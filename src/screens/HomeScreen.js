@@ -1,11 +1,25 @@
 import React from 'react';
-import { Text } from 'react-native';
+import { View, Text } from 'react-native';
 
-const HomeScreen = () => {
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+
+const HomeScreen = ({username, fullname}) => {
     return (
-        <Text>Hello</Text>
-    );
+        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+          <Text>Home {username} ({fullname})</Text>
+        </View>
+      );
 };
 
+HomeScreen.protoTypes = {
+    fullName: PropTypes.string.isRequired,
+    username: PropTypes.string.isRequired,
+  };
+  
+  const mapStateToProps = (state) => ({
+    username: state.auth.username,
+    fullname: state.auth.fullname,
+  });
 
-export default HomeScreen;
+  export default connect(mapStateToProps)(HomeScreen) ;

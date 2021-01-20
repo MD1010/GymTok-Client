@@ -1,7 +1,4 @@
-import axois from 'axios';
-import setAuthToken from '../utils/setAuthToken';
-import AsyncStorage from '@react-native-community/async-storage';
-// import  NavigationService  from "../navigationService";
+import api from '../api/api';
 
 
 import {
@@ -9,30 +6,9 @@ import {
   REGISTER_FAIL,
   LOGIN_SUCCESS,
   LOGIN_FAIL,
-  USER_LOADED,
-  AUTH_ERROR,
   LOGOUT,
-  CLEAR_PROFILE,
 } from './types';
 
-export const loadUser = () => async (dispatch) => {
-  if (AsyncStorage.token) {
-    setAuthToken(AsyncStorage.token);
-  }
-
-  try {
-    const res = await axois.get('http://453e69b4ff60.ngrok.io/api/auth');
-
-    dispatch({
-      type: USER_LOADED,
-      payload: res.data,
-    });
-  } catch (err) {
-    dispatch({
-      type: AUTH_ERROR,
-    });
-  }
-};
 
 // Register user
 export const register = ( username, fullName, password ) => async (dispatch) => {
@@ -43,26 +19,22 @@ export const register = ( username, fullName, password ) => async (dispatch) => 
 
   const body = JSON.stringify({username, fullName, password});
   try {
-    const res = await axois.post('https://453e69b4ff60.ngrok.io/Users/register', body, config);
+    const res = await api.post('/Users/register', body, config);
 
     dispatch({
       type: REGISTER_SUCCESS,
       payload: res.data,
     });
 
-    navigate('login');
-  } catch (err) {
-    const errors = err.response.data.errors;
+    return '';
 
-    if (errors) {
-      // errors.forEach((e) => {
-      //   dispatch(setAlert(e.msg, 'danger'));
-      // });
-    }
+  } catch (err) {
 
     dispatch({
       type: REGISTER_FAIL,
     });
+
+    return err;
   }
 };
 
@@ -74,27 +46,23 @@ export const login = (username, password) => async (dispatch) => {
 
   const body = JSON.stringify({ username, password });
   try {
-    const res = await axois.post('https://453e69b4ff60.ngrok.io/Users/login', body, config);
+    const res = await api.post('/Users/login', body, config);
     dispatch({
       type: LOGIN_SUCCESS,
       payload: res.data,
     });
 
-
+    return '';
   } catch (err) {
-
-    if (err) {
-      console.log(err);
-    }
-
     dispatch({
       type: LOGIN_FAIL,
     });
+
+    return err;
   }
 };
 
 // Logout / Clear profile
 export const logout = () => (dispatch) => {
   dispatch({ type: LOGOUT });
-  dispatch({ type: CLEAR_PROFILE });
 };

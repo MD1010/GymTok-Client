@@ -13,9 +13,8 @@ import {
 
 const initialState = {
   token: AsyncStorage.getItem('token'),
-  isAuthenticated: null,
-  loading: true,
-  user: null,
+  username: null,
+  fullname: null,
 };
 
 export default function (state = initialState, action) {
@@ -28,8 +27,8 @@ export default function (state = initialState, action) {
       return {
         ...state,
         ...payload,
-        isAuthenticated: true,
-        loading: false,
+        username: payload.username ? payload.username : null,
+        fullname: payload.fullname ? payload.fullname : null,
       };
     case AUTH_ERROR:
     case LOGIN_FAIL:

@@ -9,19 +9,13 @@ import 'react-native-gesture-handler';
 import { setNavigator } from './navigationRef';
 
 
+import HomeScreen from './screens/HomeScreen';
 import LoginScreen from './screens/LoginScreen';
 import RegisterScreen from './screens/RegisterScreen';
 import store from './store';
 import { Provider } from 'react-redux';
 
 
-function HomeScreen() {
-  return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>Home Screen</Text>
-    </View>
-  );
-}
 
 function DetailsScreen() {
   return (

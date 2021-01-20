@@ -36,10 +36,15 @@ const LoginScreen = ({login, navigation}) => {
     }
     setLoading(true)
 
-    await login(username, password, navigation);
+    const err = await login(username, password, navigation);
+    
+    setLoading(false);
 
-     setLoading(false);
-     navigation.navigate('home');
+    if(err) {
+      setErrortext(err.toString());
+    } else {
+      navigation.navigate('home');
+    }
   };
 
   return (

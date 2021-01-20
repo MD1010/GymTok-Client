@@ -47,10 +47,15 @@ const RegisterScreen = ({register, navigation}) => {
     //Show Loader
     setLoading(true);
 
-    await register(userName, fullName, password);
-
+    const err =  await register(userName, fullName, userPassword);
+    
     setLoading(false);
-    navigation.navigate('login');
+    
+    if(err) {
+      setErrortext(err.toString());
+    } else {
+      setIsRegistraionSuccess(true);
+    }
   };
 
   if (isRegistraionSuccess) {
@@ -136,8 +141,8 @@ const RegisterScreen = ({register, navigation}) => {
           <View style={styles.SectionStyle}>
             <TextInput
               style={styles.inputStyle}
-              onChangeText={(UserPassword) =>
-                setUserPassword(UserPassword)
+              onChangeText={(userPassword) =>
+                setUserPassword(userPassword)
               }
               underlineColorAndroid="#f000"
               placeholder="Enter Password"
