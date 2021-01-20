@@ -52,7 +52,11 @@ const RegisterScreen = ({register, navigation}) => {
     setLoading(false);
     
     if(err) {
-      setErrortext(err.toString());
+      if(err.response.data.message) {
+        setErrortext(err.response.data.message.toString());
+      } else {
+        setErrortext(err.toString());
+      }
     } else {
       setIsRegistraionSuccess(true);
     }
@@ -87,7 +91,7 @@ const RegisterScreen = ({register, navigation}) => {
     );
   }
   return (
-    <View style={{flex: 1, backgroundColor: '#307ecc'}}>
+    <View style={{flex: 1, backgroundColor: '#1f1e1e'}}>
       <Loader loading={loading} />
       <ScrollView
         keyboardShouldPersistTaps="handled"
@@ -191,10 +195,10 @@ const styles = StyleSheet.create({
     margin: 10,
   },
   buttonStyle: {
-    backgroundColor: '#7DE24E',
+    backgroundColor: '#db403b',
     borderWidth: 0,
     color: '#FFFFFF',
-    borderColor: '#7DE24E',
+    borderColor: '#db403b',
     height: 40,
     alignItems: 'center',
     borderRadius: 30,

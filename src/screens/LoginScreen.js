@@ -41,7 +41,11 @@ const LoginScreen = ({login, navigation}) => {
     setLoading(false);
 
     if(err) {
-      setErrortext(err.toString());
+      if(err.response.data.message) {
+        setErrortext(err.response.data.message.toString());
+      } else {
+        setErrortext(err.toString());
+      }
     } else {
       navigation.navigate('home');
     }
@@ -143,7 +147,7 @@ const styles = StyleSheet.create({
   mainBody: {
     flex: 1,
     justifyContent: 'center',
-    backgroundColor: '#307ecc',
+    backgroundColor: '#1f1e1e',
     alignContent: 'center',
   },
   SectionStyle: {
@@ -155,10 +159,10 @@ const styles = StyleSheet.create({
     margin: 10,
   },
   buttonStyle: {
-    backgroundColor: '#7DE24E',
+    backgroundColor: '#db403b',
     borderWidth: 0,
     color: '#FFFFFF',
-    borderColor: '#7DE24E',
+    borderColor: '#db403b',
     height: 40,
     alignItems: 'center',
     borderRadius: 30,
