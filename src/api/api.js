@@ -1,7 +1,8 @@
 import axios from 'axios';
 import AsyncStorage from '@react-native-community/async-storage';
+import { setNewAccessTokenIfExpired } from "./jwt";
 
-let url = 'https://dce13997b01f.ngrok.io';
+let url = 'https://42556c920a46.ngrok.io';
 
 const instance = axios.create({
   baseURL: url,
@@ -9,13 +10,20 @@ const instance = axios.create({
 
 instance.interceptors.request.use(
   async (config) => {
-    const token = await AsyncStorage.getItem('token');
+    const token = await AsyncStorage.getItem('accessToken');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
   },
   (err) => {
+    let requestConfig = error.config;
+    if (error.response?.data.msg === "Token has expired") {
+      axios.interceptors.response.eject(interceptor);
+      setNewAccessTokenIfExpired();
+      requestConfig.headers = httpClient.defaults.headers;
+      return axios(requestConfig);
+    }
     return Promise.reject(err);
   }
 );

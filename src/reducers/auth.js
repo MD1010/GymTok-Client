@@ -12,7 +12,6 @@ import {
 } from '../actions/types';
 
 const initialState = {
-  token: AsyncStorage.getItem('token'),
   username: null,
   fullname: null,
 };
@@ -23,7 +22,8 @@ export default function (state = initialState, action) {
   switch (type) {
     case LOGIN_SUCCESS:
     case REGISTER_SUCCESS:
-      AsyncStorage.setItem('token', payload.accessToken);
+      AsyncStorage.setItem('accessToken', payload.accessToken);
+      AsyncStorage.setItem('refreshToken', payload.refreshToken);
       return {
         ...state,
         ...payload,
@@ -34,7 +34,6 @@ export default function (state = initialState, action) {
     case LOGIN_FAIL:
     case REGISTER_FAIL:
     case LOGOUT:
-    case DELETE_ACCOUNT:
       AsyncStorage.removeItem('token');
       return initialState;
     case USER_LOADED:
