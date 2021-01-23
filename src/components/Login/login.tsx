@@ -1,53 +1,48 @@
-import React, {useState, createRef} from 'react';
+import { useNavigation } from "@react-navigation/native";
+import React, { createRef, useState } from "react";
 import {
-  StyleSheet,
-  TextInput,
-  View,
-  Text,
-  ScrollView,
-  Image,
   Keyboard,
-  TouchableOpacity,
   KeyboardAvoidingView,
-} from 'react-native';
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { useDispatch, useSelector } from "react-redux";
+import { login } from "../../store/auth/actions";
+import { authSelector } from "../../store/auth/authSlice";
+import Loader from "../shared/Loader";
 
-import { login } from '../actions/auth';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import Loader from '../components/Loader';
+interface LoginProps {}
 
-const LoginScreen = ({login, navigation}) => {
-  const [username, setUserName] = useState('');
-  const [password, setUserPassword] = useState('');
+export const Login: React.FC<LoginProps> = () => {
+  const [username, setUserName] = useState("");
+  const [password, setUserPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [errortext, setErrortext] = useState('');
-
-  const passwordInputRef = createRef();
-
+  const [errortext, setErrortext] = useState("");
+  const navigation = useNavigation();
+  const dispatch = useDispatch();
+  const passwordInputRef = createRef<TextInput>();
+  const { authError } = useSelector(authSelector);
   const handleSubmitPress = async () => {
-    setErrortext('');
+    setErrortext("");
     if (!username) {
-      alert('Please fill UserName');
+      alert("Please fill UserName");
       return;
     }
     if (!password) {
-      alert('Please fill Password');
+      alert("Please fill Password");
       return;
     }
-    setLoading(true)
-
-    const err = await login(username, password, navigation);
-    
+    setLoading(true);
+    dispatch(login(username, password));
     setLoading(false);
-
-    if(err) {
-      if(err.response.data.message) {
-        setErrortext(err.response.data.message.toString());
-      } else {
-        setErrortext(err.toString());
-      }
+    if (authError) {
+      alert(authError);
     } else {
-      navigation.navigate('home');
+      navigation.navigate("home");
     }
   };
 
@@ -58,12 +53,13 @@ const LoginScreen = ({login, navigation}) => {
         keyboardShouldPersistTaps="handled"
         contentContainerStyle={{
           flex: 1,
-          justifyContent: 'center',
-          alignContent: 'center',
-        }}>
+          justifyContent: "center",
+          alignContent: "center",
+        }}
+      >
         <View>
           <KeyboardAvoidingView enabled>
-            <View style={{alignItems: 'center'}}>
+            <View style={{ alignItems: "center" }}>
               {/* <Image
                 source={require('../Image/aboutreact.png')}
                 style={{
@@ -77,17 +73,12 @@ const LoginScreen = ({login, navigation}) => {
             <View style={styles.SectionStyle}>
               <TextInput
                 style={styles.inputStyle}
-                onChangeText={(UserName) =>
-                  setUserName(UserName)
-                }
+                onChangeText={(UserName) => setUserName(UserName)}
                 placeholder="Enter User Name"
                 placeholderTextColor="#8b9cb5"
                 autoCapitalize="none"
                 returnKeyType="next"
-                onSubmitEditing={() =>
-                  passwordInputRef.current &&
-                  passwordInputRef.current.focus()
-                }
+                onSubmitEditing={() => passwordInputRef.current && passwordInputRef.current.focus()}
                 underlineColorAndroid="#f000"
                 blurOnSubmit={false}
               />
@@ -95,9 +86,7 @@ const LoginScreen = ({login, navigation}) => {
             <View style={styles.SectionStyle}>
               <TextInput
                 style={styles.inputStyle}
-                onChangeText={(UserPassword) =>
-                  setUserPassword(UserPassword)
-                }
+                onChangeText={(UserPassword) => setUserPassword(UserPassword)}
                 placeholder="Enter Password" //12345
                 placeholderTextColor="#8b9cb5"
                 keyboardType="default"
@@ -109,20 +98,11 @@ const LoginScreen = ({login, navigation}) => {
                 returnKeyType="next"
               />
             </View>
-            {errortext != '' ? (
-              <Text style={styles.errorTextStyle}>
-                {errortext}
-              </Text>
-            ) : null}
-            <TouchableOpacity
-              style={styles.buttonStyle}
-              activeOpacity={0.5}
-              onPress={handleSubmitPress}>
+            {errortext != "" ? <Text style={styles.errorTextStyle}>{errortext}</Text> : null}
+            <TouchableOpacity style={styles.buttonStyle} activeOpacity={0.5} onPress={handleSubmitPress}>
               <Text style={styles.buttonTextStyle}>LOGIN</Text>
             </TouchableOpacity>
-            <Text
-              style={styles.registerTextStyle}
-              onPress={() => navigation.navigate('register')}>
+            <Text style={styles.registerTextStyle} onPress={() => navigation.navigate("register")}>
               New Here ? Register
             </Text>
           </KeyboardAvoidingView>
@@ -132,26 +112,15 @@ const LoginScreen = ({login, navigation}) => {
   );
 };
 
-LoginScreen.protoTypes = {
-  login: PropTypes.func.isRequired
-};
-
-const mapStateToProps = (state) => {
-  const { friends } = state
-  return { friends }
-};
-
-export default connect(mapStateToProps, { login })(LoginScreen);
-
 const styles = StyleSheet.create({
   mainBody: {
     flex: 1,
-    justifyContent: 'center',
-    backgroundColor: '#1f1e1e',
-    alignContent: 'center',
+    justifyContent: "center",
+    backgroundColor: "#1f1e1e",
+    alignContent: "center",
   },
   SectionStyle: {
-    flexDirection: 'row',
+    flexDirection: "row",
     height: 40,
     marginTop: 20,
     marginLeft: 35,
@@ -159,12 +128,12 @@ const styles = StyleSheet.create({
     margin: 10,
   },
   buttonStyle: {
-    backgroundColor: '#db403b',
+    backgroundColor: "#db403b",
     borderWidth: 0,
-    color: '#FFFFFF',
-    borderColor: '#db403b',
+    color: "#FFFFFF",
+    borderColor: "#db403b",
     height: 40,
-    alignItems: 'center',
+    alignItems: "center",
     borderRadius: 30,
     marginLeft: 35,
     marginRight: 35,
@@ -172,30 +141,30 @@ const styles = StyleSheet.create({
     marginBottom: 25,
   },
   buttonTextStyle: {
-    color: '#FFFFFF',
+    color: "#FFFFFF",
     paddingVertical: 10,
     fontSize: 16,
   },
   inputStyle: {
     flex: 1,
-    color: 'white',
+    color: "white",
     paddingLeft: 15,
     paddingRight: 15,
     borderWidth: 1,
     borderRadius: 30,
-    borderColor: '#dadae8',
+    borderColor: "#dadae8",
   },
   registerTextStyle: {
-    color: '#FFFFFF',
-    textAlign: 'center',
-    fontWeight: 'bold',
+    color: "#FFFFFF",
+    textAlign: "center",
+    fontWeight: "bold",
     fontSize: 14,
-    alignSelf: 'center',
+    alignSelf: "center",
     padding: 10,
   },
   errorTextStyle: {
-    color: 'red',
-    textAlign: 'center',
+    color: "red",
+    textAlign: "center",
     fontSize: 14,
   },
 });

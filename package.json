@@ -13,6 +13,7 @@
     "@react-navigation/drawer": "^5.11.5",
     "@react-navigation/native": "^5.9.0",
     "@react-navigation/stack": "^5.13.0",
+    "@reduxjs/toolkit": "^1.5.0",
     "axios": "^0.21.1",
     "expo": "~40.0.0",
     "expo-status-bar": "~1.0.3",
@@ -39,6 +40,7 @@
     "@types/react": "~16.9.35",
     "@types/react-dom": "~16.9.8",
     "@types/react-native": "~0.63.2",
+    "@types/react-redux": "^7.1.16",
     "typescript": "~4.0.0"
   },
   "private": true

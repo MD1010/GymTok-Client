@@ -1,10 +1,10 @@
-import axois from 'axios';
+import axois from "axios";
 
 const setAuthToken = (token) => {
   if (token) {
-    axois.defaults.headers.common['x-auth-token'] = token;
+    axois.defaults.headers.common["x-auth-token"] = token;
   } else {
-    delete axois.defaults.headers.common['x-auth-token'];
+    delete axois.defaults.headers.common["x-auth-token"];
   }
 };
 

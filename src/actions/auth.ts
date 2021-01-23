@@ -1,68 +1,65 @@
-import api from '../api/api';
+// import api from '../api/api';
 
+// import {
+//   REGISTER_SUCCESS,
+//   REGISTER_FAIL,
+//   LOGIN_SUCCESS,
+//   LOGIN_FAIL,
+//   LOGOUT,
+// } from './types';
 
-import {
-  REGISTER_SUCCESS,
-  REGISTER_FAIL,
-  LOGIN_SUCCESS,
-  LOGIN_FAIL,
-  LOGOUT,
-} from './types';
+// // Register user
+// export const register = ( username, fullName, password ) => async (dispatch) => {
+//   const config = {
+//     headers: { 'Content-Type': 'application/json' },
+//   };
 
+//   const body = JSON.stringify({username, fullName, password});
+//   try {
+//     const res = await api.post('/Users/register', body, config);
 
-// Register user
-export const register = ( username, fullName, password ) => async (dispatch) => {
-  const config = {
-    headers: { 'Content-Type': 'application/json' },
-  };
+//     dispatch({
+//       type: REGISTER_SUCCESS,
+//       payload: res.data,
+//     });
 
+//     return '';
 
-  const body = JSON.stringify({username, fullName, password});
-  try {
-    const res = await api.post('/Users/register', body, config);
+//   } catch (err) {
 
-    dispatch({
-      type: REGISTER_SUCCESS,
-      payload: res.data,
-    });
+//     dispatch({
+//       type: REGISTER_FAIL,
+//     });
 
-    return '';
+//     return err;
+//   }
+// };
 
-  } catch (err) {
+// // Login user
+// export const login = (username, password) => async (dispatch) => {
+//   const config = {
+//     headers: { 'Content-Type': 'application/json' },
+//   };
 
-    dispatch({
-      type: REGISTER_FAIL,
-    });
+//   const body = JSON.stringify({ username, password });
+//   try {
+//     const res = await api.post('/Users/login', body, config);
+//     dispatch({
+//       type: LOGIN_SUCCESS,
+//       payload: res.data,
+//     });
 
-    return err;
-  }
-};
+//     return '';
+//   } catch (err) {
+//     dispatch({
+//       type: LOGIN_FAIL,
+//     });
 
-// Login user
-export const login = (username, password) => async (dispatch) => {
-  const config = {
-    headers: { 'Content-Type': 'application/json' },
-  };
+//     return err;
+//   }
+// };
 
-  const body = JSON.stringify({ username, password });
-  try {
-    const res = await api.post('/Users/login', body, config);
-    dispatch({
-      type: LOGIN_SUCCESS,
-      payload: res.data,
-    });
-
-    return '';
-  } catch (err) {
-    dispatch({
-      type: LOGIN_FAIL,
-    });
-
-    return err;
-  }
-};
-
-// Logout / Clear profile
-export const logout = () => (dispatch) => {
-  dispatch({ type: LOGOUT });
-};
+// // Logout / Clear profile
+// export const logout = () => (dispatch) => {
+//   dispatch({ type: LOGOUT });
+// };
