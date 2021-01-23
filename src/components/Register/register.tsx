@@ -4,15 +4,15 @@ import { KeyboardAvoidingView, ScrollView, StyleSheet, Text, TextInput, Touchabl
 import { useDispatch, useSelector } from "react-redux";
 import { register } from "../../store/auth/actions";
 import { authSelector } from "../../store/auth/authSlice";
-import Loader from "../shared/Loader";
+import { Loader } from "../shared/Loader";
 
 interface RegisterProps {}
 
-export const Register: React.FC<RegisterProps> = () => {
+export const RegisterScreen: React.FC<RegisterProps> = () => {
   const [userName, setUserName] = useState("");
   const [fullName, setFullName] = useState("");
   const [userPassword, setUserPassword] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [isLoading, setLoading] = useState(false);
   const [errortext, setErrortext] = useState("");
   const [isRegistraionSuccess, setIsRegistraionSuccess] = useState(false);
   const dispatch = useDispatch();
@@ -72,7 +72,7 @@ export const Register: React.FC<RegisterProps> = () => {
   }
   return (
     <View style={{ flex: 1, backgroundColor: "#1f1e1e" }}>
-      <Loader loading={loading} />
+      <Loader isLoading={isLoading} />
       <ScrollView
         keyboardShouldPersistTaps="handled"
         contentContainerStyle={{

@@ -5,11 +5,11 @@ import * as React from "react";
 import { Text, View } from "react-native";
 import "react-native-gesture-handler";
 import { Provider } from "react-redux";
-import HomeScreen from "./components/Home/home";
-import LoginScreen from "./components/Login/login";
+import { HomeScreen } from "./components/Home/home";
+import { LoginScreen } from "./components/Login/login";
+import { RegisterScreen } from "./components/Register/register";
 import { setNavigator } from "./navigationRef";
-import RegisterScreen from "./screens/RegisterScreen";
-import store from "./store";
+import { store } from "./store/configureStore";
 
 function DetailsScreen() {
   return (

@@ -13,14 +13,14 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../../store/auth/actions";
 import { authSelector } from "../../store/auth/authSlice";
-import Loader from "../shared/Loader";
+import { Loader } from "../shared/Loader";
 
 interface LoginProps {}
 
-export const Login: React.FC<LoginProps> = () => {
+export const LoginScreen: React.FC<LoginProps> = () => {
   const [username, setUserName] = useState("");
   const [password, setUserPassword] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [isLoading, setLoading] = useState(false);
   const [errortext, setErrortext] = useState("");
   const navigation = useNavigation();
   const dispatch = useDispatch();
@@ -45,10 +45,10 @@ export const Login: React.FC<LoginProps> = () => {
       navigation.navigate("home");
     }
   };
-
+  console.log(isLoading);
   return (
     <View style={styles.mainBody}>
-      <Loader loading={loading} />
+      <Loader isLoading={isLoading} />
       <ScrollView
         keyboardShouldPersistTaps="handled"
         contentContainerStyle={{

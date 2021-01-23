@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "client",
-    "entryPoint": "./src/App.js",
+    "entryPoint": "./src/App.tsx",
     "slug": "client",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -14,9 +14,7 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true
     },
