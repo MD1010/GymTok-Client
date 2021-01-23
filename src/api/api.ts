@@ -1,8 +1,8 @@
-import axios from 'axios';
-import AsyncStorage from '@react-native-community/async-storage';
+import asyncStorage from "@react-native-community/async-storage";
+import axios from "axios";
 import { setNewAccessTokenIfExpired } from "./jwt";
 
-let url = 'https://42556c920a46.ngrok.io';
+let url = "https://42556c920a46.ngrok.io";
 
 const instance = axios.create({
   baseURL: url,
@@ -10,7 +10,7 @@ const instance = axios.create({
 
 instance.interceptors.request.use(
   async (config) => {
-    const token = await AsyncStorage.getItem('accessToken');
+    const token = await asyncStorage.getItem("accessToken");
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }

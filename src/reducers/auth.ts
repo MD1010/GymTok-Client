@@ -1,15 +1,13 @@
-import AsyncStorage from '@react-native-community/async-storage';
-
+import asyncStorage from "@react-native-community/async-storage";
 import {
-  REGISTER_SUCCESS,
-  REGISTER_FAIL,
-  LOGIN_SUCCESS,
-  LOGIN_FAIL,
-  USER_LOADED,
   AUTH_ERROR,
+  LOGIN_FAIL,
+  LOGIN_SUCCESS,
   LOGOUT,
-  DELETE_ACCOUNT,
-} from '../actions/types';
+  REGISTER_FAIL,
+  REGISTER_SUCCESS,
+  USER_LOADED,
+} from "../actions/types";
 
 const initialState = {
   username: null,
@@ -22,8 +20,8 @@ export default function (state = initialState, action) {
   switch (type) {
     case LOGIN_SUCCESS:
     case REGISTER_SUCCESS:
-      AsyncStorage.setItem('accessToken', payload.accessToken);
-      AsyncStorage.setItem('refreshToken', payload.refreshToken);
+      asyncStorage.setItem("accessToken", payload.accessToken);
+      asyncStorage.setItem("refreshToken", payload.refreshToken);
       return {
         ...state,
         ...payload,
@@ -34,7 +32,7 @@ export default function (state = initialState, action) {
     case LOGIN_FAIL:
     case REGISTER_FAIL:
     case LOGOUT:
-      AsyncStorage.removeItem('token');
+      asyncStorage.removeItem("token");
       return initialState;
     case USER_LOADED:
       return {
