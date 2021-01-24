@@ -1,6 +1,7 @@
 import localStorage from "@react-native-community/async-storage";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { User } from "../../interfaces/user.interface";
+import { RootState } from "../configureStore";
 
 export interface AuthState {
   loggedUser: User | null;
@@ -25,12 +26,13 @@ const authSlice = createSlice({
       state.loggedUser = null;
     },
     authFailed: (state, action: PayloadAction<{ error: any }>) => {
+      console.log("setting the error in state");
       state.authError = action.payload.error.message;
     },
   },
 });
 
 export const authActions = authSlice.actions;
-export const authSelector = (state: { auth: AuthState }) => state.auth;
+export const authSelector = (state: RootState) => state.auth;
 
 export default authSlice.reducer;

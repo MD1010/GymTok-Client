@@ -13,7 +13,8 @@ export const LoginContainer: React.FC<LoginContainerProps> = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const passwordInputRef = createRef<TextInput>();
-  const { authError } = useSelector(authSelector);
+  const { authError, loggedUser } = useSelector(authSelector);
+  console.log(authError);
   const handleSubmitPress = async (username: string, password: string) => {
     if (!username) {
       alert("Please fill UserName");
@@ -26,8 +27,9 @@ export const LoginContainer: React.FC<LoginContainerProps> = () => {
     setLoading(true);
     await dispatch(login(username, password));
     setLoading(false);
+    console.log("before check?!!?@#", authError, loggedUser);
     if (authError) {
-      console.log(authError);
+      console.log("in auth error", authError);
       alert(authError);
     } else {
       navigation.navigate("home");

@@ -8,15 +8,17 @@ export const register = (username: string, fullName: string, password: string): 
     const registerEnpoint = `${BASE_API_ENPOINT}/users/register`;
     const body = { username, fullName, password };
     const { res, error } = await fetchAPI(RequestMethod.POST, registerEnpoint, body);
-    res ? dispatch(authActions.login(res.data)) : error && dispatch(authActions.authFailed({ error }));
+    res ? dispatch(authActions.login(res.data)) : dispatch(authActions.authFailed({ error }));
   };
 };
 export const login = (username: string, password: string): AppThunk => {
   return async (dispatch: AppDispatch) => {
     const registerEnpoint = `${BASE_API_ENPOINT}/users/login`;
     const body = { username, password };
+    console.log("before fetch");
     const { res, error } = await fetchAPI(RequestMethod.POST, registerEnpoint, body);
-    res ? dispatch(authActions.login(res.data)) : error && dispatch(authActions.authFailed({ error }));
+    console.log("before dispatching error", error);
+    res ? dispatch(authActions.login(res.data)) : dispatch(authActions.authFailed({ error }));
   };
 };
 
