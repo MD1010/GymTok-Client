@@ -1,35 +1,31 @@
-import asyncStorage from "@react-native-community/async-storage";
+import localStorage from "@react-native-community/async-storage";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { User } from "../../interfaces/user.interface";
 
 export interface AuthState {
-  username: null;
-  fullname: null;
-  authError: null;
+  loggedUser: User | null;
+  authError: string | null;
 }
 export const initialState: AuthState = {
-  username: null,
-  fullname: null,
+  loggedUser: null,
   authError: null,
 };
 const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    // todo change name
-    login: (state, action: PayloadAction<any>) => {
+    login: (state, action: PayloadAction<{ user: User; accessToken: string; refreshToken: string }>) => {
       const { payload } = action;
-      asyncStorage.setItem("accessToken", payload.accessToken);
-      asyncStorage.setItem("refreshToken", payload.refreshToken);
-      state.fullname = payload.fullName;
-      state.username = payload.username;
+      localStorage.setItem("accessToken", payload.accessToken);
+      localStorage.setItem("refreshToken", payload.refreshToken);
+      state.loggedUser = payload.user;
     },
     logout: (state) => {
-      asyncStorage.clear();
-      state.fullname = null;
-      state.username = null;
+      localStorage.clear();
+      state.loggedUser = null;
     },
-    authFail: (state, action: PayloadAction<any>) => {
-      state.authError = action.payload.error;
+    authFailed: (state, action: PayloadAction<{ error: any }>) => {
+      state.authError = action.payload.error.message;
     },
   },
 });

@@ -1,48 +1,22 @@
-import api from "../../api/api";
+import { BASE_API_ENPOINT } from "../../consts";
+import { fetchAPI, RequestMethod } from "../../utils/fetchAPI";
 import { AppDispatch, AppThunk } from "../configureStore";
 import { authActions } from "./authSlice";
 
 export const register = (username: string, fullName: string, password: string): AppThunk => {
   return async (dispatch: AppDispatch) => {
-    // todo - make generic request with erro handling and remove try catch from here.
-    const config = {
-      headers: { "Content-Type": "application/json" },
-    };
-    const body = JSON.stringify({ username, fullName, password });
-
-    try {
-      const res = await api.post("/Users/register", body, config);
-      dispatch(authActions.login(res.data));
-    } catch (err) {
-      dispatch(authActions.authFail(err));
-    }
+    const registerEnpoint = `${BASE_API_ENPOINT}/users/register`;
+    const body = { username, fullName, password };
+    const { res, error } = await fetchAPI(RequestMethod.POST, registerEnpoint, body);
+    res ? dispatch(authActions.login(res.data)) : error && dispatch(authActions.authFailed({ error }));
   };
 };
 export const login = (username: string, password: string): AppThunk => {
   return async (dispatch: AppDispatch) => {
-    // todo - make generic request with erro handling and remove try catch from here.
-    const config = {
-      headers: { "Content-Type": "application/json" },
-    };
-
-    const body = JSON.stringify({ username, password });
-    try {
-      const res = await api.post("/Users/login", body, config);
-      dispatch(authActions.login(res.data));
-      // dispatch({
-      //   type: LOGIN_SUCCESS,
-      //   payload: res.data,
-      // });
-
-      // return "";
-    } catch (err) {
-      dispatch(authActions.authFail(err));
-      // dispatch({
-      //   type: LOGIN_FAIL,
-      // });
-
-      // return err;
-    }
+    const registerEnpoint = `${BASE_API_ENPOINT}/users/login`;
+    const body = { username, password };
+    const { res, error } = await fetchAPI(RequestMethod.POST, registerEnpoint, body);
+    res ? dispatch(authActions.login(res.data)) : error && dispatch(authActions.authFailed({ error }));
   };
 };
 

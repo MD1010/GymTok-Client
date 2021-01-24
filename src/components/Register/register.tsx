@@ -21,7 +21,6 @@ export const RegisterScreen: React.FC<RegisterProps> = () => {
   const { authError } = useSelector(authSelector);
   const navigation = useNavigation();
   const handleSubmitButton = async () => {
-    setErrortext("");
     if (!userName) {
       alert("Please fill User Name");
       return;
@@ -34,9 +33,8 @@ export const RegisterScreen: React.FC<RegisterProps> = () => {
       alert("Please fill Password");
       return;
     }
-    //Show Loader
     setLoading(true);
-    dispatch(register(userName, fullName, userPassword));
+    await dispatch(register(userName, fullName, userPassword));
     setLoading(false);
 
     if (authError) {
@@ -55,14 +53,6 @@ export const RegisterScreen: React.FC<RegisterProps> = () => {
           justifyContent: "center",
         }}
       >
-        {/* <Image
-          source={require('../Image/success.png')}
-          style={{
-            height: 150,
-            resizeMode: 'contain',
-            alignSelf: 'center'
-          }}
-        /> */}
         <Text style={styles.successTextStyle}>Registration Successful</Text>
         <TouchableOpacity style={styles.buttonStyle} activeOpacity={0.5} onPress={() => navigation.navigate("login")}>
           <Text style={styles.buttonTextStyle}>Login Now</Text>
@@ -131,7 +121,7 @@ export const RegisterScreen: React.FC<RegisterProps> = () => {
               blurOnSubmit={false}
             />
           </View>
-          {errortext != "" ? <Text style={styles.errorTextStyle}>{errortext}</Text> : null}
+          {/* {errortext != "" ? <Text style={styles.errorTextStyle}>{errortext}</Text> : null} */}
           <TouchableOpacity style={styles.buttonStyle} activeOpacity={0.5} onPress={handleSubmitButton}>
             <Text style={styles.buttonTextStyle}>REGISTER</Text>
           </TouchableOpacity>

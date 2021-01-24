@@ -10,42 +10,21 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { useDispatch, useSelector } from "react-redux";
-import { login } from "../../store/auth/actions";
-import { authSelector } from "../../store/auth/authSlice";
 import { Loader } from "../shared/Loader";
 
-interface LoginProps {}
+interface LoginProps {
+  onSubmit: (username: string, password: string) => any;
+  error: string | null;
+}
 
-export const LoginScreen: React.FC<LoginProps> = () => {
+export const LoginScreen: React.FC<LoginProps> = ({ onSubmit, error }) => {
   const [username, setUserName] = useState("");
-  const [password, setUserPassword] = useState("");
+  const [password, setPassword] = useState("");
   const [isLoading, setLoading] = useState(false);
   const [errortext, setErrortext] = useState("");
   const navigation = useNavigation();
-  const dispatch = useDispatch();
   const passwordInputRef = createRef<TextInput>();
-  const { authError } = useSelector(authSelector);
-  const handleSubmitPress = async () => {
-    setErrortext("");
-    if (!username) {
-      alert("Please fill UserName");
-      return;
-    }
-    if (!password) {
-      alert("Please fill Password");
-      return;
-    }
-    setLoading(true);
-    dispatch(login(username, password));
-    setLoading(false);
-    if (authError) {
-      alert(authError);
-    } else {
-      navigation.navigate("home");
-    }
-  };
-  console.log(isLoading);
+
   return (
     <View style={styles.mainBody}>
       <Loader isLoading={isLoading} />
@@ -59,17 +38,6 @@ export const LoginScreen: React.FC<LoginProps> = () => {
       >
         <View>
           <KeyboardAvoidingView enabled>
-            <View style={{ alignItems: "center" }}>
-              {/* <Image
-                source={require('../Image/aboutreact.png')}
-                style={{
-                  width: '50%',
-                  height: 100,
-                  resizeMode: 'contain',
-                  margin: 30,
-                }}
-              /> */}
-            </View>
             <View style={styles.SectionStyle}>
               <TextInput
                 style={styles.inputStyle}
@@ -86,7 +54,7 @@ export const LoginScreen: React.FC<LoginProps> = () => {
             <View style={styles.SectionStyle}>
               <TextInput
                 style={styles.inputStyle}
-                onChangeText={(UserPassword) => setUserPassword(UserPassword)}
+                onChangeText={(password) => setPassword(password)}
                 placeholder="Enter Password" //12345
                 placeholderTextColor="#8b9cb5"
                 keyboardType="default"
@@ -98,8 +66,12 @@ export const LoginScreen: React.FC<LoginProps> = () => {
                 returnKeyType="next"
               />
             </View>
-            {errortext != "" ? <Text style={styles.errorTextStyle}>{errortext}</Text> : null}
-            <TouchableOpacity style={styles.buttonStyle} activeOpacity={0.5} onPress={handleSubmitPress}>
+            {error ? <Text style={styles.errorTextStyle}>{JSON.stringify(error)}</Text> : null}
+            <TouchableOpacity
+              style={styles.buttonStyle}
+              activeOpacity={0.5}
+              onPress={() => onSubmit(username, password)}
+            >
               <Text style={styles.buttonTextStyle}>LOGIN</Text>
             </TouchableOpacity>
             <Text style={styles.registerTextStyle} onPress={() => navigation.navigate("register")}>
