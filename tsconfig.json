@@ -9,4 +9,5 @@
     "resolveJsonModule": true,
     "strict": true
   }
+  // "include": ["env.d.ts"]
 }
