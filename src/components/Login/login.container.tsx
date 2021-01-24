@@ -4,6 +4,7 @@ import { TextInput } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../../store/auth/actions";
 import { authSelector } from "../../store/auth/authSlice";
+import { Loader } from "../shared/Loader";
 import { LoginScreen } from "./login";
 
 interface LoginContainerProps {}
@@ -14,7 +15,7 @@ export const LoginContainer: React.FC<LoginContainerProps> = () => {
   const dispatch = useDispatch();
   const passwordInputRef = createRef<TextInput>();
   const { authError, loggedUser } = useSelector(authSelector);
-  console.log(authError);
+
   const handleSubmitPress = async (username: string, password: string) => {
     if (!username) {
       alert("Please fill UserName");
@@ -25,15 +26,8 @@ export const LoginContainer: React.FC<LoginContainerProps> = () => {
       return;
     }
     setLoading(true);
-    await dispatch(login(username, password));
+    dispatch(login(username, password));
     setLoading(false);
-    console.log("before check?!!?@#", authError, loggedUser);
-    if (authError) {
-      console.log("in auth error", authError);
-      alert(authError);
-    } else {
-      navigation.navigate("home");
-    }
   };
-  return <LoginScreen error={authError} onSubmit={handleSubmitPress} />;
+  return isLoading ? <Loader /> : <LoginScreen error={authError} onSubmit={handleSubmitPress} />;
 };

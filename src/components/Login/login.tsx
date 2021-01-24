@@ -27,7 +27,7 @@ export const LoginScreen: React.FC<LoginProps> = ({ onSubmit, error }) => {
 
   return (
     <View style={styles.mainBody}>
-      <Loader isLoading={isLoading} />
+      {isLoading && <Loader />}
       <ScrollView
         keyboardShouldPersistTaps="handled"
         contentContainerStyle={{

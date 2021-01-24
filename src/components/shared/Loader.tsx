@@ -5,16 +5,12 @@
 import React from "react";
 import { ActivityIndicator, StyleSheet, View } from "react-native";
 
-interface LoaderProps {
-  isLoading: boolean;
-}
-
-export const Loader: React.FC<LoaderProps> = ({ isLoading }) => {
-  return isLoading ? (
+export const Loader: React.FC = () => {
+  return (
     <View style={[styles.container, styles.horizontal]}>
       <ActivityIndicator animating={true} />
     </View>
-  ) : null;
+  );
 };
 
 const styles = StyleSheet.create({

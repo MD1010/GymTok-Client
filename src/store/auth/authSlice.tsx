@@ -26,7 +26,6 @@ const authSlice = createSlice({
       state.loggedUser = null;
     },
     authFailed: (state, action: PayloadAction<{ error: any }>) => {
-      console.log("setting the error in state");
       state.authError = action.payload.error.message;
     },
   },

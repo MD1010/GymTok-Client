@@ -62,7 +62,7 @@ export const RegisterScreen: React.FC<RegisterProps> = () => {
   }
   return (
     <View style={{ flex: 1, backgroundColor: "#1f1e1e" }}>
-      <Loader isLoading={isLoading} />
+      {isLoading && <Loader />}
       <ScrollView
         keyboardShouldPersistTaps="handled"
         contentContainerStyle={{
