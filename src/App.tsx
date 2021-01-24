@@ -1,8 +1,7 @@
-import { NavigationContainer, NavigationContainerRef } from "@react-navigation/native";
+import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import * as Expo from "expo";
 import * as React from "react";
-import { createRef } from "react";
 import { Provider } from "react-redux";
 import { HomeScreen } from "./components/Home/home";
 import { LoginContainer } from "./components/Login/login.container";
@@ -10,12 +9,11 @@ import { RegisterScreen } from "./components/Register/register";
 import { store } from "./store/configureStore";
 
 const Stack = createStackNavigator();
-export const navigationRef = createRef<NavigationContainerRef>();
 
 function App() {
   return (
     <Provider store={store}>
-      <NavigationContainer ref={navigationRef}>
+      <NavigationContainer>
         <Stack.Navigator>
           <Stack.Screen name="login" component={LoginContainer} />
           <Stack.Screen name="home" component={HomeScreen} />

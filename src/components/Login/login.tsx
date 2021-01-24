@@ -66,7 +66,7 @@ export const LoginScreen: React.FC<LoginProps> = ({ onSubmit, error }) => {
                 returnKeyType="next"
               />
             </View>
-            {error ? <Text style={styles.errorTextStyle}>{JSON.stringify(error)}</Text> : null}
+            {error ? <Text style={styles.errorTextStyle}>{error}</Text> : null}
             <TouchableOpacity
               style={styles.buttonStyle}
               activeOpacity={0.5}

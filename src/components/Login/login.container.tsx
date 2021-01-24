@@ -1,5 +1,5 @@
 import { useNavigation } from "@react-navigation/native";
-import React, { createRef, useState } from "react";
+import React, { createRef, useEffect, useState } from "react";
 import { TextInput } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../../store/auth/actions";
@@ -15,6 +15,10 @@ export const LoginContainer: React.FC<LoginContainerProps> = () => {
   const dispatch = useDispatch();
   const passwordInputRef = createRef<TextInput>();
   const { authError, loggedUser } = useSelector(authSelector);
+
+  useEffect(() => {
+    loggedUser && navigation.navigate("home");
+  }, [loggedUser]);
 
   const handleSubmitPress = async (username: string, password: string) => {
     if (!username) {
