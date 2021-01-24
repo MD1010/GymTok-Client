@@ -10,7 +10,6 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { Loader } from "../shared/Loader";
 
 interface LoginProps {
   onSubmit: (username: string, password: string) => any;
@@ -20,14 +19,12 @@ interface LoginProps {
 export const LoginScreen: React.FC<LoginProps> = ({ onSubmit, error }) => {
   const [username, setUserName] = useState("");
   const [password, setPassword] = useState("");
-  const [isLoading, setLoading] = useState(false);
   const [errortext, setErrortext] = useState("");
   const navigation = useNavigation();
   const passwordInputRef = createRef<TextInput>();
 
   return (
     <View style={styles.mainBody}>
-      {isLoading && <Loader />}
       <ScrollView
         keyboardShouldPersistTaps="handled"
         contentContainerStyle={{

@@ -7,7 +7,7 @@ import { authSelector } from "../../store/auth/authSlice";
 import { Loader } from "../shared/Loader";
 
 interface RegisterProps {}
-
+// todo tal: split to container and presentational component like in login
 export const RegisterScreen: React.FC<RegisterProps> = () => {
   const [userName, setUserName] = useState("");
   const [fullName, setFullName] = useState("");

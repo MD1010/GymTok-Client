@@ -1,17 +1,12 @@
 import React from "react";
 import { Text, View } from "react-native";
 
-interface HomeProps {
-  username: string;
-  fullName: string;
-}
+interface HomeProps {}
 
-export const HomeScreen: React.FC<HomeProps> = ({ username, fullName }) => {
+export const HomeScreen: React.FC<HomeProps> = () => {
   return (
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-      <Text>
-        Home {username} ({fullName})
-      </Text>
+      <Text>Home</Text>
     </View>
   );
 };
