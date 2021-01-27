@@ -1,65 +1,21 @@
-import { useNavigation } from "@react-navigation/native";
 import React, { createRef, useState } from "react";
 import { KeyboardAvoidingView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
-import { useDispatch, useSelector } from "react-redux";
-import { register } from "../../store/auth/actions";
-import { authSelector } from "../../store/auth/authSlice";
 import { Loader } from "../shared/Loader";
 
-interface RegisterProps {}
+interface RegisterProps {
+  onSubmit: (username: string, fullName: string, password: string) => any;
+  error: string | null;
+}
 
-export const RegisterScreen: React.FC<RegisterProps> = () => {
-  const [userName, setUserName] = useState("");
+export const RegisterScreen: React.FC<RegisterProps> = ({ onSubmit, error }) => {
+
+  const [username, setUserName] = useState("");
+  const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
-  const [userPassword, setUserPassword] = useState("");
   const [isLoading, setLoading] = useState(false);
-  const [errortext, setErrortext] = useState("");
-  const [isRegistraionSuccess, setIsRegistraionSuccess] = useState(false);
-  const dispatch = useDispatch();
   const fullNameInputRef = createRef<TextInput>();
   const passwordInputRef = createRef<TextInput>();
-  const { authError } = useSelector(authSelector);
-  const navigation = useNavigation();
-  const handleSubmitButton = async () => {
-    if (!userName) {
-      alert("Please fill User Name");
-      return;
-    }
-    if (!fullName) {
-      alert("Please fill Full Name");
-      return;
-    }
-    if (!userPassword) {
-      alert("Please fill Password");
-      return;
-    }
-    setLoading(true);
-    await dispatch(register(userName, fullName, userPassword));
-    setLoading(false);
 
-    if (authError) {
-      alert(authError);
-    } else {
-      setIsRegistraionSuccess(true);
-    }
-  };
-
-  if (isRegistraionSuccess) {
-    return (
-      <View
-        style={{
-          flex: 1,
-          backgroundColor: "#307ecc",
-          justifyContent: "center",
-        }}
-      >
-        <Text style={styles.successTextStyle}>Registration Successful</Text>
-        <TouchableOpacity style={styles.buttonStyle} activeOpacity={0.5} onPress={() => navigation.navigate("login")}>
-          <Text style={styles.buttonTextStyle}>Login Now</Text>
-        </TouchableOpacity>
-      </View>
-    );
-  }
   return (
     <View style={{ flex: 1, backgroundColor: "#1f1e1e" }}>
       {isLoading && <Loader />}
@@ -111,7 +67,7 @@ export const RegisterScreen: React.FC<RegisterProps> = () => {
           <View style={styles.SectionStyle}>
             <TextInput
               style={styles.inputStyle}
-              onChangeText={(userPassword) => setUserPassword(userPassword)}
+              onChangeText={(userPassword) => setPassword(userPassword)}
               underlineColorAndroid="#f000"
               placeholder="Enter Password"
               placeholderTextColor="#8b9cb5"
@@ -121,8 +77,8 @@ export const RegisterScreen: React.FC<RegisterProps> = () => {
               blurOnSubmit={false}
             />
           </View>
-          {/* {errortext != "" ? <Text style={styles.errorTextStyle}>{errortext}</Text> : null} */}
-          <TouchableOpacity style={styles.buttonStyle} activeOpacity={0.5} onPress={handleSubmitButton}>
+          {error != "" ? <Text style={styles.errorTextStyle}>{error}</Text> : null}
+          <TouchableOpacity style={styles.buttonStyle} activeOpacity={0.5} onPress={() => onSubmit(username, fullName,password)}>
             <Text style={styles.buttonTextStyle}>REGISTER</Text>
           </TouchableOpacity>
         </KeyboardAvoidingView>

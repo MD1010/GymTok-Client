@@ -10,7 +10,7 @@ export const register = (username: string, fullName: string, password: string): 
     const body = { username, fullName, password };
     const { res, error } = await fetchAPI(RequestMethod.POST, registerEnpoint, body);
     if (res) {
-      dispatch(authActions.login(res.data));
+      dispatch(authActions.login(res));
       Navigator.navigate("home");
     } else {
       dispatch(authActions.authFailed({ error }));
@@ -24,7 +24,7 @@ export const login = (username: string, password: string): AppThunk => {
     console.log("before fetch");
     const { res, error } = await fetchAPI(RequestMethod.POST, registerEnpoint, body);
     if (res) {
-      dispatch(authActions.login(res.data));
+      dispatch(authActions.login(res));
       Navigator.navigate("home");
     } else {
       dispatch(authActions.authFailed({ error }));

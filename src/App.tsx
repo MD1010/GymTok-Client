@@ -6,7 +6,7 @@ import { createRef } from "react";
 import { Provider } from "react-redux";
 import { HomeScreen } from "./components/Home/home";
 import { LoginContainer } from "./components/Login/login.container";
-import { RegisterScreen } from "./components/Register/register";
+import { RegisterContainer } from "./components/Register/register.container";
 import { store } from "./store/configureStore";
 
 const Stack = createStackNavigator();
@@ -19,7 +19,7 @@ function App() {
         <Stack.Navigator>
           <Stack.Screen name="login" component={LoginContainer} />
           <Stack.Screen name="home" component={HomeScreen} />
-          <Stack.Screen name="register" component={RegisterScreen} />
+          <Stack.Screen name="register" component={RegisterContainer} />
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>

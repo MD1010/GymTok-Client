@@ -21,7 +21,6 @@ export const LoginScreen: React.FC<LoginProps> = ({ onSubmit, error }) => {
   const [username, setUserName] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setLoading] = useState(false);
-  const [errortext, setErrortext] = useState("");
   const navigation = useNavigation();
   const passwordInputRef = createRef<TextInput>();
 
