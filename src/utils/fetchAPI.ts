@@ -11,7 +11,7 @@ export enum RequestMethod {
 export const httpClient = axios.create();
 
 httpClient.defaults.timeout = 5000;
-httpClient.defaults.headers.Authorization = `"Bearer" ${localStorage.getItem("aceessToken")}`;
+httpClient.defaults.headers['Authorization'] = `"Bearer" ${localStorage.getItem("accessToken")}`;
 
 const interceptor = httpClient.interceptors.response.use(
   (response) => {
