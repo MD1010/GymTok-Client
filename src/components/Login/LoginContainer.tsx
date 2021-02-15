@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { login } from "../../store/auth/actions";
 import { authSelector } from "../../store/auth/authSlice";
 import { Loader } from "../shared/Loader";
-import { LoginScreen } from "./login";
+import { LoginScreen } from "./Login";
 
 interface LoginContainerProps {}
 

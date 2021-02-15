@@ -1,10 +1,10 @@
 import localStorage from "@react-native-community/async-storage";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { User } from "../../interfaces/user.interface";
+import { IUser } from "../../interfaces/User";
 import { RootState } from "../configureStore";
 
 export interface AuthState {
-  loggedUser: User | null;
+  loggedUser: IUser | null;
   authError: string | null;
 }
 export const initialState: AuthState = {
@@ -15,7 +15,7 @@ const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    login: (state, action: PayloadAction<{ user: User; accessToken: string; refreshToken: string }>) => {
+    login: (state, action: PayloadAction<{ user: IUser; accessToken: string; refreshToken: string }>) => {
       const { payload } = action;
       localStorage.setItem("accessToken", payload.accessToken);
       localStorage.setItem("refreshToken", payload.refreshToken);

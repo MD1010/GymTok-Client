@@ -6,7 +6,7 @@ interface HomeProps {}
 export const HomeScreen: React.FC<HomeProps> = () => {
   return (
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-      <Text>Home</Text>
+      <Text>Home1</Text>
     </View>
   );
 };

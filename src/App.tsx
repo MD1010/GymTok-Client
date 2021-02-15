@@ -3,24 +3,29 @@ import { createStackNavigator } from "@react-navigation/stack";
 import * as Expo from "expo";
 import * as React from "react";
 import { Provider } from "react-redux";
-import { HomeScreen } from "./components/Home/home";
-import { LoginContainer } from "./components/Login/login.container";
-import { RegisterScreen } from "./components/Register/register";
+import { ChallengesContainer as ChallengesScreen } from "./components/Challenges/ChallengesContainer";
+import { HomeScreen } from "./components/Home/Home";
+import { LoginContainer as LoginScreen } from "./components/Login/LoginContainer";
+import { RegisterScreen } from "./components/Register/Register";
 import { store } from "./store/configureStore";
 
 const Stack = createStackNavigator();
 
 function App() {
   return (
-    <Provider store={store}>
-      <NavigationContainer>
-        <Stack.Navigator>
-          <Stack.Screen name="login" component={LoginContainer} />
-          <Stack.Screen name="home" component={HomeScreen} />
-          <Stack.Screen name="register" component={RegisterScreen} />
-        </Stack.Navigator>
-      </NavigationContainer>
-    </Provider>
+    <>
+      {/* <S.GlobalResetStyles /> */}
+      <Provider store={store}>
+        <NavigationContainer>
+          <Stack.Navigator initialRouteName="challenges">
+            <Stack.Screen name="login" component={LoginScreen} />
+            <Stack.Screen name="home" component={HomeScreen} />
+            <Stack.Screen name="register" component={RegisterScreen} />
+            <Stack.Screen name="challenges" component={ChallengesScreen} />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </Provider>
+    </>
   );
 }
 
