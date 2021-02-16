@@ -16,7 +16,6 @@ export const ChallengesContainer: React.FC<ChallengesContainerProps> = ({}) => {
   };
   useEffect(() => {
     error && alert(error);
-    console.error(error);
   }, [error]);
 
   useEffect(() => {
