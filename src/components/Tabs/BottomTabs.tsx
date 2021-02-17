@@ -2,6 +2,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import React from "react";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { ChallengesContainer as ChallengesScreen } from "../Challenges/ChallengesContainer";
+import { VideoContainer as VideoScreen } from "../Camera/VideoContainer";
 import { HomeScreen } from "../Home/Home";
 
 interface BottomTabsProps {}
@@ -33,6 +34,16 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons name="controller-classic" color={color} size={size} />
           ),
+        }}
+      />
+
+      <Tab.Screen
+        name="camera"
+        component={VideoScreen}
+        options={{
+          unmountOnBlur: true,
+          tabBarLabel: "take video",
+          tabBarIcon: ({ color, size }) => <MaterialCommunityIcons name="camera" color={color} size={size} />,
         }}
       />
     </Tab.Navigator>

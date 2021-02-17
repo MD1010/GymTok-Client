@@ -19,6 +19,8 @@ export const ChallengesContainer: React.FC<ChallengesContainerProps> = ({}) => {
   }, [error]);
 
   useEffect(() => {
+    console.log("server ip=", process.env.BASE_API_ENPOINT);
+
     fetchChallenges();
   }, []);
   return <ChallengesScreen challenges={challenges} />;
