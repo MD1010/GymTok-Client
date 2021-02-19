@@ -1,14 +1,13 @@
+import { FontAwesome } from "@expo/vector-icons";
 import React, { useRef, useState } from "react";
 import { Dimensions, FlatList, StatusBar, StyleSheet, View } from "react-native";
 import { IChallenge } from "../../interfaces/Challenge";
 import { VideoPlayer } from "../shared/VideoPlayer";
-
 interface ChallengesProps {
   challenges: IChallenge[];
 }
 
 export const HomeScreen: React.FC<ChallengesProps> = ({ challenges }) => {
-  const videoRefs = useRef([]);
   const [currentlyPlaying, setCurrentlyPlaying] = useState(0);
   const scrollEnded = useRef<boolean>(false);
 
@@ -17,6 +16,9 @@ export const HomeScreen: React.FC<ChallengesProps> = ({ challenges }) => {
 
     return (
       <View style={styles.container}>
+        <View style={styles.playBtn}>
+          <FontAwesome name={"play"} size={40} color={"white"} />
+        </View>
         <VideoPlayer
           style={styles.video}
           uri={videoURL}
@@ -62,5 +64,12 @@ const styles = StyleSheet.create({
     left: 0,
     bottom: 0,
     right: 0,
+  },
+  playBtn: {
+    zIndex: 1000,
+    alignItems: "center",
+    flex: 1,
+    backgroundColor: "red",
+    justifyContent: "center",
   },
 });
