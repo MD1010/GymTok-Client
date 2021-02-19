@@ -17,7 +17,12 @@ export const HomeScreen: React.FC<ChallengesProps> = ({ challenges }) => {
 
     return (
       <View style={styles.container}>
-        <VideoPlayer style={styles.video} uri={videoURL} isPlaying={videoIndex === currentlyPlaying} />
+        <VideoPlayer
+          style={styles.video}
+          uri={videoURL}
+          isPlaying={videoIndex === currentlyPlaying}
+          resizeMode="cover"
+        />
       </View>
     );
   };

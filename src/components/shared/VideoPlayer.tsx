@@ -6,9 +6,10 @@ interface VideoProps {
   uri: string;
   style?: StyleProp<ViewStyle>;
   isPlaying: boolean;
+  resizeMode: "cover" | "stretch" | "contain";
 }
 
-export const VideoPlayer: React.FC<VideoProps> = ({ uri, style, isPlaying }) => {
+export const VideoPlayer: React.FC<VideoProps> = ({ uri, style, isPlaying, resizeMode }) => {
   const [status, setStatus] = React.useState<any>();
   const ref = useRef(null);
 
@@ -25,13 +26,10 @@ export const VideoPlayer: React.FC<VideoProps> = ({ uri, style, isPlaying }) => 
         source={{
           uri,
         }}
-        resizeMode="cover"
+        resizeMode={resizeMode}
         shouldPlay={isPlaying}
         isLooping
         onPlaybackStatusUpdate={(status) => setStatus(() => status)}
-        onReadyForDisplay={(e) => {
-          e.naturalSize.orientation = "portrait";
-        }}
       />
     </TouchableWithoutFeedback>
   );
