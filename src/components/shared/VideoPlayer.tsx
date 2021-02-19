@@ -1,30 +1,32 @@
 import { Video } from "expo-av";
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { StyleProp, TouchableWithoutFeedback, ViewStyle } from "react-native";
 
 interface VideoProps {
   uri: string;
   style?: StyleProp<ViewStyle>;
-  id?: string;
+  isPlaying: boolean;
 }
 
-export const VideoPlayer = ({ uri, style }) => {
+export const VideoPlayer: React.FC<VideoProps> = ({ uri, style, isPlaying }) => {
   const [status, setStatus] = React.useState<any>();
-  const videoRef = useRef(null);
-  // const { uri, style } = props;
-  // console.log(" In video player ", ref);
+  const ref = useRef(null);
+
+  // console.log("isPlaying", isPlaying);
+  useEffect(() => {
+    console.log("isPlaying?", isPlaying);
+  }, [isPlaying]);
+
   return (
-    <TouchableWithoutFeedback
-      onPress={() => (status.isPlaying ? videoRef.current.pauseAsync() : videoRef.current.playAsync())}
-    >
+    <TouchableWithoutFeedback onPress={() => (status.isPlaying ? ref.current.pauseAsync() : ref.current.playAsync())}>
       <Video
-        ref={videoRef}
+        ref={ref}
         style={style}
         source={{
           uri,
         }}
         resizeMode="cover"
-        shouldPlay
+        shouldPlay={isPlaying}
         isLooping
         onPlaybackStatusUpdate={(status) => setStatus(() => status)}
         onReadyForDisplay={(e) => {

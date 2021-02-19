@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef, useState } from "react";
 import { Dimensions, FlatList, StatusBar, StyleSheet, View } from "react-native";
 import { IChallenge } from "../../interfaces/Challenge";
 import { VideoPlayer } from "../shared/VideoPlayer";
@@ -8,41 +8,40 @@ interface ChallengesProps {
 }
 
 export const HomeScreen: React.FC<ChallengesProps> = ({ challenges }) => {
-  // const videoRefs = useRef([]);
+  const videoRefs = useRef([]);
+  const [currentlyPlaying, setCurrentlyPlaying] = useState(0);
+  const scrollEnded = useRef<boolean>(false);
 
-  // const onViewableItemsChanged = ({ viewableItems, changed }) => {
-  //   changed.forEach((item) => {
-  //     if (!item.isViewable) {
-  //       videoRefs[item.id].pauseVideo();
-  //     }
-  //   });
-  //   viewableItems.forEach((item) => {
-  //     if (item.isViewable) {
-  //       videoRefs[item.id].playVideo();
-  //     }
-  //   });
-  // };
-
-  const renderChallengeVideo = (challenge: IChallenge) => {
+  const renderChallengeVideo = (challenge: IChallenge, videoIndex: number) => {
     const { name, video: videoURL, image, estimatedScore, description, creationTime, createdBy, _id } = challenge;
+
     return (
       <View style={styles.container}>
-        <VideoPlayer style={styles.video} uri={videoURL} />
+        <VideoPlayer style={styles.video} uri={videoURL} isPlaying={videoIndex === currentlyPlaying} />
       </View>
     );
   };
+
+  // track view changes in order to control when video is starting to play
+  const onViewRef = React.useRef(({ viewableItems }) => {
+    // change playing video only after user stop dragging
+    scrollEnded.current && setCurrentlyPlaying(viewableItems[0]?.index);
+  });
 
   return (
     <>
       <StatusBar barStyle={"light-content"} />
       <FlatList
         data={challenges}
-        renderItem={({ item, index }) => renderChallengeVideo(item)}
+        renderItem={({ item, index }) => renderChallengeVideo(item, index)}
         keyExtractor={(challenge) => challenge._id}
         showsVerticalScrollIndicator={false}
         snapToInterval={Dimensions.get("window").height}
         snapToAlignment={"start"}
         decelerationRate={"fast"}
+        onViewableItemsChanged={onViewRef.current}
+        onScrollEndDrag={() => (scrollEnded.current = true)}
+        onScrollBeginDrag={() => (scrollEnded.current = false)}
       ></FlatList>
     </>
   );
