@@ -1,5 +1,5 @@
 import { Video } from "expo-av";
-import React from "react";
+import React, { useRef } from "react";
 import { StyleProp, TouchableWithoutFeedback, ViewStyle } from "react-native";
 
 interface VideoProps {
@@ -8,14 +8,17 @@ interface VideoProps {
   id?: string;
 }
 
-export const VideoPlayer: React.FC<VideoProps> = React.forwardRef((props, ref) => {
+export const VideoPlayer = ({ uri, style }) => {
   const [status, setStatus] = React.useState<any>();
-  const { uri, id, style } = props;
-  console.log(ref);
+  const videoRef = useRef(null);
+  // const { uri, style } = props;
+  // console.log(" In video player ", ref);
   return (
-    <TouchableWithoutFeedback onPress={() => (status.isPlaying ? ref.current.pauseAsync() : ref.current.playAsync())}>
+    <TouchableWithoutFeedback
+      onPress={() => (status.isPlaying ? videoRef.current.pauseAsync() : videoRef.current.playAsync())}
+    >
       <Video
-        ref={ref}
+        ref={videoRef}
         style={style}
         source={{
           uri,
@@ -30,4 +33,4 @@ export const VideoPlayer: React.FC<VideoProps> = React.forwardRef((props, ref) =
       />
     </TouchableWithoutFeedback>
   );
-});
+};
