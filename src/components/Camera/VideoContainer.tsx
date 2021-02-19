@@ -3,6 +3,8 @@ import { Camera } from "expo-camera";
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import { NavigationScreenProp } from "react-navigation";
 import { useIsFocused } from "@react-navigation/native";
+import * as ImagePicker from "expo-image-picker";
+import * as Permissions from "expo-permissions";
 
 interface VideoScreenProps {
   navigation: NavigationScreenProp<any, any>;
@@ -41,14 +43,13 @@ const styles = StyleSheet.create({
 export const VideoContainer: React.FC<VideoScreenProps> = ({ navigation }) => {
   const [hasPermission, setHasPermission] = useState<boolean>(false);
   const [type, setType] = useState(Camera.Constants.Type.back);
-  const [recroding, setRecording] = useState<boolean>(false);
-  const [processing, setProcessing] = useState<boolean>(false);
   const isFocused = useIsFocused();
   const cameraRef = useRef(null);
 
   useEffect(() => {
     (async () => {
       const { status } = await Camera.requestPermissionsAsync();
+      await ImagePicker.getMediaLibraryPermissionsAsync(true);
       setHasPermission(status === "granted");
     })();
   }, []);
@@ -60,25 +61,21 @@ export const VideoContainer: React.FC<VideoScreenProps> = ({ navigation }) => {
     return <Text>No access to camera</Text>;
   }
 
-  const snap = async () => {
-    if (cameraRef && cameraRef.current) {
-      let photo = await cameraRef.current.takePictureAsync();
-    }
-  };
-
   const record = async () => {
-    if (cameraRef && cameraRef.current) {
-      setRecording(true);
-      let video = await cameraRef.current.recordAsync();
-      console.log(video.uri);
-      navigation.navigate("Publish", { videoUri: video.uri });
+    const selectedVideo = await ImagePicker.launchCameraAsync({ mediaTypes: ImagePicker.MediaTypeOptions.Videos });
+    if (!selectedVideo.cancelled) {
+      console.log(selectedVideo.uri);
+      navigation.navigate("Publish", { videoUri: selectedVideo.uri });
     }
   };
 
-  const stopRecord = () => {
-    if (cameraRef && cameraRef.current) {
-      setRecording(false);
-      cameraRef.current.stopRecording();
+  const pickVideo = async () => {
+    const selectedVideo = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Videos,
+    });
+    if (!selectedVideo.cancelled) {
+      console.log(selectedVideo.uri);
+      navigation.navigate("Publish", { videoUri: selectedVideo.uri });
     }
   };
 
@@ -86,57 +83,25 @@ export const VideoContainer: React.FC<VideoScreenProps> = ({ navigation }) => {
     <View style={styles.container}>
       {isFocused && (
         <Camera ref={cameraRef} style={styles.camera} type={type}>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => {
-              cameraRef.current.pausePreview();
-            }}
-          >
-            <Text style={styles.text}> X </Text>
-          </TouchableOpacity>
-          {!recroding ? (
-            <View style={styles.buttonContainer}>
-              <TouchableOpacity
-                style={styles.button}
-                onPress={() => {
-                  setType(
-                    type === Camera.Constants.Type.back ? Camera.Constants.Type.front : Camera.Constants.Type.back
-                  );
-                }}
-              >
-                <Text style={styles.text}> Flip </Text>
-              </TouchableOpacity>
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => {
+                record();
+              }}
+            >
+              <Text style={styles.text}> record </Text>
+            </TouchableOpacity>
 
-              <TouchableOpacity
-                style={styles.button}
-                onPress={() => {
-                  snap();
-                }}
-              >
-                <Text style={styles.text}> Snap </Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                style={styles.button}
-                onPress={() => {
-                  record();
-                }}
-              >
-                <Text style={styles.text}> record </Text>
-              </TouchableOpacity>
-            </View>
-          ) : (
-            <View style={styles.buttonContainer}>
-              <TouchableOpacity
-                style={styles.button}
-                onPress={() => {
-                  stopRecord();
-                }}
-              >
-                <Text style={styles.text}> stop record </Text>
-              </TouchableOpacity>
-            </View>
-          )}
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => {
+                pickVideo();
+              }}
+            >
+              <Text style={styles.text}> choose from gallery </Text>
+            </TouchableOpacity>
+          </View>
         </Camera>
       )}
     </View>

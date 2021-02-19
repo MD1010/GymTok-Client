@@ -1,15 +1,45 @@
-import React from "react";
-import { View, StyleSheet, Button, Alert } from "react-native";
+import React, { useState } from "react";
+import { View, StyleSheet, Button, Alert, TouchableWithoutFeedback, Keyboard } from "react-native";
 import { useRoute } from "@react-navigation/native";
 import { VideoScreen } from "./publishVideo";
+import { TextInput } from "react-native";
+import { FriendsModal } from "./FreindsModal";
+import axios from "axios";
 
 interface PublishNewVideoProps {}
 
 export const PublishNewVideoScreen: React.FC<PublishNewVideoProps> = () => {
   const route = useRoute();
+  const [text, setText] = useState<string>("");
+  const [showFriendsModal, setShowFriendsModal] = useState<boolean>(false);
+  const [selectedFriends, setSelectedFriends] = useState<any[]>([]);
+
+  const publishChallenge = () => {
+    let formData = new FormData();
+
+    formData.append("description", text);
+    formData.append("video", {
+      name: "dov-test",
+      uri: route.params!.videoUri,
+      type: "video/mp4",
+    });
+    formData.append("selectedFriends", JSON.stringify(selectedFriends));
+    axios.post("http://10.0.0.33:8080/challenges/upload", formData);
+  };
 
   return (
     <View style={{ display: "flex", flexDirection: "column", justifyContent: "flex-end" }}>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+        <TextInput
+          style={{ height: 40, borderColor: "gray", borderWidth: 1 }}
+          onChangeText={(text) => setText(text)}
+          value={text}
+          placeholder={"write description"}
+          autoCorrect={true}
+          autoCapitalize={"words"}
+        />
+      </TouchableWithoutFeedback>
+
       <View style={{ marginTop: "60%" }}>
         <VideoScreen uri={route.params!.videoUri} />
       </View>
@@ -22,9 +52,15 @@ export const PublishNewVideoScreen: React.FC<PublishNewVideoProps> = () => {
           flexDirection: "row",
         }}
       >
-        <Button title="tag friends" color="#841584" onPress={() => Alert.alert("Simple Button pressed")} />
-        <Button title="publish" color="#841584" onPress={() => Alert.alert("Simple Button pressed")} />
+        <Button title="tag friends" color="#841584" onPress={() => setShowFriendsModal(true)} />
+        <Button title="publish" color="#841584" onPress={() => publishChallenge()} />
       </View>
+
+      <FriendsModal
+        modalVisible={showFriendsModal}
+        setModalVisible={(isShow: boolean) => setShowFriendsModal(isShow)}
+        setSelectedFriends={(selectedFriends: any[]) => setSelectedFriends(selectedFriends)}
+      />
     </View>
   );
 };
