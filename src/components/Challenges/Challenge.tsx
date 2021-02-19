@@ -1,28 +1,36 @@
 import React from "react";
-import { Text } from "react-native";
+import { Dimensions, StyleSheet, View } from "react-native";
 import { Card } from "react-native-elements";
 import styled from "styled-components/native";
 import { IChallenge } from "../../interfaces";
+import { VideoPlayer } from "../shared/VideoPlayer";
 
 interface ChallengeProps {
   challenge: IChallenge;
 }
 
 export const Challenge: React.FC<ChallengeProps> = ({ challenge }) => {
-  const { name, video, image, estimatedScore, description, creationTime, createdBy } = challenge;
+  const { name, video: videoURL, image, estimatedScore, description, creationTime, createdBy, _id } = challenge;
   return (
-    <Card>
-      <Header>{name}</Header>
-      <Card.Divider />
-      <Text>{`created by  ${createdBy}`}</Text>
-      <Text>{`creation time  ${creationTime}`}</Text>
-      <Text>{`score ${estimatedScore}`}</Text>
-      <Text>{`video ${video}`}</Text>
-      <Text>{`description ${description}`}</Text>
-    </Card>
+    <View style={styles.container}>
+      <VideoPlayer style={styles.video} uri={videoURL} id={_id} />
+    </View>
   );
 };
 
 const Header = styled(Card.Title)`
   text-align: left;
 `;
+const styles = StyleSheet.create({
+  container: {
+    width: "100%",
+    height: Dimensions.get("window").height,
+  },
+  video: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    bottom: 0,
+    right: 0,
+  },
+});
