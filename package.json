@@ -19,6 +19,7 @@
     "axios": "^0.21.1",
     "babel-plugin-inline-dotenv": "^1.6.0",
     "expo": "~40.0.0",
+    "expo-av": "^9.0.0",
     "expo-barcode-scanner": "^10.0.0",
     "expo-camera": "^10.0.0",
     "expo-face-detector": "^9.0.1",

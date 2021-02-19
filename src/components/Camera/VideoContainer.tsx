@@ -1,6 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Camera } from "expo-camera";
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import { NavigationScreenProp } from "react-navigation";
+import { useIsFocused } from "@react-navigation/native";
+
+interface VideoScreenProps {
+  navigation: NavigationScreenProp<any, any>;
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -32,11 +38,12 @@ const styles = StyleSheet.create({
   },
 });
 
-export const VideoContainer: React.FC = () => {
+export const VideoContainer: React.FC<VideoScreenProps> = ({ navigation }) => {
   const [hasPermission, setHasPermission] = useState<boolean>(false);
   const [type, setType] = useState(Camera.Constants.Type.back);
   const [recroding, setRecording] = useState<boolean>(false);
   const [processing, setProcessing] = useState<boolean>(false);
+  const isFocused = useIsFocused();
   const cameraRef = useRef(null);
 
   useEffect(() => {
@@ -64,6 +71,7 @@ export const VideoContainer: React.FC = () => {
       setRecording(true);
       let video = await cameraRef.current.recordAsync();
       console.log(video.uri);
+      navigation.navigate("Publish", { videoUri: video.uri });
     }
   };
 
@@ -76,57 +84,61 @@ export const VideoContainer: React.FC = () => {
 
   return (
     <View style={styles.container}>
-      <Camera ref={cameraRef} style={styles.camera} type={type}>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => {
-            cameraRef.current.pausePreview();
-          }}
-        >
-          <Text style={styles.text}> X </Text>
-        </TouchableOpacity>
-        {!recroding ? (
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() => {
-                setType(type === Camera.Constants.Type.back ? Camera.Constants.Type.front : Camera.Constants.Type.back);
-              }}
-            >
-              <Text style={styles.text}> Flip </Text>
-            </TouchableOpacity>
+      {isFocused && (
+        <Camera ref={cameraRef} style={styles.camera} type={type}>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => {
+              cameraRef.current.pausePreview();
+            }}
+          >
+            <Text style={styles.text}> X </Text>
+          </TouchableOpacity>
+          {!recroding ? (
+            <View style={styles.buttonContainer}>
+              <TouchableOpacity
+                style={styles.button}
+                onPress={() => {
+                  setType(
+                    type === Camera.Constants.Type.back ? Camera.Constants.Type.front : Camera.Constants.Type.back
+                  );
+                }}
+              >
+                <Text style={styles.text}> Flip </Text>
+              </TouchableOpacity>
 
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() => {
-                snap();
-              }}
-            >
-              <Text style={styles.text}> Snap </Text>
-            </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.button}
+                onPress={() => {
+                  snap();
+                }}
+              >
+                <Text style={styles.text}> Snap </Text>
+              </TouchableOpacity>
 
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() => {
-                record();
-              }}
-            >
-              <Text style={styles.text}> record </Text>
-            </TouchableOpacity>
-          </View>
-        ) : (
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() => {
-                stopRecord();
-              }}
-            >
-              <Text style={styles.text}> stop record </Text>
-            </TouchableOpacity>
-          </View>
-        )}
-      </Camera>
+              <TouchableOpacity
+                style={styles.button}
+                onPress={() => {
+                  record();
+                }}
+              >
+                <Text style={styles.text}> record </Text>
+              </TouchableOpacity>
+            </View>
+          ) : (
+            <View style={styles.buttonContainer}>
+              <TouchableOpacity
+                style={styles.button}
+                onPress={() => {
+                  stopRecord();
+                }}
+              >
+                <Text style={styles.text}> stop record </Text>
+              </TouchableOpacity>
+            </View>
+          )}
+        </Camera>
+      )}
     </View>
   );
 };
