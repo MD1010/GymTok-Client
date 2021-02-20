@@ -2,6 +2,7 @@ import { AntDesign, FontAwesome5, Ionicons } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import React from "react";
 import { HomeContainer as Home } from "../Home/HomeContainer";
+import { colors } from "../shared/styles/variables";
 
 interface BottomTabsProps {}
 
@@ -12,12 +13,12 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
     <Tab.Navigator
       initialRouteName="Home"
       tabBarOptions={{
-        activeTintColor: "#ffd700",
-        activeBackgroundColor: "#14192c",
-        inactiveBackgroundColor: "#14192c",
-        inactiveTintColor: "white",
+        activeTintColor: colors.yellow,
+        activeBackgroundColor: colors.darkBlue,
+        inactiveBackgroundColor: colors.darkBlue,
+        inactiveTintColor: colors.white,
         labelStyle: { bottom: 8 },
-        style: { height: 60, borderTopWidth: 0, backgroundColor: "#14192c" },
+        style: { height: 60, borderTopWidth: 0, backgroundColor: colors.darkBlue },
       }}
     >
       <Tab.Screen
@@ -46,7 +47,7 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
               size={size}
               color={"white"}
               selectionColor={"white"}
-              style={{ left: 5, backgroundColor: "#4F33FF", borderRadius: 5, padding: 15 }}
+              style={{ left: 5, backgroundColor: colors.lightPurpule, borderRadius: 5, padding: 15 }}
             />
           ),
           tabBarLabel: () => null,
