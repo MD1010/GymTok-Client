@@ -1,8 +1,9 @@
-import { FontAwesome } from "@expo/vector-icons";
 import React, { useRef, useState } from "react";
 import { Dimensions, FlatList, StatusBar, StyleSheet, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { IChallenge } from "../../interfaces/Challenge";
 import { VideoPlayer } from "../shared/VideoPlayer";
+
 interface ChallengesProps {
   challenges: IChallenge[];
 }
@@ -15,28 +16,28 @@ export const HomeScreen: React.FC<ChallengesProps> = ({ challenges }) => {
     const { name, video: videoURL, image, estimatedScore, description, creationTime, createdBy, _id } = challenge;
 
     return (
-      <View style={styles.container}>
-        <View style={styles.playBtn}>
-          <FontAwesome name={"play"} size={40} color={"white"} />
+      <>
+        <View style={styles.container}>
+          <VideoPlayer
+            style={styles.video}
+            uri={videoURL}
+            isPlaying={videoIndex === currentlyPlaying}
+            resizeMode="cover"
+          />
         </View>
-        <VideoPlayer
-          style={styles.video}
-          uri={videoURL}
-          isPlaying={videoIndex === currentlyPlaying}
-          resizeMode="cover"
-        />
-      </View>
+        <View />
+      </>
     );
   };
 
   // track view changes in order to control when video is starting to play
-  const onViewRef = React.useRef(({ viewableItems }) => {
+  const onViewRef = useRef(({ viewableItems }) => {
     // change playing video only after user stop dragging
     scrollEnded.current && setCurrentlyPlaying(viewableItems[0]?.index);
   });
 
   return (
-    <>
+    <SafeAreaView>
       <StatusBar barStyle={"light-content"} />
       <FlatList
         data={challenges}
@@ -50,13 +51,16 @@ export const HomeScreen: React.FC<ChallengesProps> = ({ challenges }) => {
         onScrollEndDrag={() => (scrollEnded.current = true)}
         onScrollBeginDrag={() => (scrollEnded.current = false)}
       ></FlatList>
-    </>
+    </SafeAreaView>
   );
 };
 const styles = StyleSheet.create({
   container: {
     width: "100%",
     height: Dimensions.get("window").height,
+    // flex: 1,
+    // alignItems: "center",
+    // justifyContent: "center",
   },
   video: {
     position: "absolute",
@@ -64,12 +68,5 @@ const styles = StyleSheet.create({
     left: 0,
     bottom: 0,
     right: 0,
-  },
-  playBtn: {
-    zIndex: 1000,
-    alignItems: "center",
-    flex: 1,
-    backgroundColor: "red",
-    justifyContent: "center",
   },
 });
