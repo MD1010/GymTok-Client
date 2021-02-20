@@ -24,6 +24,10 @@ export const HomeScreen: React.FC<ChallengesProps> = ({ challenges }) => {
             isPlaying={videoIndex === currentlyPlaying}
             resizeMode="cover"
           />
+          {/* <FontAwesome name="home" size={40} color={colors.white} style={{ zIndex: 2 }} /> */}
+          {/* <View style={{ backgroundColor: "red", width: 100, height: 400, zIndex: 123 }}>
+            <Text style={{ zIndex: 123 }}>asdasasdasdd</Text>
+          </View> */}
         </View>
         <View />
       </>
@@ -58,9 +62,8 @@ const styles = StyleSheet.create({
   container: {
     width: "100%",
     height: Dimensions.get("window").height,
-    // flex: 1,
-    // alignItems: "center",
-    // justifyContent: "center",
+    alignItems: "center",
+    justifyContent: "center",
   },
   video: {
     position: "absolute",

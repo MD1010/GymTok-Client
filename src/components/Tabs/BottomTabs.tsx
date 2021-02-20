@@ -44,9 +44,14 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
           tabBarIcon: ({ size }) => (
             <AntDesign
               name="plus"
-              size={30}
               color={"white"}
-              style={{ left: 5, backgroundColor: colors.lightPurpule, borderRadius: 7, padding: 15 }}
+              size={30}
+              style={{
+                left: 5,
+                backgroundColor: colors.lightPurpule,
+                borderRadius: 7,
+                padding: 15,
+              }}
             />
           ),
           tabBarLabel: () => null,
