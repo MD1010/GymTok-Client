@@ -17,6 +17,7 @@ export const VideoPlayer: React.FC<VideoProps> = ({ uri, style, isPlaying, resiz
   const [isPaused, setIsPaused] = useState<Boolean>(false);
 
   const pauseVideo = () => {
+    console.log(123);
     ref.current.pauseAsync();
     setIsPaused(true);
   };
@@ -27,35 +28,27 @@ export const VideoPlayer: React.FC<VideoProps> = ({ uri, style, isPlaying, resiz
   };
   return (
     <TouchableWithoutFeedback onPress={() => (status.isPlaying ? pauseVideo() : resumeVideo())}>
-      <View style={styles.container}>
-        <Video
-          ref={ref}
-          style={style}
-          source={{
-            uri,
-          }}
-          resizeMode={resizeMode}
-          shouldPlay={isPlaying}
-          isLooping
-          onPlaybackStatusUpdate={(status) => setStatus(() => status)}
-        />
-        {isPaused && (
-          <View style={styles.playBtn}>
-            <FontAwesome name={"play"} color={"white"} size={playBtnSize ? playBtnSize : 40} />
-          </View>
-        )}
-      </View>
+      <Video
+        ref={ref}
+        style={style}
+        source={{
+          uri,
+        }}
+        resizeMode={resizeMode}
+        shouldPlay={isPlaying}
+        isLooping
+        onPlaybackStatusUpdate={(status) => setStatus(() => status)}
+      />
     </TouchableWithoutFeedback>
   );
 };
 const styles = StyleSheet.create({
   playBtn: {
     zIndex: 2,
+    position: "absolute",
   },
   container: {
     height: "100%",
     width: "100%",
-    justifyContent: "center",
-    alignItems: "center",
   },
 });
