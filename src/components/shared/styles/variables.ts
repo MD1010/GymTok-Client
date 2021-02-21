@@ -5,6 +5,7 @@ export enum Colors {
   yellow = "#ffd700",
   gold = "#B29B00",
   white = "#FFF",
+  red = "#fe0000",
 }
 
 export enum UIConsts {
