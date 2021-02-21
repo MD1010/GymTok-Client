@@ -1,5 +1,5 @@
-import React, { useRef, useState } from "react";
-import { Dimensions, FlatList, StatusBar, StyleSheet, View, Text } from "react-native";
+import React, { useEffect, useRef, useState } from "react";
+import { Dimensions, FlatList, StatusBar, StyleSheet, View, Text, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { IChallenge } from "../../interfaces/Challenge";
 import { VideoPlayer } from "../shared/VideoPlayer";
@@ -8,7 +8,7 @@ import { Colors, UIConsts } from "../shared/styles/variables";
 import { AntDesign, FontAwesome5, Ionicons } from "@expo/vector-icons";
 import { Video } from "expo-av";
 import { Avatar } from "react-native-elements";
-import { TouchableOpacity, TouchableWithoutFeedback } from "react-native-gesture-handler";
+import { useNavigation } from "@react-navigation/native";
 interface ChallengesProps {
   challenges: IChallenge[];
 }
@@ -16,36 +16,34 @@ interface ChallengesProps {
 export const HomeScreen: React.FC<ChallengesProps> = ({ challenges }) => {
   const [currentlyPlaying, setCurrentlyPlaying] = useState(0);
   const scrollEnded = useRef<boolean>(false);
+  const navigation = useNavigation();
+  const [isPausedVideo, setPausedVideo] = useState(false);
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener("blur", () => {
+      setPausedVideo(true);
+    });
+    return unsubscribe;
+  }, [navigation]);
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener("focus", () => {
+      setPausedVideo(false);
+    });
+    return unsubscribe;
+  }, [navigation]);
 
   const renderChallengeVideo = (challenge: IChallenge, videoIndex: number) => {
     const { name, video: videoURL, image, estimatedScore, description, creationTime, createdBy, _id } = challenge;
     const tags = ["balistic", "tilaba", "imayad"];
     return (
       <View style={styles.container}>
-        {/* <TouchableWithoutFeedback
-          onPress={() => {
-            console.log("pressed");
-          }}
-        > */}
         <VideoPlayer
           style={styles.video}
           uri={videoURL}
-          isPlaying={videoIndex === currentlyPlaying}
+          isPlaying={videoIndex === currentlyPlaying && !isPausedVideo}
           resizeMode="cover"
         />
-        {/* <View
-            style={{
-              position: "absolute",
-              height: "100%",
-              justifyContent: "center",
-              alignItems: "center",
-              alignSelf: "center",
-              width: "100%",
-              alignContent: "center",
-            }}
-          >
-            <FontAwesome name={"play"} color={"white"} size={40} />
-          </View> */}
 
         <View style={styles.uiContainer}>
           <View style={styles.rightContainer}>
@@ -80,14 +78,6 @@ export const HomeScreen: React.FC<ChallengesProps> = ({ challenges }) => {
             </View>
           </View>
         </View>
-        {/* </TouchableWithoutFeedback> */}
-        {/* <View style={styles.uiContainer}>
-          
-        </View> */}
-
-        {/* <View style={{ backgroundColor: "red", width: 100, height: 400, zIndex: 123 }}>
-            <Text style={{ zIndex: 123 }}>asdasasdasdd</Text>
-          </View> */}
       </View>
     );
   };
@@ -135,24 +125,20 @@ const styles = StyleSheet.create({
   rightContainer: {
     alignSelf: "flex-end",
     height: 300,
-    // justifyContent: "space-between",
-    marginRight: 10,
+    marginRight: 15,
     marginBottom: 10,
-    // backgroundColor: "red",
   },
   infoContainer: {
     alignSelf: "flex-start",
     width: "80%",
-    // justifyContent: "space-between",
     marginLeft: 5,
     bottom: 15,
     padding: 10,
-    // backgroundColor: "black",
   },
 
   creator: {
     fontSize: 15,
-    color: "white",
+    color: Colors.white,
     fontWeight: "bold",
   },
   tagsContainer: {

@@ -2,6 +2,7 @@ import { AntDesign, FontAwesome5, Ionicons } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import React from "react";
 import { HomeContainer as Home } from "../Home/HomeContainer";
+import { LoginScreen } from "../Login/Login";
 import { Colors, UIConsts } from "../shared/styles/variables";
 
 interface BottomTabsProps {}
@@ -31,7 +32,7 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
       />
       <Tab.Screen
         name="Leaderboards"
-        component={Home}
+        component={LoginScreen}
         options={{
           tabBarLabel: "Leaderboards",
           tabBarIcon: ({ color, size }) => <Ionicons name="trophy" color={color} size={size} />,
@@ -39,7 +40,7 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
       />
       <Tab.Screen
         name={"Upload"}
-        component={Home}
+        component={LoginScreen}
         options={{
           tabBarIcon: ({ size }) => (
             <AntDesign
@@ -60,7 +61,7 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
 
       <Tab.Screen
         name="Inbox"
-        component={Home}
+        component={LoginScreen}
         options={{
           tabBarLabel: "Inbox",
           tabBarIcon: ({ color, size }) => <FontAwesome5 name="envelope" color={color} size={size} />,
@@ -68,7 +69,7 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
       ></Tab.Screen>
       <Tab.Screen
         name="Me"
-        component={Home}
+        component={LoginScreen}
         options={{
           tabBarLabel: "Me",
           tabBarIcon: ({ color, size }) => <FontAwesome5 name="user-alt" color={color} size={size} />,
