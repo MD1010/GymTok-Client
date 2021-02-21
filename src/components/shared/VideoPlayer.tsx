@@ -16,15 +16,17 @@ interface VideoProps {
 
 export const VideoPlayer: React.FC<VideoProps> = ({ uri, style, isPlaying, resizeMode, playBtnSize }) => {
   const [status, setStatus] = useState<any>();
+  const [isPaused, setIsPaused] = useState<boolean>(false);
   const ref = useRef(null);
 
   const pauseVideo = () => {
     console.log(123);
-
+    setIsPaused(true);
     ref.current.pauseAsync();
   };
 
   const resumeVideo = () => {
+    setIsPaused(false);
     ref.current.playAsync();
   };
   return (
@@ -45,7 +47,7 @@ export const VideoPlayer: React.FC<VideoProps> = ({ uri, style, isPlaying, resiz
 
       <TouchableWithoutFeedback onPress={() => (status.isPlaying ? pauseVideo() : resumeVideo())}>
         <View style={styles.playBtnContainer}>
-          {!isPlaying && <FontAwesome name="play" size={40} color={Colors.white} />}
+          {isPaused && !status?.isPlaying && <FontAwesome name="play" size={40} color={Colors.white} />}
         </View>
       </TouchableWithoutFeedback>
     </>
