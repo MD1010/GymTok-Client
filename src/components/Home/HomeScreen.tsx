@@ -8,6 +8,7 @@ import { Colors, UIConsts } from "../shared/styles/variables";
 import { AntDesign, FontAwesome5, Ionicons } from "@expo/vector-icons";
 import { Video } from "expo-av";
 import { Avatar } from "react-native-elements";
+import { TouchableOpacity, TouchableWithoutFeedback } from "react-native-gesture-handler";
 interface ChallengesProps {
   challenges: IChallenge[];
 }
@@ -21,32 +22,41 @@ export const HomeScreen: React.FC<ChallengesProps> = ({ challenges }) => {
     const tags = ["balistic", "tilaba", "imayad"];
     return (
       <View style={styles.container}>
+        {/* <TouchableWithoutFeedback
+          onPress={() => {
+            console.log("pressed");
+          }}
+        > */}
         <VideoPlayer
           style={styles.video}
           uri={videoURL}
           isPlaying={videoIndex === currentlyPlaying}
           resizeMode="cover"
         />
-
-        {/* {videoIndex === currentlyPlaying && (
-          <View style={{ backgroundColor: "red", alignSelf: "center", flex: 1 }}>
+        {/* <View
+            style={{
+              position: "absolute",
+              height: "100%",
+              justifyContent: "center",
+              alignItems: "center",
+              alignSelf: "center",
+              width: "100%",
+              alignContent: "center",
+            }}
+          >
             <FontAwesome name={"play"} color={"white"} size={40} />
-          </View>
-        )} */}
-
-        {/* <Video
-          resizeMode={"cover"}
-          style={styles.video}
-          source={{
-            uri: videoURL,
-          }}
-          isLooping
-        /> */}
+          </View> */}
 
         <View style={styles.uiContainer}>
           <View style={styles.rightContainer}>
             <View style={styles.iconContainer}>
-              <FontAwesome name="heart" size={40} color={Colors.white} />
+              <TouchableOpacity
+                onPress={() => {
+                  console.log("like!");
+                }}
+              >
+                <FontAwesome name="heart" size={40} color={Colors.white} />
+              </TouchableOpacity>
               <Text style={styles.iconText}>123</Text>
             </View>
             <View style={styles.iconContainer}>
@@ -70,7 +80,7 @@ export const HomeScreen: React.FC<ChallengesProps> = ({ challenges }) => {
             </View>
           </View>
         </View>
-
+        {/* </TouchableWithoutFeedback> */}
         {/* <View style={styles.uiContainer}>
           
         </View> */}
@@ -110,7 +120,6 @@ const styles = StyleSheet.create({
   container: {
     width: "100%",
     height: Dimensions.get("window").height - UIConsts.bottomNavbarHeight,
-    // justifyContent: "center",
   },
   video: {
     position: "absolute",

@@ -30,11 +30,11 @@ export const VideoPlayer: React.FC<VideoProps> = ({ uri, style, isPlaying, resiz
     ref.current.playAsync();
   };
   return (
-    <>
-      <TouchableWithoutFeedback onPress={() => (status.isPlaying ? pauseVideo() : resumeVideo())}>
+    <TouchableWithoutFeedback onPress={() => (status.isPlaying ? pauseVideo() : resumeVideo())}>
+      <View style={styles.container}>
         <Video
           ref={ref}
-          style={style}
+          style={[style]}
           source={{
             uri,
           }}
@@ -43,17 +43,19 @@ export const VideoPlayer: React.FC<VideoProps> = ({ uri, style, isPlaying, resiz
           isLooping
           onPlaybackStatusUpdate={(status) => setStatus(() => status)}
         />
-      </TouchableWithoutFeedback>
-
-      <TouchableWithoutFeedback onPress={() => (status.isPlaying ? pauseVideo() : resumeVideo())}>
         <View style={styles.playBtnContainer}>
           {isPaused && !status?.isPlaying && <FontAwesome name="play" size={40} color={Colors.white} />}
         </View>
-      </TouchableWithoutFeedback>
-    </>
+      </View>
+    </TouchableWithoutFeedback>
   );
 };
 const styles = StyleSheet.create({
+  container: {
+    position: "absolute",
+    width: "100%",
+    height: "100%",
+  },
   playBtnContainer: {
     position: "absolute",
     height: "100%",
