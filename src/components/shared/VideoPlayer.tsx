@@ -1,9 +1,7 @@
 import { FontAwesome } from "@expo/vector-icons";
 import { Video } from "expo-av";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { StyleProp, StyleSheet, TouchableWithoutFeedback, View, ViewStyle } from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { Colors } from "./styles/variables";
 
 interface VideoProps {
