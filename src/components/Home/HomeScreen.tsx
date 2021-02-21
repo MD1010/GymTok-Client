@@ -20,17 +20,21 @@ export const HomeScreen: React.FC<ChallengesProps> = ({ challenges }) => {
   const [isPausedVideo, setPausedVideo] = useState(false);
 
   useEffect(() => {
-    const unsubscribe = navigation.addListener("blur", () => {
+    navigation.addListener("blur", () => {
       setPausedVideo(true);
     });
-    return unsubscribe;
+    return () => {
+      navigation.removeListener("blur", null);
+    };
   }, [navigation]);
 
   useEffect(() => {
-    const unsubscribe = navigation.addListener("focus", () => {
+    navigation.addListener("focus", () => {
       setPausedVideo(false);
     });
-    return unsubscribe;
+    return () => {
+      navigation.removeListener("focus", null);
+    };
   }, [navigation]);
 
   const renderChallengeVideo = (challenge: IChallenge, videoIndex: number) => {
@@ -125,7 +129,7 @@ const styles = StyleSheet.create({
   rightContainer: {
     alignSelf: "flex-end",
     height: 300,
-    marginRight: 15,
+    marginRight: 10,
     marginBottom: 10,
   },
   infoContainer: {

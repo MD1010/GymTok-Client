@@ -29,13 +29,6 @@ export const VideoPlayer: React.FC<VideoProps> = ({ uri, style, isPlaying, resiz
     ref.current.playAsync();
   };
 
-  useEffect(() => {
-    return () => {
-      console.log("unmount!!");
-      pauseVideo();
-    };
-  }, []);
-
   return (
     <TouchableWithoutFeedback onPress={() => (status.isPlaying ? pauseVideo() : resumeVideo())}>
       <View style={styles.container}>
