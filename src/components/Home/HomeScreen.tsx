@@ -19,16 +19,11 @@ export const HomeScreen: React.FC<ChallengesProps> = ({ challenges }) => {
     navigation.addListener("blur", () => {
       setNavigatedOutOfScreen(true);
     });
-    return () => {
-      navigation.removeListener("blur", null);
-    };
-  }, [navigation]);
-
-  useEffect(() => {
     navigation.addListener("focus", () => {
       setNavigatedOutOfScreen(false);
     });
     return () => {
+      navigation.removeListener("blur", null);
       navigation.removeListener("focus", null);
     };
   }, [navigation]);
