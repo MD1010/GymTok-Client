@@ -4,7 +4,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import React from "react";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { ChallengesContainer as ChallengesScreen } from "../Challenges/ChallengesContainer";
-import { VideoContainer as VideoScreen } from "../Camera/VideoContainer2";
+import { VideoContainer as VideoScreen } from "../Camera/VideoContainer";
 import { HomeScreen } from "../Home/Home";
 import { View, Text } from "react-native";
 import { PublishNewVideoScreen } from "../Camera/PublishNewVideo";
