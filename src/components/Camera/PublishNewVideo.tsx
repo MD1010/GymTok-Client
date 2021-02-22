@@ -19,12 +19,12 @@ export const PublishNewVideoScreen: React.FC<PublishNewVideoProps> = () => {
 
     formData.append("description", text);
     formData.append("video", {
-      name: "dov-test",
+      name: "dov-test.mp4",
       uri: route.params!.videoUri,
       type: "video/mp4",
     });
     formData.append("selectedFriends", JSON.stringify(selectedFriends));
-    axios.post("http://10.0.0.33:8080/challenges/upload", formData);
+    axios.post(`${process.env.BASE_API_ENPOINT}/challenges/upload`, formData);
   };
 
   return (

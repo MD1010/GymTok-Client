@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Camera } from "expo-camera";
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity, Platform } from "react-native";
 import { NavigationScreenProp } from "react-navigation";
 import { useIsFocused } from "@react-navigation/native";
 import * as ImagePicker from "expo-image-picker";
 import { Fontisto, MaterialIcons, Ionicons, Feather } from "@expo/vector-icons";
 import { PinchGestureHandler } from "react-native-gesture-handler";
+import * as Permissions from "expo-permissions";
 
 interface VideoScreenProps {
   navigation: NavigationScreenProp<any, any>;
@@ -48,18 +49,24 @@ export const VideoContainer: React.FC<VideoScreenProps> = ({ navigation }) => {
 
   useEffect(() => {
     (async () => {
-      const { status } = await Camera.requestPermissionsAsync();
-      await ImagePicker.getMediaLibraryPermissionsAsync(true);
-      setHasPermission(status === "granted");
+      const audioRecording =
+        Platform.OS === "ios"
+          ? await Camera.requestPermissionsAsync()
+          : (await Permissions.askAsync(Permissions.AUDIO_RECORDING)) &&
+            (await Permissions.askAsync(Permissions.CAMERA));
+      setHasPermission(audioRecording.granted);
+      // const cameraPermission = await Permissions.askAsync(Permissions.CAMERA);
+      if (!audioRecording.granted) {
+        alert("No permissions granted!");
+        navigation.navigate("/Home");
+      } else {
+        await ImagePicker.getMediaLibraryPermissionsAsync(true);
+      }
+      // setHasPermission(cameraPermission.granted && audioRecording.granted)
+      // const { status } = await Camera.requestPermissionsAsync();
+      // setHasPermission(status === "granted");
     })();
   }, []);
-
-  if (hasPermission === null) {
-    return <View />;
-  }
-  if (hasPermission === false) {
-    return <Text>No access to camera</Text>;
-  }
 
   const pickVideo = async () => {
     const selectedVideo = await ImagePicker.launchImageLibraryAsync({
@@ -74,9 +81,13 @@ export const VideoContainer: React.FC<VideoScreenProps> = ({ navigation }) => {
   const record = async () => {
     if (cameraRef && cameraRef.current) {
       setRecording(true);
-      let video = await cameraRef.current.recordAsync();
-      console.log(video.uri);
-      navigation.navigate("Publish", { videoUri: video.uri });
+      try {
+        let video = await cameraRef.current.recordAsync();
+        console.log(video.uri);
+        navigation.navigate("Publish", { videoUri: video.uri });
+      } catch (e) {
+        console.error(e);
+      }
     }
   };
 

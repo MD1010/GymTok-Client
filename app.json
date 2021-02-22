@@ -22,7 +22,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "permissions": ["RECORD_AUDIO", "CAMERA", "CAPTURE_AUDIO_OUTPUT"]
     },
     "web": {
       "favicon": "./assets/favicon.png"
