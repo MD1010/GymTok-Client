@@ -37,7 +37,7 @@ export const VideoPlayer: React.FC<VideoProps> = ({ uri, style, isPlaying, resiz
   }, [isPlaying]);
 
   return (
-    <TouchableWithoutFeedback onPress={() => (isPlaying ? pauseVideo() : resumeVideo())}>
+    <TouchableWithoutFeedback onPress={() => (status.isPlaying ? pauseVideo() : resumeVideo())}>
       <View style={styles.container}>
         <Video
           ref={ref}
