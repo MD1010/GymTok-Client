@@ -19,37 +19,67 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
   const myTabs = () => {
     return (
       <Tab.Navigator
-        initialRouteName="challenges"
+        initialRouteName="Home"
         tabBarOptions={{
-          activeTintColor: "#4e22ee",
-          style: { paddingBottom: 3 },
+          activeTintColor: Colors.yellow,
+          activeBackgroundColor: Colors.darkBlue,
+          inactiveBackgroundColor: Colors.darkBlue,
+          inactiveTintColor: Colors.white,
+          labelStyle: { bottom: 8 },
+          style: { height: UIConsts.bottomNavbarHeight, borderTopWidth: 0, backgroundColor: Colors.darkBlue },
         }}
       >
         <Tab.Screen
           name="Home"
-          component={HomeScreen}
+          component={Home}
           options={{
             tabBarLabel: "Home",
-            tabBarIcon: ({ color, size }) => <MaterialCommunityIcons name="home" color={color} size={size} />,
+            tabBarIcon: ({ color, size }) => <FontAwesome5 name="home" size={size} color={color} />,
           }}
         />
         <Tab.Screen
-          name="challenges"
-          component={ChallengesScreen}
+          name="Leaderboards"
+          component={LoginScreen}
           options={{
-            tabBarLabel: "My Challenges",
-            tabBarIcon: ({ color, size }) => (
-              <MaterialCommunityIcons name="controller-classic" color={color} size={size} />
+            tabBarLabel: "Leaderboards",
+            tabBarIcon: ({ color, size }) => <Ionicons name="trophy" color={color} size={size} />,
+          }}
+        />
+        <Tab.Screen
+          name={"Upload"}
+          component={LoginScreen}
+          options={{
+            tabBarIcon: ({ size }) => (
+              <AntDesign
+                name="plus"
+                color={"white"}
+                size={30}
+                style={{
+                  left: 5,
+                  backgroundColor: Colors.lightPurpule,
+                  borderRadius: 7,
+                  padding: 15,
+                }}
+              />
             ),
+            tabBarLabel: () => null,
           }}
         />
 
         <Tab.Screen
-          name="camera"
-          component={VideoScreen}
+          name="Inbox"
+          component={LoginScreen}
           options={{
-            tabBarLabel: "take video",
-            tabBarIcon: ({ color, size }) => <MaterialCommunityIcons name="camera" color={color} size={size} />,
+            tabBarLabel: "Inbox",
+            tabBarIcon: ({ color, size }) => <FontAwesome5 name="envelope" color={color} size={size} />,
+          }}
+        ></Tab.Screen>
+        <Tab.Screen
+          name="Me"
+          component={LoginScreen}
+          options={{
+            tabBarLabel: "Me",
+            tabBarIcon: ({ color, size }) => <FontAwesome5 name="user-alt" color={color} size={size} />,
           }}
         />
       </Tab.Navigator>
