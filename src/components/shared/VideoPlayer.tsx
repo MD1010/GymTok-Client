@@ -17,12 +17,12 @@ export const VideoPlayer: React.FC<VideoProps> = ({ uri, style, isPlaying, resiz
   const [isPaused, setIsPaused] = useState<boolean>(false);
   const ref = useRef(null);
 
-  const pauseVideo = () => {
+  const pauseVideoByTap = () => {
     setIsPaused(true);
     ref.current.pauseAsync();
   };
 
-  const resumeVideo = () => {
+  const resumeVideoByTap = () => {
     setIsPaused(false);
     ref.current.playAsync();
   };
@@ -37,7 +37,7 @@ export const VideoPlayer: React.FC<VideoProps> = ({ uri, style, isPlaying, resiz
   }, [isPlaying]);
 
   return (
-    <TouchableWithoutFeedback onPress={() => (status.isPlaying ? pauseVideo() : resumeVideo())}>
+    <TouchableWithoutFeedback onPress={() => (status.isPlaying ? pauseVideoByTap() : resumeVideoByTap())}>
       <View style={styles.container}>
         <Video
           ref={ref}
