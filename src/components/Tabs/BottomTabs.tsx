@@ -1,11 +1,12 @@
+import { AntDesign, FontAwesome5, Ionicons } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import React from "react";
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import { ChallengesContainer as ChallengesScreen } from "../Challenges/ChallengesContainer";
+import { HomeContainer as Home } from "../Home/HomeContainer";
+import { LoginScreen } from "../Login/Login";
+import { Colors, UIConsts } from "../shared/styles/variables";
 import { VideoContainer as VideoScreen } from "../Camera/VideoContainer";
-import { HomeScreen } from "../Home/Home";
 import { View, Text } from "react-native";
 import { PublishNewVideoScreen } from "../Camera/PublishNewVideo";
 
