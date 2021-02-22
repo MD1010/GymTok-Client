@@ -1,6 +1,6 @@
 import { FontAwesome } from "@expo/vector-icons";
 import { Video } from "expo-av";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { StyleProp, StyleSheet, TouchableWithoutFeedback, View, ViewStyle } from "react-native";
 import { Colors } from "./styles/variables";
 
@@ -27,8 +27,17 @@ export const VideoPlayer: React.FC<VideoProps> = ({ uri, style, isPlaying, resiz
     ref.current.playAsync();
   };
 
+  useEffect(() => {
+    if (isPlaying) {
+      ref.current.replayAsync();
+      setIsPaused(false);
+    } else {
+      ref.current.pauseAsync();
+    }
+  }, [isPlaying]);
+
   return (
-    <TouchableWithoutFeedback onPress={() => (status.isPlaying ? pauseVideo() : resumeVideo())}>
+    <TouchableWithoutFeedback onPress={() => (isPlaying ? pauseVideo() : resumeVideo())}>
       <View style={styles.container}>
         <Video
           ref={ref}
@@ -37,14 +46,11 @@ export const VideoPlayer: React.FC<VideoProps> = ({ uri, style, isPlaying, resiz
             uri,
           }}
           resizeMode={resizeMode}
-          shouldPlay={isPlaying}
           isLooping
           onPlaybackStatusUpdate={(status) => setStatus(() => status)}
         />
         <View style={styles.playBtnContainer}>
-          {isPaused && !status?.isPlaying && (
-            <FontAwesome name="play" size={playBtnSize ? playBtnSize : 40} color={Colors.white} />
-          )}
+          {isPaused && <FontAwesome name="play" size={playBtnSize ? playBtnSize : 40} color={Colors.white} />}
         </View>
       </View>
     </TouchableWithoutFeedback>

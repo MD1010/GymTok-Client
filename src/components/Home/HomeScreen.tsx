@@ -1,6 +1,7 @@
 import { useNavigation } from "@react-navigation/native";
 import React, { useEffect, useRef, useState } from "react";
-import { Dimensions, FlatList, StatusBar } from "react-native";
+import { Dimensions, FlatList, StatusBar, View } from "react-native";
+import { GestureHandlerRootView, NativeViewGestureHandler, PanGestureHandler } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { IChallenge } from "../../interfaces/Challenge";
 import { ChallengePost } from "../ChallengePost/ChallengePost";
@@ -35,7 +36,7 @@ export const HomeScreen: React.FC<ChallengesProps> = ({ challenges }) => {
   });
 
   return (
-    <SafeAreaView>
+    <View>
       <StatusBar barStyle={"light-content"} />
       <FlatList
         data={challenges}
@@ -51,6 +52,6 @@ export const HomeScreen: React.FC<ChallengesProps> = ({ challenges }) => {
         onScrollEndDrag={() => (scrollEnded.current = true)}
         onScrollBeginDrag={() => (scrollEnded.current = false)}
       ></FlatList>
-    </SafeAreaView>
+    </View>
   );
 };
