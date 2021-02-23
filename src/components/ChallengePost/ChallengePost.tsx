@@ -1,6 +1,8 @@
 import { FontAwesome, FontAwesome5 } from "@expo/vector-icons";
+import { Video } from "expo-av";
 import React from "react";
-import { Text, TouchableOpacity, View } from "react-native";
+import { Text, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native";
+import { cos } from "react-native-reanimated";
 import { IChallenge } from "../../interfaces";
 import { Colors } from "../shared/styles/variables";
 import { VideoPlayer } from "../shared/VideoPlayer";
@@ -18,36 +20,34 @@ export const ChallengePost: React.FC<ChallengePostProps> = ({ challenge, isVideo
     <View style={styles.container}>
       <VideoPlayer style={styles.video} uri={videoURL} isPlaying={isVideoPlaying} resizeMode="cover" />
 
-      <View style={styles.uiContainer}>
-        <View style={styles.rightContainer}>
-          <View style={styles.iconContainer}>
-            <TouchableOpacity
-              onPress={() => {
-                console.log("like!");
-              }}
-            >
-              <FontAwesome name="heart" size={40} color={Colors.white} />
-            </TouchableOpacity>
-            <Text style={styles.iconText}>123</Text>
-          </View>
-          <View style={styles.iconContainer}>
-            <FontAwesome5 name="comment-dots" size={40} color={Colors.white} />
-            <Text style={styles.iconText}>123</Text>
-          </View>
-          <View style={styles.iconContainer}>
-            <FontAwesome5 name="running" size={40} color={Colors.white} />
-            <Text style={styles.iconText}>Try</Text>
-          </View>
+      <View style={styles.rightContainer}>
+        <View style={styles.iconContainer}>
+          <TouchableOpacity
+            onPress={() => {
+              console.log("like!");
+            }}
+          >
+            <FontAwesome name="heart" size={35} color={Colors.white} />
+          </TouchableOpacity>
+          <Text style={styles.iconText}>123</Text>
         </View>
-        <View style={styles.infoContainer}>
-          <View>
-            <Text style={styles.creator}>@{createdBy}</Text>
-            <Text style={styles.info}>{name}</Text>
-            <View style={styles.tagsContainer}>
-              {tags.map((tag, i) => (
-                <Text key={i} style={styles.tag}>{`#${tag}`}</Text>
-              ))}
-            </View>
+        <View style={styles.iconContainer}>
+          <FontAwesome name={"commenting"} size={35} color="white" />
+          <Text style={styles.iconText}>123</Text>
+        </View>
+        <View style={styles.iconContainer}>
+          <FontAwesome5 name="running" size={35} color={Colors.white} />
+          <Text style={styles.iconText}>Try</Text>
+        </View>
+      </View>
+      <View style={styles.infoContainer}>
+        <View>
+          <Text style={styles.creator}>@{createdBy}</Text>
+          <Text style={styles.info}>{name}</Text>
+          <View style={styles.tagsContainer}>
+            {tags.map((tag, i) => (
+              <Text key={i} style={styles.tag}>{`#${tag}`}</Text>
+            ))}
           </View>
         </View>
       </View>
