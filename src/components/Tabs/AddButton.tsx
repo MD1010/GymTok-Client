@@ -1,10 +1,7 @@
-import React, { useState } from "react";
-import { View, StyleSheet, TouchableHighlight, Animated, Text, Platform } from "react-native";
-import { FontAwesome5, Fontisto, MaterialIcons, Ionicons, Feather } from "@expo/vector-icons";
+import React from "react";
+import { Ionicons, Feather } from "@expo/vector-icons";
 import { FloatingAction } from "react-native-floating-action";
-import * as Permissions from "expo-permissions";
 import { Camera } from "expo-camera";
-import { NavigationScreenProp } from "react-navigation";
 import * as ImagePicker from "expo-image-picker";
 import { useNavigation } from "@react-navigation/native";
 
@@ -21,6 +18,7 @@ const actions = [
 
 export const AddButton: React.FC = () => {
   const navigation = useNavigation();
+
   const handleSelectAction = (actionName) => {
     if (actionName === "bt_camera") {
       takeVideo();
@@ -32,7 +30,6 @@ export const AddButton: React.FC = () => {
   const takeVideo = async () => {
     const { status } = await Camera.requestPermissionsAsync();
     await ImagePicker.getMediaLibraryPermissionsAsync(true);
-
     if (status === "granted") {
       const selectedVideo = await ImagePicker.launchCameraAsync({ mediaTypes: ImagePicker.MediaTypeOptions.Videos });
       if (!selectedVideo.cancelled) {
@@ -55,13 +52,11 @@ export const AddButton: React.FC = () => {
   };
 
   return (
-    <View style={{ marginTop: 110, marginLeft: 110 }}>
-      <FloatingAction
-        actions={actions}
-        onPressItem={(name) => {
-          handleSelectAction(name);
-        }}
-      />
-    </View>
+    <FloatingAction
+      actions={actions}
+      onPressItem={(name) => {
+        handleSelectAction(name);
+      }}
+    />
   );
 };

@@ -51,18 +51,9 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
           component={LoginScreen}
           options={{
             tabBarIcon: ({ size }) => (
-              <AddButton />
-              // <AntDesign
-              //   name="plus"
-              //   color={"white"}
-              //   size={30}
-              //   // style={{
-              //   //   left: 5,
-              //   //   backgroundColor: Colors.lightPurpule,
-              //   //   borderRadius: 7,
-              //   //   padding: 15,
-              //   // }}
-              // />
+              <View style={{ marginTop: 115, marginLeft: 120 }}>
+                <AddButton />
+              </View>
             ),
             tabBarLabel: () => null,
           }}
