@@ -38,6 +38,7 @@
     "react-native-camera-hooks": "^0.5.0",
     "react-native-check-box": "^2.1.7",
     "react-native-elements": "^3.1.0",
+    "react-native-floating-action": "^1.21.0",
     "react-native-gesture-handler": "^1.8.0",
     "react-native-reanimated": "~1.13.0",
     "react-native-safe-area-context": "3.1.9",

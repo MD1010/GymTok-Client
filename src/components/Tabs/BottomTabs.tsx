@@ -9,6 +9,7 @@ import { Colors, UIConsts } from "../shared/styles/variables";
 import { VideoContainer as VideoScreen } from "../Camera/VideoContainer";
 import { View, Text } from "react-native";
 import { PublishNewVideoScreen } from "../Camera/PublishNewVideo";
+import { AddButton } from "./AddButton";
 
 interface BottomTabsProps {}
 
@@ -50,17 +51,18 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
           component={LoginScreen}
           options={{
             tabBarIcon: ({ size }) => (
-              <AntDesign
-                name="plus"
-                color={"white"}
-                size={30}
-                style={{
-                  left: 5,
-                  backgroundColor: Colors.lightPurpule,
-                  borderRadius: 7,
-                  padding: 15,
-                }}
-              />
+              <AddButton />
+              // <AntDesign
+              //   name="plus"
+              //   color={"white"}
+              //   size={30}
+              //   // style={{
+              //   //   left: 5,
+              //   //   backgroundColor: Colors.lightPurpule,
+              //   //   borderRadius: 7,
+              //   //   padding: 15,
+              //   // }}
+              // />
             ),
             tabBarLabel: () => null,
           }}

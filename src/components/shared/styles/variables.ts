@@ -9,5 +9,5 @@ export enum Colors {
 }
 
 export enum UIConsts {
-  bottomNavbarHeight = 60,
+  bottomNavbarHeight = 100,
 }
