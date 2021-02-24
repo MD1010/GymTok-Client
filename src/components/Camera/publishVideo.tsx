@@ -33,8 +33,8 @@ const styles = StyleSheet.create({
   },
   video: {
     alignSelf: "center",
-    width: 320,
-    height: 200,
+    width: 380,
+    height: 230,
   },
   buttons: {
     flexDirection: "row",

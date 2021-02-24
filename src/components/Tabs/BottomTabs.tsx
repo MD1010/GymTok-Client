@@ -6,7 +6,6 @@ import React from "react";
 import { HomeContainer as Home } from "../Home/HomeContainer";
 import { LoginScreen } from "../Login/Login";
 import { Colors, UIConsts } from "../shared/styles/variables";
-import { VideoContainer as VideoScreen } from "../Camera/VideoContainer";
 import { View, Text } from "react-native";
 import { PublishNewVideoScreen } from "../Camera/PublishNewVideo";
 import { AddButton } from "./AddButton";

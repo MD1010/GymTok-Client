@@ -1,20 +1,23 @@
 import React, { useState } from "react";
-import { View, StyleSheet, Button, Alert, TouchableWithoutFeedback, Keyboard } from "react-native";
+import { View, TouchableWithoutFeedback, Keyboard, Text, TouchableOpacity, StyleSheet, TextInput } from "react-native";
 import { useRoute } from "@react-navigation/native";
 import { VideoScreen } from "./publishVideo";
-import { TextInput } from "react-native";
 import { FriendsModal } from "./FreindsModal";
 import axios from "axios";
+import Spinner from "react-native-loading-spinner-overlay";
+import * as Animatable from "react-native-animatable";
+import { EvilIcons, AntDesign } from "@expo/vector-icons";
+import { Colors } from "../shared/styles/variables";
 
-interface PublishNewVideoProps {}
-
-export const PublishNewVideoScreen: React.FC<PublishNewVideoProps> = () => {
+export const PublishNewVideoScreen: React.FC = () => {
   const route = useRoute();
   const [text, setText] = useState<string>("");
-  const [showFriendsModal, setShowFriendsModal] = useState<boolean>(false);
+  const [showTaggedFriends, setShowTaggedFriends] = useState<boolean>(false);
   const [selectedFriends, setSelectedFriends] = useState<any[]>([]);
+  const [isSpinner, setIsSpinner] = useState<boolean>(false);
 
-  const publishChallenge = () => {
+  const publishChallenge = async () => {
+    setIsSpinner(true);
     let formData = new FormData();
 
     formData.append("description", text);
@@ -24,14 +27,18 @@ export const PublishNewVideoScreen: React.FC<PublishNewVideoProps> = () => {
       type: "video/mp4",
     });
     formData.append("selectedFriends", JSON.stringify(selectedFriends));
-    axios.post(`${process.env.BASE_API_ENPOINT}/challenges/upload`, formData);
+    const uploaded = await axios.post(`${process.env.BASE_API_ENPOINT}/challenges/upload`, formData);
+    if (uploaded) alert("upload succefully!!");
+    setIsSpinner(false);
   };
 
   return (
-    <View style={{ display: "flex", flexDirection: "column", justifyContent: "flex-end" }}>
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+    <View style={styles.container}>
+      <Spinner visible={isSpinner} textContent={"Uploading..."} textStyle={styles.spinnerTextStyle} />
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <TextInput
-          style={{ height: 40, borderColor: "gray", borderWidth: 1 }}
+          style={styles.description}
+          //multiline
           onChangeText={(text) => setText(text)}
           value={text}
           placeholder={"write description"}
@@ -40,45 +47,93 @@ export const PublishNewVideoScreen: React.FC<PublishNewVideoProps> = () => {
         />
       </TouchableWithoutFeedback>
 
-      <View style={{ marginTop: "60%" }}>
+      <View style={styles.video}>
         <VideoScreen uri={route.params!.videoUri} />
       </View>
 
-      <View
-        style={{
-          marginTop: "100%",
-          display: "flex",
-          justifyContent: "space-between",
-          flexDirection: "row",
-        }}
-      >
-        <Button title="tag friends" color="#841584" onPress={() => setShowFriendsModal(true)} />
-        <Button title="publish" color="#841584" onPress={() => publishChallenge()} />
-      </View>
+      {showTaggedFriends && (
+        <Animatable.View animation="fadeInUp" style={styles.tagFriends}>
+          <FriendsModal
+            close={() => setShowTaggedFriends(false)}
+            isVisible={showTaggedFriends}
+            setSelectedFriends={setSelectedFriends}
+          />
+        </Animatable.View>
+      )}
 
-      <FriendsModal
-        modalVisible={showFriendsModal}
-        setModalVisible={(isShow: boolean) => setShowFriendsModal(isShow)}
-        setSelectedFriends={(selectedFriends: any[]) => setSelectedFriends(selectedFriends)}
-      />
+      <View style={styles.btnOptions}>
+        <TouchableOpacity
+          style={styles.tagBtn}
+          onPress={() => {
+            setShowTaggedFriends(!showTaggedFriends);
+          }}
+        >
+          <EvilIcons name="tag" size={35} color={"white"} />
+          <Text style={styles.btnText}>Tag Friends</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.publishBtn}
+          onPress={() => {
+            publishChallenge();
+          }}
+        >
+          <AntDesign name="upload" size={28} color={"white"} />
+          <Text style={styles.btnText}>Publish</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    justifyContent: "center",
-    backgroundColor: "#ecf0f1",
+    display: "flex",
+    flexDirection: "column",
+  },
+  description: {
+    height: 140,
+    marginLeft: 16,
+    marginRight: 16,
+    marginTop: 10,
+    borderColor: "gray",
+    borderWidth: 1,
   },
   video: {
-    alignSelf: "center",
-    width: 320,
-    height: 200,
+    marginTop: 120,
   },
-  buttons: {
+  tagFriends: {
+    backgroundColor: "red",
+    marginTop: 120,
+    height: 330,
+    marginLeft: 16,
+    marginRight: 16,
+  },
+  btnOptions: {
+    width: 430,
+    height: 90,
+    marginTop: 725,
+    position: "absolute",
     flexDirection: "row",
-    justifyContent: "center",
+    backgroundColor: Colors.darkBlue,
+  },
+  tagBtn: {
+    alignSelf: "flex-end",
     alignItems: "center",
+    marginLeft: 20,
+    marginBottom: 35,
+    marginRight: 270,
+  },
+  publishBtn: {
+    alignSelf: "flex-end",
+    alignItems: "center",
+    marginBottom: 35,
+  },
+  btnText: {
+    color: "white",
+    fontSize: 10,
+  },
+  spinnerTextStyle: {
+    color: "#FFF",
   },
 });
