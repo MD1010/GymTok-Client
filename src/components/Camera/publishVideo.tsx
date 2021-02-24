@@ -1,6 +1,7 @@
 import React from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Dimensions } from "react-native";
 import { Video } from "expo-av";
+import { UIConsts } from "../shared/styles/variables";
 
 interface PublishScreenProps {
   uri: string;
@@ -32,13 +33,11 @@ const styles = StyleSheet.create({
     backgroundColor: "#ecf0f1",
   },
   video: {
-    alignSelf: "center",
-    width: 380,
-    height: 230,
-  },
-  buttons: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
+    position: "absolute",
+    top: 0,
+    left: 0,
+    bottom: 0,
+    right: 0,
+    height: Dimensions.get("window").height - 220,
   },
 });

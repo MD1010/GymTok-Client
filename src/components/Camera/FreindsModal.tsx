@@ -116,7 +116,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   safeArea: {
-    height: 280,
+    height: 550,
     display: "flex",
     flexDirection: "row",
   },

@@ -35,21 +35,18 @@ export const PublishNewVideoScreen: React.FC = () => {
   return (
     <View style={styles.container}>
       <Spinner visible={isSpinner} textContent={"Uploading..."} textStyle={styles.spinnerTextStyle} />
+      <VideoScreen uri={route.params!.videoUri} />
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <TextInput
           style={styles.description}
-          //multiline
           onChangeText={(text) => setText(text)}
           value={text}
           placeholder={"write description"}
+          placeholderTextColor={Colors.white}
           autoCorrect={true}
           autoCapitalize={"words"}
         />
       </TouchableWithoutFeedback>
-
-      <View style={styles.video}>
-        <VideoScreen uri={route.params!.videoUri} />
-      </View>
 
       {showTaggedFriends && (
         <Animatable.View animation="fadeInUp" style={styles.tagFriends}>
@@ -90,24 +87,27 @@ const styles = StyleSheet.create({
   container: {
     display: "flex",
     flexDirection: "column",
+    backgroundColor: Colors.darkBlue,
   },
   description: {
-    height: 140,
-    marginLeft: 16,
-    marginRight: 16,
-    marginTop: 10,
-    borderColor: "gray",
+    height: 49,
+    // marginLeft: 5,
+    // marginRight: 5,
+    marginTop: 676,
+    borderRadius: 50,
+    color: Colors.white,
+    borderColor: Colors.gold,
     borderWidth: 1,
   },
   video: {
     marginTop: 120,
   },
   tagFriends: {
-    backgroundColor: "red",
+    position: "absolute",
+    backgroundColor: "#F0F0F0",
     marginTop: 120,
-    height: 330,
-    marginLeft: 16,
-    marginRight: 16,
+    height: 830,
+    width: "100%",
   },
   btnOptions: {
     width: 430,
