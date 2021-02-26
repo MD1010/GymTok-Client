@@ -5,7 +5,7 @@ import { GestureHandlerRootView, NativeViewGestureHandler, PanGestureHandler } f
 import { SafeAreaView } from "react-native-safe-area-context";
 import { IChallenge } from "../../interfaces/Challenge";
 import { ChallengePost } from "../ChallengePost/ChallengePost";
-import { AddButton } from "../Tabs/AddButton";
+import { AddButton } from "../Camera/AddButton";
 
 interface ChallengesProps {
   challenges: IChallenge[];

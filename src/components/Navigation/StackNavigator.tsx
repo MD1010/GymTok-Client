@@ -1,0 +1,26 @@
+import { createStackNavigator } from "@react-navigation/stack";
+
+import { PublishNewVideoScreen } from "../Camera/PublishNewVideo";
+import React from "react";
+import { NavigationContainer } from "@react-navigation/native";
+import { BottomTabs } from "./BottomTabs";
+
+interface StackNavigatorProps {}
+
+export const StackNavigator: React.FC<StackNavigatorProps> = ({}) => {
+  const Stack = createStackNavigator();
+  return (
+    <NavigationContainer independent={true}>
+      <Stack.Navigator>
+        <Stack.Screen
+          name="tabs"
+          component={BottomTabs}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen name="Publish" component={PublishNewVideoScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+};
