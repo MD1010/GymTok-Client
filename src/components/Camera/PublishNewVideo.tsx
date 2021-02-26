@@ -1,5 +1,17 @@
 import React, { useState } from "react";
-import { View, TouchableWithoutFeedback, Keyboard, Text, TouchableOpacity, StyleSheet, TextInput } from "react-native";
+import {
+  View,
+  TouchableWithoutFeedback,
+  Keyboard,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  TextInput,
+  KeyboardAvoidingView,
+  Platform,
+  SafeAreaView,
+  Dimensions,
+} from "react-native";
 import { useRoute } from "@react-navigation/native";
 import { VideoScreen } from "./publishVideo";
 import { FriendsModal } from "./FreindsModal";
@@ -33,9 +45,8 @@ export const PublishNewVideoScreen: React.FC = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <Spinner visible={isSpinner} textContent={"Uploading..."} textStyle={styles.spinnerTextStyle} />
-      <VideoScreen uri={route.params!.videoUri} />
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <TextInput
           style={styles.description}
@@ -48,8 +59,10 @@ export const PublishNewVideoScreen: React.FC = () => {
         />
       </TouchableWithoutFeedback>
 
+      <VideoScreen uri={route.params!.videoUri} />
+
       {showTaggedFriends && (
-        <Animatable.View animation="fadeInUp" style={styles.tagFriends}>
+        <Animatable.View animation="fadeInUpBig" duration={500} style={styles.tagFriends}>
           <FriendsModal
             close={() => setShowTaggedFriends(false)}
             isVisible={showTaggedFriends}
@@ -79,7 +92,7 @@ export const PublishNewVideoScreen: React.FC = () => {
           <Text style={styles.btnText}>Publish</Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -91,28 +104,24 @@ const styles = StyleSheet.create({
   },
   description: {
     height: 49,
-    // marginLeft: 5,
-    // marginRight: 5,
-    marginTop: 676,
     borderRadius: 50,
     color: Colors.white,
     borderColor: Colors.gold,
     borderWidth: 1,
   },
-  video: {
-    marginTop: 120,
-  },
+
   tagFriends: {
     position: "absolute",
     backgroundColor: "#F0F0F0",
     marginTop: 120,
+    zIndex: 1,
     height: 830,
     width: "100%",
   },
   btnOptions: {
     width: 430,
     height: 90,
-    marginTop: 725,
+    marginTop: Dimensions.get("window").height - 171,
     position: "absolute",
     flexDirection: "row",
     backgroundColor: Colors.darkBlue,
