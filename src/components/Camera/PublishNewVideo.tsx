@@ -121,7 +121,7 @@ const styles = StyleSheet.create({
   btnOptions: {
     width: 430,
     height: 90,
-    marginTop: Dimensions.get("window").height - 171,
+    marginTop: Dimensions.get("screen").height - 171,
     position: "absolute",
     flexDirection: "row",
     backgroundColor: Colors.darkBlue,

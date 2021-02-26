@@ -39,7 +39,7 @@ export const AddButton: React.FC = () => {
       bgColor={"#101010"}
       hideShadow={true}
       position={"center"}
-      offsetY={18}
+      offsetY={30}
       useNativeFeedback={false}
       renderIcon={() => <FontAwesome5 name="plus" size={20} color={Colors.white} />}
       backgroundTappable={false}

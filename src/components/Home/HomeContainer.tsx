@@ -19,7 +19,9 @@ export const HomeContainer: React.FC<HomeContainerProps> = ({}) => {
   }, [error]);
 
   useEffect(() => {
-    fetchChallenges();
+    (async () => {
+      await fetchChallenges();
+    })();
   }, []);
   return <HomeScreen challenges={challenges} />;
 };
