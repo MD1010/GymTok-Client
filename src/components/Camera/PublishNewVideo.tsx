@@ -45,56 +45,54 @@ export const PublishNewVideoScreen: React.FC = () => {
   };
 
   return (
-    <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={{ flex: 1 }}>
-      <SafeAreaView style={styles.container}>
-        <Spinner visible={isSpinner} textContent={"Uploading..."} textStyle={styles.spinnerTextStyle} />
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <TextInput
-            style={styles.description}
-            onChangeText={(text) => setText(text)}
-            value={text}
-            placeholder={"write description"}
-            placeholderTextColor={Colors.white}
-            autoCorrect={true}
-            autoCapitalize={"words"}
+    <SafeAreaView style={styles.container}>
+      <Spinner visible={isSpinner} textContent={"Uploading..."} textStyle={styles.spinnerTextStyle} />
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <TextInput
+          style={styles.description}
+          onChangeText={(text) => setText(text)}
+          value={text}
+          placeholder={"write description"}
+          placeholderTextColor={Colors.white}
+          autoCorrect={true}
+          autoCapitalize={"words"}
+        />
+      </TouchableWithoutFeedback>
+
+      <VideoScreen uri={route.params!.videoUri} />
+
+      {showTaggedFriends && (
+        <Animatable.View animation="fadeInUpBig" duration={500} style={styles.tagFriends}>
+          <FriendsModal
+            close={() => setShowTaggedFriends(false)}
+            isVisible={showTaggedFriends}
+            setSelectedFriends={setSelectedFriends}
           />
-        </TouchableWithoutFeedback>
+        </Animatable.View>
+      )}
 
-        <VideoScreen uri={route.params!.videoUri} />
+      <View style={styles.btnOptions}>
+        <TouchableOpacity
+          style={styles.tagBtn}
+          onPress={() => {
+            setShowTaggedFriends(!showTaggedFriends);
+          }}
+        >
+          <EvilIcons name="tag" size={35} color={"white"} />
+          <Text style={styles.btnText}>Tag Friends</Text>
+        </TouchableOpacity>
 
-        {showTaggedFriends && (
-          <Animatable.View animation="fadeInUp" style={styles.tagFriends}>
-            <FriendsModal
-              close={() => setShowTaggedFriends(false)}
-              isVisible={showTaggedFriends}
-              setSelectedFriends={setSelectedFriends}
-            />
-          </Animatable.View>
-        )}
-
-        <View style={styles.btnOptions}>
-          <TouchableOpacity
-            style={styles.tagBtn}
-            onPress={() => {
-              setShowTaggedFriends(!showTaggedFriends);
-            }}
-          >
-            <EvilIcons name="tag" size={35} color={"white"} />
-            <Text style={styles.btnText}>Tag Friends</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={styles.publishBtn}
-            onPress={() => {
-              publishChallenge();
-            }}
-          >
-            <AntDesign name="upload" size={28} color={"white"} />
-            <Text style={styles.btnText}>Publish</Text>
-          </TouchableOpacity>
-        </View>
-      </SafeAreaView>
-    </KeyboardAvoidingView>
+        <TouchableOpacity
+          style={styles.publishBtn}
+          onPress={() => {
+            publishChallenge();
+          }}
+        >
+          <AntDesign name="upload" size={28} color={"white"} />
+          <Text style={styles.btnText}>Publish</Text>
+        </TouchableOpacity>
+      </View>
+    </SafeAreaView>
   );
 };
 
@@ -116,6 +114,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     backgroundColor: "#F0F0F0",
     marginTop: 120,
+    zIndex: 1,
     height: 830,
     width: "100%",
   },
@@ -123,7 +122,6 @@ const styles = StyleSheet.create({
     width: 430,
     height: 90,
     marginTop: Dimensions.get("window").height - 171,
-    // marginTop: 725,
     position: "absolute",
     flexDirection: "row",
     backgroundColor: Colors.darkBlue,
