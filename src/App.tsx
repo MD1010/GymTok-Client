@@ -2,26 +2,19 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import * as Expo from "expo";
 import * as React from "react";
+import { View } from "react-native";
 import { Provider } from "react-redux";
+import { AddButton } from "./components/Camera/AddButton";
 import { BottomTabs } from "./components/Navigation/BottomTabs";
+import { StackNavigator } from "./components/Navigation/StackNavigator";
 import { store } from "./store/configureStore";
-
-const Stack = createStackNavigator();
 
 function App() {
   return (
     <>
       {/* <GlobalResetStyles /> */}
       <Provider store={store}>
-        <NavigationContainer>
-          {/* <Stack.Navigator initialRouteName="challenges">
-            <Stack.Screen name="login" component={LoginScreen} />
-            <Stack.Screen name="home" component={HomeScreen} />
-            <Stack.Screen name="register" component={RegisterScreen} />
-            <Stack.Screen name="challenges" component={ChallengesScreen} />
-          </Stack.Navigator> */}
-          <BottomTabs />
-        </NavigationContainer>
+        <StackNavigator />
       </Provider>
     </>
   );

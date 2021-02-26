@@ -10,4 +10,5 @@ export enum Colors {
 
 export enum UIConsts {
   bottomNavbarHeight = 60,
+  addChallengePlusButton = 60,
 }

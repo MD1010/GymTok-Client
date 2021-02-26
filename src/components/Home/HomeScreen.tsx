@@ -1,6 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
 import React, { useEffect, useRef, useState } from "react";
-import { Dimensions, FlatList, StatusBar, View } from "react-native";
+import { Dimensions, FlatList, StatusBar, TouchableWithoutFeedback, View } from "react-native";
 import { GestureHandlerRootView, NativeViewGestureHandler, PanGestureHandler } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { IChallenge } from "../../interfaces/Challenge";
@@ -53,7 +53,6 @@ export const HomeScreen: React.FC<ChallengesProps> = ({ challenges }) => {
         onScrollEndDrag={() => (scrollEnded.current = true)}
         onScrollBeginDrag={() => (scrollEnded.current = false)}
       ></FlatList>
-      <AddButton />
     </View>
   );
 };

@@ -1,30 +1,26 @@
 import { AntDesign, FontAwesome5, Ionicons } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { NavigationContainer } from "@react-navigation/native";
+
 import { createStackNavigator } from "@react-navigation/stack";
 import React from "react";
 import { HomeContainer as Home } from "../Home/HomeContainer";
 import { LoginScreen } from "../Login/Login";
 import { Colors, UIConsts } from "../shared/styles/variables";
-import { View, Text } from "react-native";
+import { View, Text, Platform } from "react-native";
 import { PublishNewVideoScreen } from "../Camera/PublishNewVideo";
 import { AddButton } from "../Camera/AddButton";
-import { Screen } from "./Screen";
+import { Portal, FAB, Provider } from "react-native-paper";
+import { TouchableWithoutFeedback } from "react-native-gesture-handler";
+import { createAppContainer } from "react-navigation";
 
 interface BottomTabsProps {}
 
 export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
-  const Stack = createStackNavigator();
   const Tab = createBottomTabNavigator();
-  const Screens = {
-    home: () => <Screen name="Home" />,
-    leaderboards: () => <Screen name="Leaderboards" />,
-    notifications: () => <Screen name="Notifications" />,
-    profile: () => <Screen name="Profile" />,
-  };
 
   return (
-    <>
+    <Provider>
       <Tab.Navigator
         initialRouteName="Home"
         tabBarOptions={{
@@ -32,15 +28,18 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
           activeBackgroundColor: Colors.darkBlue,
           inactiveBackgroundColor: Colors.darkBlue,
           inactiveTintColor: Colors.white,
-          labelStyle: { bottom: 8 },
-          style: { height: UIConsts.bottomNavbarHeight, borderTopWidth: 0, backgroundColor: Colors.darkBlue },
+          showLabel: false,
+          style: {
+            height: UIConsts.bottomNavbarHeight,
+            borderTopWidth: 0,
+            backgroundColor: Colors.darkBlue,
+          },
         }}
       >
         <Tab.Screen
           name="Home"
           component={Home}
           options={{
-            tabBarLabel: "Home",
             tabBarIcon: ({ color, size }) => <FontAwesome5 name="home" size={size} color={color} />,
           }}
         />
@@ -48,28 +47,69 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
           name="Leaderboards"
           component={LoginScreen}
           options={{
-            tabBarLabel: "Leaderboards",
-            tabBarIcon: ({ color, size }) => <Ionicons name="trophy" color={color} size={size} />,
+            tabBarIcon: ({ color, size }) => (
+              <Ionicons name="trophy" color={color} size={size} style={{ marginRight: 50 }} />
+            ),
           }}
         />
 
         <Tab.Screen
-          name="Inbox"
+          name="Upload"
+          component={() => {
+            return null;
+          }}
+          listeners={{
+            tabPress: (e) => {
+              e.preventDefault();
+            },
+          }}
+          options={{
+            tabBarIcon: ({ color, size }) => (
+              <Ionicons name="trophy" color={color} size={size} style={{ marginRight: 50 }} />
+            ),
+          }}
+        />
+
+        <Tab.Screen
+          name="Notifications"
           component={LoginScreen}
           options={{
-            tabBarLabel: "Inbox",
-            tabBarIcon: ({ color, size }) => <FontAwesome5 name="envelope" color={color} size={size} />,
+            tabBarIcon: ({ color, size }) => (
+              <Ionicons
+                name={Platform.OS === "android" ? "md-notifications" : "ios-notifications"}
+                color={color}
+                size={size}
+                style={{
+                  marginLeft: 50,
+                }}
+              />
+            ),
           }}
         ></Tab.Screen>
         <Tab.Screen
           name="Me"
           component={LoginScreen}
           options={{
-            tabBarLabel: "Me",
             tabBarIcon: ({ color, size }) => <FontAwesome5 name="user-alt" color={color} size={size} />,
           }}
         />
       </Tab.Navigator>
-    </>
+      <TouchableWithoutFeedback style={{ marginRight: 200 }}>
+        <Portal>
+          {/* <FAB
+          visible={true}
+          icon={"feather"}
+          style={{
+            position: "absolute",
+            bottom: 100,
+            right: 16,
+          }}
+          onPress={() => alert("fdfdfd")}
+          color="white"
+        /> */}
+          <AddButton />
+        </Portal>
+      </TouchableWithoutFeedback>
+    </Provider>
   );
 };

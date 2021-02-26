@@ -4,6 +4,7 @@ import { PublishNewVideoScreen } from "../Camera/PublishNewVideo";
 import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { BottomTabs } from "./BottomTabs";
+import { AddButton } from "../Camera/AddButton";
 
 interface StackNavigatorProps {}
 

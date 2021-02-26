@@ -4,7 +4,8 @@ import { FloatingAction } from "react-native-floating-action";
 import { Camera } from "expo-camera";
 import * as ImagePicker from "expo-image-picker";
 import { useNavigation } from "@react-navigation/native";
-import { Touchable, TouchableWithoutFeedback, View } from "react-native";
+import { Dimensions, StyleSheet, Touchable, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native";
+import { UIConsts } from "../shared/styles/variables";
 
 const actions = [
   {
@@ -55,10 +56,34 @@ export const AddButton: React.FC = () => {
 
   return (
     <FloatingAction
+      buttonSize={UIConsts.addChallengePlusButton}
       actions={actions}
+      showBackground={false}
       onPressItem={(name) => {
         handleSelectAction(name);
       }}
     />
+    // <View style={styles.container}>
+    //   <FloatingAction
+    //     buttonSize={UIConsts.addChallengePlusButton}
+    //     actions={actions}
+    //     showBackground={false}
+    //     onPressItem={(name) => {
+    //       handleSelectAction(name);
+    //     }}
+    //   />
+    // </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    position: "absolute",
+    bottom: 100,
+    right: 16,
+    // top: 10,
+    // position: "absolute",
+    // top: Dimensions.get("window").height - UIConsts.bottomNavbarHeight,
+    // margin: 50,
+  },
+});
