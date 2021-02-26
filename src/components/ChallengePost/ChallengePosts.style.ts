@@ -13,20 +13,17 @@ export const styles = StyleSheet.create({
     bottom: 0,
     right: 0,
   },
-  uiContainer: {
-    height: "100%",
-    justifyContent: "flex-end",
-  },
+
   rightContainer: {
-    alignSelf: "flex-end",
-    height: 300,
-    marginRight: 10,
-    marginBottom: 10,
+    right: 12,
+    bottom: 150,
+    position: "absolute",
   },
   infoContainer: {
     alignSelf: "flex-start",
     width: "80%",
-    marginLeft: 5,
+    position: "absolute",
+    left: 5,
     bottom: 15,
     padding: 10,
   },

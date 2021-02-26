@@ -49,7 +49,7 @@ export const VideoPlayer: React.FC<VideoProps> = ({ uri, style, isPlaying, resiz
           isLooping
           onPlaybackStatusUpdate={(status) => setStatus(() => status)}
         />
-        <View style={styles.playBtnContainer}>
+        <View>
           {isPaused && <FontAwesome name="play" size={playBtnSize ? playBtnSize : 40} color={Colors.white} />}
         </View>
       </View>
@@ -58,14 +58,8 @@ export const VideoPlayer: React.FC<VideoProps> = ({ uri, style, isPlaying, resiz
 };
 const styles = StyleSheet.create({
   container: {
-    position: "absolute",
-    width: "100%",
-    height: "100%",
-  },
-  playBtnContainer: {
-    height: "100%",
+    flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    width: "100%",
   },
 });
