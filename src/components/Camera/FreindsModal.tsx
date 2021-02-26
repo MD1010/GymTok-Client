@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, TouchableHighlight, View, SafeAreaView, FlatList } from "react-native";
-import CheckBox from "react-native-check-box";
-import { EvilIcons } from "@expo/vector-icons";
+import { StyleSheet, Text, View, SafeAreaView, FlatList, Button } from "react-native";
+import { CheckBox } from "react-native-elements";
 
 interface props {
   isVisible: boolean;
@@ -49,41 +48,41 @@ export const FriendsModal: React.FC<props> = ({ isVisible, setSelectedFriends, c
   const renderItem = ({ item }) => {
     return (
       <View style={styles.checkboxContainer}>
-        <CheckBox
-          onClick={() => {
-            updateSelectionFriend(!item.isSelected, item.id);
-          }}
-          isChecked={item.isSelected}
-        />
         <Text style={styles.title}>{item.title}</Text>
+        <CheckBox checked={item.isSelected} onPress={() => updateSelectionFriend(!item.isSelected, item.id)} />
       </View>
     );
   };
   return (
     <React.Fragment>
-      <SafeAreaView style={styles.safeArea}>
-        <FlatList style={styles.flastList} data={friends} renderItem={renderItem} keyExtractor={(item) => item.id} />
-        <TouchableHighlight
-          style={styles.closeBtn}
-          onPress={() => {
-            close();
-          }}
-        >
-          <EvilIcons name="close" size={30} />
-        </TouchableHighlight>
-      </SafeAreaView>
-
-      <View style={styles.saveBtn}>
-        <TouchableHighlight
-          style={styles.openButton}
+      <View style={styles.Btns}>
+        <Button
+          title="Cencel"
+          color="#841584"
           onPress={() => {
             handleSelectedFriends();
             close();
           }}
-        >
-          <Text style={styles.textStyle}>Save</Text>
-        </TouchableHighlight>
+        />
+        <Text style={{ alignSelf: "center", fontSize: 25 }}>Friends</Text>
+        <Button
+          title="Apply"
+          color="#841584"
+          onPress={() => {
+            close();
+          }}
+        />
       </View>
+      <View
+        style={{
+          marginTop: 10,
+          borderBottomColor: "black",
+          borderBottomWidth: 1,
+        }}
+      />
+      <SafeAreaView style={styles.safeArea}>
+        <FlatList style={styles.flastList} data={friends} renderItem={renderItem} keyExtractor={(item) => item.id} />
+      </SafeAreaView>
     </React.Fragment>
   );
 };
@@ -91,16 +90,12 @@ export const FriendsModal: React.FC<props> = ({ isVisible, setSelectedFriends, c
 const styles = StyleSheet.create({
   checkboxContainer: {
     display: "flex",
-    justifyContent: "center",
+    justifyContent: "space-between",
     alignItems: "center",
     flexDirection: "row",
     marginBottom: 20,
   },
-  checkbox: {
-    width: 50,
-    height: 50,
-    alignSelf: "center",
-  },
+
   title: {
     fontSize: 32,
   },
@@ -116,6 +111,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   safeArea: {
+    marginTop: 19,
     height: 550,
     display: "flex",
     flexDirection: "row",
@@ -126,9 +122,9 @@ const styles = StyleSheet.create({
   closeBtn: {
     height: 20,
   },
-  saveBtn: {
+  Btns: {
     display: "flex",
-    justifyContent: "center",
     flexDirection: "row",
+    justifyContent: "space-between",
   },
 });
