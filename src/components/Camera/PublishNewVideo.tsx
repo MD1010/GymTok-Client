@@ -1,5 +1,16 @@
 import React, { useState } from "react";
-import { View, TouchableWithoutFeedback, Keyboard, Text, TouchableOpacity, StyleSheet, TextInput } from "react-native";
+import {
+  View,
+  TouchableWithoutFeedback,
+  Keyboard,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  TextInput,
+  KeyboardAvoidingView,
+  Platform,
+  SafeAreaView,
+} from "react-native";
 import { useRoute } from "@react-navigation/native";
 import { VideoScreen } from "./publishVideo";
 import { FriendsModal } from "./FreindsModal";
@@ -33,53 +44,56 @@ export const PublishNewVideoScreen: React.FC = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <Spinner visible={isSpinner} textContent={"Uploading..."} textStyle={styles.spinnerTextStyle} />
-      <VideoScreen uri={route.params!.videoUri} />
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <TextInput
-          style={styles.description}
-          onChangeText={(text) => setText(text)}
-          value={text}
-          placeholder={"write description"}
-          placeholderTextColor={Colors.white}
-          autoCorrect={true}
-          autoCapitalize={"words"}
-        />
-      </TouchableWithoutFeedback>
-
-      {showTaggedFriends && (
-        <Animatable.View animation="fadeInUp" style={styles.tagFriends}>
-          <FriendsModal
-            close={() => setShowTaggedFriends(false)}
-            isVisible={showTaggedFriends}
-            setSelectedFriends={setSelectedFriends}
+    <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={{ flex: 1 }}>
+      <SafeAreaView style={styles.container}>
+        <Spinner visible={isSpinner} textContent={"Uploading..."} textStyle={styles.spinnerTextStyle} />
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <TextInput
+            style={styles.description}
+            onChangeText={(text) => setText(text)}
+            value={text}
+            placeholder={"write description"}
+            placeholderTextColor={Colors.white}
+            autoCorrect={true}
+            autoCapitalize={"words"}
           />
-        </Animatable.View>
-      )}
+        </TouchableWithoutFeedback>
 
-      <View style={styles.btnOptions}>
-        <TouchableOpacity
-          style={styles.tagBtn}
-          onPress={() => {
-            setShowTaggedFriends(!showTaggedFriends);
-          }}
-        >
-          <EvilIcons name="tag" size={35} color={"white"} />
-          <Text style={styles.btnText}>Tag Friends</Text>
-        </TouchableOpacity>
+        <VideoScreen uri={route.params!.videoUri} />
 
-        <TouchableOpacity
-          style={styles.publishBtn}
-          onPress={() => {
-            publishChallenge();
-          }}
-        >
-          <AntDesign name="upload" size={28} color={"white"} />
-          <Text style={styles.btnText}>Publish</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
+        {showTaggedFriends && (
+          <Animatable.View animation="fadeInUp" style={styles.tagFriends}>
+            <FriendsModal
+              close={() => setShowTaggedFriends(false)}
+              isVisible={showTaggedFriends}
+              setSelectedFriends={setSelectedFriends}
+            />
+          </Animatable.View>
+        )}
+
+        <View style={styles.btnOptions}>
+          <TouchableOpacity
+            style={styles.tagBtn}
+            onPress={() => {
+              setShowTaggedFriends(!showTaggedFriends);
+            }}
+          >
+            <EvilIcons name="tag" size={35} color={"white"} />
+            <Text style={styles.btnText}>Tag Friends</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.publishBtn}
+            onPress={() => {
+              publishChallenge();
+            }}
+          >
+            <AntDesign name="upload" size={28} color={"white"} />
+            <Text style={styles.btnText}>Publish</Text>
+          </TouchableOpacity>
+        </View>
+      </SafeAreaView>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -91,9 +105,6 @@ const styles = StyleSheet.create({
   },
   description: {
     height: 49,
-    // marginLeft: 5,
-    // marginRight: 5,
-    marginTop: 676,
     borderRadius: 50,
     color: Colors.white,
     borderColor: Colors.gold,
