@@ -53,7 +53,7 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
           }}
         />
 
-        <Tab.Screen
+        {/* <Tab.Screen
           name="Upload"
           component={() => {
             return null;
@@ -68,7 +68,7 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
               <Ionicons name="trophy" color={color} size={size} style={{ marginRight: 50 }} />
             ),
           }}
-        />
+        /> */}
 
         <Tab.Screen
           name="Notifications"
