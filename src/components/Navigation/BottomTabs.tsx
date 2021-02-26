@@ -1,18 +1,12 @@
-import { AntDesign, FontAwesome5, Ionicons } from "@expo/vector-icons";
+import { FontAwesome5, Ionicons } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { NavigationContainer } from "@react-navigation/native";
-
-import { createStackNavigator } from "@react-navigation/stack";
 import React from "react";
+import { Platform } from "react-native";
+import { Portal, Provider } from "react-native-paper";
+import { AddButton } from "../Camera/AddButton";
 import { HomeContainer as Home } from "../Home/HomeContainer";
 import { LoginScreen } from "../Login/Login";
 import { Colors, UIConsts } from "../shared/styles/variables";
-import { View, Text, Platform } from "react-native";
-import { PublishNewVideoScreen } from "../Camera/PublishNewVideo";
-import { AddButton } from "../Camera/AddButton";
-import { Portal, FAB, Provider } from "react-native-paper";
-import { TouchableWithoutFeedback } from "react-native-gesture-handler";
-import { createAppContainer } from "react-navigation";
 
 interface BottomTabsProps {}
 
@@ -94,22 +88,10 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
           }}
         />
       </Tab.Navigator>
-      <TouchableWithoutFeedback style={{ marginRight: 200 }}>
-        <Portal>
-          {/* <FAB
-          visible={true}
-          icon={"feather"}
-          style={{
-            position: "absolute",
-            bottom: 100,
-            right: 16,
-          }}
-          onPress={() => alert("fdfdfd")}
-          color="white"
-        /> */}
-          <AddButton />
-        </Portal>
-      </TouchableWithoutFeedback>
+
+      <Portal>
+        <AddButton />
+      </Portal>
     </Provider>
   );
 };

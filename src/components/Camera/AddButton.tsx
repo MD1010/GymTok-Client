@@ -1,11 +1,11 @@
 import React from "react";
-import { Ionicons, Feather, FontAwesome5 } from "@expo/vector-icons";
+import { Ionicons, Feather, FontAwesome5, FontAwesome } from "@expo/vector-icons";
 import { FloatingAction } from "react-native-floating-action";
 import { Camera } from "expo-camera";
 import * as ImagePicker from "expo-image-picker";
 import { useNavigation } from "@react-navigation/native";
 import { Dimensions, StyleSheet, Touchable, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native";
-import { UIConsts } from "../shared/styles/variables";
+import { Colors, UIConsts } from "../shared/styles/variables";
 import ActionButton from "react-native-action-button";
 
 const actions = [
@@ -58,37 +58,31 @@ export const AddButton: React.FC = () => {
   return (
     <>
       {/* Rest of the app comes ABOVE the action button component !*/}
-      <ActionButton hideShadow={true} position={"center"} style={{ marginBottom: -10 }} buttonColor="rgba(231,76,60,1)">
-        <ActionButton.Item buttonColor="#9b59b6" size={40} onPress={() => console.log("notes tapped!")}>
-          <FontAwesome5 name="home" size={20} color={"white"} />
+      <ActionButton
+        backdrop
+        bgOpacity={0.75}
+        bgColor={"#101010"}
+        hideShadow={true}
+        position={"center"}
+        offsetY={18}
+        useNativeFeedback={false}
+        renderIcon={() => <FontAwesome5 name="plus" size={20} color={Colors.white} />}
+        backgroundTappable={false}
+        buttonColor={Colors.lightPurpule}
+      >
+        <ActionButton.Item useNativeFeedback={false} buttonColor={Colors.lightPurpule} size={40} onPress={takeVideo}>
+          <FontAwesome5 name="video" size={15} color={Colors.white} />
         </ActionButton.Item>
-        <ActionButton.Item buttonColor="#3498db" size={40} onPress={() => {}}>
-          <FontAwesome5 name="home" size={20} color={"white"} />
-        </ActionButton.Item>
-        <ActionButton.Item buttonColor="#1abc9c" size={40} onPress={() => {}}>
-          <FontAwesome5 name="home" size={20} color={"white"} />
+        <ActionButton.Item
+          useNativeFeedback={false}
+          buttonColor={Colors.lightPurpule}
+          size={40}
+          onPress={takeVideoFromGallery}
+        >
+          <FontAwesome name="picture-o" size={15} color={Colors.white} />
         </ActionButton.Item>
       </ActionButton>
     </>
-
-    // <FloatingAction
-    //   buttonSize={UIConsts.addChallengePlusButton}
-    //   actions={actions}
-    //   showBackground={false}
-    //   onPressItem={(name) => {
-    //     handleSelectAction(name);
-    //   }}
-    // />
-    // <View style={styles.container}>
-    //   <FloatingAction
-    //     buttonSize={UIConsts.addChallengePlusButton}
-    //     actions={actions}
-    //     showBackground={false}
-    //     onPressItem={(name) => {
-    //       handleSelectAction(name);
-    //     }}
-    //   />
-    // </View>
   );
 };
 
