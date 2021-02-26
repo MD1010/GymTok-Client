@@ -1,35 +1,13 @@
-import React from "react";
-import { Ionicons, Feather, FontAwesome5, FontAwesome } from "@expo/vector-icons";
-import { FloatingAction } from "react-native-floating-action";
+import { FontAwesome, FontAwesome5 } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
 import { Camera } from "expo-camera";
 import * as ImagePicker from "expo-image-picker";
-import { useNavigation } from "@react-navigation/native";
-import { Dimensions, StyleSheet, Touchable, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native";
-import { Colors, UIConsts } from "../shared/styles/variables";
+import React from "react";
 import ActionButton from "react-native-action-button";
-
-const actions = [
-  {
-    icon: <Feather name="camera" color={"white"} size={24} />,
-    name: "bt_camera",
-  },
-  {
-    icon: <Ionicons name={"md-image-outline"} color={"white"} size={24} />,
-    name: "bt_gallery",
-  },
-];
+import { Colors } from "../shared/styles/variables";
 
 export const AddButton: React.FC = () => {
   const navigation = useNavigation();
-
-  const handleSelectAction = (actionName) => {
-    console.log(actionName);
-    if (actionName === "bt_camera") {
-      takeVideo();
-    } else {
-      takeVideoFromGallery();
-    }
-  };
 
   const takeVideo = async () => {
     const { status } = await Camera.requestPermissionsAsync();
@@ -37,7 +15,6 @@ export const AddButton: React.FC = () => {
     if (status === "granted") {
       const selectedVideo = await ImagePicker.launchCameraAsync({ mediaTypes: ImagePicker.MediaTypeOptions.Videos });
       if (!selectedVideo.cancelled) {
-        console.log(selectedVideo.uri);
         navigation.navigate("Publish", { videoUri: selectedVideo.uri });
       }
     } else {
@@ -56,49 +33,29 @@ export const AddButton: React.FC = () => {
   };
 
   return (
-    <>
-      {/* Rest of the app comes ABOVE the action button component !*/}
-      <ActionButton
-        backdrop
-        bgOpacity={0.75}
-        bgColor={"#101010"}
-        hideShadow={true}
-        position={"center"}
-        offsetY={18}
+    <ActionButton
+      backdrop
+      bgOpacity={0.75}
+      bgColor={"#101010"}
+      hideShadow={true}
+      position={"center"}
+      offsetY={18}
+      useNativeFeedback={false}
+      renderIcon={() => <FontAwesome5 name="plus" size={20} color={Colors.white} />}
+      backgroundTappable={false}
+      buttonColor={Colors.lightPurpule}
+    >
+      <ActionButton.Item useNativeFeedback={false} buttonColor={Colors.lightPurpule} size={40} onPress={takeVideo}>
+        <FontAwesome5 name="video" size={15} color={Colors.white} />
+      </ActionButton.Item>
+      <ActionButton.Item
         useNativeFeedback={false}
-        renderIcon={() => <FontAwesome5 name="plus" size={20} color={Colors.white} />}
-        backgroundTappable={false}
         buttonColor={Colors.lightPurpule}
+        size={40}
+        onPress={takeVideoFromGallery}
       >
-        <ActionButton.Item useNativeFeedback={false} buttonColor={Colors.lightPurpule} size={40} onPress={takeVideo}>
-          <FontAwesome5 name="video" size={15} color={Colors.white} />
-        </ActionButton.Item>
-        <ActionButton.Item
-          useNativeFeedback={false}
-          buttonColor={Colors.lightPurpule}
-          size={40}
-          onPress={takeVideoFromGallery}
-        >
-          <FontAwesome name="picture-o" size={15} color={Colors.white} />
-        </ActionButton.Item>
-      </ActionButton>
-    </>
+        <FontAwesome name="picture-o" size={15} color={Colors.white} />
+      </ActionButton.Item>
+    </ActionButton>
   );
 };
-
-const styles = StyleSheet.create({
-  actionButtonIcon: {
-    fontSize: 20,
-    height: 22,
-    color: "white",
-  },
-  container: {
-    position: "absolute",
-    bottom: 100,
-    right: 16,
-    // top: 10,
-    // position: "absolute",
-    // top: Dimensions.get("window").height - UIConsts.bottomNavbarHeight,
-    // margin: 50,
-  },
-});

@@ -47,23 +47,6 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
           }}
         />
 
-        {/* <Tab.Screen
-          name="Upload"
-          component={() => {
-            return null;
-          }}
-          listeners={{
-            tabPress: (e) => {
-              e.preventDefault();
-            },
-          }}
-          options={{
-            tabBarIcon: ({ color, size }) => (
-              <Ionicons name="trophy" color={color} size={size} style={{ marginRight: 50 }} />
-            ),
-          }}
-        /> */}
-
         <Tab.Screen
           name="Notifications"
           component={LoginScreen}
