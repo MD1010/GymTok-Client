@@ -4,6 +4,7 @@ import { FloatingAction } from "react-native-floating-action";
 import { Camera } from "expo-camera";
 import * as ImagePicker from "expo-image-picker";
 import { useNavigation } from "@react-navigation/native";
+import { Touchable, TouchableWithoutFeedback, View } from "react-native";
 
 const actions = [
   {
@@ -20,6 +21,7 @@ export const AddButton: React.FC = () => {
   const navigation = useNavigation();
 
   const handleSelectAction = (actionName) => {
+    console.log(actionName);
     if (actionName === "bt_camera") {
       takeVideo();
     } else {

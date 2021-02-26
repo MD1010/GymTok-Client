@@ -18,63 +18,53 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
 
   const myTabs = () => {
     return (
-      <Tab.Navigator
-        initialRouteName="Home"
-        tabBarOptions={{
-          activeTintColor: Colors.yellow,
-          activeBackgroundColor: Colors.darkBlue,
-          inactiveBackgroundColor: Colors.darkBlue,
-          inactiveTintColor: Colors.white,
-          labelStyle: { bottom: 8 },
-          style: { height: UIConsts.bottomNavbarHeight, borderTopWidth: 0, backgroundColor: Colors.darkBlue },
-        }}
-      >
-        <Tab.Screen
-          name="Home"
-          component={Home}
-          options={{
-            tabBarLabel: "Home",
-            tabBarIcon: ({ color, size }) => <FontAwesome5 name="home" size={size} color={color} />,
+      <>
+        <Tab.Navigator
+          initialRouteName="Home"
+          tabBarOptions={{
+            activeTintColor: Colors.yellow,
+            activeBackgroundColor: Colors.darkBlue,
+            inactiveBackgroundColor: Colors.darkBlue,
+            inactiveTintColor: Colors.white,
+            labelStyle: { bottom: 8 },
+            style: { height: UIConsts.bottomNavbarHeight, borderTopWidth: 0, backgroundColor: Colors.darkBlue },
           }}
-        />
-        <Tab.Screen
-          name="Leaderboards"
-          component={LoginScreen}
-          options={{
-            tabBarLabel: "Leaderboards",
-            tabBarIcon: ({ color, size }) => <Ionicons name="trophy" color={color} size={size} />,
-          }}
-        />
-        <Tab.Screen
-          name={"Upload"}
-          component={LoginScreen}
-          options={{
-            tabBarIcon: ({ size }) => (
-              <View style={{ marginTop: 115, marginLeft: 120 }}>
-                <AddButton />
-              </View>
-            ),
-            tabBarLabel: () => null,
-          }}
-        />
+        >
+          <Tab.Screen
+            name="Home"
+            component={Home}
+            options={{
+              tabBarLabel: "Home",
+              tabBarIcon: ({ color, size }) => <FontAwesome5 name="home" size={size} color={color} />,
+            }}
+          />
+          <Tab.Screen
+            name="Leaderboards"
+            component={LoginScreen}
+            options={{
+              tabBarLabel: "Leaderboards",
+              tabBarIcon: ({ color, size }) => <Ionicons name="trophy" color={color} size={size} />,
+            }}
+          />
 
-        <Tab.Screen
-          name="Inbox"
-          component={LoginScreen}
-          options={{
-            tabBarLabel: "Inbox",
-            tabBarIcon: ({ color, size }) => <FontAwesome5 name="envelope" color={color} size={size} />,
-          }}
-        ></Tab.Screen>
-        <Tab.Screen
-          name="Me"
-          component={LoginScreen}
-          options={{
-            tabBarLabel: "Me",
-            tabBarIcon: ({ color, size }) => <FontAwesome5 name="user-alt" color={color} size={size} />,
-          }}
-        />
-      </Tab.Navigator>
+          <Tab.Screen
+            name="Inbox"
+            component={LoginScreen}
+            options={{
+              tabBarLabel: "Inbox",
+              tabBarIcon: ({ color, size }) => <FontAwesome5 name="envelope" color={color} size={size} />,
+            }}
+          ></Tab.Screen>
+          <Tab.Screen
+            name="Me"
+            component={LoginScreen}
+            options={{
+              tabBarLabel: "Me",
+              tabBarIcon: ({ color, size }) => <FontAwesome5 name="user-alt" color={color} size={size} />,
+            }}
+          />
+        </Tab.Navigator>
+      </>
     );
   };
 

@@ -5,6 +5,7 @@ import { GestureHandlerRootView, NativeViewGestureHandler, PanGestureHandler } f
 import { SafeAreaView } from "react-native-safe-area-context";
 import { IChallenge } from "../../interfaces/Challenge";
 import { ChallengePost } from "../ChallengePost/ChallengePost";
+import { AddButton } from "../Tabs/AddButton";
 
 interface ChallengesProps {
   challenges: IChallenge[];
@@ -37,7 +38,7 @@ export const HomeScreen: React.FC<ChallengesProps> = ({ challenges }) => {
 
   return (
     <View>
-      <StatusBar barStyle={"light-content"} />
+      <StatusBar barStyle={"dark-content"} />
       <FlatList
         data={challenges}
         renderItem={({ item, index }) => (
@@ -52,6 +53,7 @@ export const HomeScreen: React.FC<ChallengesProps> = ({ challenges }) => {
         onScrollEndDrag={() => (scrollEnded.current = true)}
         onScrollBeginDrag={() => (scrollEnded.current = false)}
       ></FlatList>
+      <AddButton />
     </View>
   );
 };
