@@ -10,6 +10,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   SafeAreaView,
+  Dimensions,
 } from "react-native";
 import { useRoute } from "@react-navigation/native";
 import { VideoScreen } from "./publishVideo";
@@ -110,9 +111,7 @@ const styles = StyleSheet.create({
     borderColor: Colors.gold,
     borderWidth: 1,
   },
-  video: {
-    marginTop: 120,
-  },
+
   tagFriends: {
     position: "absolute",
     backgroundColor: "#F0F0F0",
@@ -123,7 +122,8 @@ const styles = StyleSheet.create({
   btnOptions: {
     width: 430,
     height: 90,
-    marginTop: 725,
+    marginTop: Dimensions.get("window").height - 171,
+    // marginTop: 725,
     position: "absolute",
     flexDirection: "row",
     backgroundColor: Colors.darkBlue,
