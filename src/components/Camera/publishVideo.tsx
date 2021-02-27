@@ -1,7 +1,8 @@
 import React from "react";
-import { View, StyleSheet, Dimensions } from "react-native";
+import { View, StyleSheet, Dimensions, Platform } from "react-native";
 import { Video } from "expo-av";
 import { UIConsts } from "../shared/styles/variables";
+import VideoPlayer from "expo-video-player";
 
 interface PublishScreenProps {
   uri: string;
@@ -11,18 +12,42 @@ export const VideoScreen: React.FC<PublishScreenProps> = ({ uri }) => {
   const video = React.useRef(null);
 
   return (
-    <View style={styles.container}>
-      <Video
-        ref={video}
-        style={styles.video}
-        source={{
+    <VideoPlayer
+      height={Platform.OS === "android" ? Dimensions.get("screen").height - 249 : Dimensions.get("screen").height - 220}
+      showFullscreenButton={false}
+      videoProps={{
+        shouldPlay: false,
+        resizeMode: Video.RESIZE_MODE_CONTAIN,
+        source: {
           uri: uri,
-        }}
-        useNativeControls
-        resizeMode="contain"
-        isLooping={true}
-      />
-    </View>
+        },
+      }}
+      inFullscreen={false}
+    />
+    // <View style={styles.container}>
+    //   <VideoPlayer
+    //     videoProps={{
+    //       shouldPlay: true,
+    //       resizeMode: Video.RESIZE_MODE_CONTAIN,
+    //       source: {
+    //         uri: uri,
+    //       },
+    //     }}
+    //     //inFullscreen={true}
+    //   />
+
+    //   {/* <Video
+    //     ref={video}
+    //     style={styles.video}
+    //     source={{
+    //       uri: uri,
+    //       //overrideFileExtensionAndroid: "H.264",
+    //     }}
+    //     useNativeControls
+    //     resizeMode="contain"
+    //     isLooping={true}
+    //   /> */}
+    // </View>
   );
 };
 

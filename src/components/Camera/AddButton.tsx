@@ -27,7 +27,6 @@ export const AddButton: React.FC = () => {
       mediaTypes: ImagePicker.MediaTypeOptions.Videos,
     });
     if (!selectedVideo.cancelled) {
-      console.log(selectedVideo.uri);
       navigation.navigate("Publish", { videoUri: selectedVideo.uri });
     }
   };

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, View, SafeAreaView, FlatList, Button } from "react-native";
+import { StyleSheet, Text, View, SafeAreaView, FlatList, Button, Platform, Dimensions } from "react-native";
 import { CheckBox } from "react-native-elements";
+import { Colors } from "../shared/styles/variables";
 
 interface props {
   isVisible: boolean;
@@ -10,15 +11,43 @@ interface props {
 
 const DATA = [
   {
-    id: "bd7acbea-c1b1-46c2-aed5-3ad53abb28ba",
+    id: "1",
     title: "First Item",
   },
   {
-    id: "3ac68afc-c605-48d3-a4f8-fbd91aa97f63",
+    id: "2",
     title: "Second Item",
   },
   {
-    id: "58694a0f-3da1-471f-bd96-145571e29d72",
+    id: "3",
+    title: "Third Item",
+  },
+  {
+    id: "4",
+    title: "First Item",
+  },
+  {
+    id: "5",
+    title: "Second Item",
+  },
+  {
+    id: "6",
+    title: "Third Item",
+  },
+  {
+    id: "7",
+    title: "First Item",
+  },
+  {
+    id: "8",
+    title: "Second Item",
+  },
+  {
+    id: "9",
+    title: "Third Item",
+  },
+  {
+    id: "10",
     title: "Third Item",
   },
 ];
@@ -54,20 +83,20 @@ export const FriendsModal: React.FC<props> = ({ isVisible, setSelectedFriends, c
     );
   };
   return (
-    <React.Fragment>
+    <View style={{ backgroundColor: Colors.darkBlue }}>
       <View style={styles.Btns}>
         <Button
           title="Cencel"
-          color="#841584"
+          color={Colors.red}
           onPress={() => {
             handleSelectedFriends();
             close();
           }}
         />
-        <Text style={{ alignSelf: "center", fontSize: 25 }}>Friends</Text>
+        <Text style={{ alignSelf: "center", fontSize: 25, color: Colors.gold }}>Friends</Text>
         <Button
           title="Apply"
-          color="#841584"
+          color={Colors.lightGreen}
           onPress={() => {
             close();
           }}
@@ -76,14 +105,14 @@ export const FriendsModal: React.FC<props> = ({ isVisible, setSelectedFriends, c
       <View
         style={{
           marginTop: 10,
-          borderBottomColor: "black",
+          borderBottomColor: Colors.gold,
           borderBottomWidth: 1,
         }}
       />
       <SafeAreaView style={styles.safeArea}>
         <FlatList style={styles.flastList} data={friends} renderItem={renderItem} keyExtractor={(item) => item.id} />
       </SafeAreaView>
-    </React.Fragment>
+    </View>
   );
 };
 
@@ -97,7 +126,8 @@ const styles = StyleSheet.create({
   },
 
   title: {
-    fontSize: 32,
+    color: Colors.white,
+    fontSize: 20,
   },
   openButton: {
     backgroundColor: "#2196F3",
@@ -111,8 +141,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   safeArea: {
-    marginTop: 19,
-    height: 550,
+    height: Platform.OS === "android" ? Dimensions.get("screen").height - 300 : Dimensions.get("screen").height - 255,
     display: "flex",
     flexDirection: "row",
   },
