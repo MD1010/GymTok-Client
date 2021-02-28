@@ -5,6 +5,8 @@ import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { BottomTabs } from "./BottomTabs";
 import { AddButton } from "../Camera/AddButton";
+import { UIConsts } from "../shared/styles/variables";
+import { Colors } from "../shared/styles/variables";
 
 interface StackNavigatorProps {}
 
@@ -20,7 +22,16 @@ export const StackNavigator: React.FC<StackNavigatorProps> = ({}) => {
             headerShown: false,
           }}
         />
-        <Stack.Screen name="Publish" component={PublishNewVideoScreen} />
+        <Stack.Screen
+          name="Publish"
+          component={PublishNewVideoScreen}
+          options={{
+            title: "",
+            headerStyle: {
+              backgroundColor: Colors.darkBlue,
+            },
+          }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

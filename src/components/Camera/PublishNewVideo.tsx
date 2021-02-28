@@ -1,27 +1,25 @@
+import { AntDesign, EvilIcons } from "@expo/vector-icons";
+import { useRoute } from "@react-navigation/native";
 import React, { useState } from "react";
 import {
-  View,
-  TouchableWithoutFeedback,
+  Dimensions,
   Keyboard,
-  Text,
-  //TouchableOpacity,
-  StyleSheet,
-  TextInput,
-  KeyboardAvoidingView,
   Platform,
   SafeAreaView,
-  Dimensions,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableWithoutFeedback,
+  View,
 } from "react-native";
-import { useRoute } from "@react-navigation/native";
-import { VideoScreen } from "./publishVideo";
-import { FriendsModal } from "./FreindsModal";
-import axios from "axios";
-import Spinner from "react-native-loading-spinner-overlay";
 import * as Animatable from "react-native-animatable";
-import { EvilIcons, AntDesign } from "@expo/vector-icons";
-import { Colors, UIConsts } from "../shared/styles/variables";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import Spinner from "react-native-loading-spinner-overlay";
 import { fetchAPI, RequestMethod } from "../../utils/fetchAPI";
+import { Colors, UIConsts } from "../shared/styles/variables";
+import { FriendsModal } from "./FreindsModal";
+import { VideoScreen } from "./publishVideo";
 
 export const PublishNewVideoScreen: React.FC = () => {
   const route = useRoute();
@@ -56,54 +54,56 @@ export const PublishNewVideoScreen: React.FC = () => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <Spinner visible={isSpinner} textContent={"Uploading..."} textStyle={styles.spinnerTextStyle} />
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <TextInput
-          style={styles.description}
-          onChangeText={(text) => setText(text)}
-          value={text}
-          placeholder={"write description"}
-          placeholderTextColor={Colors.white}
-          autoCorrect={true}
-          autoCapitalize={"words"}
-        />
-      </TouchableWithoutFeedback>
-
-      <VideoScreen uri={route.params!.videoUri} />
-
-      {showTaggedFriends && (
-        <Animatable.View animation="fadeInUpBig" duration={500} style={styles.tagFriends}>
-          <FriendsModal
-            close={() => setShowTaggedFriends(false)}
-            isVisible={showTaggedFriends}
-            setSelectedFriends={setSelectedFriends}
+    <KeyboardAwareScrollView>
+      <SafeAreaView style={styles.container}>
+        <Spinner visible={isSpinner} textContent={"Uploading..."} textStyle={styles.spinnerTextStyle} />
+        <VideoScreen uri={route.params!.videoUri} />
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <TextInput
+            style={styles.description}
+            onChangeText={(text) => setText(text)}
+            value={text}
+            placeholder={"write description"}
+            placeholderTextColor={Colors.black}
+            autoCorrect={true}
+            autoCapitalize={"words"}
           />
-        </Animatable.View>
-      )}
+        </TouchableWithoutFeedback>
 
-      <View style={styles.btnOptions}>
-        <TouchableOpacity
-          style={styles.tagBtn}
-          onPress={() => {
-            setShowTaggedFriends(!showTaggedFriends);
-          }}
-        >
-          <EvilIcons name="tag" size={35} color={"white"} />
-          <Text style={styles.btnText}>Tag Friends</Text>
-        </TouchableOpacity>
+        {showTaggedFriends && (
+          <Animatable.View animation="fadeInUpBig" duration={500} style={styles.tagFriends}>
+            <FriendsModal
+              selectedFriends={selectedFriends}
+              close={() => setShowTaggedFriends(false)}
+              isVisible={showTaggedFriends}
+              setSelectedFriends={setSelectedFriends}
+            />
+          </Animatable.View>
+        )}
 
-        <TouchableOpacity
-          style={styles.publishBtn}
-          onPress={() => {
-            publishChallenge();
-          }}
-        >
-          <AntDesign name="upload" size={28} color={"white"} />
-          <Text style={styles.btnText}>Publish</Text>
-        </TouchableOpacity>
-      </View>
-    </SafeAreaView>
+        <View style={styles.btnOptions}>
+          <TouchableOpacity
+            style={styles.tagBtn}
+            onPress={() => {
+              setShowTaggedFriends(!showTaggedFriends);
+            }}
+          >
+            <EvilIcons name="tag" size={35} color={"white"} />
+            <Text style={styles.btnText}>Tag Friends</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.publishBtn}
+            onPress={() => {
+              publishChallenge();
+            }}
+          >
+            <AntDesign name="upload" size={28} color={"white"} />
+            <Text style={styles.btnText}>Publish</Text>
+          </TouchableOpacity>
+        </View>
+      </SafeAreaView>
+    </KeyboardAwareScrollView>
   );
 };
 
@@ -115,12 +115,12 @@ const styles = StyleSheet.create({
   },
   description: {
     height: UIConsts.bottomNavbarHeight,
-    borderRadius: 50,
-    color: Colors.white,
+    borderRadius: 25,
+    color: Colors.black,
+    backgroundColor: Colors.white,
     borderColor: Colors.gold,
     borderWidth: 1,
   },
-
   tagFriends: {
     position: "absolute",
     backgroundColor: "#F0F0F0",

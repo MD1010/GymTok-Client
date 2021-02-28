@@ -48,6 +48,7 @@
     "react-native-fade-in-view": "^1.1.0",
     "react-native-floating-action": "^1.21.0",
     "react-native-gesture-handler": "^1.8.0",
+    "react-native-keyboard-aware-scroll-view": "^0.9.3",
     "react-native-loading-spinner-overlay": "^2.0.0",
     "react-native-paper": "^4.7.2",
     "react-native-portal-view": "0.0.24",

@@ -10,6 +10,7 @@ export enum Colors {
   lightGrey = "#D1C7C7",
   darkGrey = "#625959",
   red = "#fe0000",
+  black = "#000000",
 }
 
 export enum UIConsts {
