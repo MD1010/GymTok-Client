@@ -4,7 +4,7 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   Text,
-  TouchableOpacity,
+  //TouchableOpacity,
   StyleSheet,
   TextInput,
   KeyboardAvoidingView,
@@ -19,7 +19,8 @@ import axios from "axios";
 import Spinner from "react-native-loading-spinner-overlay";
 import * as Animatable from "react-native-animatable";
 import { EvilIcons, AntDesign } from "@expo/vector-icons";
-import { Colors } from "../shared/styles/variables";
+import { Colors, UIConsts } from "../shared/styles/variables";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 export const PublishNewVideoScreen: React.FC = () => {
   const route = useRoute();
@@ -103,7 +104,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.darkBlue,
   },
   description: {
-    height: 49,
+    height: UIConsts.bottomNavbarHeight,
     borderRadius: 50,
     color: Colors.white,
     borderColor: Colors.gold,
@@ -116,27 +117,26 @@ const styles = StyleSheet.create({
     marginTop: 120,
     zIndex: 1,
     height: 830,
-    width: "100%",
+    width: Dimensions.get("screen").width,
   },
   btnOptions: {
-    width: 430,
-    height: 90,
-    marginTop: Dimensions.get("window").height - 171,
+    width: Dimensions.get("screen").width,
+    height: Platform.OS === "android" ? 51 : 75,
+    marginTop:
+      Platform.OS === "android" ? Dimensions.get("screen").height - 189 : Dimensions.get("screen").height - 160,
     position: "absolute",
     flexDirection: "row",
+    alignItems: "center",
     backgroundColor: Colors.darkBlue,
   },
   tagBtn: {
-    alignSelf: "flex-end",
     alignItems: "center",
     marginLeft: 20,
-    marginBottom: 35,
     marginRight: 270,
   },
   publishBtn: {
     alignSelf: "flex-end",
     alignItems: "center",
-    marginBottom: 35,
   },
   btnText: {
     color: "white",

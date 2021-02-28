@@ -27,7 +27,6 @@ export const AddButton: React.FC = () => {
       mediaTypes: ImagePicker.MediaTypeOptions.Videos,
     });
     if (!selectedVideo.cancelled) {
-      console.log(selectedVideo.uri);
       navigation.navigate("Publish", { videoUri: selectedVideo.uri });
     }
   };
@@ -39,7 +38,7 @@ export const AddButton: React.FC = () => {
       bgColor={"#101010"}
       hideShadow={true}
       position={"center"}
-      offsetY={18}
+      offsetY={30}
       useNativeFeedback={false}
       renderIcon={() => <FontAwesome5 name="plus" size={20} color={Colors.white} />}
       backgroundTappable={false}
