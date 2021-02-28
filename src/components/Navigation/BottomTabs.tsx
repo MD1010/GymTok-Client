@@ -1,7 +1,7 @@
 import { FontAwesome5, Ionicons } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import React from "react";
-import { Platform } from "react-native";
+import { Platform, Image } from "react-native";
 import { Portal, Provider } from "react-native-paper";
 import { AddButton } from "../Camera/AddButton";
 import { HomeContainer as Home } from "../Home/HomeContainer";
@@ -34,7 +34,13 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
           name="Home"
           component={Home}
           options={{
-            tabBarIcon: ({ color, size }) => <FontAwesome5 name="home" size={size} color={color} />,
+            tabBarIcon: ({ color, size }) => (
+              <Image
+                style={{ width: 35, height: 35, tintColor: color }}
+                resizeMode={"contain"}
+                source={require("../../../assets/icons/home.png")}
+              ></Image>
+            ),
           }}
         />
         <Tab.Screen
@@ -42,7 +48,7 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
           component={LoginScreen}
           options={{
             tabBarIcon: ({ color, size }) => (
-              <Ionicons name="trophy" color={color} size={size} style={{ marginRight: 50 }} />
+              <Ionicons name="trophy-outline" color={color} size={size} style={{ marginRight: 50 }} />
             ),
           }}
         />
@@ -53,7 +59,7 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
           options={{
             tabBarIcon: ({ color, size }) => (
               <Ionicons
-                name={Platform.OS === "android" ? "md-notifications" : "ios-notifications"}
+                name={Platform.OS === "android" ? "notifications-outline" : "ios-notifications"}
                 color={color}
                 size={size}
                 style={{
@@ -67,7 +73,7 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
           name="Me"
           component={LoginScreen}
           options={{
-            tabBarIcon: ({ color, size }) => <FontAwesome5 name="user-alt" color={color} size={size} />,
+            tabBarIcon: ({ color, size }) => <Ionicons name="person-outline" color={color} size={size} />,
           }}
         />
       </Tab.Navigator>

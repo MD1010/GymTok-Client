@@ -1,8 +1,7 @@
 import { FontAwesome, FontAwesome5 } from "@expo/vector-icons";
-import { Video } from "expo-av";
 import React from "react";
-import { Text, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native";
-import { cos } from "react-native-reanimated";
+import { Text, TouchableOpacity, View } from "react-native";
+import { Image } from "react-native-elements";
 import { IChallenge } from "../../interfaces";
 import { Colors } from "../shared/styles/variables";
 import { VideoPlayer } from "../shared/VideoPlayer";
@@ -15,10 +14,11 @@ interface ChallengePostProps {
 
 export const ChallengePost: React.FC<ChallengePostProps> = ({ challenge, isVideoPlaying }) => {
   const { name, video: videoURL, image, estimatedScore, description, creationTime, createdBy, _id } = challenge;
+  const streaminServerUrl = `${process.env.STREAMING_SERVER_ENPOINT}/${videoURL}`;
   const tags = ["balistic", "tilaba", "imayad"];
   return (
     <View style={styles.container}>
-      <VideoPlayer style={styles.video} videoURL={videoURL} isPlaying={isVideoPlaying} resizeMode="cover" />
+      <VideoPlayer style={styles.video} uri={streaminServerUrl} isPlaying={isVideoPlaying} resizeMode="cover" />
 
       <View style={styles.rightContainer}>
         <View style={styles.iconContainer}>
@@ -27,16 +27,26 @@ export const ChallengePost: React.FC<ChallengePostProps> = ({ challenge, isVideo
               console.log("like!");
             }}
           >
-            <FontAwesome name="heart" size={35} color={Colors.white} />
+            <FontAwesome name="heart" size={32} color={Colors.white} />
           </TouchableOpacity>
           <Text style={styles.iconText}>123</Text>
         </View>
         <View style={styles.iconContainer}>
-          <FontAwesome name={"commenting"} size={35} color="white" />
+          <Image
+            style={{ width: 32, height: 32 }}
+            resizeMode={"contain"}
+            source={require("../../../assets/icons/comment.png")}
+          ></Image>
+          {/* <FontAwesome name={"commenting"} size={35} color="white" /> */}
           <Text style={styles.iconText}>123</Text>
         </View>
         <View style={styles.iconContainer}>
-          <FontAwesome5 name="running" size={35} color={Colors.white} />
+          <Image
+            style={{ width: 32, height: 32 }}
+            resizeMode={"contain"}
+            source={require("../../../assets/icons/share.png")}
+          ></Image>
+          {/* <FontAwesome5 name="running" size={35} color={Colors.white} /> */}
           <Text style={styles.iconText}>Try</Text>
         </View>
       </View>
