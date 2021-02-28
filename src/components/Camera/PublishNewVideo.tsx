@@ -47,9 +47,9 @@ export const PublishNewVideoScreen: React.FC = () => {
   };
 
   return (
-    <KeyboardAwareScrollView>
-      <SafeAreaView style={styles.container}>
-        <Spinner visible={isSpinner} textContent={"Uploading..."} textStyle={styles.spinnerTextStyle} />
+    <SafeAreaView style={styles.container}>
+      <Spinner visible={isSpinner} textContent={"Uploading..."} textStyle={styles.spinnerTextStyle} />
+      <KeyboardAwareScrollView>
         <VideoScreen uri={route.params!.videoUri} />
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <TextInput
@@ -62,41 +62,41 @@ export const PublishNewVideoScreen: React.FC = () => {
             autoCapitalize={"words"}
           />
         </TouchableWithoutFeedback>
+      </KeyboardAwareScrollView>
 
-        {showTaggedFriends && (
-          <Animatable.View animation="fadeInUpBig" duration={500} style={styles.tagFriends}>
-            <FriendsModal
-              selectedFriends={selectedFriends}
-              close={() => setShowTaggedFriends(false)}
-              isVisible={showTaggedFriends}
-              setSelectedFriends={setSelectedFriends}
-            />
-          </Animatable.View>
-        )}
+      {showTaggedFriends && (
+        <Animatable.View animation="fadeInUpBig" duration={500} style={styles.tagFriends}>
+          <FriendsModal
+            selectedFriends={selectedFriends}
+            close={() => setShowTaggedFriends(false)}
+            isVisible={showTaggedFriends}
+            setSelectedFriends={setSelectedFriends}
+          />
+        </Animatable.View>
+      )}
 
-        <View style={styles.btnOptions}>
-          <TouchableOpacity
-            style={styles.tagBtn}
-            onPress={() => {
-              setShowTaggedFriends(!showTaggedFriends);
-            }}
-          >
-            <EvilIcons name="tag" size={35} color={"white"} />
-            <Text style={styles.btnText}>Tag Friends</Text>
-          </TouchableOpacity>
+      <View style={styles.btnOptions}>
+        <TouchableOpacity
+          style={styles.tagBtn}
+          onPress={() => {
+            setShowTaggedFriends(!showTaggedFriends);
+          }}
+        >
+          <EvilIcons name="tag" size={35} color={"white"} />
+          <Text style={styles.btnText}>Tag Friends</Text>
+        </TouchableOpacity>
 
-          <TouchableOpacity
-            style={styles.publishBtn}
-            onPress={() => {
-              publishChallenge();
-            }}
-          >
-            <AntDesign name="upload" size={28} color={"white"} />
-            <Text style={styles.btnText}>Publish</Text>
-          </TouchableOpacity>
-        </View>
-      </SafeAreaView>
-    </KeyboardAwareScrollView>
+        <TouchableOpacity
+          style={styles.publishBtn}
+          onPress={() => {
+            publishChallenge();
+          }}
+        >
+          <AntDesign name="upload" size={28} color={"white"} />
+          <Text style={styles.btnText}>Publish</Text>
+        </TouchableOpacity>
+      </View>
+    </SafeAreaView>
   );
 };
 

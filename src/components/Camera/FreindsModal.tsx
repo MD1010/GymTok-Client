@@ -14,6 +14,7 @@ import {
 } from "react-native";
 import { CheckBox } from "react-native-elements";
 import { Colors } from "../shared/styles/variables";
+import { LogBox } from "react-native";
 
 interface props {
   selectedFriends: any[];
@@ -70,6 +71,7 @@ export const FriendsModal: React.FC<props> = ({ isVisible, setSelectedFriends, s
   const [filteredFriends, setFilteredFriends] = useState<any[]>([]);
 
   useEffect(() => {
+    LogBox.ignoreLogs(["VirtualizedLists should never be nested"]);
     if (isVisible) {
       const newFriendsArr = DATA.map((friend) =>
         Object.assign({ isSelected: isSelectedFriend(friend.id) }, { ...friend })
