@@ -15,6 +15,7 @@ import {
 import { CheckBox } from "react-native-elements";
 import { Colors } from "../shared/styles/variables";
 import { LogBox } from "react-native";
+import { fetchAPI, RequestMethod } from "../../utils/fetchAPI";
 
 interface props {
   selectedFriends: any[];
@@ -23,77 +24,37 @@ interface props {
   setSelectedFriends: (selectedFriends: any[]) => void;
 }
 
-const DATA = [
-  {
-    id: "1",
-    name: "First Item",
-  },
-  {
-    id: "2",
-    name: "Second Item",
-  },
-  {
-    id: "3",
-    name: "Third Item",
-  },
-  {
-    id: "4",
-    name: "First Item",
-  },
-  {
-    id: "5",
-    name: "Second Item",
-  },
-  {
-    id: "6",
-    name: "Third Item",
-  },
-  {
-    id: "7",
-    name: "First Item",
-  },
-  {
-    id: "8",
-    name: "Second Item",
-  },
-  {
-    id: "9",
-    name: "Third Item",
-  },
-  {
-    id: "10",
-    name: "Third Item",
-  },
-];
-
 export const FriendsModal: React.FC<props> = ({ isVisible, setSelectedFriends, selectedFriends, close }) => {
   const [friends, setFriends] = useState<any[]>([]);
   const [filteredFriends, setFilteredFriends] = useState<any[]>([]);
 
   useEffect(() => {
-    LogBox.ignoreLogs(["VirtualizedLists should never be nested"]);
-    if (isVisible) {
-      const newFriendsArr = DATA.map((friend) =>
-        Object.assign({ isSelected: isSelectedFriend(friend.id) }, { ...friend })
-      );
-      setFriends(newFriendsArr);
-    }
+    (async () => {
+      LogBox.ignoreLogs(["VirtualizedLists should never be nested"]);
+      if (isVisible) {
+        const { res, error } = await fetchAPI(RequestMethod.GET, `${process.env.BASE_API_ENPOINT}/users`);
+        const newFriendsArr = res.map((friend) =>
+          Object.assign({ isSelected: isSelectedFriend(friend._id) }, { ...friend })
+        );
+        setFriends(newFriendsArr);
+      }
+    })();
   }, [isVisible]);
 
   const isSelectedFriend = (friendID) => {
-    const selectedFriend = selectedFriends.filter((tempSelectedFriend) => tempSelectedFriend.id === friendID);
+    const selectedFriend = selectedFriends.filter((tempSelectedFriend) => tempSelectedFriend._id === friendID);
     if (selectedFriend.length > 0) return selectedFriend[0].isSelected;
     return false;
   };
 
   const updateSelectionFriend = (isSelectionFriend: boolean, friendID: string) => {
     const selectedFriends = friends.map((friend) =>
-      friend.id === friendID ? { ...friend, isSelected: isSelectionFriend } : friend
+      friend._id === friendID ? { ...friend, isSelected: isSelectionFriend } : friend
     );
     setFriends(selectedFriends);
 
     const selectedFilteredFriends = filteredFriends.map((friend) =>
-      friend.id === friendID ? { ...friend, isSelected: isSelectionFriend } : friend
+      friend._id === friendID ? { ...friend, isSelected: isSelectionFriend } : friend
     );
     setFilteredFriends(selectedFilteredFriends);
   };
@@ -106,14 +67,14 @@ export const FriendsModal: React.FC<props> = ({ isVisible, setSelectedFriends, s
   const renderItem = ({ item }) => {
     return (
       <View style={styles.checkboxContainer}>
-        <Text style={styles.title}>{item.name}</Text>
-        <CheckBox checked={item.isSelected} onPress={() => updateSelectionFriend(!item.isSelected, item.id)} />
+        <Text style={styles.title}>{item.fullName}</Text>
+        <CheckBox checked={item.isSelected} onPress={() => updateSelectionFriend(!item.isSelected, item._id)} />
       </View>
     );
   };
 
   const filterFriends = (friendName) => {
-    const filteredFriends = friends.filter((friend) => friend.name.includes(friendName) && friendName.length > 0);
+    const filteredFriends = friends.filter((friend) => friend.fullName.includes(friendName) && friendName.length > 0);
     setFilteredFriends(filteredFriends);
   };
 
@@ -138,13 +99,7 @@ export const FriendsModal: React.FC<props> = ({ isVisible, setSelectedFriends, s
           }}
         />
       </View>
-      <View
-        style={{
-          marginTop: 10,
-          borderBottomColor: Colors.gold,
-          borderBottomWidth: 1,
-        }}
-      />
+
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <TextInput
           style={{ color: "white", borderColor: Colors.gold, borderWidth: 0.5, height: 40 }}
@@ -158,7 +113,7 @@ export const FriendsModal: React.FC<props> = ({ isVisible, setSelectedFriends, s
           style={styles.flastList}
           data={filteredFriends.length == 0 ? friends : filteredFriends}
           renderItem={renderItem}
-          keyExtractor={(item) => item.id}
+          keyExtractor={(item) => item._id}
         />
       </SafeAreaView>
     </View>
@@ -204,5 +159,6 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
+    marginBottom: Platform.OS === "android" ? 20 : 10,
   },
 });

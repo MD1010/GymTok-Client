@@ -52,15 +52,17 @@ export const PublishNewVideoScreen: React.FC = () => {
       <KeyboardAwareScrollView>
         <VideoScreen uri={route.params!.videoUri} />
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <TextInput
-            style={styles.description}
-            onChangeText={(text) => setText(text)}
-            value={text}
-            placeholder={"write description"}
-            placeholderTextColor={Colors.black}
-            autoCorrect={true}
-            autoCapitalize={"words"}
-          />
+          <View style={{ height: UIConsts.bottomNavbarHeight }}>
+            <TextInput
+              style={styles.description}
+              onChangeText={(text) => setText(text)}
+              value={text}
+              placeholder={"write description"}
+              placeholderTextColor={Colors.black}
+              autoCorrect={true}
+              autoCapitalize={"words"}
+            />
+          </View>
         </TouchableWithoutFeedback>
       </KeyboardAwareScrollView>
 
@@ -107,10 +109,11 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.darkBlue,
   },
   description: {
-    height: UIConsts.bottomNavbarHeight,
+    height: UIConsts.bottomNavbarHeight - 20,
     borderRadius: 25,
+    opacity: 0.6,
     color: Colors.black,
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.lightGrey,
     borderColor: Colors.gold,
     borderWidth: 1,
   },
