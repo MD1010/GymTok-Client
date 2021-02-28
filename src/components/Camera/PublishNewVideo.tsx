@@ -21,6 +21,7 @@ import * as Animatable from "react-native-animatable";
 import { EvilIcons, AntDesign } from "@expo/vector-icons";
 import { Colors, UIConsts } from "../shared/styles/variables";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import { fetchAPI, RequestMethod } from "../../utils/fetchAPI";
 
 export const PublishNewVideoScreen: React.FC = () => {
   const route = useRoute();
@@ -34,14 +35,23 @@ export const PublishNewVideoScreen: React.FC = () => {
     let formData = new FormData();
 
     formData.append("description", text);
+    formData.append("userId", "6004a03343b8e925a48d270b");
     formData.append("video", {
       name: "dov-test.mp4",
-      uri: route.params!.videoUri,
+      uri: route.params.videoUri,
       type: "video/mp4",
     });
     formData.append("selectedFriends", JSON.stringify(selectedFriends));
-    const uploaded = await axios.post(`${process.env.BASE_API_ENPOINT}/challenges/upload`, formData);
-    if (uploaded) alert("upload succefully!!");
+    console.log(`${process.env.BASE_API_ENPOINT}/challenges/upload`);
+    const { res, error } = await fetchAPI(
+      RequestMethod.POST,
+      `${process.env.BASE_API_ENPOINT}/challenges/upload`,
+      formData
+    );
+    console.log("res=", res);
+    console.log("res=", error);
+    if (res) alert("upload succefully!!");
+    else alert(error);
     setIsSpinner(false);
   };
 

@@ -37,7 +37,7 @@ export const HomeScreen: React.FC<ChallengesProps> = ({ challenges }) => {
   });
 
   return (
-    <View>
+    <View style={{ flex: 1 }}>
       <StatusBar barStyle={"dark-content"} />
       <FlatList
         data={challenges}

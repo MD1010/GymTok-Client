@@ -2,17 +2,18 @@ import { FontAwesome } from "@expo/vector-icons";
 import { Video } from "expo-av";
 import React, { useEffect, useRef, useState } from "react";
 import { StyleProp, StyleSheet, TouchableWithoutFeedback, View, ViewStyle } from "react-native";
+import { proc } from "react-native-reanimated";
 import { Colors } from "./styles/variables";
 
 interface VideoProps {
-  uri: string;
+  videoURL: string;
   style?: StyleProp<ViewStyle>;
   playBtnSize?: number;
   isPlaying: boolean;
   resizeMode: "cover" | "stretch" | "contain";
 }
 
-export const VideoPlayer: React.FC<VideoProps> = ({ uri, style, isPlaying, resizeMode, playBtnSize }) => {
+export const VideoPlayer: React.FC<VideoProps> = ({ videoURL, style, isPlaying, resizeMode, playBtnSize }) => {
   const [status, setStatus] = useState<any>();
   const [isPaused, setIsPaused] = useState<boolean>(false);
   const ref = useRef(null);
@@ -43,7 +44,7 @@ export const VideoPlayer: React.FC<VideoProps> = ({ uri, style, isPlaying, resiz
           ref={ref}
           style={[style]}
           source={{
-            uri,
+            uri: `${process.env.STREAMING_SERVER_ENPOINT}/${videoURL}`,
           }}
           resizeMode={resizeMode}
           isLooping

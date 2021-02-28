@@ -18,7 +18,7 @@ export const ChallengePost: React.FC<ChallengePostProps> = ({ challenge, isVideo
   const tags = ["balistic", "tilaba", "imayad"];
   return (
     <View style={styles.container}>
-      <VideoPlayer style={styles.video} uri={videoURL} isPlaying={isVideoPlaying} resizeMode="cover" />
+      <VideoPlayer style={styles.video} videoURL={videoURL} isPlaying={isVideoPlaying} resizeMode="cover" />
 
       <View style={styles.rightContainer}>
         <View style={styles.iconContainer}>
