@@ -54,56 +54,58 @@ export const PublishNewVideoScreen: React.FC = () => {
   };
 
   return (
-    <KeyboardAwareScrollView>
-      <SafeAreaView style={styles.container}>
-        <Spinner visible={isSpinner} textContent={"Uploading..."} textStyle={styles.spinnerTextStyle} />
+    <SafeAreaView style={styles.container}>
+      <Spinner visible={isSpinner} textContent={"Uploading..."} textStyle={styles.spinnerTextStyle} />
+      <KeyboardAwareScrollView>
         <VideoScreen uri={route.params!.videoUri} />
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <TextInput
-            style={styles.description}
-            onChangeText={(text) => setText(text)}
-            value={text}
-            placeholder={"write description"}
-            placeholderTextColor={Colors.black}
-            autoCorrect={true}
-            autoCapitalize={"words"}
-          />
-        </TouchableWithoutFeedback>
-
-        {showTaggedFriends && (
-          <Animatable.View animation="fadeInUpBig" duration={500} style={styles.tagFriends}>
-            <FriendsModal
-              selectedFriends={selectedFriends}
-              close={() => setShowTaggedFriends(false)}
-              isVisible={showTaggedFriends}
-              setSelectedFriends={setSelectedFriends}
+          <View style={{ height: UIConsts.bottomNavbarHeight }}>
+            <TextInput
+              style={styles.description}
+              onChangeText={(text) => setText(text)}
+              value={text}
+              placeholder={"write description"}
+              placeholderTextColor={Colors.black}
+              autoCorrect={true}
+              autoCapitalize={"words"}
             />
-          </Animatable.View>
-        )}
+          </View>
+        </TouchableWithoutFeedback>
+      </KeyboardAwareScrollView>
 
-        <View style={styles.btnOptions}>
-          <TouchableOpacity
-            style={styles.tagBtn}
-            onPress={() => {
-              setShowTaggedFriends(!showTaggedFriends);
-            }}
-          >
-            <EvilIcons name="tag" size={35} color={"white"} />
-            <Text style={styles.btnText}>Tag Friends</Text>
-          </TouchableOpacity>
+      {showTaggedFriends && (
+        <Animatable.View animation="fadeInUpBig" duration={500} style={styles.tagFriends}>
+          <FriendsModal
+            selectedFriends={selectedFriends}
+            close={() => setShowTaggedFriends(false)}
+            isVisible={showTaggedFriends}
+            setSelectedFriends={setSelectedFriends}
+          />
+        </Animatable.View>
+      )}
 
-          <TouchableOpacity
-            style={styles.publishBtn}
-            onPress={() => {
-              publishChallenge();
-            }}
-          >
-            <AntDesign name="upload" size={28} color={"white"} />
-            <Text style={styles.btnText}>Publish</Text>
-          </TouchableOpacity>
-        </View>
-      </SafeAreaView>
-    </KeyboardAwareScrollView>
+      <View style={styles.btnOptions}>
+        <TouchableOpacity
+          style={styles.tagBtn}
+          onPress={() => {
+            setShowTaggedFriends(!showTaggedFriends);
+          }}
+        >
+          <EvilIcons name="tag" size={35} color={"white"} />
+          <Text style={styles.btnText}>Tag Friends</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.publishBtn}
+          onPress={() => {
+            publishChallenge();
+          }}
+        >
+          <AntDesign name="upload" size={28} color={"white"} />
+          <Text style={styles.btnText}>Publish</Text>
+        </TouchableOpacity>
+      </View>
+    </SafeAreaView>
   );
 };
 
@@ -114,10 +116,11 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.darkBlue,
   },
   description: {
-    height: UIConsts.bottomNavbarHeight,
+    height: UIConsts.bottomNavbarHeight - 20,
     borderRadius: 25,
+    opacity: 0.6,
     color: Colors.black,
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.lightGrey,
     borderColor: Colors.gold,
     borderWidth: 1,
   },
