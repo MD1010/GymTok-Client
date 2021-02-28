@@ -75,7 +75,7 @@ export const FriendsModal: React.FC<props> = ({ isVisible, setSelectedFriends, s
 
   const filterFriends = (friendName) => {
     const filteredFriends = friends.filter((friend) => friend.fullName.includes(friendName) && friendName.length > 0);
-    setFilteredFriends(filteredFriends);
+    setFilteredFriends(filteredFriends.length > 0 ? filteredFriends : friendName.length > 0 ? undefined : []);
   };
 
   return (
@@ -111,7 +111,7 @@ export const FriendsModal: React.FC<props> = ({ isVisible, setSelectedFriends, s
       <SafeAreaView style={styles.safeArea}>
         <FlatList
           style={styles.flastList}
-          data={filteredFriends.length == 0 ? friends : filteredFriends}
+          data={filteredFriends === undefined ? [] : filteredFriends.length == 0 ? friends : filteredFriends}
           renderItem={renderItem}
           keyExtractor={(item) => item._id}
         />
