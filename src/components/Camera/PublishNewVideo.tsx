@@ -22,7 +22,7 @@ import { FriendsModal } from "./FreindsModal";
 import { VideoScreen } from "./publishVideo";
 
 export const PublishNewVideoScreen: React.FC = () => {
-  const route = useRoute();
+  const route = useRoute<any>();
   const [text, setText] = useState<string>("");
   const [showTaggedFriends, setShowTaggedFriends] = useState<boolean>(false);
   const [selectedFriends, setSelectedFriends] = useState<any[]>([]);
@@ -38,7 +38,7 @@ export const PublishNewVideoScreen: React.FC = () => {
       name: "dov-test.mp4",
       uri: route.params.videoUri,
       type: "video/mp4",
-    });
+    } as any);
     formData.append("selectedFriends", JSON.stringify(selectedFriends));
     console.log(`${process.env.BASE_API_ENPOINT}/challenges/upload`);
     const { res, error } = await fetchAPI(
@@ -57,7 +57,7 @@ export const PublishNewVideoScreen: React.FC = () => {
     <SafeAreaView style={styles.container}>
       <Spinner visible={isSpinner} textContent={"Uploading..."} textStyle={styles.spinnerTextStyle} />
       <KeyboardAwareScrollView>
-        <VideoScreen uri={route.params!.videoUri} />
+        <VideoScreen uri={route.params.videoUri} />
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View style={{ height: UIConsts.bottomNavbarHeight }}>
             <TextInput
