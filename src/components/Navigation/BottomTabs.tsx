@@ -5,7 +5,7 @@ import { Platform } from "react-native";
 import { Portal, Provider } from "react-native-paper";
 import { AddButton } from "../Camera/AddButton";
 import { HomeContainer as Home } from "../Home/HomeContainer";
-import { LoginScreen } from "../Login/Login";
+import { LoginContainer as LoginScreen } from "../Login/LoginContainer";
 import { Colors, UIConsts } from "../shared/styles/variables";
 
 interface BottomTabsProps {}

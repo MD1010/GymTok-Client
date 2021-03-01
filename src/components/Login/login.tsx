@@ -1,5 +1,5 @@
 import { useNavigation } from "@react-navigation/native";
-import React, { createRef, useState } from "react";
+import React, { createRef, useEffect, useState } from "react";
 import {
   Keyboard,
   KeyboardAvoidingView,
@@ -17,6 +17,7 @@ interface LoginProps {
 }
 
 export const LoginScreen: React.FC<LoginProps> = ({ onSubmit, error }) => {
+
   const [username, setUserName] = useState("");
   const [password, setPassword] = useState("");
   const [errortext, setErrortext] = useState("");
