@@ -4,7 +4,7 @@ import { Colors, UIConsts } from "../shared/styles/variables";
 export const styles = StyleSheet.create({
   container: {
     width: "100%",
-    height: Dimensions.get("window").height - 60,
+    height: Dimensions.get("window").height - UIConsts.bottomNavbarHeight,
   },
   video: {
     position: "absolute",
@@ -13,25 +13,36 @@ export const styles = StyleSheet.create({
     bottom: 0,
     right: 0,
   },
-
-  rightContainer: {
-    right: 12,
-    bottom: 150,
-    position: "absolute",
+  uiContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: 15,
   },
+  amount: {
+    color: Colors.white,
+    fontSize: 13,
+    fontWeight: "bold",
+    marginLeft: 5,
+  },
+  rowContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+
   infoContainer: {
-    alignSelf: "flex-start",
-    width: "80%",
     position: "absolute",
-    left: 5,
-    bottom: 15,
-    padding: 10,
+    width: "100%",
+    bottom: 0,
+    paddingLeft: 10,
+    paddingRight: 10,
+    paddingBottom: 15,
   },
 
   creator: {
     fontSize: 15,
     color: Colors.white,
     fontWeight: "bold",
+    marginLeft: 10,
   },
   tagsContainer: {
     flexDirection: "row",
