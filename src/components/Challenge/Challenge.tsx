@@ -39,22 +39,22 @@ const UIContainer = () => {
       <View style={styles.uiContainer}>
         <View style={[styles.rowContainer, { width: 60, justifyContent: "space-between" }]}>
           <TouchableOpacity onPress={() => console.log("like!")}>
-            <FontAwesome name={"heart"} size={22} color={Colors.white} />
+            <FontAwesome name={"heart"} size={22} color={Colors.lightGrey} />
           </TouchableOpacity>
 
           <TouchableOpacity onPress={() => console.log("comment!")}>
-            <FontAwesome name={"comment"} size={22} color={Colors.white} />
+            <FontAwesome name={"comment"} size={22} color={Colors.lightGrey} />
           </TouchableOpacity>
         </View>
 
         <View style={[styles.rowContainer, { justifyContent: "space-between" }]}>
           <View style={[styles.rowContainer, { marginRight: 10 }]}>
-            <FontAwesome name={"heart"} size={15} color={Colors.white} />
+            <FontAwesome name={"heart"} size={13} color={Colors.lightGrey} />
 
             <Text style={styles.amount}>138k</Text>
           </View>
           <View style={styles.rowContainer}>
-            <FontAwesome name={"comment"} size={15} color={Colors.white} />
+            <FontAwesome name={"comment"} size={13} color={Colors.lightGrey} />
             <Text style={styles.amount}>289</Text>
           </View>
         </View>
