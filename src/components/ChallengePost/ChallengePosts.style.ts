@@ -4,7 +4,7 @@ import { Colors, UIConsts } from "../shared/styles/variables";
 export const styles = StyleSheet.create({
   container: {
     width: "100%",
-    height: Dimensions.get("window").height - UIConsts.bottomNavbarHeight,
+    height: Dimensions.get("window").height - 60,
   },
   video: {
     position: "absolute",

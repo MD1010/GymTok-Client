@@ -1,7 +1,8 @@
 import { FontAwesome, FontAwesome5 } from "@expo/vector-icons";
 import React from "react";
-import { Text, TouchableOpacity, View } from "react-native";
+import { Text, View } from "react-native";
 import { Image } from "react-native-elements";
+import { TouchableOpacity } from "react-native-gesture-handler";
 import { IChallenge } from "../../interfaces";
 import { Colors } from "../shared/styles/variables";
 import { VideoPlayer } from "../shared/VideoPlayer";
@@ -32,13 +33,19 @@ export const ChallengePost: React.FC<ChallengePostProps> = ({ challenge, isVideo
           <Text style={styles.iconText}>123</Text>
         </View>
         <View style={styles.iconContainer}>
-          <Image
-            style={{ width: 32, height: 32 }}
-            resizeMode={"contain"}
-            source={require("../../../assets/icons/comment.png")}
-          ></Image>
-          {/* <FontAwesome name={"commenting"} size={35} color="white" /> */}
-          <Text style={styles.iconText}>123</Text>
+          <TouchableOpacity
+            onPress={() => {
+              console.log("comment!");
+            }}
+          >
+            <Image
+              style={{ width: 32, height: 32 }}
+              resizeMode={"contain"}
+              source={require("../../../assets/icons/comment.png")}
+            ></Image>
+            {/* <FontAwesome name={"commenting"} size={35} color="white" /> */}
+            <Text style={styles.iconText}>123</Text>
+          </TouchableOpacity>
         </View>
         <View style={styles.iconContainer}>
           <Image

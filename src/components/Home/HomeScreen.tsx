@@ -6,6 +6,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { IChallenge } from "../../interfaces/Challenge";
 import { ChallengePost } from "../ChallengePost/ChallengePost";
 import { AddButton } from "../Camera/AddButton";
+import { UIConsts } from "../shared/styles/variables";
 
 interface ChallengesProps {
   challenges: IChallenge[];
