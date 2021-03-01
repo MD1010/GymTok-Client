@@ -7,7 +7,7 @@ export const register = (username: string, fullName: string, password: string): 
     const body = { username, fullName, password };
     const { res, error } = await fetchAPI(RequestMethod.POST, registerEnpoint, body);
     if (res) {
-      dispatch(authActions.login(res.data));
+      dispatch(authActions.login(res));
     } else {
       dispatch(authActions.authFailed({ error }));
     }

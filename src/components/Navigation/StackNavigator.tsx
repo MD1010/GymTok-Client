@@ -5,7 +5,11 @@ import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { BottomTabs } from "./BottomTabs";
 import { AddButton } from "../Camera/AddButton";
-import { RegisterScreen } from "../Register/register";
+import { LoginContainer as LoginScreen } from "../Login/LoginContainer";
+import { RegisterContainer as RegisterScreen } from "../Register/RegisterContainer";
+import { UIConsts } from "../shared/styles/variables";
+import { Colors } from "../shared/styles/variables";
+
 
 interface StackNavigatorProps {}
 
@@ -22,7 +26,8 @@ export const StackNavigator: React.FC<StackNavigatorProps> = ({}) => {
           }}
         />
         <Stack.Screen name="Publish" component={PublishNewVideoScreen} />
-        <Stack.Screen name="register" component={RegisterScreen} />
+        <Stack.Screen name="Register" component={RegisterScreen} />
+        <Stack.Screen name="Login" component={LoginScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

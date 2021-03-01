@@ -1,7 +1,7 @@
 import { FontAwesome5, Ionicons } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import React from "react";
-import { Platform } from "react-native";
+import { Platform, Image } from "react-native";
 import { Portal, Provider } from "react-native-paper";
 import { AddButton } from "../Camera/AddButton";
 import { HomeContainer as Home } from "../Home/HomeContainer";
@@ -18,9 +18,8 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
       <Tab.Navigator
         initialRouteName="Home"
         tabBarOptions={{
-          activeTintColor: Colors.yellow,
+          activeTintColor: Colors.cyan,
           activeBackgroundColor: Colors.darkBlue,
-          inactiveBackgroundColor: Colors.darkBlue,
           inactiveTintColor: Colors.white,
           showLabel: false,
           style: {
@@ -34,16 +33,29 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
           name="Home"
           component={Home}
           options={{
-            tabBarIcon: ({ color, size }) => <FontAwesome5 name="home" size={size} color={color} />,
+            tabBarIcon: ({ color, size, focused }) =>
+              focused ? (
+                <Ionicons name="md-home-sharp" color={color} size={size} />
+              ) : (
+                <Ionicons name="md-home-outline" color={color} size={size} />
+              ),
+            // <Image
+            //   style={{ width: 35, height: 35, tintColor: color }}
+            //   resizeMode={"contain"}
+            //   source={require("../../../assets/icons/home.png")}
+            // ></Image>
           }}
         />
         <Tab.Screen
           name="Leaderboards"
           component={LoginScreen}
           options={{
-            tabBarIcon: ({ color, size }) => (
-              <Ionicons name="trophy" color={color} size={size} style={{ marginRight: 50 }} />
-            ),
+            tabBarIcon: ({ color, size, focused }) =>
+              focused ? (
+                <Ionicons name="trophy-sharp" color={color} size={size} style={{ marginRight: 50 }} />
+              ) : (
+                <Ionicons name="trophy-outline" color={color} size={size} style={{ marginRight: 50 }} />
+              ),
           }}
         />
 
@@ -51,23 +63,38 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
           name="Notifications"
           component={LoginScreen}
           options={{
-            tabBarIcon: ({ color, size }) => (
-              <Ionicons
-                name={Platform.OS === "android" ? "md-notifications" : "ios-notifications"}
-                color={color}
-                size={size}
-                style={{
-                  marginLeft: 50,
-                }}
-              />
-            ),
+            tabBarIcon: ({ color, size, focused }) =>
+              focused ? (
+                <Ionicons
+                  name={"notifications-sharp"}
+                  color={color}
+                  size={size}
+                  style={{
+                    marginLeft: 50,
+                  }}
+                />
+              ) : (
+                <Ionicons
+                  name={"notifications-outline"}
+                  color={color}
+                  size={size}
+                  style={{
+                    marginLeft: 50,
+                  }}
+                />
+              ),
           }}
         ></Tab.Screen>
         <Tab.Screen
           name="Me"
           component={LoginScreen}
           options={{
-            tabBarIcon: ({ color, size }) => <FontAwesome5 name="user-alt" color={color} size={size} />,
+            tabBarIcon: ({ color, size, focused }) =>
+              focused ? (
+                <Ionicons name="person-sharp" color={color} size={size} />
+              ) : (
+                <Ionicons name="person-outline" color={color} size={size} />
+              ),
           }}
         />
       </Tab.Navigator>

@@ -1,5 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
 import React, { createRef, useEffect, useState } from "react";
+import { AuthModal } from "../shared/AuthModal";
 import {
   Keyboard,
   KeyboardAvoidingView,
@@ -23,6 +24,7 @@ export const LoginScreen: React.FC<LoginProps> = ({ onSubmit, error }) => {
   const [errortext, setErrortext] = useState("");
   const navigation = useNavigation();
   const passwordInputRef = createRef<TextInput>();
+  const [showAuthModal, setShowAuthModal] = useState(false);
 
   return (
     <View style={styles.mainBody}>
@@ -34,6 +36,7 @@ export const LoginScreen: React.FC<LoginProps> = ({ onSubmit, error }) => {
           alignContent: "center",
         }}
       >
+        {showAuthModal && (<AuthModal close={()=> setShowAuthModal(false) }/>)}
         <View>
           <KeyboardAvoidingView enabled>
             <View style={styles.SectionStyle}>
@@ -72,9 +75,17 @@ export const LoginScreen: React.FC<LoginProps> = ({ onSubmit, error }) => {
             >
               <Text style={styles.buttonTextStyle}>LOGIN</Text>
             </TouchableOpacity>
-            <Text style={styles.registerTextStyle} onPress={() => navigation.navigate("register")}>
+
+            <TouchableOpacity
+              style={styles.buttonStyle}
+              activeOpacity={0.5}
+              onPress={() => setShowAuthModal(!showAuthModal)}
+            >
+              <Text style={styles.buttonTextStyle}>open</Text>
+            </TouchableOpacity>
+            {/* <Text style={styles.registerTextStyle} onPress={() => navigation.navigate("register")}>
               New Here ? Register
-            </Text>
+            </Text> */}
           </KeyboardAvoidingView>
         </View>
       </ScrollView>

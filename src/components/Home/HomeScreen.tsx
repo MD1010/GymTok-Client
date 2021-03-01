@@ -4,8 +4,10 @@ import { Dimensions, FlatList, StatusBar, TouchableWithoutFeedback, View } from 
 import { GestureHandlerRootView, NativeViewGestureHandler, PanGestureHandler } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { IChallenge } from "../../interfaces/Challenge";
-import { ChallengePost } from "../ChallengePost/ChallengePost";
+import { Challenge } from "../Challenge/Challenge";
 import { AddButton } from "../Camera/AddButton";
+import { UIConsts } from "../shared/styles/variables";
+
 
 interface ChallengesProps {
   challenges: IChallenge[];
@@ -37,16 +39,16 @@ export const HomeScreen: React.FC<ChallengesProps> = ({ challenges }) => {
   });
 
   return (
-    <View>
+    <View style={{ flex: 1 }}>
       <StatusBar barStyle={"dark-content"} />
       <FlatList
         data={challenges}
         renderItem={({ item, index }) => (
-          <ChallengePost challenge={item} isVideoPlaying={index === currentlyPlaying && !navigatedOutOfScreen} />
+          <Challenge challenge={item} isVideoPlaying={index === currentlyPlaying && !navigatedOutOfScreen} />
         )}
         keyExtractor={(challenge) => challenge._id}
         showsVerticalScrollIndicator={false}
-        snapToInterval={Dimensions.get("window").height}
+        snapToInterval={Dimensions.get("window").height - UIConsts.bottomNavbarHeight}
         snapToAlignment={"start"}
         decelerationRate={"fast"}
         onViewableItemsChanged={onViewRef.current}

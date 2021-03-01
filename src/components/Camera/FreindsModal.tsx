@@ -1,72 +1,62 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, View, SafeAreaView, FlatList, Button, Platform, Dimensions } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  SafeAreaView,
+  FlatList,
+  Button,
+  Platform,
+  Dimensions,
+  TouchableWithoutFeedback,
+  TextInput,
+  Keyboard,
+} from "react-native";
 import { CheckBox } from "react-native-elements";
 import { Colors } from "../shared/styles/variables";
+import { LogBox } from "react-native";
+import { fetchAPI, RequestMethod } from "../../utils/fetchAPI";
 
 interface props {
+  selectedFriends: any[];
   isVisible: boolean;
   close: () => void;
   setSelectedFriends: (selectedFriends: any[]) => void;
 }
 
-const DATA = [
-  {
-    id: "1",
-    title: "First Item",
-  },
-  {
-    id: "2",
-    title: "Second Item",
-  },
-  {
-    id: "3",
-    title: "Third Item",
-  },
-  {
-    id: "4",
-    title: "First Item",
-  },
-  {
-    id: "5",
-    title: "Second Item",
-  },
-  {
-    id: "6",
-    title: "Third Item",
-  },
-  {
-    id: "7",
-    title: "First Item",
-  },
-  {
-    id: "8",
-    title: "Second Item",
-  },
-  {
-    id: "9",
-    title: "Third Item",
-  },
-  {
-    id: "10",
-    title: "Third Item",
-  },
-];
-
-export const FriendsModal: React.FC<props> = ({ isVisible, setSelectedFriends, close }) => {
+export const FriendsModal: React.FC<props> = ({ isVisible, setSelectedFriends, selectedFriends, close }) => {
   const [friends, setFriends] = useState<any[]>([]);
+  const [filteredFriends, setFilteredFriends] = useState<any[]>([]);
 
   useEffect(() => {
-    if (isVisible) {
-      const newFriendsArr = DATA.map((friend) => Object.assign({ isSelected: false }, { ...friend }));
-      setFriends(newFriendsArr);
-    }
+    (async () => {
+      LogBox.ignoreLogs(["VirtualizedLists should never be nested"]);
+      if (isVisible) {
+        const { res, error } = await fetchAPI(RequestMethod.GET, `${process.env.BASE_API_ENPOINT}/users`);
+        const newFriendsArr = res.map((friend) =>
+          Object.assign({ isSelected: isSelectedFriend(friend._id) }, { ...friend })
+        );
+        setFriends(newFriendsArr);
+      }
+    })();
   }, [isVisible]);
+
+  const isSelectedFriend = (friendID) => {
+    const selectedFriend = selectedFriends.filter((tempSelectedFriend) => tempSelectedFriend._id === friendID);
+    if (selectedFriend.length > 0) return selectedFriend[0].isSelected;
+    return false;
+  };
 
   const updateSelectionFriend = (isSelectionFriend: boolean, friendID: string) => {
     const selectedFriends = friends.map((friend) =>
-      friend.id === friendID ? { ...friend, isSelected: isSelectionFriend } : friend
+      friend._id === friendID ? { ...friend, isSelected: isSelectionFriend } : friend
     );
     setFriends(selectedFriends);
+
+    const selectedFilteredFriends = filteredFriends.map((friend) =>
+      friend._id === friendID ? { ...friend, isSelected: isSelectionFriend } : friend
+    );
+    setFilteredFriends(selectedFilteredFriends);
   };
 
   const handleSelectedFriends = () => {
@@ -77,19 +67,25 @@ export const FriendsModal: React.FC<props> = ({ isVisible, setSelectedFriends, c
   const renderItem = ({ item }) => {
     return (
       <View style={styles.checkboxContainer}>
-        <Text style={styles.title}>{item.title}</Text>
-        <CheckBox checked={item.isSelected} onPress={() => updateSelectionFriend(!item.isSelected, item.id)} />
+        <Text style={styles.title}>{item.fullName}</Text>
+        <CheckBox checked={item.isSelected} onPress={() => updateSelectionFriend(!item.isSelected, item._id)} />
       </View>
     );
   };
+
+  const filterFriends = (friendName) => {
+    const filteredFriends = friends.filter((friend) => friend.fullName.includes(friendName) && friendName.length > 0);
+    setFilteredFriends(filteredFriends.length > 0 ? filteredFriends : friendName.length > 0 ? undefined : []);
+  };
+
   return (
     <View style={{ backgroundColor: Colors.darkBlue }}>
       <View style={styles.Btns}>
         <Button
-          title="Cencel"
+          title="Cancel"
           color={Colors.red}
           onPress={() => {
-            handleSelectedFriends();
+            setSelectedFriends([]);
             close();
           }}
         />
@@ -98,19 +94,27 @@ export const FriendsModal: React.FC<props> = ({ isVisible, setSelectedFriends, c
           title="Apply"
           color={Colors.lightGreen}
           onPress={() => {
+            handleSelectedFriends();
             close();
           }}
         />
       </View>
-      <View
-        style={{
-          marginTop: 10,
-          borderBottomColor: Colors.gold,
-          borderBottomWidth: 1,
-        }}
-      />
+
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <TextInput
+          style={{ color: "white", borderColor: Colors.gold, borderWidth: 0.5, height: 40 }}
+          onChangeText={(friendName) => filterFriends(friendName)}
+          placeholder={"search friends"}
+          placeholderTextColor={Colors.white}
+        />
+      </TouchableWithoutFeedback>
       <SafeAreaView style={styles.safeArea}>
-        <FlatList style={styles.flastList} data={friends} renderItem={renderItem} keyExtractor={(item) => item.id} />
+        <FlatList
+          style={styles.flastList}
+          data={filteredFriends === undefined ? [] : filteredFriends.length == 0 ? friends : filteredFriends}
+          renderItem={renderItem}
+          keyExtractor={(item) => item._id}
+        />
       </SafeAreaView>
     </View>
   );
@@ -122,7 +126,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     flexDirection: "row",
-    marginBottom: 20,
+    marginBottom: 2,
   },
 
   title: {
@@ -141,7 +145,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   safeArea: {
-    height: Platform.OS === "android" ? Dimensions.get("screen").height - 300 : Dimensions.get("screen").height - 255,
+    height: Platform.OS === "android" ? Dimensions.get("screen").height - 300 : Dimensions.get("screen").height - 285,
     display: "flex",
     flexDirection: "row",
   },
@@ -155,5 +159,6 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
+    marginBottom: Platform.OS === "android" ? 20 : 10,
   },
 });
