@@ -55,11 +55,19 @@ export const PublishNewVideoScreen: React.FC = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Spinner visible={isSpinner} textContent={"Uploading..."} textStyle={styles.spinnerTextStyle} />
+      <Spinner
+        visible={isSpinner}
+        textContent={"Uploading..."}
+        textStyle={styles.spinnerTextStyle}
+      />
       <KeyboardAwareScrollView>
         <VideoScreen uri={route.params!.videoUri} />
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <View style={{ height: UIConsts.bottomNavbarHeight }}>
+          <View
+            style={{
+              height: UIConsts.bottomNavbarHeight,
+            }}
+          >
             <TextInput
               style={styles.description}
               onChangeText={(text) => setText(text)}
@@ -74,7 +82,11 @@ export const PublishNewVideoScreen: React.FC = () => {
       </KeyboardAwareScrollView>
 
       {showTaggedFriends && (
-        <Animatable.View animation="fadeInUpBig" duration={500} style={styles.tagFriends}>
+        <Animatable.View
+          animation="fadeInUpBig"
+          duration={500}
+          style={styles.tagFriends}
+        >
           <FriendsModal
             selectedFriends={selectedFriends}
             close={() => setShowTaggedFriends(false)}
@@ -114,10 +126,12 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "column",
     backgroundColor: Colors.darkBlue,
+    height: 670,
   },
   description: {
     height: UIConsts.bottomNavbarHeight - 20,
-    borderRadius: 25,
+
+    paddingLeft: 10,
     opacity: 0.6,
     color: Colors.black,
     backgroundColor: Colors.lightGrey,
@@ -136,7 +150,9 @@ const styles = StyleSheet.create({
     width: Dimensions.get("screen").width,
     height: Platform.OS === "android" ? 51 : 75,
     marginTop:
-      Platform.OS === "android" ? Dimensions.get("screen").height - 189 : Dimensions.get("screen").height - 160,
+      Platform.OS === "android"
+        ? Dimensions.get("screen").height - 189
+        : Dimensions.get("screen").height - 160,
     position: "absolute",
     flexDirection: "row",
     alignItems: "center",

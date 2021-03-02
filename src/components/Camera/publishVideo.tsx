@@ -10,11 +10,21 @@ interface PublishScreenProps {
 
 export const VideoScreen: React.FC<PublishScreenProps> = ({ uri }) => {
   const video = React.useRef(null);
-
+  // const styles = StyleSheet.create({
+  //   video:{
+  //     width:100%
+  //   }
+  // })
   return (
     <VideoPlayer
-      height={Platform.OS === "android" ? Dimensions.get("screen").height - 249 : Dimensions.get("screen").height - 220}
+      height={
+        Platform.OS === "android"
+          ? Dimensions.get("screen").height - 249
+          : Dimensions.get("screen").height - 220
+      }
       showFullscreenButton={false}
+      // width={100}
+
       videoProps={{
         shouldPlay: false,
         resizeMode: Video.RESIZE_MODE_CONTAIN,
