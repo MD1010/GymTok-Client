@@ -21,9 +21,10 @@ export const AuthModal: React.FC<props> = ({close }) => {
   const navigation = useNavigation();
 
   return (
-    <View style={{backgroundColor: "#F0F0F0"}}>
+  
     <Animatable.View animation="fadeInUpBig" duration={500} style={styles.tagFriends}>
-        <View style={{ backgroundColor: Colors.darkBlue }}>
+        <View style={styles.checkboxContainer}>
+        
       <View style={styles.Btns}>
         <Button
           title="Cancel"
@@ -34,6 +35,7 @@ export const AuthModal: React.FC<props> = ({close }) => {
         />
       </View>
       
+      <View style={styles.tal}> 
         <Text style={{ alignSelf: "center", fontSize: 25, color: Colors.gold }}>Sign up for GymTok</Text>
         <TouchableOpacity
           onPress={() => {
@@ -49,10 +51,10 @@ export const AuthModal: React.FC<props> = ({close }) => {
         >
         <Text style={{ alignSelf: "center", fontSize: 15, color: Colors.red }}>Already have an accuont? Log in</Text>
       </TouchableOpacity>
+      </View>
       
     </View>
     </Animatable.View>
-    </View>
   );
 };
 
@@ -62,7 +64,7 @@ const styles = StyleSheet.create({
         backgroundColor: "#F0F0F0",
         marginTop: 120,
         zIndex: 1,
-        height: 500,
+        height:  Dimensions.get("window").height - 75,
         width: Dimensions.get("screen").width,
       },
       closeBtn: {
@@ -74,4 +76,15 @@ const styles = StyleSheet.create({
         justifyContent: "space-between",
         marginBottom: Platform.OS === "android" ? 20 : 10,
       },
+      checkboxContainer: {
+        backgroundColor: Colors.darkBlue,
+        height:Dimensions.get("window").height 
+      },
+      tal: {
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        flexDirection: "column",
+        height: 250
+      }
 });
