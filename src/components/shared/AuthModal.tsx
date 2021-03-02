@@ -21,6 +21,7 @@ export const AuthModal: React.FC<props> = ({close }) => {
   const navigation = useNavigation();
 
   return (
+    <View style={{backgroundColor: "#F0F0F0"}}>
     <Animatable.View animation="fadeInUpBig" duration={500} style={styles.tagFriends}>
         <View style={{ backgroundColor: Colors.darkBlue }}>
       <View style={styles.Btns}>
@@ -31,25 +32,27 @@ export const AuthModal: React.FC<props> = ({close }) => {
             close();
           }}
         />
-        
       </View>
-      <Text style={{ alignSelf: "center", fontSize: 25, color: Colors.gold }}>Sign up for GymTok</Text>
-      <TouchableOpacity
-        onPress={() => {
-            navigation.navigate("Register");
-        }}
+      
+        <Text style={{ alignSelf: "center", fontSize: 25, color: Colors.gold }}>Sign up for GymTok</Text>
+        <TouchableOpacity
+          onPress={() => {
+              navigation.navigate("Register");
+          }}
+          >
+            <Text style={{ alignSelf: "center", fontSize: 15, color: Colors.gold }}>Register with username</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+              navigation.navigate("Login");
+          }}
         >
-            <Text style={{ alignSelf: "center", fontSize: 15, color: Colors.gold }}>Register with email</Text>
+        <Text style={{ alignSelf: "center", fontSize: 15, color: Colors.red }}>Already have an accuont? Log in</Text>
       </TouchableOpacity>
-      <TouchableOpacity
-        onPress={() => {
-            navigation.navigate("Login");
-        }}
-      >
-      <Text style={{ alignSelf: "center", fontSize: 15, color: Colors.red }}>Already have an accuont? Log in</Text>
-      </TouchableOpacity>
+      
     </View>
     </Animatable.View>
+    </View>
   );
 };
 
@@ -59,7 +62,7 @@ const styles = StyleSheet.create({
         backgroundColor: "#F0F0F0",
         marginTop: 120,
         zIndex: 1,
-        height: 830,
+        height: 500,
         width: Dimensions.get("screen").width,
       },
       closeBtn: {
@@ -70,10 +73,5 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "space-between",
         marginBottom: Platform.OS === "android" ? 20 : 10,
-      },
-      safeArea: {
-        height: Platform.OS === "android" ? Dimensions.get("screen").height - 300 : Dimensions.get("screen").height - 285,
-        display: "flex",
-        flexDirection: "row",
       },
 });
