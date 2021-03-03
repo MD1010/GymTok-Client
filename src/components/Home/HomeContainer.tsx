@@ -8,7 +8,8 @@ interface HomeContainerProps {}
 export const HomeContainer: React.FC<HomeContainerProps> = ({}) => {
   const [challenges, setChallenges] = useState<IChallenge[]>([]);
   const [error, setError] = useState<string | null>();
-  const challengesEndpoint = `${process.env.BASE_API_ENPOINT}/challenges`;
+  const challengesEndpoint = `${process.env.SERVER_ENDPOINT}/challenges`;
+
   const fetchChallenges = async () => {
     const { res, error } = await fetchAPI(RequestMethod.GET, challengesEndpoint);
     res && setChallenges(res);
@@ -19,9 +20,7 @@ export const HomeContainer: React.FC<HomeContainerProps> = ({}) => {
   }, [error]);
 
   useEffect(() => {
-    (async () => {
-      await fetchChallenges();
-    })();
+    fetchChallenges();
   }, []);
   return <HomeScreen challenges={challenges} />;
 };

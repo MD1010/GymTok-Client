@@ -1,6 +1,6 @@
 declare namespace NodeJS {
   export interface ProcessEnv {
-    BASE_API_ENPOINT: string; // http://{local_ip}:{server_port}
-    STREAMING_SERVER_ENPOINT: string;
+    SERVER_ENDPOINT: string; // http://{local_ip}:{server_port}
+    VIDEO_SERVER_ENDPOINT: string;
   }
 }
