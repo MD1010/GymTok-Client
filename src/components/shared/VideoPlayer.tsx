@@ -49,7 +49,7 @@ export const VideoPlayer: React.FC<VideoProps> = ({ uri, style, isPlaying, resiz
           isLooping
           onPlaybackStatusUpdate={(status) => setStatus(() => status)}
         />
-        <View>
+        <View style={{ position: "absolute" }}>
           {isPaused && <FontAwesome name="play" size={playBtnSize ? playBtnSize : 40} color={Colors.white} />}
         </View>
       </View>

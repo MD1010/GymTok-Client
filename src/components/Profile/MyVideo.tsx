@@ -11,29 +11,11 @@ interface MyVideoProps {
 }
 
 export const MyModal: React.FC<MyVideoProps> = ({ modalVisible, setModalVisible, videoUri }) => {
-  useEffect(() => {
-    alert(videoUri);
-  }, [videoUri]);
-
   return (
     <View style={styles.centeredView}>
       <Modal animationType="slide" transparent={true} visible={modalVisible}>
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
-            {/* <Challenge
-              challenge={{
-                _id: "1",
-                creationTime: "",
-                name: "string",
-                createdBy: "string",
-                description: "string",
-                estimatedScore: "string",
-                image: "string",
-                video: videoUri,
-              }}
-              isVideoPlaying={true}
-            /> */}
-
             <View style={styles.Btns}>
               <Button
                 title="Cancel"
@@ -43,7 +25,23 @@ export const MyModal: React.FC<MyVideoProps> = ({ modalVisible, setModalVisible,
               />
             </View>
 
-            <VideoPlayer uri={videoUri} style={{ height: 400, width: 400 }} isPlaying resizeMode="cover" />
+            <View style={{ flex: 1 }}>
+              <Challenge
+                challenge={{
+                  _id: "1",
+                  creationTime: "",
+                  name: "string",
+                  createdBy: "string",
+                  description: "string",
+                  estimatedScore: "string",
+                  image: "string",
+                  video: videoUri,
+                }}
+                isVideoPlaying={true}
+              />
+            </View>
+
+            {/* <VideoPlayer uri={videoUri} style={{ height: 400, width: 400 }} isPlaying resizeMode="cover" /> */}
           </View>
         </View>
       </Modal>
@@ -60,6 +58,7 @@ const styles = StyleSheet.create({
   },
   modalView: {
     // margin: 20,
+    // flex: 1,
     backgroundColor: "white",
     borderRadius: 20,
     padding: 35,

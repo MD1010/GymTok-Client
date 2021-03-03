@@ -1,6 +1,6 @@
 import React from "react";
 import { View, StyleSheet, Dimensions, Platform } from "react-native";
-import { Video } from "expo-av";
+import { ResizeMode, Video } from "expo-av";
 import { UIConsts } from "../shared/styles/variables";
 import VideoPlayer from "expo-video-player";
 
@@ -17,7 +17,7 @@ export const VideoScreen: React.FC<PublishScreenProps> = ({ uri }) => {
       showFullscreenButton={false}
       videoProps={{
         shouldPlay: false,
-        resizeMode: Video.RESIZE_MODE_CONTAIN,
+        resizeMode: ResizeMode.COVER,
         source: {
           uri: uri,
         },
