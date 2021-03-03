@@ -161,7 +161,7 @@ export const FriendsModal: React.FC<props> = ({
         <TextInput
           style={{
             color: "white",
-            borderColor: Colors.gold,
+            borderColor: Colors.lightGrey,
             borderWidth: 0.5,
             height: 40,
             paddingLeft: 10,

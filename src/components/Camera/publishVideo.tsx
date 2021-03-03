@@ -1,6 +1,6 @@
 import React from "react";
 import { View, StyleSheet, Dimensions, Platform } from "react-native";
-import { Video } from "expo-av";
+import { ResizeMode, Video } from "expo-av";
 import { UIConsts } from "../shared/styles/variables";
 import VideoPlayer from "expo-video-player";
 
@@ -17,17 +17,16 @@ export const VideoScreen: React.FC<PublishScreenProps> = ({ uri }) => {
   // })
   return (
     <VideoPlayer
+      width={Dimensions.get("window").width}
       height={
-        Platform.OS === "android"
-          ? Dimensions.get("screen").height - 249
-          : Dimensions.get("screen").height - 220
+        Dimensions.get("screen").height - Dimensions.get("screen").height / 3.5
       }
       showFullscreenButton={false}
       // width={100}
 
       videoProps={{
         shouldPlay: false,
-        resizeMode: Video.RESIZE_MODE_CONTAIN,
+        resizeMode: ResizeMode.COVER,
         source: {
           uri: uri,
         },
