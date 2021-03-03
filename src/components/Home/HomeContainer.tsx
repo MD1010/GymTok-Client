@@ -8,7 +8,7 @@ interface HomeContainerProps {}
 export const HomeContainer: React.FC<HomeContainerProps> = ({}) => {
   const [challenges, setChallenges] = useState<IChallenge[]>([]);
   const [error, setError] = useState<string | null>();
-  const challengesEndpoint = `${process.env.SERVER_ENDPOINT}/challenges`;
+  const challengesEndpoint = `http://192.168.0.107:8080/challenges`;
 
   const fetchChallenges = async () => {
     const { res, error } = await fetchAPI(RequestMethod.GET, challengesEndpoint);

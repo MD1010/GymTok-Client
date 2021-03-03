@@ -40,7 +40,7 @@ export const PublishNewVideoScreen: React.FC = () => {
       type: "video/mp4",
     } as any);
     formData.append("selectedFriends", JSON.stringify(selectedFriends));
-    console.log(`${process.env.BASE_API_ENPOINT}/challenges/upload`);
+
     const { res, error } = await fetchAPI(
       RequestMethod.POST,
       `${process.env.BASE_API_ENPOINT}/challenges/upload`,
