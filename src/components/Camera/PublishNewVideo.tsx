@@ -46,8 +46,6 @@ export const PublishNewVideoScreen: React.FC = () => {
       `${process.env.BASE_API_ENPOINT}/challenges/upload`,
       formData
     );
-    console.log("res=", res);
-    console.log("res=", error);
     if (res) alert("upload succefully!!");
     else alert(error);
     setIsSpinner(false);

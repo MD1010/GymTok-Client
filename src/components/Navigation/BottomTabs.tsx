@@ -5,6 +5,7 @@ import { Platform, Image } from "react-native";
 import { Portal, Provider } from "react-native-paper";
 import { AddButton } from "../Camera/AddButton";
 import { HomeContainer as Home } from "../Home/HomeContainer";
+import { HomeScreen } from "../Home/HomeScreen";
 import { LoginScreen } from "../Login/Login";
 import { Colors, UIConsts } from "../shared/styles/variables";
 
@@ -31,7 +32,7 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
       >
         <Tab.Screen
           name="Home"
-          component={Home}
+          component={HomeScreen}
           options={{
             tabBarIcon: ({ color, size, focused }) =>
               focused ? (

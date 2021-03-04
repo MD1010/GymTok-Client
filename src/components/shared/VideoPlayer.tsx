@@ -34,6 +34,9 @@ export const VideoPlayer: React.FC<VideoProps> = ({ uri, style, isPlaying, resiz
     } else {
       ref.current.pauseAsync();
     }
+    return () => {
+      ref.current.pauseAsync();
+    };
   }, [isPlaying]);
 
   return (

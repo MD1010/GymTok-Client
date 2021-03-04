@@ -1,5 +1,5 @@
 import { FontAwesome } from "@expo/vector-icons";
-import React from "react";
+import React, { memo } from "react";
 import { Text, View } from "react-native";
 import { Avatar } from "react-native-elements";
 import { TouchableOpacity, TouchableWithoutFeedback } from "react-native-gesture-handler";
@@ -63,9 +63,10 @@ const UIContainer = () => {
   );
 };
 
-export const Challenge: React.FC<ChallengeProps> = ({ challenge, isVideoPlaying }) => {
+export const Challenge: React.FC<ChallengeProps> = memo(({ challenge, isVideoPlaying }) => {
   const { name, video: videoURL, image, estimatedScore, description, creationTime, createdBy, _id } = challenge;
-  console.log(challenge);
+  console.log("render!");
+
   const streaminServerUrl = `http://193.106.55.109:8000/${videoURL}`;
   return (
     <View style={styles.container}>
@@ -81,4 +82,4 @@ export const Challenge: React.FC<ChallengeProps> = ({ challenge, isVideoPlaying 
       </View>
     </View>
   );
-};
+});
