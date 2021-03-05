@@ -13,16 +13,18 @@ import {
   Dimensions,
 } from "react-native";
 import { GestureHandlerRootView, NativeViewGestureHandler, PanGestureHandler } from "react-native-gesture-handler";
-import { UIConsts } from "../shared/styles/variables";
+import { Colors, UIConsts } from "../shared/styles/variables";
 import * as VideoThumbnails from "expo-video-thumbnails";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { MyModal } from "./MyVideo";
+import { ProfileVideoModal } from "./ProfileVideoModal";
+import { FontAwesome } from "@expo/vector-icons";
 
 interface ProfileProps {
   challenges: any[];
+  numColumns: number;
 }
 
-export const ProfileScreen: React.FC<ProfileProps> = ({ challenges }) => {
+export const ProfileScreen: React.FC<ProfileProps> = ({ challenges, numColumns }) => {
   const [tempChallanges, setTempChallanges] = useState<any[]>([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedVideoUri, setSelectedVideoUri] = useState(null);
@@ -42,7 +44,7 @@ export const ProfileScreen: React.FC<ProfileProps> = ({ challenges }) => {
   const generateThumbnail = async (url) => {
     try {
       const { uri } = await VideoThumbnails.getThumbnailAsync(url, {
-        time: 15000,
+        //time: 15000,
       });
       return uri;
     } catch (e) {
@@ -62,9 +64,15 @@ export const ProfileScreen: React.FC<ProfileProps> = ({ challenges }) => {
           showVideo(item.url);
         }}
       >
-        <ImageBackground style={styles.theImage} source={{ uri: item.image }}>
+        <ImageBackground
+          style={{ ...styles.theImage, width: Dimensions.get("window").width / numColumns }}
+          source={{ uri: item.image }}
+        >
           <View style={{ display: "flex", justifyContent: "flex-end", flexDirection: "column", height: 120 }}>
-            <Text>Hey</Text>
+            <View style={[styles.rowContainer, { marginRight: 10 }]}>
+              <FontAwesome name={"heart"} size={13} color={Colors.lightGrey} />
+              <Text style={styles.amount}>138k</Text>
+            </View>
           </View>
         </ImageBackground>
       </TouchableOpacity>
@@ -82,9 +90,9 @@ export const ProfileScreen: React.FC<ProfileProps> = ({ challenges }) => {
           renderItem={renderItem}
           keyExtractor={(item) => item._id}
           horizontal={false}
-          numColumns={3}
+          numColumns={numColumns}
         />
-        <MyModal
+        <ProfileVideoModal
           videoUri={selectedVideoUri}
           modalVisible={modalVisible}
           setModalVisible={(isModalVisible) => setModalVisible(isModalVisible)}
@@ -108,7 +116,6 @@ const styles = StyleSheet.create({
 
   theImage: {
     margin: 2,
-    width: Dimensions.get("window").width / 3,
     height: 120,
     resizeMode: "cover",
   },
@@ -116,5 +123,15 @@ const styles = StyleSheet.create({
     flex: 1,
     display: "flex",
     flexDirection: "column",
+  },
+  amount: {
+    color: Colors.white,
+    fontSize: 13,
+    fontWeight: "bold",
+    marginLeft: 5,
+  },
+  rowContainer: {
+    flexDirection: "row",
+    alignItems: "center",
   },
 });

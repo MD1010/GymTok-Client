@@ -4,13 +4,13 @@ import { VideoPlayer } from "../shared/VideoPlayer";
 import { Video } from "expo-av";
 import { Challenge } from "../Challenge/Challenge";
 
-interface MyVideoProps {
+interface ProfileVideoModal {
   videoUri: string;
   modalVisible: boolean;
   setModalVisible: (isModalVisible: boolean) => void;
 }
 
-export const MyModal: React.FC<MyVideoProps> = ({ modalVisible, setModalVisible, videoUri }) => {
+export const ProfileVideoModal: React.FC<ProfileVideoModal> = ({ modalVisible, setModalVisible, videoUri }) => {
   return (
     <View style={styles.centeredView}>
       <Modal animationType="slide" transparent={true} visible={modalVisible}>

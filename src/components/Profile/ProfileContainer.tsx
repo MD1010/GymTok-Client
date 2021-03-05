@@ -65,5 +65,5 @@ export const ProfileContainer: React.FC<ProfileContainerProps> = ({}) => {
   //   useEffect(() => {
   //     fetchChallenges();
   //   }, []);
-  return <ProfileScreen challenges={challenges} />;
+  return <ProfileScreen challenges={challenges} numColumns={3} />;
 };
