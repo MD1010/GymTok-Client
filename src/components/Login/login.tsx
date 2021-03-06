@@ -18,7 +18,6 @@ interface LoginProps {
 }
 
 export const LoginScreen: React.FC<LoginProps> = ({ onSubmit, error }) => {
-
   const [username, setUserName] = useState("");
   const [password, setPassword] = useState("");
   const [errortext, setErrortext] = useState("");
@@ -36,7 +35,7 @@ export const LoginScreen: React.FC<LoginProps> = ({ onSubmit, error }) => {
           alignContent: "center",
         }}
       >
-        {showAuthModal && (<AuthModal close={()=> setShowAuthModal(false) }/>)}
+        {showAuthModal && <AuthModal close={() => setShowAuthModal(false)} />}
         <View>
           <KeyboardAvoidingView enabled>
             <View style={styles.SectionStyle}>
