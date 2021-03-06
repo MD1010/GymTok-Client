@@ -5,7 +5,7 @@ import { IChallenge } from "../../interfaces/Challenge";
 import { fetchAPI, RequestMethod } from "../../utils/fetchAPI";
 import { Challenge } from "../Challenge/Challenge";
 import { UIConsts } from "../shared/styles/variables";
-
+import { Text } from "react-native";
 interface ChallengesProps {
   challenges: IChallenge[];
 }
@@ -26,10 +26,16 @@ export const HomeScreen: React.FC<ChallengesProps> = () => {
       size: itemsToLoad,
       page: challenges.length / itemsToLoad,
     });
-    console.log("now the challenges are ", res);
-    res && setChallenges([...challenges, ...res]);
+    res &&
+      setChallenges(
+        [...challenges, ...res].map((ch: IChallenge) => {
+          ch.video = "video2.mp4";
+          return ch;
+        })
+      );
     error && setError(error);
   };
+
   useEffect(() => {
     error && alert(error);
   }, [error]);
@@ -70,7 +76,7 @@ export const HomeScreen: React.FC<ChallengesProps> = () => {
       <FlatList
         data={challenges}
         renderItem={renderItem}
-        keyExtractor={(challenge) => challenge._id}
+        keyExtractor={(challenge, i) => i.toString()}
         showsVerticalScrollIndicator={false}
         snapToInterval={Dimensions.get("window").height - UIConsts.bottomNavbarHeight}
         snapToAlignment={"start"}
@@ -78,13 +84,9 @@ export const HomeScreen: React.FC<ChallengesProps> = () => {
         onViewableItemsChanged={onViewRef.current}
         onScrollEndDrag={() => (scrollEnded.current = true)}
         onScrollBeginDrag={() => (scrollEnded.current = false)}
-        getItemLayout={(_data, index) => ({
-          length: Dimensions.get("window").height - UIConsts.bottomNavbarHeight,
-          offset: Dimensions.get("window").height - UIConsts.bottomNavbarHeight * index,
-          index,
-        })}
         onEndReached={fetchChallenges}
         onEndReachedThreshold={0.3}
+        ListFooterComponent={() => <Text>Loading more..</Text>}
       ></FlatList>
     </View>
   );

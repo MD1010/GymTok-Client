@@ -65,9 +65,10 @@ const UIContainer = () => {
 
 export const Challenge: React.FC<ChallengeProps> = memo(({ challenge, isVideoPlaying }) => {
   const { name, video: videoURL, image, estimatedScore, description, creationTime, createdBy, _id } = challenge;
-  console.log("render!");
+  console.log("render challenge!");
 
   const streaminServerUrl = `http://193.106.55.109:8000/${videoURL}`;
+  // const streaminServerUrl = `http://192.168.0.107:8000/${videoURL}`;
   return (
     <View style={styles.container}>
       <VideoPlayer style={styles.video} uri={streaminServerUrl} isPlaying={isVideoPlaying} resizeMode="cover" />

@@ -1,8 +1,10 @@
 import { FontAwesome } from "@expo/vector-icons";
 import { Video } from "expo-av";
-import React, { useEffect, useRef, useState } from "react";
+import React, { memo, useEffect, useRef, useState } from "react";
 import { StyleProp, StyleSheet, TouchableWithoutFeedback, View, ViewStyle } from "react-native";
 import { Colors } from "./styles/variables";
+import * as FileSystem from "expo-file-system";
+import shorthash from "shorthash";
 
 interface VideoProps {
   uri: string;
@@ -12,10 +14,13 @@ interface VideoProps {
   resizeMode: "cover" | "stretch" | "contain";
 }
 
-export const VideoPlayer: React.FC<VideoProps> = ({ uri, style, isPlaying, resizeMode, playBtnSize }) => {
-  const [status, setStatus] = useState<any>();
+export const VideoPlayer: React.FC<VideoProps> = memo(({ uri, style, isPlaying, resizeMode, playBtnSize }) => {
+  // const [status, setStatus] = useState<any>();
+  const statusRef = useRef<any>();
   const [isPaused, setIsPaused] = useState<boolean>(false);
   const ref = useRef(null);
+  const [videoURI, setVideoURI] = useState<string>();
+  console.log("render video");
 
   const pauseVideoByTap = () => {
     setIsPaused(true);
@@ -26,6 +31,25 @@ export const VideoPlayer: React.FC<VideoProps> = ({ uri, style, isPlaying, resiz
     setIsPaused(false);
     ref.current.playAsync();
   };
+
+  const loadURI = async () => {
+    const name = shorthash.unique(uri);
+    console.log(name);
+    const path = `${FileSystem.cacheDirectory}${name}`;
+    const image = await FileSystem.getInfoAsync(path);
+    if (image.exists) {
+      console.log("read image from cache");
+      setVideoURI(image.uri);
+    } else {
+      console.log("downloading image to cache");
+      const newImage = await FileSystem.downloadAsync(uri, path);
+      setVideoURI(newImage.uri);
+    }
+  };
+
+  useEffect(() => {
+    console.log("uri", videoURI);
+  }, [videoURI]);
 
   useEffect(() => {
     if (isPlaying) {
@@ -39,26 +63,32 @@ export const VideoPlayer: React.FC<VideoProps> = ({ uri, style, isPlaying, resiz
     };
   }, [isPlaying]);
 
+  useEffect(() => {
+    loadURI();
+  }, []);
+
   return (
-    <TouchableWithoutFeedback onPress={() => (status.isPlaying ? pauseVideoByTap() : resumeVideoByTap())}>
+    <TouchableWithoutFeedback onPress={() => (statusRef.current.isPlaying ? pauseVideoByTap() : resumeVideoByTap())}>
       <View style={styles.container}>
-        <Video
-          ref={ref}
-          style={[style]}
-          source={{
-            uri,
-          }}
-          resizeMode={resizeMode}
-          isLooping
-          onPlaybackStatusUpdate={(status) => setStatus(() => status)}
-        />
+        {
+          <Video
+            ref={ref}
+            style={[style]}
+            source={{
+              uri: videoURI,
+            }}
+            resizeMode={resizeMode}
+            isLooping
+            onPlaybackStatusUpdate={(status) => (statusRef.current = status)}
+          />
+        }
         <View>
           {isPaused && <FontAwesome name="play" size={playBtnSize ? playBtnSize : 40} color={Colors.white} />}
         </View>
       </View>
     </TouchableWithoutFeedback>
   );
-};
+});
 const styles = StyleSheet.create({
   container: {
     flex: 1,
