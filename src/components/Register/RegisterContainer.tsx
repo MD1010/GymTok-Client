@@ -1,5 +1,5 @@
 import { useNavigation } from "@react-navigation/native";
-import React, { createRef, useState } from "react";
+import React, { createRef, useEffect, useState } from "react";
 import { TextInput } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { register } from "../../store/auth/actions";
@@ -16,6 +16,10 @@ export const RegisterContainer: React.FC<RegisterContainerProps> = () => {
   const passwordInputRef = createRef<TextInput>();
   const { authError, loggedUser } = useSelector(authSelector);
 
+  useEffect(() => {
+    loggedUser && navigation.navigate("Home");
+  }, [loggedUser]);
+
   const handleSubmitPress = async (username: string, fullName: string, password: string) => {
     if (!username) {
       alert("Please fill UserName");
@@ -23,9 +27,9 @@ export const RegisterContainer: React.FC<RegisterContainerProps> = () => {
     }
 
     if (!fullName) {
-        alert("Please fill fullName");
-        return;
-      }
+      alert("Please fill fullName");
+      return;
+    }
 
     if (!password) {
       alert("Please fill Password");

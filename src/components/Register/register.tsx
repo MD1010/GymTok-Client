@@ -1,6 +1,7 @@
 import React, { createRef, useState } from "react";
 import { KeyboardAvoidingView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { Loader } from "../shared/Loader";
+import { Colors } from "../shared/styles/variables";
 
 interface RegisterProps {
   onSubmit: (username: string, fullName: string, password: string) => any;
@@ -8,16 +9,15 @@ interface RegisterProps {
 }
 
 export const RegisterScreen: React.FC<RegisterProps> = ({ onSubmit, error }) => {
-
-  const [username, setUserName] = useState("");
-  const [password, setPassword] = useState("");
-  const [fullName, setFullName] = useState("");
+  const [username, setUserName] = useState(null);
+  const [password, setPassword] = useState(null);
+  const [fullName, setFullName] = useState(null);
   const [isLoading, setLoading] = useState(false);
   const fullNameInputRef = createRef<TextInput>();
   const passwordInputRef = createRef<TextInput>();
 
   return (
-    <View style={{ flex: 1, backgroundColor: "#1f1e1e" }}>
+    <View style={{ flex: 1, backgroundColor: Colors.darkBlue }}>
       {isLoading && <Loader />}
       <ScrollView
         keyboardShouldPersistTaps="handled"
@@ -26,17 +26,7 @@ export const RegisterScreen: React.FC<RegisterProps> = ({ onSubmit, error }) => 
           alignContent: "center",
         }}
       >
-        <View style={{ alignItems: "center" }}>
-          {/* <Image
-            source={require('../Image/aboutreact.png')}
-            style={{
-              width: '50%',
-              height: 100,
-              resizeMode: 'contain',
-              margin: 30,
-            }}
-          /> */}
-        </View>
+        <View style={{ alignItems: "center" }}></View>
         <KeyboardAvoidingView enabled>
           <View style={styles.SectionStyle}>
             <TextInput
@@ -77,8 +67,12 @@ export const RegisterScreen: React.FC<RegisterProps> = ({ onSubmit, error }) => 
               blurOnSubmit={false}
             />
           </View>
-          {error != "" ? <Text style={styles.errorTextStyle}>{error}</Text> : null}
-          <TouchableOpacity style={styles.buttonStyle} activeOpacity={0.5} onPress={() => onSubmit(username, fullName,password)}>
+          {!!error ? <Text style={styles.errorTextStyle}>{error}</Text> : null}
+          <TouchableOpacity
+            style={styles.buttonStyle}
+            activeOpacity={0.5}
+            onPress={() => onSubmit(username, fullName, password)}
+          >
             <Text style={styles.buttonTextStyle}>REGISTER</Text>
           </TouchableOpacity>
         </KeyboardAvoidingView>
@@ -97,10 +91,10 @@ const styles = StyleSheet.create({
     margin: 10,
   },
   buttonStyle: {
-    backgroundColor: "#db403b",
+    backgroundColor: Colors.gold,
     borderWidth: 0,
     color: "#FFFFFF",
-    borderColor: "#db403b",
+    borderColor: Colors.gold,
     height: 40,
     alignItems: "center",
     borderRadius: 30,

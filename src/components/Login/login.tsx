@@ -1,6 +1,4 @@
-import { useNavigation } from "@react-navigation/native";
 import React, { createRef, useEffect, useState } from "react";
-import { AuthModal } from "../shared/AuthModal";
 import {
   Keyboard,
   KeyboardAvoidingView,
@@ -11,6 +9,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { Colors } from "../shared/styles/variables";
 
 interface LoginProps {
   onSubmit: (username: string, password: string) => any;
@@ -18,12 +17,9 @@ interface LoginProps {
 }
 
 export const LoginScreen: React.FC<LoginProps> = ({ onSubmit, error }) => {
-  const [username, setUserName] = useState("");
-  const [password, setPassword] = useState("");
-  const [errortext, setErrortext] = useState("");
-  const navigation = useNavigation();
+  const [username, setUserName] = useState(null);
+  const [password, setPassword] = useState(null);
   const passwordInputRef = createRef<TextInput>();
-  const [showAuthModal, setShowAuthModal] = useState(false);
 
   return (
     <View style={styles.mainBody}>
@@ -35,7 +31,6 @@ export const LoginScreen: React.FC<LoginProps> = ({ onSubmit, error }) => {
           alignContent: "center",
         }}
       >
-        {showAuthModal && <AuthModal close={() => setShowAuthModal(false)} />}
         <View>
           <KeyboardAvoidingView enabled>
             <View style={styles.SectionStyle}>
@@ -66,7 +61,7 @@ export const LoginScreen: React.FC<LoginProps> = ({ onSubmit, error }) => {
                 returnKeyType="next"
               />
             </View>
-            {error ? <Text style={styles.errorTextStyle}>{error}</Text> : null}
+            {!!error ? <Text style={styles.errorTextStyle}>{error}</Text> : null}
             <TouchableOpacity
               style={styles.buttonStyle}
               activeOpacity={0.5}
@@ -74,17 +69,6 @@ export const LoginScreen: React.FC<LoginProps> = ({ onSubmit, error }) => {
             >
               <Text style={styles.buttonTextStyle}>LOGIN</Text>
             </TouchableOpacity>
-
-            <TouchableOpacity
-              style={styles.buttonStyle}
-              activeOpacity={0.5}
-              onPress={() => setShowAuthModal(!showAuthModal)}
-            >
-              <Text style={styles.buttonTextStyle}>open</Text>
-            </TouchableOpacity>
-            {/* <Text style={styles.registerTextStyle} onPress={() => navigation.navigate("register")}>
-              New Here ? Register
-            </Text> */}
           </KeyboardAvoidingView>
         </View>
       </ScrollView>
@@ -96,7 +80,7 @@ const styles = StyleSheet.create({
   mainBody: {
     flex: 1,
     justifyContent: "center",
-    backgroundColor: "#1f1e1e",
+    backgroundColor: Colors.darkBlue,
     alignContent: "center",
   },
   SectionStyle: {
@@ -108,10 +92,10 @@ const styles = StyleSheet.create({
     margin: 10,
   },
   buttonStyle: {
-    backgroundColor: "#db403b",
+    backgroundColor: Colors.gold,
     borderWidth: 0,
     color: "#FFFFFF",
-    borderColor: "#db403b",
+    borderColor: Colors.gold,
     height: 40,
     alignItems: "center",
     borderRadius: 30,

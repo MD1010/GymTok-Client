@@ -36,7 +36,7 @@ const Heading = ({ createdBy }) => {
   );
 };
 
-const UIContainer : React.FC<any>= ({onLikeButtonPress}) => {
+const UIContainer: React.FC<any> = ({ onLikeButtonPress, onCommentButtonPress }) => {
   return (
     <>
       <View style={styles.uiContainer}>
@@ -45,7 +45,7 @@ const UIContainer : React.FC<any>= ({onLikeButtonPress}) => {
             <FontAwesome name={"heart"} size={22} color={Colors.lightGrey} />
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={() => console.log("comment!")}>
+          <TouchableOpacity onPress={() => onCommentButtonPress()}>
             <FontAwesome name={"comment"} size={22} color={Colors.lightGrey} />
           </TouchableOpacity>
         </View>
@@ -68,23 +68,35 @@ const UIContainer : React.FC<any>= ({onLikeButtonPress}) => {
 
 export const Challenge: React.FC<ChallengeProps> = ({ challenge, isVideoPlaying }) => {
   const { name, video: videoURL, image, estimatedScore, description, creationTime, createdBy, _id } = challenge;
-  console.log(challenge);
+  // console.log(challenge);
   const { loggedUser } = useSelector(authSelector);
+
   const [showAuthModal, setShowAuthModal] = useState<boolean>(false);
   const streaminServerUrl = `${process.env.STREAMING_SERVER_ENPOINT}/${videoURL}`;
 
   const onLikeButtonPress = () => {
-    if(loggedUser) {
-      console.log("like");
+    if (loggedUser) {
+      console.log("user:" + loggedUser?.fullName + " click on like button.");
       // todo: fetch here
     } else {
       setShowAuthModal(true);
+      console.log("guest click on like button, need to log-in");
     }
-  }
+  };
+
+  const onCommentButtonPress = () => {
+    if (loggedUser) {
+      console.log("user:" + loggedUser?.fullName + " click on comment button.");
+      // todo: fetch here
+    } else {
+      setShowAuthModal(true);
+      console.log("guest click on comment button, need to log-in");
+    }
+  };
 
   return (
     <View style={styles.container}>
-      {showAuthModal && (<AuthModal close={()=> setShowAuthModal(false) }/>)}
+      {showAuthModal && !loggedUser && <AuthModal close={() => setShowAuthModal(false)} />}
       <VideoPlayer style={styles.video} uri={streaminServerUrl} isPlaying={isVideoPlaying} resizeMode="cover" />
       <View style={styles.infoContainer}>
         <Heading createdBy={createdBy} />
@@ -93,7 +105,10 @@ export const Challenge: React.FC<ChallengeProps> = ({ challenge, isVideoPlaying 
           <Text style={styles.info}>{"My Challenge"}</Text>
         </View>
 
-        <UIContainer onLikeButtonPress={() => setShowAuthModal(true)}/>
+        <UIContainer
+          onLikeButtonPress={() => onLikeButtonPress()}
+          onCommentButtonPress={() => onCommentButtonPress()}
+        />
       </View>
     </View>
   );

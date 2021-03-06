@@ -3,15 +3,19 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import React from "react";
 import { Platform, Image } from "react-native";
 import { Portal, Provider } from "react-native-paper";
+import { useSelector } from "react-redux";
+import { authSelector } from "../../store/auth/authSlice";
 import { AddButton } from "../Camera/AddButton";
-import { HomeContainer as Home } from "../Home/HomeContainer";
+import { HomeContainer as Home, HomeContainer } from "../Home/HomeContainer";
 import { LoginContainer as LoginScreen } from "../Login/LoginContainer";
+import { NotLoggedInScreen } from "../NotLoggedIn/NotLoggedIn";
 import { Colors, UIConsts } from "../shared/styles/variables";
 
 interface BottomTabsProps {}
 
 export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
   const Tab = createBottomTabNavigator();
+  const { loggedUser } = useSelector(authSelector);
 
   return (
     <Provider>
@@ -48,7 +52,7 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
         />
         <Tab.Screen
           name="Leaderboards"
-          component={LoginScreen}
+          component={loggedUser ? () => <Home /> : () => <NotLoggedInScreen text={"Leaderboards"} icon={"sadasd"} />}
           options={{
             tabBarIcon: ({ color, size, focused }) =>
               focused ? (
@@ -61,7 +65,7 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
 
         <Tab.Screen
           name="Notifications"
-          component={LoginScreen}
+          component={loggedUser ? () => <Home /> : () => <NotLoggedInScreen text={"Notifications"} icon={"sadasd"} />}
           options={{
             tabBarIcon: ({ color, size, focused }) =>
               focused ? (
