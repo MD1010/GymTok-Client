@@ -1,9 +1,12 @@
 import { FontAwesome } from "@expo/vector-icons";
-import React from "react";
+import React, { useState } from "react";
 import { Text, View } from "react-native";
 import { Avatar } from "react-native-elements";
 import { TouchableOpacity, TouchableWithoutFeedback } from "react-native-gesture-handler";
+import { useSelector } from "react-redux";
 import { IChallenge } from "../../interfaces";
+import { authSelector } from "../../store/auth/authSlice";
+import { AuthModal } from "../shared/AuthModal";
 import { Colors } from "../shared/styles/variables";
 import { VideoPlayer } from "../shared/VideoPlayer";
 import { styles } from "./Challenge.style";
@@ -33,12 +36,12 @@ const Heading = ({ createdBy }) => {
   );
 };
 
-const UIContainer = () => {
+const UIContainer : React.FC<any>= ({onLikeButtonPress}) => {
   return (
     <>
       <View style={styles.uiContainer}>
         <View style={[styles.rowContainer, { width: 60, justifyContent: "space-between" }]}>
-          <TouchableOpacity onPress={() => console.log("like!")}>
+          <TouchableOpacity onPress={() => onLikeButtonPress()}>
             <FontAwesome name={"heart"} size={22} color={Colors.lightGrey} />
           </TouchableOpacity>
 
@@ -66,9 +69,22 @@ const UIContainer = () => {
 export const Challenge: React.FC<ChallengeProps> = ({ challenge, isVideoPlaying }) => {
   const { name, video: videoURL, image, estimatedScore, description, creationTime, createdBy, _id } = challenge;
   console.log(challenge);
+  const { loggedUser } = useSelector(authSelector);
+  const [showAuthModal, setShowAuthModal] = useState<boolean>(false);
   const streaminServerUrl = `${process.env.STREAMING_SERVER_ENPOINT}/${videoURL}`;
+
+  const onLikeButtonPress = () => {
+    if(loggedUser) {
+      console.log("like");
+      // todo: fetch here
+    } else {
+      setShowAuthModal(true);
+    }
+  }
+
   return (
     <View style={styles.container}>
+      {showAuthModal && (<AuthModal close={()=> setShowAuthModal(false) }/>)}
       <VideoPlayer style={styles.video} uri={streaminServerUrl} isPlaying={isVideoPlaying} resizeMode="cover" />
       <View style={styles.infoContainer}>
         <Heading createdBy={createdBy} />
@@ -77,7 +93,7 @@ export const Challenge: React.FC<ChallengeProps> = ({ challenge, isVideoPlaying 
           <Text style={styles.info}>{"My Challenge"}</Text>
         </View>
 
-        <UIContainer />
+        <UIContainer onLikeButtonPress={() => setShowAuthModal(true)}/>
       </View>
     </View>
   );
