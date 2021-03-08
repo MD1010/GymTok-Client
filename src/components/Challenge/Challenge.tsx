@@ -5,7 +5,7 @@ import { Avatar } from "react-native-elements";
 import { TouchableOpacity, TouchableWithoutFeedback } from "react-native-gesture-handler";
 import { IChallenge } from "../../interfaces";
 import { Colors } from "../shared/styles/variables";
-import { VideoPlayer } from "../shared/VideoPlayer";
+import { Player } from "../shared/VideoPlayer";
 import { styles } from "./Challenge.style";
 
 interface ChallengeProps {
@@ -63,7 +63,7 @@ const UIContainer = () => {
   );
 };
 
-export const Challenge: React.FC<ChallengeProps> = memo(({ challenge, isVideoPlaying }) => {
+export const Challenge: React.FC<any> = memo(({ challenge, isVideoPlaying }) => {
   const { name, video: videoURL, image, estimatedScore, description, creationTime, createdBy, _id } = challenge;
   console.log("render challenge!");
 
@@ -71,7 +71,7 @@ export const Challenge: React.FC<ChallengeProps> = memo(({ challenge, isVideoPla
   // const streaminServerUrl = `http://192.168.0.107:8000/${videoURL}`;
   return (
     <View style={styles.container}>
-      <VideoPlayer style={styles.video} uri={streaminServerUrl} isPlaying={isVideoPlaying} resizeMode="cover" />
+      <Player style={styles.video} uri={streaminServerUrl} isPlaying={isVideoPlaying} resizeMode="cover" />
       <View style={styles.infoContainer}>
         <Heading createdBy={createdBy} />
 

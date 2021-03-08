@@ -16,7 +16,7 @@ export const HomeScreen: React.FC<ChallengesProps> = () => {
   const navigation = useNavigation();
   const [navigatedOutOfScreen, setNavigatedOutOfScreen] = useState(false);
   const [challenges, setChallenges] = useState([]);
-  const itemsToLoad = 5;
+  const itemsToLoad = 10;
   const [error, setError] = useState<string | null>();
   const challengesEndpoint = `http://192.168.0.107:8080/challenges`;
 
@@ -26,13 +26,8 @@ export const HomeScreen: React.FC<ChallengesProps> = () => {
       size: itemsToLoad,
       page: challenges.length / itemsToLoad,
     });
-    res &&
-      setChallenges(
-        [...challenges, ...res].map((ch: IChallenge) => {
-          ch.video = "video2.mp4";
-          return ch;
-        })
-      );
+
+    res && setChallenges([...challenges, ...res]);
     error && setError(error);
   };
 
@@ -45,23 +40,27 @@ export const HomeScreen: React.FC<ChallengesProps> = () => {
   }, []);
 
   useEffect(() => {
-    navigation.addListener("blur", () => {
-      setNavigatedOutOfScreen(true);
-    });
-    navigation.addListener("focus", () => {
-      setNavigatedOutOfScreen(false);
-    });
-    return () => {
-      navigation.removeListener("blur", null);
-      navigation.removeListener("focus", null);
-    };
-  }, [navigation]);
+    console.log("challenges", challenges);
+  }, [challenges]);
+
+  // useEffect(() => {
+  //   navigation.addListener("blur", () => {
+  //     setNavigatedOutOfScreen(true);
+  //   });
+  //   navigation.addListener("focus", () => {
+  //     setNavigatedOutOfScreen(false);
+  //   });
+  //   return () => {
+  //     navigation.removeListener("blur", null);
+  //     navigation.removeListener("focus", null);
+  //   };
+  // }, [navigation]);
 
   // track view changes in order to control when video is starting to play
-  const onViewRef = useRef(({ viewableItems }) => {
-    // change playing video only after user stop dragging
-    scrollEnded.current && setCurrentlyPlaying(viewableItems[0]?.index);
-  });
+  // const onViewRef = useRef(({ viewableItems }) => {
+  //   // change playing video only after user stop dragging
+  //   scrollEnded.current && setCurrentlyPlaying(viewableItems[0]?.index);
+  // });
 
   const renderItem = useCallback(
     ({ item, index }) => (
@@ -81,11 +80,11 @@ export const HomeScreen: React.FC<ChallengesProps> = () => {
         snapToInterval={Dimensions.get("window").height - UIConsts.bottomNavbarHeight}
         snapToAlignment={"start"}
         decelerationRate={"fast"}
-        onViewableItemsChanged={onViewRef.current}
+        // onViewableItemsChanged={onViewRef.current}
         onScrollEndDrag={() => (scrollEnded.current = true)}
         onScrollBeginDrag={() => (scrollEnded.current = false)}
         onEndReached={fetchChallenges}
-        onEndReachedThreshold={0.3}
+        onEndReachedThreshold={3}
         ListFooterComponent={() => <Text>Loading more..</Text>}
       ></FlatList>
     </View>
