@@ -22,7 +22,7 @@ export const Player: React.FC<VideoProps> = memo(({ uri, style, isPlaying, resiz
   const [isPaused, setIsPaused] = useState<boolean>(false);
   const ref = useRef(null);
   const [videoURI, setVideoURI] = useState<string>();
-  console.log("render video");
+  // console.log("render video");
 
   const pauseVideoByTap = () => {
     setIsPaused(true);
@@ -82,7 +82,7 @@ export const Player: React.FC<VideoProps> = memo(({ uri, style, isPlaying, resiz
   // },[])
 
   return (
-    <TouchableWithoutFeedback onPress={() => (statusRef.current.isPlaying ? pauseVideoByTap() : resumeVideoByTap())}>
+    <TouchableWithoutFeedback onPress={() => (statusRef.current?.isPlaying ? pauseVideoByTap() : resumeVideoByTap())}>
       <View style={styles.container}>
         {
           // <Text>asdasdasdasdasdasdasdasdasd</Text>

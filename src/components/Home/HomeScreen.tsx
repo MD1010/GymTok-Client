@@ -18,7 +18,7 @@ export const HomeScreen: React.FC<ChallengesProps> = () => {
   const [challenges, setChallenges] = useState([]);
   const itemsToLoad = 10;
   const [error, setError] = useState<string | null>();
-  const challengesEndpoint = `http://192.168.0.107:8080/challenges`;
+  const challengesEndpoint = `${process.env.BASE_API_ENPOINT}/challenges`;
 
   const fetchChallenges = async () => {
     console.log("fetching more...");
@@ -28,6 +28,7 @@ export const HomeScreen: React.FC<ChallengesProps> = () => {
     });
 
     res && setChallenges([...challenges, ...res]);
+
     error && setError(error);
   };
 
@@ -40,27 +41,25 @@ export const HomeScreen: React.FC<ChallengesProps> = () => {
   }, []);
 
   useEffect(() => {
-    console.log("challenges", challenges);
-  }, [challenges]);
-
-  // useEffect(() => {
-  //   navigation.addListener("blur", () => {
-  //     setNavigatedOutOfScreen(true);
-  //   });
-  //   navigation.addListener("focus", () => {
-  //     setNavigatedOutOfScreen(false);
-  //   });
-  //   return () => {
-  //     navigation.removeListener("blur", null);
-  //     navigation.removeListener("focus", null);
-  //   };
-  // }, [navigation]);
+    navigation.addListener("blur", () => {
+      setNavigatedOutOfScreen(true);
+    });
+    navigation.addListener("focus", () => {
+      setNavigatedOutOfScreen(false);
+    });
+    return () => {
+      navigation.removeListener("blur", null);
+      navigation.removeListener("focus", null);
+    };
+  }, [navigation]);
 
   // track view changes in order to control when video is starting to play
-  // const onViewRef = useRef(({ viewableItems }) => {
-  //   // change playing video only after user stop dragging
-  //   scrollEnded.current && setCurrentlyPlaying(viewableItems[0]?.index);
-  // });
+  const onViewRef = useRef(({ viewableItems }) => {
+    // change playing video only after user stop dragging
+
+    // scrollEnded.current && console.log(viewableItems);
+    scrollEnded.current && setCurrentlyPlaying(viewableItems[0]?.index);
+  });
 
   const renderItem = useCallback(
     ({ item, index }) => (
@@ -80,12 +79,12 @@ export const HomeScreen: React.FC<ChallengesProps> = () => {
         snapToInterval={Dimensions.get("window").height - UIConsts.bottomNavbarHeight}
         snapToAlignment={"start"}
         decelerationRate={"fast"}
-        // onViewableItemsChanged={onViewRef.current}
+        onViewableItemsChanged={onViewRef.current}
         onScrollEndDrag={() => (scrollEnded.current = true)}
         onScrollBeginDrag={() => (scrollEnded.current = false)}
         onEndReached={fetchChallenges}
         onEndReachedThreshold={3}
-        ListFooterComponent={() => <Text>Loading more..</Text>}
+        ListFooterComponent={() => (challenges.length ? <Text>Loading more..</Text> : null)}
       ></FlatList>
     </View>
   );
