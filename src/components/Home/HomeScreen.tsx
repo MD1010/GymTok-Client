@@ -18,7 +18,7 @@ export const HomeScreen: React.FC<ChallengesProps> = () => {
   const [challenges, setChallenges] = useState([]);
   const itemsToLoad = 5;
   const [error, setError] = useState<string | null>();
-  const challengesEndpoint = `http://192.168.0.107:8080/challenges`;
+  const challengesEndpoint = `http://10.0.0.43:8080/challenges`;
 
   const fetchChallenges = async () => {
     console.log("fetching more...");

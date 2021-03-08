@@ -75,7 +75,8 @@ export const VideoPlayer: React.FC<VideoProps> = memo(({ uri, style, isPlaying, 
             ref={ref}
             style={[style]}
             source={{
-              uri: videoURI,
+              uri: "http://193.106.55.109:8000/136e5b14-ded6-4527-b40d-90697e8d6475.mp4",
+              // uri: videoURI,
             }}
             resizeMode={resizeMode}
             isLooping
