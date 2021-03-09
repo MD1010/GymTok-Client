@@ -17,12 +17,10 @@ interface VideoProps {
 }
 
 export const Player: React.FC<VideoProps> = memo(({ uri, style, isPlaying, resizeMode, playBtnSize }) => {
-  // const [status, setStatus] = useState<any>();
   const statusRef = useRef<any>();
   const [isPaused, setIsPaused] = useState<boolean>(false);
   const ref = useRef(null);
   const [videoURI, setVideoURI] = useState<string>();
-  // console.log("render video");
 
   const pauseVideoByTap = () => {
     setIsPaused(true);
@@ -51,83 +49,37 @@ export const Player: React.FC<VideoProps> = memo(({ uri, style, isPlaying, resiz
   // };
 
   // useEffect(() => {
-  //   console.log("uri", videoURI);
-  // }, [videoURI]);
-
-  // useEffect(() => {
-  //   if (isPlaying) {
-  //     ref.current.replayAsync();
-  //     setIsPaused(false);
-  //   } else {
-  //     ref.current.pauseAsync();
-  //   }
-  //   return () => {
-  //     ref.current.pauseAsync();
-  //   };
-  // }, [isPlaying]);
-
-  // const damog = async () => {
-  //   const a = await FileSystem.downloadAsync(
-  //     "http://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4",
-  //     `${FileSystem.cacheDirectory}bunny`
-  //   );
-  //   console.log("cache url = ", a.uri);
-  // };
-  // useEffect(() => {
-  //   damog();
+  //   loadURI()
   // }, []);
 
-  // useEffect(()=>{
-
-  // },[])
+  useEffect(() => {
+    if (isPlaying) {
+      ref.current.replayAsync();
+      setIsPaused(false);
+    } else {
+      ref.current.pauseAsync();
+    }
+    return () => {
+      ref.current.pauseAsync();
+    };
+  }, [isPlaying]);
 
   return (
     <TouchableWithoutFeedback onPress={() => (statusRef.current?.isPlaying ? pauseVideoByTap() : resumeVideoByTap())}>
       <View style={styles.container}>
-        {
-          // <Text>asdasdasdasdasdasdasdasdasd</Text>
-          <Video
-            ref={ref}
-            style={[style]}
-            source={{
-              uri: "http://193.106.55.109:8000/136e5b14-ded6-4527-b40d-90697e8d6475.mp4",
-            }}
-            resizeMode={resizeMode}
-            isLooping
-            onPlaybackStatusUpdate={(status) => (statusRef.current = status)}
-          />
+        <Video
+          ref={ref}
+          style={[style]}
+          source={{
+            uri: "http://193.106.55.109:8000/136e5b14-ded6-4527-b40d-90697e8d6475.mp4",
+            // uri: "http://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4",
+          }}
+          resizeMode={resizeMode}
+          shouldPlay={isPlaying}
+          isLooping
+          onPlaybackStatusUpdate={(status) => (statusRef.current = status)}
+        />
 
-          // <VideoPlayer
-          //   showFullscreenButton={false}
-          //   videoProps={{
-          //     isLooping: true,
-          //     shouldPlay: false,
-          //     resizeMode: ResizeMode.COVER,
-          //     style,
-
-          //     source: {
-          //       uri: "http://193.106.55.109:8000/136e5b14-ded6-4527-b40d-90697e8d6475.mp4",
-          //     },
-          //   }}
-          //   inFullscreen={false}
-          // />
-          // <VideoPlayer
-          //   showFullscreenButton={false}
-          //   debug
-          //   videoProps={{
-          //     isLooping: true,
-          //     shouldPlay: false,
-          //     resizeMode: ResizeMode.COVER,
-          //     style,
-
-          //     source: {
-          //       uri:
-          //         "file:///data/user/0/host.exp.exponent/cache/ExperienceData/%2540anonymous%252Fclient-68b1c424-98dc-4128-a36b-e3cf46200a7c/n3XIG",
-          //     },
-          //   }}
-          //   inFullscreen={false}
-          // />
-        }
         <View>
           {isPaused && <FontAwesome name="play" size={playBtnSize ? playBtnSize : 40} color={Colors.white} />}
         </View>

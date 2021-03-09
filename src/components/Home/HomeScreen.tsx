@@ -58,6 +58,7 @@ export const HomeScreen: React.FC<ChallengesProps> = () => {
     // change playing video only after user stop dragging
 
     // scrollEnded.current && console.log(viewableItems);
+    console.log("playing", viewableItems[0]?.index);
     scrollEnded.current && setCurrentlyPlaying(viewableItems[0]?.index);
   });
 
@@ -65,7 +66,7 @@ export const HomeScreen: React.FC<ChallengesProps> = () => {
     ({ item, index }) => (
       <Challenge challenge={item} isVideoPlaying={index === currentlyPlaying && !navigatedOutOfScreen} />
     ),
-    []
+    [navigatedOutOfScreen, currentlyPlaying]
   );
 
   return (
