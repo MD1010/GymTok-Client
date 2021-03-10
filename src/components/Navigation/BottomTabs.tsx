@@ -18,7 +18,6 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
   const Tab = createBottomTabNavigator();
   const { loggedUser } = useSelector(authSelector);
   const [isAddButtonClicked, setIsAddButtonCLicked] = useState<boolean>(false);
-  const [showAuthModal, setShowAuthModal] = useState<boolean>(false);
 
   return (
     <Provider>
