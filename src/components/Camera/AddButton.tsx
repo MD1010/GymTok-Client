@@ -4,49 +4,41 @@ import { Camera } from "expo-camera";
 import * as ImagePicker from "expo-image-picker";
 import React from "react";
 import ActionButton from "react-native-action-button";
-import { useSelector } from "react-redux";
-import { authSelector } from "../../store/auth/authSlice";
-import { NotLoggedInScreen } from "../NotLoggedIn/NotLoggedIn";
-import { AuthModal } from "../shared/AuthModal";
 import { Colors } from "../shared/styles/variables";
-import { Text } from "react-native";
 
-export const AddButton: React.FC = () => {
+interface Props {
+  isAddButtonClicked: boolean;
+  setIsAddButtonCLicked: (isClicked: boolean) => void;
+}
+
+export const AddButton: React.FC<Props> = ({ isAddButtonClicked, setIsAddButtonCLicked }) => {
   const navigation = useNavigation();
-  const { loggedUser } = useSelector(authSelector);
 
   const takeVideo = async () => {
-    if (!loggedUser) {
-      navigation.navigate("Me");
-    } else {
-      const { status } = await Camera.requestPermissionsAsync();
-      await ImagePicker.getMediaLibraryPermissionsAsync(true);
-      if (status === "granted") {
-        const selectedVideo = await ImagePicker.launchCameraAsync({ mediaTypes: ImagePicker.MediaTypeOptions.Videos });
-        if (!selectedVideo.cancelled) {
-          navigation.navigate("Publish", { videoUri: selectedVideo.uri });
-        }
-      } else {
-        alert("no access to camera");
+    const { status } = await Camera.requestPermissionsAsync();
+    await ImagePicker.getMediaLibraryPermissionsAsync(true);
+    if (status === "granted") {
+      const selectedVideo = await ImagePicker.launchCameraAsync({ mediaTypes: ImagePicker.MediaTypeOptions.Videos });
+      if (!selectedVideo.cancelled) {
+        navigation.navigate("Publish", { videoUri: selectedVideo.uri });
       }
+    } else {
+      alert("no access to camera");
     }
   };
 
   const takeVideoFromGallery = async () => {
-    if (!loggedUser) {
-      navigation.navigate("Me");
-    } else {
-      const selectedVideo = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Videos,
-      });
-      if (!selectedVideo.cancelled) {
-        navigation.navigate("Publish", { videoUri: selectedVideo.uri });
-      }
+    const selectedVideo = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Videos,
+    });
+    if (!selectedVideo.cancelled) {
+      navigation.navigate("Publish", { videoUri: selectedVideo.uri });
     }
   };
 
   return (
     <ActionButton
+      onPress={() => setIsAddButtonCLicked(!isAddButtonClicked)}
       backdrop
       bgOpacity={0.75}
       bgColor={"#101010"}

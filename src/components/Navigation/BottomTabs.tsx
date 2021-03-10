@@ -1,6 +1,6 @@
 import { FontAwesome5, Ionicons } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import React from "react";
+import React, { useState } from "react";
 import { Platform, Image } from "react-native";
 import { Portal, Provider } from "react-native-paper";
 import { useSelector } from "react-redux";
@@ -9,6 +9,7 @@ import { AddButton } from "../Camera/AddButton";
 import { HomeContainer as Home, HomeContainer } from "../Home/HomeContainer";
 import { LoginContainer as LoginScreen } from "../Login/LoginContainer";
 import { NotLoggedInScreen } from "../NotLoggedIn/NotLoggedIn";
+import { AuthModal } from "../shared/AuthModal";
 import { Colors, UIConsts } from "../shared/styles/variables";
 
 interface BottomTabsProps {}
@@ -16,6 +17,8 @@ interface BottomTabsProps {}
 export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
   const Tab = createBottomTabNavigator();
   const { loggedUser } = useSelector(authSelector);
+  const [isAddButtonClicked, setIsAddButtonCLicked] = useState<boolean>(false);
+  const [showAuthModal, setShowAuthModal] = useState<boolean>(false);
 
   return (
     <Provider>
@@ -103,12 +106,12 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
         />
       </Tab.Navigator>
       <Portal>
-        <AddButton />
+        {!loggedUser && isAddButtonClicked ? (
+          <AuthModal close={() => setIsAddButtonCLicked(false)} />
+        ) : (
+          <AddButton isAddButtonClicked={isAddButtonClicked} setIsAddButtonCLicked={setIsAddButtonCLicked} />
+        )}
       </Portal>
-      {/* <Portal>
-        {loggedUser ? () => <AddButton /> : <NotLoggedInScreen text={"add"} icon={"sadasd"} />}
-        
-      </Portal> */}
     </Provider>
   );
 };
