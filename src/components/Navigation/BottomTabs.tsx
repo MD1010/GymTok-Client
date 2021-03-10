@@ -102,10 +102,13 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
           }}
         />
       </Tab.Navigator>
-
       <Portal>
         <AddButton />
       </Portal>
+      {/* <Portal>
+        {loggedUser ? () => <AddButton /> : <NotLoggedInScreen text={"add"} icon={"sadasd"} />}
+        
+      </Portal> */}
     </Provider>
   );
 };

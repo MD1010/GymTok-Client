@@ -4,30 +4,44 @@ import { Camera } from "expo-camera";
 import * as ImagePicker from "expo-image-picker";
 import React from "react";
 import ActionButton from "react-native-action-button";
+import { useSelector } from "react-redux";
+import { authSelector } from "../../store/auth/authSlice";
+import { NotLoggedInScreen } from "../NotLoggedIn/NotLoggedIn";
+import { AuthModal } from "../shared/AuthModal";
 import { Colors } from "../shared/styles/variables";
+import { Text } from "react-native";
 
 export const AddButton: React.FC = () => {
   const navigation = useNavigation();
+  const { loggedUser } = useSelector(authSelector);
 
   const takeVideo = async () => {
-    const { status } = await Camera.requestPermissionsAsync();
-    await ImagePicker.getMediaLibraryPermissionsAsync(true);
-    if (status === "granted") {
-      const selectedVideo = await ImagePicker.launchCameraAsync({ mediaTypes: ImagePicker.MediaTypeOptions.Videos });
-      if (!selectedVideo.cancelled) {
-        navigation.navigate("Publish", { videoUri: selectedVideo.uri });
-      }
+    if (!loggedUser) {
+      navigation.navigate("Me");
     } else {
-      alert("no access to camera");
+      const { status } = await Camera.requestPermissionsAsync();
+      await ImagePicker.getMediaLibraryPermissionsAsync(true);
+      if (status === "granted") {
+        const selectedVideo = await ImagePicker.launchCameraAsync({ mediaTypes: ImagePicker.MediaTypeOptions.Videos });
+        if (!selectedVideo.cancelled) {
+          navigation.navigate("Publish", { videoUri: selectedVideo.uri });
+        }
+      } else {
+        alert("no access to camera");
+      }
     }
   };
 
   const takeVideoFromGallery = async () => {
-    const selectedVideo = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Videos,
-    });
-    if (!selectedVideo.cancelled) {
-      navigation.navigate("Publish", { videoUri: selectedVideo.uri });
+    if (!loggedUser) {
+      navigation.navigate("Me");
+    } else {
+      const selectedVideo = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Videos,
+      });
+      if (!selectedVideo.cancelled) {
+        navigation.navigate("Publish", { videoUri: selectedVideo.uri });
+      }
     }
   };
 
@@ -55,6 +69,7 @@ export const AddButton: React.FC = () => {
       >
         <FontAwesome name="picture-o" size={15} color={Colors.white} />
       </ActionButton.Item>
+      )
     </ActionButton>
   );
 };

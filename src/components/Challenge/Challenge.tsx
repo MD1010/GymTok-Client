@@ -1,6 +1,6 @@
 import { FontAwesome } from "@expo/vector-icons";
 import React, { useState } from "react";
-import { Text, View } from "react-native";
+import { Dimensions, Text, View } from "react-native";
 import { Avatar } from "react-native-elements";
 import { TouchableOpacity, TouchableWithoutFeedback } from "react-native-gesture-handler";
 import { useSelector } from "react-redux";
@@ -17,21 +17,41 @@ interface ChallengeProps {
 }
 
 const Heading = ({ createdBy }) => {
+  const { loggedUser } = useSelector(authSelector);
+  const [showAuthModal, setShowAuthModal] = useState<boolean>(false);
+
+  const onCammeraPressed = () => {
+    if (loggedUser) {
+      console.log("user:" + loggedUser?.fullName + " click on like button.");
+      // todo: fetch here
+    } else {
+      setShowAuthModal(true);
+      console.log("guest click on like button, need to log-in");
+    }
+  };
   return (
     <>
-      <View style={[styles.rowContainer, { marginVertical: 10, justifyContent: "space-between" }]}>
-        <View style={{ flexDirection: "row", alignItems: "center" }}>
-          <TouchableWithoutFeedback onPress={() => console.log("avatar clicked!")}>
-            <Avatar source={require("../../../assets/avatar/01.jpg")} rounded></Avatar>
-          </TouchableWithoutFeedback>
-          <Text style={styles.creator}>@{createdBy}</Text>
+      {showAuthModal && !loggedUser ? (
+        <View
+          style={{ height: Dimensions.get("window").height - 50, width: Dimensions.get("window").width, zIndex: 100 }}
+        >
+          <AuthModal close={() => setShowAuthModal(false)} />
         </View>
-        <View>
-          <TouchableOpacity onPress={() => console.log("reply to video!")}>
-            <FontAwesome name={"camera"} size={22} color={Colors.white} />
-          </TouchableOpacity>
+      ) : (
+        <View style={[styles.rowContainer, { marginVertical: 10, justifyContent: "space-between" }]}>
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <TouchableWithoutFeedback onPress={() => console.log("avatar clicked!")}>
+              <Avatar source={require("../../../assets/avatar/01.jpg")} rounded></Avatar>
+            </TouchableWithoutFeedback>
+            <Text style={styles.creator}>@{createdBy}</Text>
+          </View>
+          <View>
+            <TouchableOpacity onPress={() => onCammeraPressed()}>
+              <FontAwesome name={"camera"} size={22} color={Colors.white} />
+            </TouchableOpacity>
+          </View>
         </View>
-      </View>
+      )}
     </>
   );
 };
