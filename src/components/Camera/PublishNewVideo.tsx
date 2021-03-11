@@ -20,6 +20,7 @@ import { fetchAPI, RequestMethod } from "../../utils/fetchAPI";
 import { Colors, UIConsts } from "../shared/styles/variables";
 import { FriendsModal } from "./FreindsModal";
 import { VideoScreen } from "./publishVideo";
+import { useNavigation } from "@react-navigation/native";
 
 export const PublishNewVideoScreen: React.FC = () => {
   const route = useRoute<any>();
@@ -27,6 +28,7 @@ export const PublishNewVideoScreen: React.FC = () => {
   const [showTaggedFriends, setShowTaggedFriends] = useState<boolean>(false);
   const [selectedFriends, setSelectedFriends] = useState<any[]>([]);
   const [isSpinner, setIsSpinner] = useState<boolean>(false);
+  const navigation = useNavigation();
 
   const publishChallenge = async () => {
     setIsSpinner(true);
@@ -46,8 +48,10 @@ export const PublishNewVideoScreen: React.FC = () => {
       `${process.env.BASE_API_ENPOINT}/challenges/upload`,
       formData
     );
-    if (res) alert("upload succefully!!");
-    else alert(error);
+    if (res) {
+      alert("upload succefully!!");
+      navigation.navigate("Home");
+    } else alert(error);
     setIsSpinner(false);
   };
 
