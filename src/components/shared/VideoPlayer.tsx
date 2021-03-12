@@ -71,7 +71,7 @@ export const Player: React.FC<VideoProps> = memo(({ uri, style, isPlaying, resiz
           ref={ref}
           style={[style]}
           source={{
-            uri: "http://193.106.55.109:8000/136e5b14-ded6-4527-b40d-90697e8d6475.mp4",
+            uri: "http://193.106.55.109:8000/fdfe5570-de14-4e53-a680-cc3c3994210b.mp4",
             // uri: "http://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4",
           }}
           resizeMode={resizeMode}

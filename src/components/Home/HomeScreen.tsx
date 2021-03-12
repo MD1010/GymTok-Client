@@ -18,7 +18,7 @@ export const HomeScreen: React.FC = () => {
   const challengesEndpoint = `${process.env.BASE_API_ENPOINT}/challenges`;
 
   const fetchChallenges = async () => {
-    console.log("fetching more...");
+    console.log("fetching more...", challengesEndpoint);
     const { res, error } = await fetchAPI(RequestMethod.GET, challengesEndpoint, null, {
       size: itemsToLoad,
       page: challenges.length / itemsToLoad,
