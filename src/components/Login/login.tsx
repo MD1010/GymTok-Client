@@ -9,6 +9,7 @@ import {
     TouchableOpacity,
     View,
 } from "react-native";
+import { useNavigation } from "../hooks/useNavigation";
 import { Colors } from "../shared/styles/variables";
 
 interface LoginProps {

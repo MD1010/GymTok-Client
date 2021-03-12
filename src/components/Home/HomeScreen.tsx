@@ -1,11 +1,12 @@
 import { useNavigation } from "@react-navigation/native";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Dimensions, FlatList, StatusBar, View } from "react-native";
-import { IChallenge } from "../../interfaces/Challenge";
 import { fetchAPI, RequestMethod } from "../../utils/fetchAPI";
 import { Challenge } from "../Challenge/Challenge";
 import { UIConsts } from "../shared/styles/variables";
 import { Text } from "react-native";
+import { useSelector } from "react-redux";
+import { authSelector } from "../../store/auth/authSlice";
 
 export const HomeScreen: React.FC = () => {
   const [currentlyPlaying, setCurrentlyPlaying] = useState(0);
@@ -13,11 +14,33 @@ export const HomeScreen: React.FC = () => {
   const navigation = useNavigation();
   const [navigatedOutOfScreen, setNavigatedOutOfScreen] = useState(false);
   const [challenges, setChallenges] = useState([]);
+  const { loggedUser } = useSelector(authSelector);
   const itemsToLoad = 10;
   const [error, setError] = useState<string | null>();
   const challengesEndpoint = `${process.env.BASE_API_ENPOINT}/challenges`;
 
-  const fetchChallenges = async () => {
+  const getChallenges = async () => {
+    if (!loggedUser) {
+      getExistChallenges();
+    } else {
+      getRecommendedChallenges();
+
+    }
+
+  };
+
+  const getRecommendedChallenges = async () => {
+    const { res, error } = await fetchAPI(RequestMethod.GET, `${process.env.BASE_API_ENPOINT}/users/${loggedUser?.username}/recommendedChallenges`, null, {
+      size: itemsToLoad,
+      page: challenges.length / itemsToLoad,
+    });
+
+    res && setChallenges([...challenges, ...res]);
+
+    error && setError(error);
+  }
+
+  const getExistChallenges = async () => {
     console.log("fetching more...", challengesEndpoint);
     const { res, error } = await fetchAPI(RequestMethod.GET, challengesEndpoint, null, {
       size: itemsToLoad,
@@ -27,14 +50,14 @@ export const HomeScreen: React.FC = () => {
     res && setChallenges([...challenges, ...res]);
 
     error && setError(error);
-  };
+  }
 
   useEffect(() => {
     error && alert(error);
   }, [error]);
 
   useEffect(() => {
-    fetchChallenges();
+    getChallenges();
   }, []);
 
   useEffect(() => {
@@ -77,7 +100,7 @@ export const HomeScreen: React.FC = () => {
         onViewableItemsChanged={onViewRef.current}
         onScrollEndDrag={() => (scrollEnded.current = true)}
         onScrollBeginDrag={() => (scrollEnded.current = false)}
-        onEndReached={fetchChallenges}
+        onEndReached={getChallenges}
         onEndReachedThreshold={3}
         ListFooterComponent={() => (challenges.length ? <Text>Loading more..</Text> : null)}
       ></FlatList>
