@@ -1,6 +1,6 @@
 import React from "react";
 import { View, StyleSheet, Dimensions, Platform } from "react-native";
-import { Video } from "expo-av";
+import { ResizeMode, Video } from "expo-av";
 import { UIConsts } from "../shared/styles/variables";
 import VideoPlayer from "expo-video-player";
 
@@ -10,14 +10,24 @@ interface PublishScreenProps {
 
 export const VideoScreen: React.FC<PublishScreenProps> = ({ uri }) => {
   const video = React.useRef(null);
-
+  // const styles = StyleSheet.create({
+  //   video:{
+  //     width:100%
+  //   }
+  // })
   return (
     <VideoPlayer
-      height={Platform.OS === "android" ? Dimensions.get("screen").height - 249 : Dimensions.get("screen").height - 220}
+      width={Dimensions.get("window").width}
+      // height={Dimensions.get("window").height}
+      height={
+        Dimensions.get("screen").height - Dimensions.get("screen").height / 3.5
+      }
       showFullscreenButton={false}
+      // width={100}
+
       videoProps={{
         shouldPlay: false,
-        resizeMode: Video.RESIZE_MODE_CONTAIN,
+        resizeMode: ResizeMode.COVER,
         source: {
           uri: uri,
         },
@@ -58,12 +68,12 @@ const styles = StyleSheet.create({
     backgroundColor: "#ecf0f1",
   },
   video: {
-    position: "absolute",
+    // position: "absolute",
     top: 0,
     left: 0,
     bottom: 0,
     right: 0,
-    height: Dimensions.get("window").height - 220,
+    // height: Dimensions.get("window").height - 220,
     // height: Dimensions.get("window").height - 220,
   },
 });

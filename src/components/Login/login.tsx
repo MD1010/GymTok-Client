@@ -1,3 +1,4 @@
+import { useNavigation } from "@react-navigation/native";
 import React, { createRef, useEffect, useState } from "react";
 import {
   Keyboard,
@@ -10,7 +11,6 @@ import {
   View,
 } from "react-native";
 import { useSelector } from "react-redux";
-import { useNavigation } from "../hooks/useNavigation";
 import { Colors } from "../shared/styles/variables";
 
 interface LoginProps {
