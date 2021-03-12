@@ -12,9 +12,9 @@ import { NotLoggedInScreen } from "../NotLoggedIn/NotLoggedIn";
 import { AuthModal } from "../shared/AuthModal";
 import { Colors, UIConsts } from "../shared/styles/variables";
 
-interface BottomTabsProps { }
+interface BottomTabsProps {}
 
-export const BottomTabs: React.FC<BottomTabsProps> = ({ }) => {
+export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
   const Tab = createBottomTabNavigator();
   const { loggedUser } = useSelector(authSelector);
   const [isAddButtonClicked, setIsAddButtonCLicked] = useState<boolean>(false);
@@ -43,8 +43,8 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({ }) => {
               focused ? (
                 <Ionicons name="md-home-sharp" color={color} size={size} />
               ) : (
-                  <Ionicons name="md-home-outline" color={color} size={size} />
-                ),
+                <Ionicons name="md-home-outline" color={color} size={size} />
+              ),
             // <Image
             //   style={{ width: 35, height: 35, tintColor: color }}
             //   resizeMode={"contain"}
@@ -54,20 +54,24 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({ }) => {
         />
         <Tab.Screen
           name="Leaderboards"
-          component={loggedUser ? () => <HomeScreen /> : () => <NotLoggedInScreen text={"Leaderboards"} icon={"sadasd"} />}
+          component={
+            loggedUser ? () => <HomeScreen /> : () => <NotLoggedInScreen text={"Leaderboards"} icon={"sadasd"} />
+          }
           options={{
             tabBarIcon: ({ color, size, focused }) =>
               focused ? (
                 <Ionicons name="trophy-sharp" color={color} size={size} style={{ marginRight: 50 }} />
               ) : (
-                  <Ionicons name="trophy-outline" color={color} size={size} style={{ marginRight: 50 }} />
-                ),
+                <Ionicons name="trophy-outline" color={color} size={size} style={{ marginRight: 50 }} />
+              ),
           }}
         />
 
         <Tab.Screen
           name="Notifications"
-          component={loggedUser ? () => <Home /> : () => <NotLoggedInScreen text={"Notifications"} icon={"sadasd"} />}
+          component={
+            loggedUser ? () => <HomeScreen /> : () => <NotLoggedInScreen text={"Notifications"} icon={"sadasd"} />
+          }
           options={{
             tabBarIcon: ({ color, size, focused }) =>
               focused ? (
@@ -80,15 +84,15 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({ }) => {
                   }}
                 />
               ) : (
-                  <Ionicons
-                    name={"notifications-outline"}
-                    color={color}
-                    size={size}
-                    style={{
-                      marginLeft: 50,
-                    }}
-                  />
-                ),
+                <Ionicons
+                  name={"notifications-outline"}
+                  color={color}
+                  size={size}
+                  style={{
+                    marginLeft: 50,
+                  }}
+                />
+              ),
           }}
         ></Tab.Screen>
         <Tab.Screen
@@ -99,8 +103,8 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({ }) => {
               focused ? (
                 <Ionicons name="person-sharp" color={color} size={size} />
               ) : (
-                  <Ionicons name="person-outline" color={color} size={size} />
-                ),
+                <Ionicons name="person-outline" color={color} size={size} />
+              ),
           }}
         />
       </Tab.Navigator>
@@ -108,8 +112,8 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({ }) => {
         {!loggedUser && isAddButtonClicked ? (
           <AuthModal close={() => setIsAddButtonCLicked(false)} />
         ) : (
-            <AddButton isAddButtonClicked={isAddButtonClicked} setIsAddButtonCLicked={setIsAddButtonCLicked} />
-          )}
+          <AddButton isAddButtonClicked={isAddButtonClicked} setIsAddButtonCLicked={setIsAddButtonCLicked} />
+        )}
       </Portal>
     </Provider>
   );

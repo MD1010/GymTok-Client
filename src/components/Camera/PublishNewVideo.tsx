@@ -61,14 +61,14 @@ export const PublishNewVideoScreen: React.FC = () => {
       <Spinner visible={isSpinner} textContent={"Uploading..."} textStyle={styles.spinnerTextStyle} />
       <SafeAreaView style={styles.container}>
         {/* <KeyboardAwareScrollView> */}
-        <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={{ flex: 1 }}>
+        <KeyboardAvoidingView style={{ flex: 1 }}>
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <View style={{ flex: 1 }}>
               <View style={{ flex: 4 }}>
                 <VideoScreen uri={route.params!.videoUri} />
               </View>
 
-              <View style={{ flex: 0.56 }}>
+              <View style={{ flex: 0.5 }}>
                 <TextInput
                   style={styles.description}
                   onChangeText={(text) => setText(text)}
@@ -152,7 +152,7 @@ const styles = StyleSheet.create({
     width: Dimensions.get("screen").width,
   },
   btnOptions: {
-    flex: 0.56,
+    flex: 0.5,
     display: "flex",
     flexDirection: "row",
     // display: "flex",

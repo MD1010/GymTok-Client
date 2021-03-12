@@ -19,9 +19,7 @@ export const VideoScreen: React.FC<PublishScreenProps> = ({ uri }) => {
     <VideoPlayer
       width={Dimensions.get("window").width}
       // height={Dimensions.get("window").height}
-      height={
-        Dimensions.get("screen").height - Dimensions.get("screen").height / 3.5
-      }
+      height={Dimensions.get("screen").height - Dimensions.get("screen").height / 3.5}
       showFullscreenButton={false}
       // width={100}
 
