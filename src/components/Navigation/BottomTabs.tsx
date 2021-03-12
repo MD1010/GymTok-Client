@@ -54,7 +54,7 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({ }) => {
         />
         <Tab.Screen
           name="Leaderboards"
-          component={loggedUser ? () => <Home /> : () => <NotLoggedInScreen text={"Leaderboards"} icon={"sadasd"} />}
+          component={loggedUser ? () => <HomeScreen /> : () => <NotLoggedInScreen text={"Leaderboards"} icon={"sadasd"} />}
           options={{
             tabBarIcon: ({ color, size, focused }) =>
               focused ? (
