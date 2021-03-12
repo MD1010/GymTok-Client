@@ -21,6 +21,8 @@ import { Colors, UIConsts } from "../shared/styles/variables";
 import { FriendsModal } from "./FreindsModal";
 import { VideoScreen } from "./publishVideo";
 import { useNavigation } from "@react-navigation/native";
+import { useSelector } from "react-redux";
+import { authSelector } from "../../store/auth/authSlice";
 
 export const PublishNewVideoScreen: React.FC = () => {
   const route = useRoute<any>();
@@ -29,13 +31,14 @@ export const PublishNewVideoScreen: React.FC = () => {
   const [selectedFriends, setSelectedFriends] = useState<any[]>([]);
   const [isSpinner, setIsSpinner] = useState<boolean>(false);
   const navigation = useNavigation();
+  const { loggedUser } = useSelector(authSelector);
 
   const publishChallenge = async () => {
     setIsSpinner(true);
     let formData = new FormData();
 
     formData.append("description", text);
-    formData.append("userId", "6004a03343b8e925a48d270b");
+    formData.append("userId", loggedUser._id);
     formData.append("video", {
       name: "dov-test.mp4",
       uri: route.params.videoUri,
@@ -49,7 +52,6 @@ export const PublishNewVideoScreen: React.FC = () => {
       formData
     );
     if (res) {
-      alert("upload succefully!!");
       navigation.navigate("Home");
     } else alert(error);
     setIsSpinner(false);
