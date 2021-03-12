@@ -4,6 +4,7 @@ import React, { useLayoutEffect, useState } from "react";
 import {
   Dimensions,
   Keyboard,
+  KeyboardAvoidingView,
   Platform,
   SafeAreaView,
   StyleSheet,
@@ -67,24 +68,59 @@ export const PublishNewVideoScreen: React.FC = () => {
         textStyle={styles.spinnerTextStyle}
       />
       <SafeAreaView style={styles.container}>
-        <KeyboardAwareScrollView>
-          <View style={{ flex: 4 }}>
-            <VideoScreen uri={route.params!.videoUri} />
-          </View>
+        {/* <KeyboardAwareScrollView> */}
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          style={{ flex: 1 }}
+        >
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <View style={{ flex: 1 }}>
-              <TextInput
-                style={styles.description}
-                onChangeText={(text) => setText(text)}
-                value={text}
-                placeholder={"write description"}
-                placeholderTextColor={Colors.black}
-                autoCorrect={true}
-                autoCapitalize={"words"}
-              />
+              <View style={{ flex: 4 }}>
+                <VideoScreen uri={route.params!.videoUri} />
+              </View>
+
+              <View style={{ flex: 0.56 }}>
+                <TextInput
+                  style={styles.description}
+                  onChangeText={(text) => setText(text)}
+                  value={text}
+                  placeholder={"write description"}
+                  placeholderTextColor={Colors.black}
+                  autoCorrect={true}
+                  autoCapitalize={"words"}
+                />
+              </View>
+              <View style={styles.btnOptions}>
+                <TouchableOpacity
+                  style={styles.tagBtn}
+                  onPress={() => {
+                    setShowTaggedFriends(!showTaggedFriends);
+                  }}
+                >
+                  <View style={styles.tagIcon}>
+                    <EvilIcons name="tag" size={35} color={"white"} />
+                  </View>
+
+                  <Text style={styles.btnText}>Tag Friends</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  style={styles.publishBtn}
+                  onPress={() => {
+                    publishChallenge();
+                  }}
+                >
+                  <View style={styles.publishIcon}>
+                    <AntDesign name="upload" size={28} color={"white"} />
+                  </View>
+
+                  <Text style={styles.btnText}>Publish</Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </TouchableWithoutFeedback>
-        </KeyboardAwareScrollView>
+        </KeyboardAvoidingView>
+        {/* </KeyboardAwareScrollView> */}
 
         {showTaggedFriends && (
           <Animatable.View
@@ -100,28 +136,6 @@ export const PublishNewVideoScreen: React.FC = () => {
             />
           </Animatable.View>
         )}
-
-        <View style={styles.btnOptions}>
-          <TouchableOpacity
-            style={styles.tagBtn}
-            onPress={() => {
-              setShowTaggedFriends(!showTaggedFriends);
-            }}
-          >
-            <EvilIcons name="tag" size={35} color={"white"} />
-            <Text style={styles.btnText}>Tag Friends</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={styles.publishBtn}
-            onPress={() => {
-              publishChallenge();
-            }}
-          >
-            <AntDesign name="upload" size={28} color={"white"} />
-            <Text style={styles.btnText}>Publish</Text>
-          </TouchableOpacity>
-        </View>
       </SafeAreaView>
     </>
   );
@@ -135,7 +149,7 @@ const styles = StyleSheet.create({
     height: Dimensions.get("window").height,
   },
   description: {
-    height: UIConsts.bottomNavbarHeight - 20,
+    height: UIConsts.bottomNavbarHeight - 15,
 
     paddingLeft: 10,
     opacity: 0.6,
@@ -153,26 +167,38 @@ const styles = StyleSheet.create({
     width: Dimensions.get("screen").width,
   },
   btnOptions: {
-    width: Dimensions.get("screen").width,
-    height: Platform.OS === "android" ? 51 : 75,
-    marginTop:
-      Platform.OS === "android"
-        ? Dimensions.get("screen").height - 189
-        : Dimensions.get("screen").height - 160,
-    position: "absolute",
-
+    flex: 0.56,
+    display: "flex",
     flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: Colors.darkBlue,
+    // display: "flex",
+    justifyContent: "space-between",
+    // height: Dimensions.get("screen").height / 10,
+
+    // alignContent: "center",
+    // width: Dimensions.get("screen").width,
+    // // height: Platform.OS === "android" ? 51 : 75,
+    // height: Dimensions.get("screen").height / 10,
+    // // marginTop:
+    // //   Platform.OS === "android"
+    // //     ? Dimensions.get("screen").height - 189
+    // //     : Dimensions.get("screen").height - 160,
+    // marginTop: Dimensions.get("screen").height / 1.3,
+    // position: "absolute",
+    // flexDirection: "row",
+    // alignItems: "center",
+    // backgroundColor: Colors.darkBlue,
   },
   tagBtn: {
-    alignItems: "center",
-    marginLeft: 20,
-    marginRight: 270,
+    marginLeft: 15,
+  },
+  tagIcon: {
+    marginLeft: 10,
   },
   publishBtn: {
-    alignSelf: "flex-end",
-    alignItems: "center",
+    marginRight: 15,
+  },
+  publishIcon: {
+    marginLeft: 3.5,
   },
   btnText: {
     color: "white",

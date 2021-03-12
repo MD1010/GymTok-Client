@@ -18,6 +18,7 @@ export const VideoScreen: React.FC<PublishScreenProps> = ({ uri }) => {
   return (
     <VideoPlayer
       width={Dimensions.get("window").width}
+      // height={Dimensions.get("window").height}
       height={
         Dimensions.get("screen").height - Dimensions.get("screen").height / 3.5
       }
@@ -67,12 +68,12 @@ const styles = StyleSheet.create({
     backgroundColor: "#ecf0f1",
   },
   video: {
-    position: "absolute",
+    // position: "absolute",
     top: 0,
     left: 0,
     bottom: 0,
     right: 0,
-    height: Dimensions.get("window").height - 220,
+    // height: Dimensions.get("window").height - 220,
     // height: Dimensions.get("window").height - 220,
   },
 });
