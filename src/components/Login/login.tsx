@@ -1,5 +1,4 @@
-import { useNavigation } from "@react-navigation/native";
-import React, { createRef, useState } from "react";
+import React, { createRef, useEffect, useState } from "react";
 import {
     Keyboard,
     KeyboardAvoidingView,
@@ -10,6 +9,7 @@ import {
     TouchableOpacity,
     View,
 } from "react-native";
+import { Colors } from "../shared/styles/variables";
 
 interface LoginProps {
     onSubmit: (username: string, password: string) => any;
