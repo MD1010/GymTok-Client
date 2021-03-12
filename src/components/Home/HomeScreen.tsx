@@ -6,11 +6,8 @@ import { fetchAPI, RequestMethod } from "../../utils/fetchAPI";
 import { Challenge } from "../Challenge/Challenge";
 import { UIConsts } from "../shared/styles/variables";
 import { Text } from "react-native";
-interface ChallengesProps {
-  challenges: IChallenge[];
-}
 
-export const HomeScreen: React.FC<ChallengesProps> = () => {
+export const HomeScreen: React.FC = () => {
   const [currentlyPlaying, setCurrentlyPlaying] = useState(0);
   const scrollEnded = useRef<boolean>(false);
   const navigation = useNavigation();
@@ -62,11 +59,8 @@ export const HomeScreen: React.FC<ChallengesProps> = () => {
     scrollEnded.current && setCurrentlyPlaying(viewableItems[0]?.index);
   });
 
-  const renderItem = useCallback(
-    ({ item, index }) => (
-      <Challenge challenge={item} isVideoPlaying={index === currentlyPlaying && !navigatedOutOfScreen} />
-    ),
-    [navigatedOutOfScreen, currentlyPlaying]
+  const renderItem = ({ item, index }) => (
+    <Challenge challenge={item} isVideoPlaying={index === currentlyPlaying && !navigatedOutOfScreen} />
   );
 
   return (
