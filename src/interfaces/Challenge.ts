@@ -7,4 +7,6 @@ export interface IChallenge {
   estimatedScore: string;
   image: string;
   video: string;
+  likes: string[];
+  replies: string[]
 }

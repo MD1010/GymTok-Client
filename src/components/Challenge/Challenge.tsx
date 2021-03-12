@@ -13,6 +13,11 @@ interface ChallengeProps {
   isVideoPlaying: boolean;
 }
 
+interface IUIContainer {
+  numberOfLikes: number;
+  numberOfComments: number
+}
+
 const Heading = ({ createdBy }) => {
   return (
     <>
@@ -33,7 +38,7 @@ const Heading = ({ createdBy }) => {
   );
 };
 
-const UIContainer = () => {
+const UIContainer: React.FC<IUIContainer> = ({ numberOfLikes, numberOfComments }) => {
   return (
     <>
       <View style={styles.uiContainer}>
@@ -51,11 +56,11 @@ const UIContainer = () => {
           <View style={[styles.rowContainer, { marginRight: 10 }]}>
             <FontAwesome name={"heart"} size={13} color={Colors.lightGrey} />
 
-            <Text style={styles.amount}>138k</Text>
+            <Text style={styles.amount}>{numberOfLikes}</Text>
           </View>
           <View style={styles.rowContainer}>
             <FontAwesome name={"comment"} size={13} color={Colors.lightGrey} />
-            <Text style={styles.amount}>289</Text>
+            <Text style={styles.amount}>{numberOfComments}</Text>
           </View>
         </View>
       </View>
@@ -64,11 +69,9 @@ const UIContainer = () => {
 };
 
 export const Challenge: React.FC<ChallengeProps> = memo(({ challenge, isVideoPlaying }) => {
-  const { name, video: videoURL, image, estimatedScore, description, creationTime, createdBy, _id } = challenge;
-  console.log("in challneg!", isVideoPlaying);
+  const { video: videoURL, createdBy, likes, replies } = challenge;
 
   const streaminServerUrl = `http://193.106.55.109:8000/${videoURL}`;
-  // const streaminServerUrl = `http://192.168.0.107:8000/${videoURL}`;
   return (
     <View style={styles.container}>
       <Player style={styles.video} uri={streaminServerUrl} isPlaying={isVideoPlaying} resizeMode="cover" />
@@ -76,10 +79,10 @@ export const Challenge: React.FC<ChallengeProps> = memo(({ challenge, isVideoPla
         <Heading createdBy={createdBy} />
 
         <View style={styles.rowContainer}>
-          <Text style={styles.info}>{"My Challenge"}</Text>
+          <Text style={styles.info}>{challenge.description}</Text>
         </View>
 
-        <UIContainer />
+        <UIContainer numberOfLikes={likes ? likes.length : 0} numberOfComments={replies ? replies.length : 0} />
       </View>
     </View>
   );
