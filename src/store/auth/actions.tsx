@@ -7,7 +7,7 @@ export const register = (username: string, fullName: string, password: string): 
     const body = { username, fullName, password };
     const { res, error } = await fetchAPI(RequestMethod.POST, registerEnpoint, body);
     if (res) {
-      dispatch(authActions.login(res.data));
+      dispatch(authActions.login(res));
     } else {
       dispatch(authActions.authFailed({ error }));
     }
@@ -16,10 +16,11 @@ export const register = (username: string, fullName: string, password: string): 
 export const login = (username: string, password: string): AppThunk => {
   return async (dispatch: AppDispatch) => {
     const registerEnpoint = `${process.env.BASE_API_ENPOINT}/users/login`;
+    
     const body = { username, password };
     const { res, error } = await fetchAPI(RequestMethod.POST, registerEnpoint, body);
     if (res) {
-      dispatch(authActions.login(res.data));
+      dispatch(authActions.login(res));
     } else {
       dispatch(authActions.authFailed({ error }));
     }

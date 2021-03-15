@@ -17,10 +17,11 @@ export const LoginContainer: React.FC<LoginContainerProps> = () => {
   const { authError, loggedUser } = useSelector(authSelector);
 
   useEffect(() => {
-    loggedUser && navigation.navigate("home");
+    loggedUser && navigation.navigate("Home");
   }, [loggedUser]);
 
-  const handleSubmitPress = async (username: string, password: string) => {
+ const handleSubmitPress = async (username: string, password: string) => {
+
     if (!username) {
       alert("Please fill UserName");
       return;

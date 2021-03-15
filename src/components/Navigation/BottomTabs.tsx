@@ -1,18 +1,24 @@
 import { FontAwesome5, Ionicons } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import React from "react";
+import React, { useState } from "react";
 import { Platform, Image } from "react-native";
 import { Portal, Provider } from "react-native-paper";
+import { useSelector } from "react-redux";
+import { authSelector } from "../../store/auth/authSlice";
 import { AddButton } from "../Camera/AddButton";
-import { HomeContainer as Home } from "../Home/HomeContainer";
+import { HomeScreen } from "../Home/HomeScreen";
+import { LoginContainer as LoginScreen } from "../Login/LoginContainer";
+import { NotLoggedInScreen } from "../NotLoggedIn/NotLoggedIn";
+import { AuthModal } from "../shared/AuthModal";
 import { ProfileContainer as Profile } from "../Profile/ProfileContainer";
-import { LoginScreen } from "../Login/Login";
 import { Colors, UIConsts } from "../shared/styles/variables";
 
 interface BottomTabsProps {}
 
 export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
   const Tab = createBottomTabNavigator();
+  const { loggedUser } = useSelector(authSelector);
+  const [isAddButtonClicked, setIsAddButtonCLicked] = useState<boolean>(false);
 
   return (
     <Provider>
@@ -32,7 +38,7 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
       >
         <Tab.Screen
           name="Home"
-          component={Home}
+          component={HomeScreen}
           options={{
             tabBarIcon: ({ color, size, focused }) =>
               focused ? (
@@ -49,7 +55,9 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
         />
         <Tab.Screen
           name="Leaderboards"
-          component={LoginScreen}
+          component={
+            loggedUser ? () => <HomeScreen /> : () => <NotLoggedInScreen text={"Leaderboards"} icon={"sadasd"} />
+          }
           options={{
             tabBarIcon: ({ color, size, focused }) =>
               focused ? (
@@ -62,7 +70,9 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
 
         <Tab.Screen
           name="Notifications"
-          component={LoginScreen}
+          component={
+            loggedUser ? () => <HomeScreen /> : () => <NotLoggedInScreen text={"Notifications"} icon={"sadasd"} />
+          }
           options={{
             tabBarIcon: ({ color, size, focused }) =>
               focused ? (
@@ -99,9 +109,12 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
           }}
         />
       </Tab.Navigator>
-
       <Portal>
-        <AddButton />
+        {!loggedUser && isAddButtonClicked ? (
+          <AuthModal close={() => setIsAddButtonCLicked(false)} />
+        ) : (
+          <AddButton isAddButtonClicked={isAddButtonClicked} setIsAddButtonCLicked={setIsAddButtonCLicked} />
+        )}
       </Portal>
     </Provider>
   );

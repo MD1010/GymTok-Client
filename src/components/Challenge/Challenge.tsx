@@ -1,11 +1,14 @@
 import { FontAwesome } from "@expo/vector-icons";
-import React from "react";
-import { Text, View } from "react-native";
+import { Dimensions, Text, View } from "react-native";
+import React, { memo, useState } from "react";
 import { Avatar } from "react-native-elements";
 import { TouchableOpacity, TouchableWithoutFeedback } from "react-native-gesture-handler";
+import { useSelector } from "react-redux";
 import { IChallenge } from "../../interfaces";
+import { authSelector } from "../../store/auth/authSlice";
+import { AuthModal } from "../shared/AuthModal";
 import { Colors } from "../shared/styles/variables";
-import { VideoPlayer } from "../shared/VideoPlayer";
+import { Player } from "../shared/VideoPlayer";
 import { styles } from "./Challenge.style";
 
 interface ChallengeProps {
@@ -13,36 +16,63 @@ interface ChallengeProps {
   isVideoPlaying: boolean;
 }
 
+interface IUIContainer {
+  numberOfLikes: number;
+  numberOfComments: number
+  onLikeButtonPress: () => void,
+  onCommentButtonPress: () => void
+}
+
 const Heading = ({ createdBy }) => {
+  const { loggedUser } = useSelector(authSelector);
+  const [showAuthModal, setShowAuthModal] = useState<boolean>(false);
+
+  const onCammeraPressed = () => {
+    if (loggedUser) {
+      console.log("user:" + loggedUser?.fullName + " click on like button.");
+      // todo: fetch here
+    } else {
+      setShowAuthModal(true);
+      console.log("guest click on like button, need to log-in");
+    }
+  };
   return (
     <>
-      <View style={[styles.rowContainer, { marginVertical: 10, justifyContent: "space-between" }]}>
-        <View style={{ flexDirection: "row", alignItems: "center" }}>
-          <TouchableWithoutFeedback onPress={() => console.log("avatar clicked!")}>
-            <Avatar source={require("../../../assets/avatar/01.jpg")} rounded></Avatar>
-          </TouchableWithoutFeedback>
-          <Text style={styles.creator}>@{createdBy}</Text>
+      {showAuthModal && !loggedUser ? (
+        <View
+          style={{ height: Dimensions.get("window").height - 50, width: Dimensions.get("window").width, zIndex: 100 }}
+        >
+          <AuthModal close={() => setShowAuthModal(false)} />
         </View>
-        <View>
-          <TouchableOpacity onPress={() => console.log("reply to video!")}>
-            <FontAwesome name={"camera"} size={22} color={Colors.white} />
-          </TouchableOpacity>
-        </View>
-      </View>
+      ) : (
+          <View style={[styles.rowContainer, { marginVertical: 10, justifyContent: "space-between" }]}>
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <TouchableWithoutFeedback onPress={() => console.log("avatar clicked!")}>
+                <Avatar source={require("../../../assets/avatar/01.jpg")} rounded></Avatar>
+              </TouchableWithoutFeedback>
+              <Text style={styles.creator}>@{createdBy}</Text>
+            </View>
+            <View>
+              <TouchableOpacity onPress={() => onCammeraPressed()}>
+                <FontAwesome name={"camera"} size={22} color={Colors.white} />
+              </TouchableOpacity>
+            </View>
+          </View>
+        )}
     </>
   );
 };
 
-const UIContainer = () => {
+const UIContainer: React.FC<IUIContainer> = ({ numberOfComments, numberOfLikes, onLikeButtonPress, onCommentButtonPress }) => {
   return (
     <>
       <View style={styles.uiContainer}>
         <View style={[styles.rowContainer, { width: 60, justifyContent: "space-between" }]}>
-          <TouchableOpacity onPress={() => console.log("like!")}>
+          <TouchableOpacity onPress={() => onLikeButtonPress()}>
             <FontAwesome name={"heart"} size={22} color={Colors.lightGrey} />
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={() => console.log("comment!")}>
+          <TouchableOpacity onPress={() => onCommentButtonPress()}>
             <FontAwesome name={"comment"} size={22} color={Colors.lightGrey} />
           </TouchableOpacity>
         </View>
@@ -51,11 +81,11 @@ const UIContainer = () => {
           <View style={[styles.rowContainer, { marginRight: 10 }]}>
             <FontAwesome name={"heart"} size={13} color={Colors.lightGrey} />
 
-            <Text style={styles.amount}>138k</Text>
+            <Text style={styles.amount}>{numberOfLikes}</Text>
           </View>
           <View style={styles.rowContainer}>
             <FontAwesome name={"comment"} size={13} color={Colors.lightGrey} />
-            <Text style={styles.amount}>289</Text>
+            <Text style={styles.amount}>{numberOfComments}</Text>
           </View>
         </View>
       </View>
@@ -63,22 +93,51 @@ const UIContainer = () => {
   );
 };
 
-export const Challenge: React.FC<ChallengeProps> = ({ challenge, isVideoPlaying }) => {
-  const { name, video: videoURL, image, estimatedScore, description, creationTime, createdBy, _id } = challenge;
-  console.log(challenge);
-  //const streaminServerUrl = `http://193.106.55.109121212:8000/${videoURL}`;
+export const Challenge: React.FC<ChallengeProps> = memo(({ challenge, isVideoPlaying }) => {
+  const { video: videoURL, createdBy, likes, replies } = challenge;
+  const { loggedUser } = useSelector(authSelector);
+
+  const [showAuthModal, setShowAuthModal] = useState<boolean>(false);
+
+  const onLikeButtonPress = () => {
+    if (loggedUser) {
+      console.log("user:" + loggedUser?.fullName + " click on like button.");
+      // todo: fetch here
+    } else {
+      setShowAuthModal(true);
+      console.log("guest click on like button, need to log-in");
+    }
+  };
+
+  const onCommentButtonPress = () => {
+    if (loggedUser) {
+      console.log("user:" + loggedUser?.fullName + " click on comment button.");
+      // todo: fetch here
+    } else {
+      setShowAuthModal(true);
+      console.log("guest click on comment button, need to log-in");
+    }
+  };
+
+  const streaminServerUrl = `http://193.106.55.109:8000/${videoURL}`;
   return (
     <View style={styles.container}>
-      <VideoPlayer style={styles.video} uri={videoURL} isPlaying={isVideoPlaying} resizeMode="cover" />
+      {showAuthModal && !loggedUser && <AuthModal close={() => setShowAuthModal(false)} />}
+      <Player style={styles.video} uri={streaminServerUrl} isPlaying={isVideoPlaying} resizeMode="cover" />
       <View style={styles.infoContainer}>
-        <Heading createdBy={createdBy} />
+        <Heading createdBy={createdBy.username} />
 
         <View style={styles.rowContainer}>
-          <Text style={styles.info}>{"My Challenge"}</Text>
+          <Text style={styles.info}>{challenge.description}</Text>
         </View>
 
-        <UIContainer />
+        <UIContainer
+          numberOfLikes={likes ? likes.length : 0}
+          numberOfComments={replies ? replies.length : 0}
+          onLikeButtonPress={() => onLikeButtonPress()}
+          onCommentButtonPress={() => onCommentButtonPress()} />
+
       </View>
     </View>
   );
-};
+});

@@ -6,7 +6,12 @@ import React from "react";
 import ActionButton from "react-native-action-button";
 import { Colors } from "../shared/styles/variables";
 
-export const AddButton: React.FC = () => {
+interface Props {
+  isAddButtonClicked: boolean;
+  setIsAddButtonCLicked: (isClicked: boolean) => void;
+}
+
+export const AddButton: React.FC<Props> = ({ isAddButtonClicked, setIsAddButtonCLicked }) => {
   const navigation = useNavigation();
 
   const takeVideo = async () => {
@@ -33,6 +38,7 @@ export const AddButton: React.FC = () => {
 
   return (
     <ActionButton
+      onPress={() => setIsAddButtonCLicked(!isAddButtonClicked)}
       backdrop
       bgOpacity={0.75}
       bgColor={"#101010"}
@@ -55,6 +61,7 @@ export const AddButton: React.FC = () => {
       >
         <FontAwesome name="picture-o" size={15} color={Colors.white} />
       </ActionButton.Item>
+      )
     </ActionButton>
   );
 };
