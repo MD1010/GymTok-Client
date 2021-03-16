@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Alert, Button, Dimensions, Modal, Platform, StyleSheet, Text, TouchableHighlight, View } from "react-native";
-import { VideoPlayer } from "../shared/VideoPlayer";
+import { Player } from "../shared/VideoPlayer";
 import { Video } from "expo-av";
 import { Challenge } from "../Challenge/Challenge";
 
@@ -31,11 +31,13 @@ export const ProfileVideoModal: React.FC<ProfileVideoModal> = ({ modalVisible, s
                   _id: "1",
                   creationTime: "",
                   name: "string",
-                  createdBy: "string",
+                  createdBy: { _id: "", fullName: "dov", username: "dov" },
                   description: "string",
                   estimatedScore: "string",
                   image: "string",
                   video: videoUri,
+                  likes: ["100"],
+                  replies: ["very good"],
                 }}
                 isVideoPlaying={true}
               />
