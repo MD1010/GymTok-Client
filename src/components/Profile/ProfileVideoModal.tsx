@@ -13,16 +13,17 @@ interface ProfileVideoModal {
 export const ProfileVideoModal: React.FC<ProfileVideoModal> = ({ modalVisible, setModalVisible, videoUri }) => {
   return (
     <Modal animationType="slide" transparent={true} visible={modalVisible}>
-      <View style={styles.modalView}>
-        <View style={styles.Btns}>
-          <Button
-            title="Cancel"
-            onPress={() => {
-              setModalVisible(!modalVisible);
-            }}
-          />
-        </View>
+      {/* <View style={{ height: 90 }}> */}
+      <View style={styles.Btns}>
+        <Button
+          title="Cancel"
+          onPress={() => {
+            setModalVisible(!modalVisible);
+          }}
+        />
+      </View>
 
+      <View style={{ height: Dimensions.get("screen").height }}>
         <Challenge
           challenge={{
             _id: "1",
@@ -39,6 +40,7 @@ export const ProfileVideoModal: React.FC<ProfileVideoModal> = ({ modalVisible, s
           isVideoPlaying={true}
         />
       </View>
+      {/* </View> */}
     </Modal>
   );
 };
@@ -75,6 +77,9 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   Btns: {
+    position: "absolute",
     alignSelf: "flex-end",
+    marginTop: 30,
+    zIndex: 1000000,
   },
 });

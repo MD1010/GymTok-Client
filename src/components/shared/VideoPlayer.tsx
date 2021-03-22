@@ -2,7 +2,7 @@ import { FontAwesome } from "@expo/vector-icons";
 // import { Video } from "expo-av";
 import VideoPlayer from "expo-video-player";
 import React, { memo, useEffect, useRef, useState } from "react";
-import { StyleProp, StyleSheet, Text, TouchableWithoutFeedback, View, ViewStyle } from "react-native";
+import { Platform, StyleProp, StyleSheet, Text, TouchableWithoutFeedback, View, ViewStyle } from "react-native";
 import { Colors } from "./styles/variables";
 import * as FileSystem from "expo-file-system";
 import shorthash from "shorthash";
@@ -33,12 +33,11 @@ export const Player: React.FC<VideoProps> = memo(({ uri, style, isPlaying, resiz
   };
 
   const loadURI = async () => {
-    const name = shorthash.unique(uri);
-    console.log(name);
-    const path = `${FileSystem.cacheDirectory}${name}`;
+    const path = `${FileSystem.documentDirectory}${Platform.OS === "ios" ? uri.split("/")[3] : shorthash.unique(uri)}`;
     const image = await FileSystem.getInfoAsync(path);
     if (image.exists) {
       console.log("read image from cache");
+      console.log("uri exists is  " + image.uri);
       setVideoURI(image.uri);
     } else {
       console.log("downloading image to cache");
