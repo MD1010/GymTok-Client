@@ -24,21 +24,24 @@ export const HomeScreen: React.FC = () => {
       getExistChallenges();
     } else {
       getRecommendedChallenges();
-
     }
-
   };
 
   const getRecommendedChallenges = async () => {
-    const { res, error } = await fetchAPI(RequestMethod.GET, `${process.env.BASE_API_ENPOINT}/users/${loggedUser?.username}/recommendedChallenges`, null, {
-      size: itemsToLoad,
-      page: challenges.length / itemsToLoad,
-    });
+    const { res, error } = await fetchAPI(
+      RequestMethod.GET,
+      `${process.env.BASE_API_ENPOINT}/users/${loggedUser?.username}/recommendedChallenges`,
+      null,
+      {
+        size: itemsToLoad,
+        page: challenges.length / itemsToLoad,
+      }
+    );
 
     res && setChallenges([...challenges, ...res]);
 
     error && setError(error);
-  }
+  };
 
   const getExistChallenges = async () => {
     console.log("fetching more...", challengesEndpoint);
@@ -46,11 +49,11 @@ export const HomeScreen: React.FC = () => {
       size: itemsToLoad,
       page: challenges.length / itemsToLoad,
     });
-
+    console.log(error);
     res && setChallenges([...challenges, ...res]);
 
     error && setError(error);
-  }
+  };
 
   useEffect(() => {
     error && alert(error);

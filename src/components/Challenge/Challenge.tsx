@@ -128,11 +128,11 @@ export const Challenge: React.FC<ChallengeProps> = memo(({ challenge, isVideoPla
     }
   };
 
-  //const streaminServerUrl = `http://193.106.55.109:8000/${videoURL}`;
+  const streaminServerUrl = `http://193.106.55.109:8000/${videoURL}`;
   return (
     <View style={styles.container}>
       {showAuthModal && !loggedUser && <AuthModal close={() => setShowAuthModal(false)} />}
-      <Player style={styles.video} uri={/*streaminServerUrl*/ videoURL} isPlaying={isVideoPlaying} resizeMode="cover" />
+      <Player style={styles.video} uri={streaminServerUrl /*videoURL*/} isPlaying={isVideoPlaying} resizeMode="cover" />
       <View style={styles.infoContainer}>
         <Heading createdBy={createdBy.username} />
 
