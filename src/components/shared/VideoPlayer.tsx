@@ -38,6 +38,7 @@ export const Player: React.FC<VideoProps> = memo(({ uri, style, isPlaying, resiz
     if (image.exists) {
       console.log("read image from cache");
       console.log("uri exists is  " + image.uri);
+      console.log("dovovovov " + image.uri);
       setVideoURI(image.uri);
     } else {
       console.log("downloading image to cache");
