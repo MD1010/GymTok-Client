@@ -33,12 +33,14 @@ export const Player: React.FC<VideoProps> = memo(({ uri, style, isPlaying, resiz
   };
 
   const loadURI = async () => {
-    const path = `${FileSystem.documentDirectory}${Platform.OS === "ios" ? uri.split("/")[3] : shorthash.unique(uri)}`;
+    const path = `${Platform.OS === "ios" ? FileSystem.documentDirectory : FileSystem.cacheDirectory}${
+      Platform.OS === "ios" ? uri.split("/")[3] : shorthash.unique(uri)
+    }`;
     const image = await FileSystem.getInfoAsync(path);
     if (image.exists) {
       console.log("read image from cache");
       console.log("uri exists is  " + image.uri);
-      console.log("dovovovov " + image.uri);
+
       setVideoURI(image.uri);
     } else {
       console.log("downloading image to cache");

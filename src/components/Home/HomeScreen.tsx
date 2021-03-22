@@ -105,7 +105,7 @@ export const HomeScreen: React.FC = () => {
         onScrollBeginDrag={() => (scrollEnded.current = false)}
         onEndReached={getChallenges}
         onEndReachedThreshold={3}
-        // ListFooterComponent={() => (challenges.length ? <Text>Loading more..</Text> : null)}
+        ListFooterComponent={() => (challenges.length ? <Text>Loading more..</Text> : null)}
       ></FlatList>
     </View>
   );
