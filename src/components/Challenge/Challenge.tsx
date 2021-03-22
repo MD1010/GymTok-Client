@@ -18,9 +18,9 @@ interface ChallengeProps {
 
 interface IUIContainer {
   numberOfLikes: number;
-  numberOfComments: number
-  onLikeButtonPress: () => void,
-  onCommentButtonPress: () => void
+  numberOfComments: number;
+  onLikeButtonPress: () => void;
+  onCommentButtonPress: () => void;
 }
 
 const Heading = ({ createdBy }) => {
@@ -45,25 +45,30 @@ const Heading = ({ createdBy }) => {
           <AuthModal close={() => setShowAuthModal(false)} />
         </View>
       ) : (
-          <View style={[styles.rowContainer, { marginVertical: 10, justifyContent: "space-between" }]}>
-            <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <TouchableWithoutFeedback onPress={() => console.log("avatar clicked!")}>
-                <Avatar source={require("../../../assets/avatar/01.jpg")} rounded></Avatar>
-              </TouchableWithoutFeedback>
-              <Text style={styles.creator}>@{createdBy}</Text>
-            </View>
-            <View>
-              <TouchableOpacity onPress={() => onCammeraPressed()}>
-                <FontAwesome name={"camera"} size={22} color={Colors.white} />
-              </TouchableOpacity>
-            </View>
+        <View style={[styles.rowContainer, { marginVertical: 10, justifyContent: "space-between" }]}>
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <TouchableWithoutFeedback onPress={() => console.log("avatar clicked!")}>
+              <Avatar source={require("../../../assets/avatar/01.jpg")} rounded></Avatar>
+            </TouchableWithoutFeedback>
+            <Text style={styles.creator}>@{createdBy}</Text>
           </View>
-        )}
+          <View>
+            <TouchableOpacity onPress={() => onCammeraPressed()}>
+              <FontAwesome name={"camera"} size={22} color={Colors.white} />
+            </TouchableOpacity>
+          </View>
+        </View>
+      )}
     </>
   );
 };
 
-const UIContainer: React.FC<IUIContainer> = ({ numberOfComments, numberOfLikes, onLikeButtonPress, onCommentButtonPress }) => {
+const UIContainer: React.FC<IUIContainer> = ({
+  numberOfComments,
+  numberOfLikes,
+  onLikeButtonPress,
+  onCommentButtonPress,
+}) => {
   return (
     <>
       <View style={styles.uiContainer}>
@@ -115,7 +120,7 @@ export const Challenge: React.FC<ChallengeProps> = memo(({ challenge, isVideoPla
       // todo: fetch here
     } else {
       setShowAuthModal(true);
-      console.log("guest click on comment button, need to log-in");
+      console.log("guest click on comment button, need to login");
     }
   };
 
@@ -135,8 +140,8 @@ export const Challenge: React.FC<ChallengeProps> = memo(({ challenge, isVideoPla
           numberOfLikes={likes ? likes.length : 0}
           numberOfComments={replies ? replies.length : 0}
           onLikeButtonPress={() => onLikeButtonPress()}
-          onCommentButtonPress={() => onCommentButtonPress()} />
-
+          onCommentButtonPress={() => onCommentButtonPress()}
+        />
       </View>
     </View>
   );
