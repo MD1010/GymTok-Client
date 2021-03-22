@@ -44,7 +44,7 @@ export const HomeScreen: React.FC = () => {
   };
 
   const getExistChallenges = async () => {
-    console.log("fetching more...", challengesEndpoint);
+    console.log("fetching more.....", challengesEndpoint);
     const { res, error } = await fetchAPI(RequestMethod.GET, challengesEndpoint, null, {
       size: itemsToLoad,
       page: challenges.length / itemsToLoad,

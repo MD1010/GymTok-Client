@@ -11,60 +11,47 @@ interface ProfileVideoModal {
 }
 
 export const ProfileVideoModal: React.FC<ProfileVideoModal> = ({ modalVisible, setModalVisible, videoUri }) => {
-  useEffect(() => {
-    console.log("now playing" + videoUri);
-  }, [videoUri]);
-
   return (
-    <View style={styles.centeredView}>
-      <Modal animationType="slide" transparent={true} visible={modalVisible}>
-        <View style={styles.centeredView}>
-          <View style={styles.modalView}>
-            <View style={styles.Btns}>
-              <Button
-                title="Cancel"
-                onPress={() => {
-                  setModalVisible(!modalVisible);
-                }}
-              />
-            </View>
-
-            <View style={{ width: "100%" }}>
-              <Challenge
-                challenge={{
-                  _id: "1",
-                  creationTime: "",
-                  name: "string",
-                  createdBy: { _id: "", fullName: "dov", username: "dov" },
-                  description: "string",
-                  estimatedScore: "string",
-                  image: "string",
-                  video: videoUri?.split("/")[3],
-                  likes: ["100"],
-                  replies: ["very good"],
-                }}
-                isVideoPlaying={true}
-              />
-            </View>
-
-            {/* <VideoPlayer uri={videoUri} style={{ height: 400, width: 400 }} isPlaying resizeMode="cover" /> */}
-          </View>
+    <Modal animationType="slide" transparent={true} visible={modalVisible}>
+      <View style={styles.modalView}>
+        <View style={styles.Btns}>
+          <Button
+            title="Cancel"
+            onPress={() => {
+              setModalVisible(!modalVisible);
+            }}
+          />
         </View>
-      </Modal>
-    </View>
+
+        <Challenge
+          challenge={{
+            _id: "1",
+            creationTime: "",
+            name: "string",
+            createdBy: { _id: "", fullName: "dov", username: "dov" },
+            description: "string",
+            estimatedScore: "string",
+            image: "string",
+            video: videoUri?.split("/")[3],
+            likes: ["100"],
+            replies: ["very good"],
+          }}
+          isVideoPlaying={true}
+        />
+      </View>
+    </Modal>
   );
 };
 
 const styles = StyleSheet.create({
   centeredView: {
-    flex: 1,
+    // flex: 1,
+    height: Dimensions.get("screen").height,
+    width: Dimensions.get("screen").width,
     justifyContent: "center",
     alignItems: "center",
-    //marginTop: 22,
   },
   modalView: {
-    // margin: 20,
-    // flex: 1,
     backgroundColor: "white",
     borderRadius: 20,
     padding: 35,
