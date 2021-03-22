@@ -8,43 +8,43 @@ interface ProfileContainerProps {}
 const challenges = [
   {
     _id: 1,
-    url: "http://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4",
+    url: "http://193.106.55.109:8000/fdfe5570-de14-4e53-a680-cc3c3994210b.mp4",
   },
   {
     _id: 2,
-    url: "http://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4",
+    url: "http://193.106.55.109:8000/fdfe5570-de14-4e53-a680-cc3c3994210b.mp4",
   },
   {
     _id: 3,
-    url: "http://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4",
+    url: "http://193.106.55.109:8000/fdfe5570-de14-4e53-a680-cc3c3994210b.mp4",
   },
   {
     _id: 4,
-    url: "http://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4",
+    url: "http://193.106.55.109:8000/fdfe5570-de14-4e53-a680-cc3c3994210b.mp4",
   },
   {
     _id: 5,
-    url: "http://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4",
+    url: "http://193.106.55.109:8000/fdfe5570-de14-4e53-a680-cc3c3994210b.mp4",
   },
   {
     _id: 6,
-    url: "http://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4",
+    url: "http://193.106.55.109:8000/fdfe5570-de14-4e53-a680-cc3c3994210b.mp4",
   },
   {
     _id: 7,
-    url: "http://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4",
+    url: "http://193.106.55.109:8000/fdfe5570-de14-4e53-a680-cc3c3994210b.mp4",
   },
   {
     _id: 8,
-    url: "http://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4",
+    url: "http://193.106.55.109:8000/fdfe5570-de14-4e53-a680-cc3c3994210b.mp4",
   },
   {
     _id: 9,
-    url: "http://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4",
+    url: "http://193.106.55.109:8000/fdfe5570-de14-4e53-a680-cc3c3994210b.mp4",
   },
   {
     _id: 10,
-    url: "http://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4",
+    url: "http://193.106.55.109:8000/fdfe5570-de14-4e53-a680-cc3c3994210b.mp4",
   },
 ];
 

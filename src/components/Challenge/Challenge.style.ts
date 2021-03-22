@@ -3,19 +3,19 @@ import { Colors, UIConsts } from "../shared/styles/variables";
 
 export const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    // width: "100%",
-    // height: Dimensions.get("window").height - UIConsts.bottomNavbarHeight,
+    // flex: 1,
+    width: "100%",
+    height: Dimensions.get("window").height - UIConsts.bottomNavbarHeight,
   },
   video: {
-    flex: 1,
-    width: Dimensions.get("window").width,
+    // flex: 1,
+    // width: Dimensions.get("window").width,
 
-    // position: "absolute",
-    // top: 0,
-    // left: 0,
-    // bottom: 0,
-    // right: 0,
+    position: "absolute",
+    top: 0,
+    left: 0,
+    bottom: 0,
+    right: 0,
   },
   uiContainer: {
     flexDirection: "row",

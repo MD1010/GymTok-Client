@@ -132,7 +132,7 @@ export const Challenge: React.FC<ChallengeProps> = memo(({ challenge, isVideoPla
   return (
     <View style={styles.container}>
       {showAuthModal && !loggedUser && <AuthModal close={() => setShowAuthModal(false)} />}
-      <Player style={styles.video} uri={streaminServerUrl /*videoURL*/} isPlaying={isVideoPlaying} resizeMode="cover" />
+      <Player style={styles.video} uri={streaminServerUrl} isPlaying={isVideoPlaying} resizeMode="cover" />
       <View style={styles.infoContainer}>
         <Heading createdBy={createdBy.username} />
 

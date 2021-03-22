@@ -11,6 +11,10 @@ interface ProfileVideoModal {
 }
 
 export const ProfileVideoModal: React.FC<ProfileVideoModal> = ({ modalVisible, setModalVisible, videoUri }) => {
+  useEffect(() => {
+    console.log("now playing" + videoUri);
+  }, [videoUri]);
+
   return (
     <View style={styles.centeredView}>
       <Modal animationType="slide" transparent={true} visible={modalVisible}>
@@ -25,7 +29,7 @@ export const ProfileVideoModal: React.FC<ProfileVideoModal> = ({ modalVisible, s
               />
             </View>
 
-            <View style={{ flex: 1 }}>
+            <View style={{ width: "100%" }}>
               <Challenge
                 challenge={{
                   _id: "1",
@@ -35,7 +39,7 @@ export const ProfileVideoModal: React.FC<ProfileVideoModal> = ({ modalVisible, s
                   description: "string",
                   estimatedScore: "string",
                   image: "string",
-                  video: videoUri,
+                  video: videoUri?.split("/")[3],
                   likes: ["100"],
                   replies: ["very good"],
                 }}
