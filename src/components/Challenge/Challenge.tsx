@@ -124,7 +124,7 @@ export const Challenge: React.FC<ChallengeProps> = memo(({ challenge, isVideoPla
       // todo: fetch here
     } else {
       setShowAuthModal(true);
-      console.log("guest click on comment button, need to log-in");
+      console.log("guest click on comment button, need to login");
     }
   };
 
