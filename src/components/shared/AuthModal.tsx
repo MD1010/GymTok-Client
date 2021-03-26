@@ -1,46 +1,80 @@
+import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import React from "react";
-import { Button, Dimensions, Platform, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Dimensions, Image, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native";
 import * as Animatable from "react-native-animatable";
 import { Colors } from "./styles/variables";
 
 interface props {
   close: () => void;
 }
+
 export const AuthModal: React.FC<props> = ({ close }) => {
   const navigation = useNavigation();
 
   return (
-    <Animatable.View animation="fadeInUpBig" duration={400} style={styles.modalContainer}>
+    <Animatable.View animation="slideInUp" duration={100} style={styles.modalContainer}>
       <View style={styles.modalBody}>
-        <View style={styles.Btns}>
-          <Button
-            title="Cancel"
-            color={Colors.red}
-            onPress={() => {
-              close();
-            }}
-          />
-        </View>
+        <TouchableWithoutFeedback onPress={() => close()}>
+          <Ionicons name="close-outline" size={29} color={"white"} />
+        </TouchableWithoutFeedback>
 
-        <View style={styles.tal}>
-          <Text style={{ alignSelf: "center", fontSize: 25, color: Colors.gold }}>Sign up for GymTok</Text>
+        <Text style={styles.title}>Sign up for GymTok</Text>
+        <Text style={styles.appDescription}>
+          Create a profile, follow other challenges, create your own challenges and more.
+        </Text>
+
+        <View style={styles.loginOptionContainer}>
           <TouchableOpacity
             onPress={() => {
               navigation.navigate("Register");
             }}
           >
-            <Text style={{ alignSelf: "center", fontSize: 15, color: Colors.gold }}>Register with username</Text>
+            <View style={styles.loginOption}>
+              <Ionicons name="md-person-outline" size={18} color={"white"} />
+
+              <Text style={styles.signInOptionText}>Use username and password</Text>
+            </View>
           </TouchableOpacity>
+
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate("Login");
+              console.log("facebook login!!");
             }}
           >
-            <Text style={{ alignSelf: "center", fontSize: 15, color: Colors.red }}>
-              Already have an accuont? Log in
-            </Text>
+            <View style={styles.loginOption}>
+              <Image
+                style={{ width: 20, height: 20 }}
+                resizeMode={"contain"}
+                source={require("../../../assets/icons/facebook.png")}
+              ></Image>
+
+              <Text style={styles.signInOptionText}>Continue with Facebook</Text>
+            </View>
           </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => {
+              console.log("google login!!");
+            }}
+          >
+            <View style={styles.loginOption}>
+              <Image
+                style={{ width: 20, height: 20 }}
+                resizeMode={"contain"}
+                source={require("../../../assets/icons/google.png")}
+              ></Image>
+
+              <Text style={styles.signInOptionText}>Continue with Google</Text>
+            </View>
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.loginFooter}>
+          <Text style={styles.loginFooterText}>Already have and account? </Text>
+          <TouchableWithoutFeedback onPress={() => navigation.navigate("Login")}>
+            <Text style={[styles.loginFooterText, { marginLeft: 5, color: Colors.lightGreen }]}>Log in </Text>
+          </TouchableWithoutFeedback>
         </View>
       </View>
     </Animatable.View>
@@ -50,7 +84,6 @@ export const AuthModal: React.FC<props> = ({ close }) => {
 const styles = StyleSheet.create({
   modalContainer: {
     position: "absolute",
-    backgroundColor: "#F0F0F0",
     marginTop: Dimensions.get("screen").width / 2,
     zIndex: 1,
     width: Dimensions.get("screen").width,
@@ -58,22 +91,51 @@ const styles = StyleSheet.create({
   modalBody: {
     backgroundColor: Colors.darkBlue,
     height: Dimensions.get("window").height,
+    padding: 20,
   },
-  closeBtn: {
-    height: 20,
+  title: {
+    marginTop: 25,
+    fontSize: 25,
+    fontWeight: "bold",
+    color: Colors.white,
+    alignSelf: "center",
   },
-  Btns: {
-    display: "flex",
+  appDescription: {
+    color: Colors.lightGrey2,
+    fontSize: 15,
+    textAlign: "center",
+    marginTop: 25,
+  },
+  loginOptionContainer: {
+    marginTop: 30,
+    alignSelf: "center",
+    width: "90%",
+    // backgroundColor: "red",
+    // width: 200,
+  },
+  loginOption: {
     flexDirection: "row",
-    justifyContent: "space-between",
-    marginBottom: Platform.OS === "android" ? 20 : 10,
+    padding: 10,
+    // justifyContent: "space-evenly",
+    // backgroundColor: "blue",
+    margin: 5,
   },
-
-  tal: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    flexDirection: "column",
-    height: 250,
+  signInOptionText: {
+    marginLeft: 40,
+    alignSelf: "center",
+    color: Colors.white,
+    fontWeight: "bold",
+    fontSize: 15,
+  },
+  loginFooterText: {
+    color: Colors.white,
+    fontWeight: "bold",
+    fontSize: 15,
+  },
+  loginFooter: {
+    flexDirection: "row",
+    marginTop: 50,
+    color: Colors.white,
+    justifyContent: "center",
   },
 });
