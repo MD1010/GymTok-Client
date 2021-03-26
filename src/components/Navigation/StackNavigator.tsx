@@ -24,9 +24,11 @@ export const StackNavigator: React.FC<StackNavigatorProps> = ({}) => {
           headerTitleStyle: {
             fontWeight: "bold",
             fontSize: 18,
+            borderWidth: 0,
           },
           headerStyle: {
             backgroundColor: Colors.darkBlue,
+            // elevation: 0,
           },
           gestureEnabled: true,
           gestureDirection: "horizontal",

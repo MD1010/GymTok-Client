@@ -20,13 +20,18 @@ const authSlice = createSlice({
       localStorage.setItem("accessToken", payload.accessToken);
       localStorage.setItem("refreshToken", payload.refreshToken);
       state.loggedUser = payload.user;
+      state.authError = null;
     },
     logout: (state) => {
       localStorage.clear();
+      state.authError = null;
       state.loggedUser = null;
     },
     authFailed: (state, action: PayloadAction<{ error: any }>) => {
       state.authError = action.payload.error.message;
+    },
+    resetAuthError: (state) => {
+      state.authError = null;
     },
   },
 });

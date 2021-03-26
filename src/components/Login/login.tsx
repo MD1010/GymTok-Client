@@ -1,31 +1,30 @@
+import { FontAwesome } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import React, { createRef, useEffect, useState } from "react";
-import {
-  Keyboard,
-  KeyboardAvoidingView,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from "react-native";
-import { FontAwesome } from "@expo/vector-icons";
-import { useSelector } from "react-redux";
-import { Colors } from "../shared/styles/variables";
+import { ActivityIndicator, Keyboard, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
+import { Colors } from "../shared/styles/variables";
 
 interface LoginProps {
   onSubmit: (username: string, password: string) => any;
-  error: string | null;
+  authError: string | null;
+  isLoading: boolean;
 }
 
-export const LoginScreen: React.FC<LoginProps> = ({ onSubmit, error }) => {
+export const LoginScreen: React.FC<LoginProps> = ({ onSubmit, authError, isLoading }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [errortext, setErrortext] = useState("");
+  const [errorText, setErrorText] = useState(authError);
   const navigation = useNavigation();
   const passwordInputRef = createRef<TextInput>();
+
+  useEffect(() => {
+    authError && setErrorText(authError);
+  }, [authError]);
+
+  useEffect(() => {
+    setErrorText(null);
+  }, [username, password]);
 
   return (
     <View style={styles.container}>
@@ -40,8 +39,7 @@ export const LoginScreen: React.FC<LoginProps> = ({ onSubmit, error }) => {
             autoCapitalize="none"
             returnKeyType="next"
             onSubmitEditing={() => passwordInputRef.current && passwordInputRef.current.focus()}
-            underlineColorAndroid="#f000"
-            blurOnSubmit={false}
+            blurOnSubmit={true}
           />
           {username.length ? (
             <TouchableWithoutFeedback onPress={() => setUsername("")}>
@@ -54,14 +52,13 @@ export const LoginScreen: React.FC<LoginProps> = ({ onSubmit, error }) => {
             value={password}
             style={styles.inputStyle}
             onChangeText={(password) => setPassword(password)}
-            placeholder="Password" //12345
+            placeholder="Password"
             placeholderTextColor="#8b9cb5"
             keyboardType="default"
             ref={passwordInputRef}
             onSubmitEditing={Keyboard.dismiss}
             blurOnSubmit={false}
             secureTextEntry={true}
-            underlineColorAndroid="#f000"
             returnKeyType="next"
           />
 
@@ -71,13 +68,33 @@ export const LoginScreen: React.FC<LoginProps> = ({ onSubmit, error }) => {
             </TouchableWithoutFeedback>
           ) : null}
         </View>
+        {errorText ? (
+          <View style={{ flexDirection: "row", alignItems: "center", marginTop: 15, marginBottom: 15 }}>
+            <FontAwesome name="exclamation-circle" size={16} color={"red"} />
+            <Text style={styles.errorTextStyle}>{errorText}</Text>
+          </View>
+        ) : null}
       </View>
-      {error ? <Text style={styles.errorTextStyle}>{error}</Text> : null}
-      <TouchableOpacity style={styles.buttonStyle} activeOpacity={0.5} onPress={() => onSubmit(username, password)}>
-        <Text style={styles.buttonTextStyle}>Log in</Text>
-      </TouchableOpacity>
+
+      <View style={!(password.length && username.length) ? styles.buttonDisabled : null}>
+        <TouchableOpacity
+          style={styles.buttonStyle}
+          disabled={!(password.length && username.length)}
+          onPress={() => {
+            onSubmit(username, password);
+          }}
+        >
+          <View style={{ flexDirection: "row", justifyContent: "center", height: 40 }}>
+            {isLoading ? (
+              <ActivityIndicator color={"white"} size={20} />
+            ) : (
+              <Text style={styles.buttonTextStyle}>Log in</Text>
+            )}
+          </View>
+        </TouchableOpacity>
+      </View>
       <Text style={styles.registerTextStyle} onPress={() => navigation.navigate("register")}>
-        New Here ? Register
+        New Here? Sign up
       </Text>
     </View>
   );
@@ -91,7 +108,7 @@ const styles = StyleSheet.create({
   },
   form: {
     marginTop: 30,
-    marginBottom: 10,
+    marginBottom: 20,
     marginRight: 25,
     marginLeft: 25,
   },
@@ -100,18 +117,23 @@ const styles = StyleSheet.create({
     height: 50,
     alignItems: "center",
   },
+
+  buttonDisabled: {
+    opacity: 0.2,
+  },
+
   buttonStyle: {
-    backgroundColor: Colors.lightPurpule,
     borderWidth: 0,
     color: "#FFFFFF",
     marginRight: 25,
     marginLeft: 25,
-    height: 40,
     alignItems: "center",
+    backgroundColor: Colors.lightPurpule,
   },
   buttonTextStyle: {
     color: "#FFFFFF",
     paddingVertical: 10,
+    fontWeight: "bold",
     fontSize: 16,
   },
   inputStyle: {
@@ -131,7 +153,7 @@ const styles = StyleSheet.create({
   },
   errorTextStyle: {
     color: "red",
-    textAlign: "center",
-    fontSize: 14,
+    marginLeft: 10,
+    fontSize: 15,
   },
 });

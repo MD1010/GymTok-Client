@@ -91,7 +91,6 @@ export const HomeScreen: React.FC = () => {
 
   return (
     <View style={{ flex: 1 }}>
-      <StatusBar barStyle={"dark-content"} />
       <FlatList
         data={challenges}
         renderItem={renderItem}
