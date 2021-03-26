@@ -23,43 +23,21 @@ interface IUIContainer {
   onCommentButtonPress: () => void;
 }
 
-const Heading = ({ createdBy }) => {
-  const { loggedUser } = useSelector(authSelector);
-  const [showAuthModal, setShowAuthModal] = useState<boolean>(false);
-
-  const onCammeraPressed = () => {
-    if (loggedUser) {
-      console.log("user:" + loggedUser?.fullName + " click on like button.");
-      // todo: fetch here
-    } else {
-      setShowAuthModal(true);
-      console.log("guest click on like button, need to log-in");
-    }
-  };
+const Heading = ({ createdBy, onCameraPress }) => {
   return (
-    <>
-      {showAuthModal && !loggedUser ? (
-        <View
-          style={{ height: Dimensions.get("window").height - 50, width: Dimensions.get("window").width, zIndex: 100 }}
-        >
-          <AuthModal close={() => setShowAuthModal(false)} />
-        </View>
-      ) : (
-        <View style={[styles.rowContainer, { marginVertical: 10, justifyContent: "space-between" }]}>
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <TouchableWithoutFeedback onPress={() => console.log("avatar clicked!")}>
-              <Avatar source={require("../../../assets/avatar/01.jpg")} rounded></Avatar>
-            </TouchableWithoutFeedback>
-            <Text style={styles.creator}>@{createdBy}</Text>
-          </View>
-          <View>
-            <TouchableOpacity onPress={() => onCammeraPressed()}>
-              <FontAwesome name={"camera"} size={22} color={Colors.white} />
-            </TouchableOpacity>
-          </View>
-        </View>
-      )}
-    </>
+    <View style={[styles.rowContainer, { marginVertical: 20, justifyContent: "space-between" }]}>
+      <View style={{ flexDirection: "row", alignItems: "center" }}>
+        <TouchableWithoutFeedback onPress={() => console.log("avatar clicked!")}>
+          <Avatar source={require("../../../assets/avatar/01.jpg")} rounded></Avatar>
+        </TouchableWithoutFeedback>
+        <Text style={styles.creator}>@{createdBy}</Text>
+      </View>
+      <View>
+        <TouchableOpacity onPress={() => onCameraPress()}>
+          <FontAwesome name={"camera"} size={22} color={Colors.white} />
+        </TouchableOpacity>
+      </View>
+    </View>
   );
 };
 
@@ -128,13 +106,23 @@ export const Challenge: React.FC<ChallengeProps> = memo(({ challenge, isVideoPla
     }
   };
 
+  const onCameraPress = () => {
+    if (loggedUser) {
+      console.log("user:" + loggedUser?.fullName + " click on comment button.");
+      // todo: fetch here
+    } else {
+      setShowAuthModal(true);
+      console.log("guest click on comment button, need to login");
+    }
+  };
+
   const streaminServerUrl = `http://193.106.55.109:8000/${videoURL}`;
   return (
     <View style={styles.container}>
       {showAuthModal && !loggedUser && <AuthModal close={() => setShowAuthModal(false)} />}
       <Player style={styles.video} uri={streaminServerUrl} isPlaying={isVideoPlaying} resizeMode="cover" />
       <View style={styles.infoContainer}>
-        <Heading createdBy={createdBy.username} />
+        <Heading createdBy={createdBy.username} onCameraPress={onCameraPress} />
 
         <View style={styles.rowContainer}>
           <Text style={styles.info}>{challenge.description}</Text>

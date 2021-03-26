@@ -51,7 +51,7 @@ export const Player: React.FC<VideoProps> = memo(({ uri, style, isPlaying, resiz
   };
 
   useEffect(() => {
-    loadURI();
+    Platform.OS === "web" ? setVideoURI(uri) : loadURI();
   }, []);
 
   useEffect(() => {
