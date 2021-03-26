@@ -1,16 +1,14 @@
-import { FontAwesome5, Ionicons } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import React, { useState } from "react";
-import { Platform, Image } from "react-native";
 import { Portal, Provider } from "react-native-paper";
 import { useSelector } from "react-redux";
 import { authSelector } from "../../store/auth/authSlice";
 import { AddButton } from "../Camera/AddButton";
 import { HomeScreen } from "../Home/HomeScreen";
-import { LoginContainer as LoginScreen } from "../Login/LoginContainer";
 import { NotLoggedInScreen } from "../NotLoggedIn/NotLoggedIn";
-import { AuthModal } from "../shared/AuthModal";
 import { ProfileContainer as Profile } from "../Profile/ProfileContainer";
+import { AuthModal } from "../shared/AuthModal";
 import { Colors, UIConsts } from "../shared/styles/variables";
 
 interface BottomTabsProps {}

@@ -5,8 +5,8 @@ import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { BottomTabs } from "./BottomTabs";
 import { AddButton } from "../Camera/AddButton";
-import { LoginContainer as LoginScreen } from "../Login/LoginContainer";
-import { RegisterContainer as RegisterScreen } from "../Register/RegisterContainer";
+import { LoginContainer as LoginScreen } from "../Auth/LoginContainer";
+import { RegisterContainer as RegisterScreen } from "../Auth/RegisterContainer";
 import { UIConsts } from "../shared/styles/variables";
 import { Colors } from "../shared/styles/variables";
 
