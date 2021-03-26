@@ -19,6 +19,7 @@ import Spinner from "react-native-loading-spinner-overlay";
 import { useSelector } from "react-redux";
 import { authSelector } from "../../store/auth/authSlice";
 import { fetchAPI, RequestMethod } from "../../utils/fetchAPI";
+import { AuthModal } from "../shared/AuthModal";
 import { Colors, UIConsts } from "../shared/styles/variables";
 import { FriendsModal } from "./FreindsModal";
 import { VideoScreen } from "./publishVideo";
@@ -31,8 +32,11 @@ export const PublishNewVideoScreen: React.FC = () => {
   const [isSpinner, setIsSpinner] = useState<boolean>(false);
   const navigation = useNavigation();
   const { loggedUser } = useSelector(authSelector);
-
+  const [showAuthModal, setShowAuthModal] = useState(false);
   const publishChallenge = async () => {
+    if (!loggedUser) {
+      return setShowAuthModal(true);
+    }
     setIsSpinner(true);
     let formData = new FormData();
 
@@ -121,6 +125,18 @@ export const PublishNewVideoScreen: React.FC = () => {
             />
           </Animatable.View>
         )}
+
+        {showAuthModal && !loggedUser && <AuthModal close={() => setShowAuthModal(false)} />}
+        {/* {showTaggedFriends && (
+          <Animatable.View animation="fadeInUpBig" duration={500} style={styles.tagFriends}>
+            <FriendsModal
+              selectedFriends={selectedFriends}
+              close={() => setShowTaggedFriends(false)}
+              isVisible={showTaggedFriends}
+              setSelectedFriends={setSelectedFriends}
+            />
+          </Animatable.View>
+        )} */}
       </SafeAreaView>
     </>
   );

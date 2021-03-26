@@ -108,11 +108,11 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
         />
       </Tab.Navigator>
       <Portal>
-        {!loggedUser && isAddButtonClicked ? (
+        {/* {!loggedUser && isAddButtonClicked ? (
           <AuthModal close={() => setIsAddButtonCLicked(false)} />
-        ) : (
-          <AddButton isAddButtonClicked={isAddButtonClicked} setIsAddButtonCLicked={setIsAddButtonCLicked} />
-        )}
+        ) : ( */}
+        <AddButton isAddButtonClicked={isAddButtonClicked} setIsAddButtonCLicked={setIsAddButtonCLicked} />
+        {/* )} */}
       </Portal>
     </Provider>
   );

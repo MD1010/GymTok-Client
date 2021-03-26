@@ -16,7 +16,7 @@ export const RegisterContainer: React.FC<RegisterContainerProps> = () => {
   const { authError, loggedUser } = useSelector(authSelector);
 
   useEffect(() => {
-    loggedUser && navigation.navigate("Home");
+    loggedUser && navigation.goBack();
   }, [loggedUser]);
 
   const handleSubmitPress = async (username: string, fullName: string, password: string) => {

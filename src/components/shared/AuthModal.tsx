@@ -11,8 +11,8 @@ export const AuthModal: React.FC<props> = ({ close }) => {
   const navigation = useNavigation();
 
   return (
-    <Animatable.View animation="fadeInUpBig" duration={400} style={styles.tagFriends}>
-      <View style={styles.checkboxContainer}>
+    <Animatable.View animation="fadeInUpBig" duration={400} style={styles.modalContainer}>
+      <View style={styles.modalBody}>
         <View style={styles.Btns}>
           <Button
             title="Cancel"
@@ -48,13 +48,16 @@ export const AuthModal: React.FC<props> = ({ close }) => {
 };
 
 const styles = StyleSheet.create({
-  tagFriends: {
+  modalContainer: {
     position: "absolute",
     backgroundColor: "#F0F0F0",
-    marginTop: 120,
+    marginTop: Dimensions.get("screen").width / 2,
     zIndex: 1,
-    height: Dimensions.get("window").height - 75,
     width: Dimensions.get("screen").width,
+  },
+  modalBody: {
+    backgroundColor: Colors.darkBlue,
+    height: Dimensions.get("window").height,
   },
   closeBtn: {
     height: 20,
@@ -65,10 +68,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     marginBottom: Platform.OS === "android" ? 20 : 10,
   },
-  checkboxContainer: {
-    backgroundColor: Colors.darkBlue,
-    height: Dimensions.get("window").height,
-  },
+
   tal: {
     display: "flex",
     justifyContent: "space-between",
