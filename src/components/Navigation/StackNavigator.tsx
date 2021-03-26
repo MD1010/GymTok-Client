@@ -43,7 +43,7 @@ export const StackNavigator: React.FC<StackNavigatorProps> = ({}) => {
           }}
         />
         <Stack.Screen name="Publish" component={PublishNewVideoScreen} />
-        <Stack.Screen name="Register" component={RegisterScreen} />
+        <Stack.Screen name="Register" component={RegisterScreen} options={{ title: "Sign up" }} />
         <Stack.Screen name="Login" component={LoginScreen} options={{ title: "Log in" }} />
       </Stack.Navigator>
     </NavigationContainer>

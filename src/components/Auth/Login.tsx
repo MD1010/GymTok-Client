@@ -27,6 +27,18 @@ export const LoginScreen: React.FC<LoginProps> = ({ onSubmit, authError, isLoadi
     setErrorText(null);
   }, [username, password]);
 
+  useEffect(() => {
+    navigation.addListener("blur", () => {
+      setPassword("");
+      setUsername("");
+      setErrorText("");
+    });
+
+    return () => {
+      navigation.removeListener("blur", null);
+    };
+  }, [navigation]);
+
   return (
     <View style={styles.container}>
       <View style={styles.form}>

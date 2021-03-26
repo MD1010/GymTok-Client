@@ -45,6 +45,20 @@ export const RegisterScreen: React.FC<RegisterProps> = ({ onSubmit, isLoading })
     }
   }, [confirmPassword]);
 
+  useEffect(() => {
+    navigation.addListener("blur", () => {
+      setPassword("");
+      setUsername("");
+      setErrorText("");
+      setFullName("");
+      setConfirmPassword("");
+    });
+
+    return () => {
+      navigation.removeListener("blur", null);
+    };
+  }, [navigation]);
+
   const validateForm = () => {
     if (username.length < 5) {
       setErrorText("username has to be at least 5 characters");
@@ -159,7 +173,7 @@ export const RegisterScreen: React.FC<RegisterProps> = ({ onSubmit, isLoading })
       <View style={!checkIfFieldsAreNotEmpty() ? styles.buttonDisabled : null}>
         <TouchableOpacity
           style={styles.buttonStyle}
-          disabled={!(password.length && username.length)}
+          disabled={!checkIfFieldsAreNotEmpty()}
           onPress={() => {
             if (validateForm()) onSubmit(username, fullName, password);
           }}
