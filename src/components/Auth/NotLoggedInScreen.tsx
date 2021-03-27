@@ -16,8 +16,8 @@ export const NotLoggedInScreen: React.FC<NotLoggedInProps> = ({ text, icon: Icon
       <View style={styles.container}>
         <View
           style={{
-            backgroundColor: "rgba(0,0,0,0.2)",
-            padding: 10,
+            backgroundColor: Colors.darkBlueOpaque,
+            padding: 15,
             borderBottomWidth: 0.3,
             borderColor: Colors.lightGrey2,
           }}

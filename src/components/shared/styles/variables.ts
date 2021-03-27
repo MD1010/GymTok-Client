@@ -13,6 +13,7 @@ export enum Colors {
   weakGrey = "#F0F0F0",
   red = "#fe0000",
   black = "#000000",
+  darkBlueOpaque = "#141422",
 }
 
 export enum UIConsts {

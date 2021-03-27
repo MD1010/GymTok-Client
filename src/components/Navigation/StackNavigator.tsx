@@ -26,7 +26,8 @@ export const StackNavigator: React.FC<StackNavigatorProps> = ({}) => {
             borderWidth: 0,
           },
           headerStyle: {
-            backgroundColor: Colors.darkBlue,
+            backgroundColor: Colors.darkBlueOpaque,
+            borderBottomWidth: 0.3,
             // elevation: 0,
           },
           gestureEnabled: true,
