@@ -1,21 +1,20 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-import React from "react";
+import React, { useEffect } from "react";
 import { Dimensions, Image, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native";
 import * as Animatable from "react-native-animatable";
-import { Colors } from "./styles/variables";
+import { Portal } from "react-native-paper";
+import { useSelector } from "react-redux";
+import { authSelector } from "../../store/auth/authSlice";
+import { Colors } from "../shared/styles/variables";
 
-interface props {
-  close: () => void;
-}
-
-export const AuthModal: React.FC<props> = ({ close }) => {
+export const NotLoggedInModal: React.FC = () => {
   const navigation = useNavigation();
 
   return (
-    <Animatable.View animation="slideInUp" duration={100} style={styles.modalContainer}>
+    <View style={styles.modalContainer}>
       <View style={styles.modalBody}>
-        <TouchableWithoutFeedback onPress={() => close()}>
+        <TouchableWithoutFeedback onPress={() => navigation.goBack()}>
           <Ionicons name="close-outline" size={29} color={"white"} />
         </TouchableWithoutFeedback>
 
@@ -77,20 +76,18 @@ export const AuthModal: React.FC<props> = ({ close }) => {
           </TouchableWithoutFeedback>
         </View>
       </View>
-    </Animatable.View>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   modalContainer: {
-    position: "absolute",
-    marginTop: Dimensions.get("screen").width / 2,
-    zIndex: 1,
-    width: Dimensions.get("screen").width,
+    height: Dimensions.get("window").height,
   },
   modalBody: {
     backgroundColor: Colors.darkBlue,
-    height: Dimensions.get("window").height,
+    top: Dimensions.get("window").width / 2,
+    flex: 1,
     padding: 20,
   },
   title: {
@@ -134,7 +131,7 @@ const styles = StyleSheet.create({
   },
   loginFooter: {
     flexDirection: "row",
-    marginTop: 50,
+    marginTop: 60,
     color: Colors.white,
     justifyContent: "center",
   },

@@ -19,7 +19,7 @@ import Spinner from "react-native-loading-spinner-overlay";
 import { useSelector } from "react-redux";
 import { authSelector } from "../../store/auth/authSlice";
 import { fetchAPI, RequestMethod } from "../../utils/fetchAPI";
-import { AuthModal } from "../shared/AuthModal";
+import { NotLoggedInModal } from "../Auth/NotLoggedInModal";
 import { Colors, UIConsts } from "../shared/styles/variables";
 import { FriendsModal } from "./FreindsModal";
 import { VideoScreen } from "./publishVideo";
@@ -126,7 +126,7 @@ export const PublishNewVideoScreen: React.FC = () => {
           </Animatable.View>
         )}
 
-        {showAuthModal && !loggedUser && <AuthModal close={() => setShowAuthModal(false)} />}
+        {showAuthModal && !loggedUser && <NotLoggedInModal close={() => setShowAuthModal(false)} />}
         {/* {showTaggedFriends && (
           <Animatable.View animation="fadeInUpBig" duration={500} style={styles.tagFriends}>
             <FriendsModal

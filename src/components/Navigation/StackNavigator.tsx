@@ -9,6 +9,8 @@ import { LoginContainer as LoginScreen } from "../Auth/LoginContainer";
 import { RegisterContainer as RegisterScreen } from "../Auth/RegisterContainer";
 import { UIConsts } from "../shared/styles/variables";
 import { Colors } from "../shared/styles/variables";
+import { NotLoggedInModal } from "../Auth/NotLoggedInModal";
+import { Dimensions } from "react-native";
 
 interface StackNavigatorProps {}
 
@@ -33,6 +35,7 @@ export const StackNavigator: React.FC<StackNavigatorProps> = ({}) => {
           gestureEnabled: true,
           gestureDirection: "horizontal",
           cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+          gestureResponseDistance: { vertical: Dimensions.get("screen").width },
         }}
       >
         <Stack.Screen
@@ -45,6 +48,22 @@ export const StackNavigator: React.FC<StackNavigatorProps> = ({}) => {
         <Stack.Screen name="Publish" component={PublishNewVideoScreen} />
         <Stack.Screen name="Register" component={RegisterScreen} options={{ title: "Sign up" }} />
         <Stack.Screen name="Login" component={LoginScreen} options={{ title: "Log in" }} />
+        <Stack.Screen
+          name="NotLoggedIn"
+          component={NotLoggedInModal}
+          options={{
+            headerShown: false,
+            cardStyle: { backgroundColor: "transparent" },
+            cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS,
+            safeAreaInsets: { top: Dimensions.get("screen").width / 2 },
+            gestureResponseDistance: { vertical: Dimensions.get("screen").height },
+
+            // animationEnabled: false,
+            // cardOverlayEnabled: false,
+            gestureDirection: "vertical",
+            gestureEnabled: true,
+          }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

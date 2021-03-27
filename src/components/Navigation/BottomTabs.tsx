@@ -6,9 +6,9 @@ import { useSelector } from "react-redux";
 import { authSelector } from "../../store/auth/authSlice";
 import { AddButton } from "../Camera/AddButton";
 import { HomeScreen } from "../Home/HomeScreen";
-import { NotLoggedInScreen } from "../NotLoggedIn/NotLoggedIn";
+import { NotLoggedInScreen } from "../Auth/NotLoggedIn";
 import { ProfileContainer as Profile } from "../Profile/ProfileContainer";
-import { AuthModal } from "../shared/AuthModal";
+import { NotLoggedInModal } from "../Auth/NotLoggedInModal";
 import { Colors, UIConsts } from "../shared/styles/variables";
 
 interface BottomTabsProps {}

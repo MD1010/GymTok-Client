@@ -6,10 +6,11 @@ import { TouchableOpacity, TouchableWithoutFeedback } from "react-native-gesture
 import { useSelector } from "react-redux";
 import { IChallenge } from "../../interfaces";
 import { authSelector } from "../../store/auth/authSlice";
-import { AuthModal } from "../shared/AuthModal";
+// import { AuthModal } from "../shared/AuthModal";
 import { Colors } from "../shared/styles/variables";
 import { Player } from "../shared/VideoPlayer";
 import { styles } from "./Challenge.style";
+import { useNavigation } from "@react-navigation/core";
 
 interface ChallengeProps {
   challenge: IChallenge;
@@ -79,7 +80,7 @@ const UIContainer: React.FC<IUIContainer> = ({
 export const Challenge: React.FC<ChallengeProps> = memo(({ challenge, isVideoPlaying }) => {
   const { video: videoURL, createdBy, likes, replies } = challenge;
   const { loggedUser } = useSelector(authSelector);
-
+  const navigation = useNavigation();
   const [showAuthModal, setShowAuthModal] = useState<boolean>(false);
 
   useEffect(() => {
@@ -91,7 +92,8 @@ export const Challenge: React.FC<ChallengeProps> = memo(({ challenge, isVideoPla
       console.log("user:" + loggedUser?.fullName + " click on like button.");
       // todo: fetch here
     } else {
-      setShowAuthModal(true);
+      // setShowAuthModal(true);
+      navigation.navigate("NotLoggedIn");
       console.log("guest click on like button, need to log-in");
     }
   };
@@ -101,7 +103,8 @@ export const Challenge: React.FC<ChallengeProps> = memo(({ challenge, isVideoPla
       console.log("user:" + loggedUser?.fullName + " click on comment button.");
       // todo: fetch here
     } else {
-      setShowAuthModal(true);
+      // setShowAuthModal(true);
+      navigation.navigate("NotLoggedIn");
       console.log("guest click on comment button, need to login");
     }
   };
@@ -111,7 +114,8 @@ export const Challenge: React.FC<ChallengeProps> = memo(({ challenge, isVideoPla
       console.log("user:" + loggedUser?.fullName + " click on comment button.");
       // todo: fetch here
     } else {
-      setShowAuthModal(true);
+      // setShowAuthModal(true);
+      navigation.navigate("NotLoggedIn");
       console.log("guest click on comment button, need to login");
     }
   };
@@ -119,7 +123,7 @@ export const Challenge: React.FC<ChallengeProps> = memo(({ challenge, isVideoPla
   const streaminServerUrl = `http://193.106.55.109:8000/${videoURL}`;
   return (
     <View style={styles.container}>
-      {showAuthModal && !loggedUser && <AuthModal close={() => setShowAuthModal(false)} />}
+      {/* {showAuthModal && !loggedUser && <AuthModal close={() => setShowAuthModal(false)} />} */}
       <Player style={styles.video} uri={streaminServerUrl} isPlaying={isVideoPlaying} resizeMode="cover" />
       <View style={styles.infoContainer}>
         <Heading createdBy={createdBy.username} onCameraPress={onCameraPress} />
