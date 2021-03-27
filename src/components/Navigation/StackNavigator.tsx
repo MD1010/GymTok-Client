@@ -1,16 +1,13 @@
-import { CardStyleInterpolators, createStackNavigator } from "@react-navigation/stack";
-
-import { PublishNewVideoScreen } from "../Camera/PublishNewVideo";
-import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
-import { BottomTabs } from "./BottomTabs";
-import { AddButton } from "../Camera/AddButton";
-import { LoginContainer as LoginScreen } from "../Auth/LoginContainer";
-import { RegisterContainer as RegisterScreen } from "../Auth/RegisterContainer";
-import { UIConsts } from "../shared/styles/variables";
-import { Colors } from "../shared/styles/variables";
-import { NotLoggedInModal } from "../Auth/NotLoggedInModal";
+import { CardStyleInterpolators, createStackNavigator } from "@react-navigation/stack";
+import React from "react";
 import { Dimensions } from "react-native";
+import { LoginContainer as LoginScreen } from "../Auth/LoginContainer";
+import { NotLoggedInModal } from "../Auth/NotLoggedInModal";
+import { RegisterContainer as RegisterScreen } from "../Auth/RegisterContainer";
+import { PublishNewVideoScreen } from "../Camera/PublishNewVideo";
+import { Colors } from "../shared/styles/variables";
+import { BottomTabs } from "./BottomTabs";
 
 interface StackNavigatorProps {}
 

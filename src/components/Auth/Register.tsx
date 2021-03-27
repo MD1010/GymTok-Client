@@ -182,7 +182,7 @@ export const RegisterScreen: React.FC<RegisterProps> = ({ onSubmit, isLoading })
             {isLoading ? (
               <ActivityIndicator color={"white"} size={20} />
             ) : (
-              <Text style={styles.buttonTextStyle}>Log in</Text>
+              <Text style={styles.buttonTextStyle}>Sign up</Text>
             )}
           </View>
         </TouchableOpacity>

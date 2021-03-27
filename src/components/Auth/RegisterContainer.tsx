@@ -1,10 +1,8 @@
 import { useNavigation } from "@react-navigation/native";
-import React, { createRef, useEffect, useState } from "react";
-import { TextInput } from "react-native";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { register } from "../../store/auth/actions";
 import { authSelector } from "../../store/auth/authSlice";
-import { Loader } from "../shared/Loader";
 import { RegisterScreen } from "./Register";
 
 interface RegisterContainerProps {}
