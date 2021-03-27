@@ -1,7 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { BackHandler } from "react-native";
 import { Portal, Provider } from "react-native-paper";
 import { useSelector } from "react-redux";
@@ -11,17 +11,17 @@ import { AddButton } from "../Camera/AddButton";
 import { HomeScreen } from "../Home/HomeScreen";
 import { ProfileContainer as Profile } from "../Profile/ProfileContainer";
 import { Colors, UIConsts } from "../shared/styles/variables";
-import { useRoute } from "@react-navigation/native";
 
 interface BottomTabsProps {}
 
 export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
   const navigation = useNavigation();
-  const isHomeTabActive = useRef<boolean>(true);
+  // const isHomeTabActive = useRef<boolean>(true);
   const RequiredAuthModal = () => {
     const navigation = useNavigation();
     useEffect(() => {
-      navigation.navigate("NotLoggedIn", { isFullScreen: !isHomeTabActive.current });
+      // navigation.navigate("NotLoggedIn", { isFullScreen: !isHomeTabActive.current });
+      navigation.navigate("NotLoggedIn");
       setIsAddButtonClicked(false);
     }, []);
     return <AddButton setIsAddButtonClicked={setIsAddButtonClicked} />;
@@ -59,11 +59,11 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
         }}
       >
         <Tab.Screen
-          listeners={({ navigation, route }) => ({
-            tabPress: (e) => {
-              isHomeTabActive.current = true;
-            },
-          })}
+          // listeners={({ navigation, route }) => ({
+          //   tabPress: (e) => {
+          //     isHomeTabActive.current = true;
+          //   },
+          // })}
           name="Home"
           component={HomeScreen}
           options={{
@@ -76,11 +76,6 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
           }}
         />
         <Tab.Screen
-          listeners={({ navigation, route }) => ({
-            tabPress: (e) => {
-              isHomeTabActive.current = false;
-            },
-          })}
           name="Explore"
           component={
             loggedUser
@@ -104,11 +99,6 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
         />
 
         <Tab.Screen
-          listeners={({ navigation, route }) => ({
-            tabPress: (e) => {
-              isHomeTabActive.current = false;
-            },
-          })}
           name="Notifications"
           component={
             loggedUser
@@ -145,11 +135,6 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
           }}
         ></Tab.Screen>
         <Tab.Screen
-          listeners={({ navigation, route }) => ({
-            tabPress: (e) => {
-              isHomeTabActive.current = false;
-            },
-          })}
           name="Me"
           component={
             loggedUser

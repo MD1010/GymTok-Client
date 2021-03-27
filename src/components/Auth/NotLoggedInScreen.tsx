@@ -14,7 +14,16 @@ export const NotLoggedInScreen: React.FC<NotLoggedInProps> = ({ text, icon: Icon
   return (
     <>
       <View style={styles.container}>
-        <Text style={styles.pageTitle}>{text}</Text>
+        <View
+          style={{
+            backgroundColor: Colors.black,
+            padding: 10,
+            borderBottomWidth: 0.5,
+            borderColor: Colors.lightGrey2,
+          }}
+        >
+          <Text style={styles.pageTitle}>{text}</Text>
+        </View>
 
         <View style={styles.body}>
           <Icon />
@@ -45,7 +54,7 @@ const styles = StyleSheet.create({
     fontSize: 17,
     color: Colors.white,
     fontWeight: "bold",
-    marginTop: 25,
+    // marginTop: 25,
   },
   container: {
     backgroundColor: Colors.darkBlue,

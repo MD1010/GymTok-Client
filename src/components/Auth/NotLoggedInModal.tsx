@@ -11,16 +11,16 @@ type StackParamsList = {
 
 export const NotLoggedInModal: React.FC = () => {
   const navigation = useNavigation();
-  const route = useRoute<RouteProp<StackParamsList, "params">>();
-  const isFullScreen = route.params?.isFullScreen;
+  // const route = useRoute<RouteProp<StackParamsList, "params">>();
+  // const isFullScreen = route.params?.isFullScreen;
   return (
     <View style={styles.modalContainer}>
-      <View style={[styles.modalBody, isFullScreen ? { top: 0 } : { top: Dimensions.get("window").width / 2 }]}>
+      <View style={[styles.modalBody]}>
         <TouchableWithoutFeedback onPress={() => navigation.goBack()}>
           <Ionicons name="close-outline" size={29} color={"white"} />
         </TouchableWithoutFeedback>
 
-        <Text style={[styles.title, isFullScreen ? { marginTop: 55 } : { marginTop: 25 }]}>Sign up for GymTok</Text>
+        <Text style={[styles.title]}>Sign up for GymTok</Text>
         <Text style={styles.appDescription}>
           Create a profile, follow other challenges, create your own challenges and more.
         </Text>
@@ -91,12 +91,14 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.darkBlue,
     flex: 1,
     padding: 20,
+    top: 10,
   },
   title: {
     fontSize: 25,
     fontWeight: "bold",
     color: Colors.white,
     alignSelf: "center",
+    marginTop: 80,
   },
   appDescription: {
     color: Colors.lightGrey2,
@@ -106,21 +108,15 @@ const styles = StyleSheet.create({
   },
   loginOptionContainer: {
     marginTop: 30,
-    alignSelf: "center",
-    width: "90%",
-    // backgroundColor: "red",
-    // width: 200,
+    marginLeft: 10,
   },
   loginOption: {
     flexDirection: "row",
     padding: 10,
-    // justifyContent: "space-evenly",
-    // backgroundColor: "blue",
-    margin: 5,
+    margin: 7,
   },
   signInOptionText: {
     marginLeft: 40,
-    alignSelf: "center",
     color: Colors.white,
     fontWeight: "bold",
     fontSize: 15,
@@ -132,7 +128,10 @@ const styles = StyleSheet.create({
   },
   loginFooter: {
     flexDirection: "row",
-    marginTop: 60,
+    position: "absolute",
+    bottom: 60,
+    alignSelf: "center",
+    // marginTop: 60,
     color: Colors.white,
     justifyContent: "center",
   },
