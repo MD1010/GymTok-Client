@@ -28,6 +28,7 @@ export const ProfileScreen: React.FC<ProfileProps> = ({ challenges, numColumns }
   const [tempChallanges, setTempChallanges] = useState<any[]>([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedVideoUri, setSelectedVideoUri] = useState(null);
+  const isMounted = useRef(true);
 
   useEffect(() => {
     (async () => {
@@ -37,9 +38,15 @@ export const ProfileScreen: React.FC<ProfileProps> = ({ challenges, numColumns }
           return Object.assign({ image: imageURI }, { ...challenge });
         })
       );
-      setTempChallanges(asyncRes);
+      isMounted.current && setTempChallanges(asyncRes);
     })();
   }, []);
+
+  useEffect(() => {
+    return () => {
+      isMounted.current = false;
+    };
+  });
 
   const generateThumbnail = async (url) => {
     try {

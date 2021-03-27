@@ -1,5 +1,5 @@
 import { FontAwesome } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import React, { createRef, useEffect, useState } from "react";
 import { ActivityIndicator, Keyboard, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
@@ -27,17 +27,17 @@ export const LoginScreen: React.FC<LoginProps> = ({ onSubmit, authError, isLoadi
     setErrorText(null);
   }, [username, password]);
 
-  useEffect(() => {
-    navigation.addListener("blur", () => {
-      setPassword("");
-      setUsername("");
-      setErrorText("");
-    });
+  useFocusEffect(
+    React.useCallback(() => {
+      navigation.addListener("blur", () => {
+        setPassword("");
+        setUsername("");
+        setErrorText("");
+      });
 
-    return () => {
-      navigation.removeListener("blur", null);
-    };
-  }, [navigation]);
+      return () => navigation.removeListener("blur", null);
+    }, [])
+  );
 
   return (
     <View style={styles.container}>

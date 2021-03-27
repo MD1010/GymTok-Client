@@ -10,6 +10,7 @@ import { authSelector } from "../../store/auth/authSlice";
 
 export const HomeScreen: React.FC = () => {
   const [currentlyPlaying, setCurrentlyPlaying] = useState(0);
+  const isMounted = useRef(true);
   const scrollEnded = useRef<boolean>(false);
   const navigation = useNavigation();
   const [navigatedOutOfScreen, setNavigatedOutOfScreen] = useState(false);
@@ -37,10 +38,10 @@ export const HomeScreen: React.FC = () => {
         page: challenges.length / itemsToLoad,
       }
     );
-
-    res && setChallenges([...challenges, ...res]);
-
-    error && setError(error);
+    if (isMounted.current) {
+      res && setChallenges([...challenges, ...res]);
+      error && setError(error);
+    }
   };
 
   const getExistChallenges = async () => {
@@ -50,9 +51,10 @@ export const HomeScreen: React.FC = () => {
       page: challenges.length / itemsToLoad,
     });
     console.log(error);
-    res && setChallenges([...challenges, ...res]);
-
-    error && setError(error);
+    if (isMounted.current) {
+      res && setChallenges([...challenges, ...res]);
+      error && setError(error);
+    }
   };
 
   useEffect(() => {
@@ -61,6 +63,9 @@ export const HomeScreen: React.FC = () => {
 
   useEffect(() => {
     getChallenges();
+    return () => {
+      isMounted.current = false;
+    };
   }, []);
 
   useEffect(() => {
