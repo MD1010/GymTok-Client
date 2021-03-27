@@ -12,16 +12,16 @@ type StackParamsList = {
 export const NotLoggedInModal: React.FC = ({}) => {
   const navigation = useNavigation();
   const route = useRoute<RouteProp<StackParamsList, "params">>();
-  const modalTopGap = route.params?.isFullScreen ? { top: 0 } : { top: Dimensions.get("window").width / 2 };
+  const isFullScreen = route.params?.isFullScreen;
 
   return (
     <View style={styles.modalContainer}>
-      <View style={[styles.modalBody, modalTopGap]}>
+      <View style={[styles.modalBody, isFullScreen ? { top: 0 } : { top: Dimensions.get("window").width / 2 }]}>
         <TouchableWithoutFeedback onPress={() => navigation.goBack()}>
           <Ionicons name="close-outline" size={29} color={"white"} />
         </TouchableWithoutFeedback>
 
-        <Text style={styles.title}>Sign up for GymTok</Text>
+        <Text style={[styles.title, isFullScreen ? { marginTop: 55 } : { marginTop: 25 }]}>Sign up for GymTok</Text>
         <Text style={styles.appDescription}>
           Create a profile, follow other challenges, create your own challenges and more.
         </Text>
@@ -86,6 +86,7 @@ export const NotLoggedInModal: React.FC = ({}) => {
 const styles = StyleSheet.create({
   modalContainer: {
     height: Dimensions.get("window").height,
+    justifyContent: "center",
   },
   modalBody: {
     backgroundColor: Colors.darkBlue,
@@ -93,7 +94,6 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   title: {
-    marginTop: 25,
     fontSize: 25,
     fontWeight: "bold",
     color: Colors.white,
