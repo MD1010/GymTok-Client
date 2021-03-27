@@ -7,10 +7,11 @@ import { UIConsts } from "../shared/styles/variables";
 import { Text } from "react-native";
 import { useSelector } from "react-redux";
 import { authSelector } from "../../store/auth/authSlice";
+import { useIsMount } from "../../hooks/useIsMount";
 
 export const HomeScreen: React.FC = () => {
   const [currentlyPlaying, setCurrentlyPlaying] = useState(0);
-  const isMounted = useRef(true);
+  const isMounted = useIsMount();
   const scrollEnded = useRef<boolean>(false);
   const navigation = useNavigation();
   const [navigatedOutOfScreen, setNavigatedOutOfScreen] = useState(false);
@@ -63,9 +64,6 @@ export const HomeScreen: React.FC = () => {
 
   useEffect(() => {
     getChallenges();
-    return () => {
-      isMounted.current = false;
-    };
   }, []);
 
   useEffect(() => {
