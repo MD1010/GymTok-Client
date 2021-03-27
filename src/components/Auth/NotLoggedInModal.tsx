@@ -6,14 +6,13 @@ import { Colors } from "../shared/styles/variables";
 import { RouteProp } from "@react-navigation/native";
 
 type StackParamsList = {
-  params: { isFullScreen: boolean };
+  params: { isFullScreen: boolean; redirectedFromHome: string };
 };
 
-export const NotLoggedInModal: React.FC = ({}) => {
+export const NotLoggedInModal: React.FC = () => {
   const navigation = useNavigation();
   const route = useRoute<RouteProp<StackParamsList, "params">>();
-  const isFullScreen = route.params?.isFullScreen;
-
+  const isFullScreen = route.params?.isFullScreen || !route.params?.redirectedFromHome;
   return (
     <View style={styles.modalContainer}>
       <View style={[styles.modalBody, isFullScreen ? { top: 0 } : { top: Dimensions.get("window").width / 2 }]}>
