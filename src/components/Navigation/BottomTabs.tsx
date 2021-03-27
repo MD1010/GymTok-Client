@@ -1,7 +1,8 @@
 import { Ionicons } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
+import { BackHandler } from "react-native";
 import { Portal, Provider } from "react-native-paper";
 import { useSelector } from "react-redux";
 import { authSelector } from "../../store/auth/authSlice";
@@ -14,6 +15,7 @@ import { Colors, UIConsts } from "../shared/styles/variables";
 interface BottomTabsProps {}
 
 export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
+  const navigation = useNavigation();
   const RequiredAuthModal = () => {
     const navigation = useNavigation();
     useEffect(() => {
@@ -22,6 +24,17 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
     }, []);
     return <AddButton setIsAddButtonClicked={setIsAddButtonClicked} />;
   };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const onBackPress = () => {
+        navigation.navigate("Home");
+        return true;
+      };
+      BackHandler.addEventListener("hardwareBackPress", onBackPress);
+      return () => BackHandler.removeEventListener("hardwareBackPress", onBackPress);
+    }, [])
+  );
 
   const Tab = createBottomTabNavigator();
   const { loggedUser } = useSelector(authSelector);
