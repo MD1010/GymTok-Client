@@ -22,7 +22,7 @@ export const NotLoggedInScreen: React.FC<NotLoggedInProps> = ({ text, icon: Icon
           <TouchableOpacity
             style={styles.buttonStyle}
             onPress={() => {
-              navigation.navigate("NotLoggedIn", { isFullScreen: true, redirectedFromHome: false });
+              navigation.navigate("NotLoggedIn", { isFullScreen: true });
             }}
           >
             <Text style={styles.buttonTextStyle}>Sign up</Text>

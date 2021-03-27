@@ -90,7 +90,7 @@ export const Challenge: React.FC<ChallengeProps> = memo(({ challenge, isVideoPla
       console.log("user:" + loggedUser?.fullName + " click on like button.");
       // todo: fetch here
     } else {
-      navigation.navigate("NotLoggedIn", { redirectedFromHome: true });
+      navigation.navigate("NotLoggedIn");
       console.log("guest click on like button, need to log-in");
     }
   };
@@ -100,7 +100,7 @@ export const Challenge: React.FC<ChallengeProps> = memo(({ challenge, isVideoPla
       console.log("user:" + loggedUser?.fullName + " click on comment button.");
       // todo: fetch here
     } else {
-      navigation.navigate("NotLoggedIn", { redirectedFromHome: true });
+      navigation.navigate("NotLoggedIn");
       console.log("guest click on comment button, need to login");
     }
   };
@@ -110,7 +110,7 @@ export const Challenge: React.FC<ChallengeProps> = memo(({ challenge, isVideoPla
       console.log("user:" + loggedUser?.fullName + " click on comment button.");
       // todo: fetch here
     } else {
-      navigation.navigate("NotLoggedIn", { redirectedFromHome: true });
+      navigation.navigate("NotLoggedIn");
       console.log("guest click on comment button, need to login");
     }
   };

@@ -12,7 +12,7 @@ type StackParamsList = {
 export const NotLoggedInModal: React.FC = () => {
   const navigation = useNavigation();
   const route = useRoute<RouteProp<StackParamsList, "params">>();
-  const isFullScreen = route.params?.isFullScreen || !route.params?.redirectedFromHome;
+  const isFullScreen = route.params?.isFullScreen;
   return (
     <View style={styles.modalContainer}>
       <View style={[styles.modalBody, isFullScreen ? { top: 0 } : { top: Dimensions.get("window").width / 2 }]}>

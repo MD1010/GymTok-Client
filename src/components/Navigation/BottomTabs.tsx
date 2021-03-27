@@ -17,11 +17,11 @@ interface BottomTabsProps {}
 
 export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
   const navigation = useNavigation();
-  const isHomeTabActive = useRef<boolean>();
+  const isHomeTabActive = useRef<boolean>(true);
   const RequiredAuthModal = () => {
     const navigation = useNavigation();
     useEffect(() => {
-      navigation.navigate("NotLoggedIn", { redirectedFromHome: isHomeTabActive.current });
+      navigation.navigate("NotLoggedIn", { isFullScreen: !isHomeTabActive.current });
       setIsAddButtonClicked(false);
     }, []);
     return <AddButton setIsAddButtonClicked={setIsAddButtonClicked} />;
