@@ -57,9 +57,6 @@ export const StackNavigator: React.FC<StackNavigatorProps> = ({}) => {
             cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS,
             safeAreaInsets: { top: Dimensions.get("screen").width / 2 },
             gestureResponseDistance: { vertical: Dimensions.get("screen").height },
-
-            // animationEnabled: false,
-            // cardOverlayEnabled: false,
             gestureDirection: "vertical",
             gestureEnabled: true,
           }}

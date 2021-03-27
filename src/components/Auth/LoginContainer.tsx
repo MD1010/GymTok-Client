@@ -14,7 +14,7 @@ export const LoginContainer: React.FC<LoginContainerProps> = () => {
   const { authError, loggedUser } = useSelector(authSelector);
 
   useEffect(() => {
-    loggedUser && navigation.goBack();
+    loggedUser && navigation.navigate("Home");
   }, [loggedUser]);
 
   const handleSubmitPress = async (username: string, password: string) => {

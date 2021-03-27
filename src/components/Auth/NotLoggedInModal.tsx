@@ -1,11 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-import React, { useEffect } from "react";
+import React from "react";
 import { Dimensions, Image, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native";
-import * as Animatable from "react-native-animatable";
-import { Portal } from "react-native-paper";
-import { useSelector } from "react-redux";
-import { authSelector } from "../../store/auth/authSlice";
 import { Colors } from "../shared/styles/variables";
 
 export const NotLoggedInModal: React.FC = () => {

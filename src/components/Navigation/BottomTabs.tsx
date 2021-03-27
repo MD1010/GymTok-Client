@@ -1,6 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Portal, Provider } from "react-native-paper";
 import { useSelector } from "react-redux";
 import { authSelector } from "../../store/auth/authSlice";
@@ -10,13 +10,24 @@ import { NotLoggedInScreen } from "../Auth/NotLoggedIn";
 import { ProfileContainer as Profile } from "../Profile/ProfileContainer";
 import { NotLoggedInModal } from "../Auth/NotLoggedInModal";
 import { Colors, UIConsts } from "../shared/styles/variables";
+import { useNavigation } from "@react-navigation/native";
+import { View } from "react-native-animatable";
 
 interface BottomTabsProps {}
 
 export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
+  const RequiredAuthModal = () => {
+    const navigation = useNavigation();
+    useEffect(() => {
+      navigation.navigate("NotLoggedIn");
+      setIsAddButtonClicked(false);
+    }, []);
+    return <AddButton setIsAddButtonClicked={setIsAddButtonClicked} />;
+  };
+
   const Tab = createBottomTabNavigator();
   const { loggedUser } = useSelector(authSelector);
-  const [isAddButtonClicked, setIsAddButtonCLicked] = useState<boolean>(false);
+  const [isAddButtonClicked, setIsAddButtonClicked] = useState<boolean>(false);
 
   return (
     <Provider>
@@ -44,11 +55,6 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
               ) : (
                 <Ionicons name="md-home-outline" color={color} size={size} />
               ),
-            // <Image
-            //   style={{ width: 35, height: 35, tintColor: color }}
-            //   resizeMode={"contain"}
-            //   source={require("../../../assets/icons/home.png")}
-            // ></Image>
           }}
         />
         <Tab.Screen
@@ -108,11 +114,11 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
         />
       </Tab.Navigator>
       <Portal>
-        {/* {!loggedUser && isAddButtonClicked ? (
-          <AuthModal close={() => setIsAddButtonCLicked(false)} />
-        ) : ( */}
-        <AddButton isAddButtonClicked={isAddButtonClicked} setIsAddButtonCLicked={setIsAddButtonCLicked} />
-        {/* )} */}
+        {!loggedUser && isAddButtonClicked ? (
+          <RequiredAuthModal />
+        ) : (
+          <AddButton setIsAddButtonClicked={setIsAddButtonClicked} />
+        )}
       </Portal>
     </Provider>
   );

@@ -1,19 +1,20 @@
 import { FontAwesome, FontAwesome5 } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useNavigationBuilder } from "@react-navigation/native";
 import { Camera } from "expo-camera";
 import * as ImagePicker from "expo-image-picker";
-import React from "react";
+import React, { useEffect } from "react";
 import ActionButton from "react-native-action-button";
+import { useSelector } from "react-redux";
+import { authSelector } from "../../store/auth/authSlice";
 import { Colors } from "../shared/styles/variables";
 
 interface Props {
-  isAddButtonClicked: boolean;
-  setIsAddButtonCLicked: (isClicked: boolean) => void;
+  setIsAddButtonClicked: (isClicked: boolean) => void;
 }
 
-export const AddButton: React.FC<Props> = ({ isAddButtonClicked, setIsAddButtonCLicked }) => {
+export const AddButton: React.FC<Props> = ({ setIsAddButtonClicked }) => {
   const navigation = useNavigation();
-
+  const { loggedUser } = useSelector(authSelector);
   const takeVideo = async () => {
     const { status } = await Camera.requestPermissionsAsync();
     await ImagePicker.getMediaLibraryPermissionsAsync(true);
@@ -35,10 +36,14 @@ export const AddButton: React.FC<Props> = ({ isAddButtonClicked, setIsAddButtonC
       navigation.navigate("Publish", { videoUri: selectedVideo.uri });
     }
   };
-
+  const checkIfAuth = () => {
+    // if (!loggedUser) {
+    //   navigation.navigate("NotLoggedIn");
+    // }
+  };
   return (
     <ActionButton
-      onPress={() => setIsAddButtonCLicked(!isAddButtonClicked)}
+      onPress={() => setIsAddButtonClicked(true)}
       backdrop
       bgOpacity={0.75}
       bgColor={"#101010"}
