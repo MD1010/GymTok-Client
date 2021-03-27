@@ -16,10 +16,11 @@ export const NotLoggedInModal: React.FC = () => {
   return (
     <View style={styles.modalContainer}>
       <View style={[styles.modalBody]}>
-        <TouchableWithoutFeedback onPress={() => navigation.goBack()}>
-          <Ionicons name="close-outline" size={29} color={"white"} />
-        </TouchableWithoutFeedback>
-
+        <View style={{ position: "absolute", left: 15, top: 15 }}>
+          <TouchableWithoutFeedback onPress={() => navigation.goBack()}>
+            <Ionicons name="close-outline" size={29} color={"white"} />
+          </TouchableWithoutFeedback>
+        </View>
         <Text style={[styles.title]}>Sign up for GymTok</Text>
         <Text style={styles.appDescription}>
           Create a profile, follow other challenges, create your own challenges and more.
@@ -90,7 +91,7 @@ const styles = StyleSheet.create({
   modalBody: {
     backgroundColor: Colors.darkBlue,
     flex: 1,
-    padding: 20,
+    padding: 30,
     top: 10,
   },
   title: {
@@ -104,10 +105,10 @@ const styles = StyleSheet.create({
     color: Colors.lightGrey2,
     fontSize: 15,
     textAlign: "center",
-    marginTop: 25,
+    marginTop: 35,
   },
   loginOptionContainer: {
-    marginTop: 30,
+    marginTop: 40,
     marginLeft: 10,
   },
   loginOption: {
@@ -131,7 +132,6 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 60,
     alignSelf: "center",
-    // marginTop: 60,
     color: Colors.white,
     justifyContent: "center",
   },
