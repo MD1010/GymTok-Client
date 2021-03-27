@@ -1,17 +1,15 @@
 import { Ionicons } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { useNavigation } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
 import { Portal, Provider } from "react-native-paper";
 import { useSelector } from "react-redux";
 import { authSelector } from "../../store/auth/authSlice";
+import { NotLoggedInScreen } from "../Auth/NotLoggedInScreen";
 import { AddButton } from "../Camera/AddButton";
 import { HomeScreen } from "../Home/HomeScreen";
-import { NotLoggedInScreen } from "../Auth/NotLoggedIn";
 import { ProfileContainer as Profile } from "../Profile/ProfileContainer";
-import { NotLoggedInModal } from "../Auth/NotLoggedInModal";
 import { Colors, UIConsts } from "../shared/styles/variables";
-import { useNavigation } from "@react-navigation/native";
-import { View } from "react-native-animatable";
 
 interface BottomTabsProps {}
 
@@ -60,7 +58,15 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
         <Tab.Screen
           name="Leaderboards"
           component={
-            loggedUser ? () => <HomeScreen /> : () => <NotLoggedInScreen text={"Leaderboards"} icon={"sadasd"} />
+            loggedUser
+              ? () => <HomeScreen />
+              : () => (
+                  <NotLoggedInScreen
+                    text={"Leaderboards"}
+                    description={"Discover Challenges By Categories"}
+                    icon={() => <Ionicons name="ios-trophy-outline" color={Colors.white} size={56} />}
+                  />
+                )
           }
           options={{
             tabBarIcon: ({ color, size, focused }) =>
@@ -75,7 +81,15 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
         <Tab.Screen
           name="Notifications"
           component={
-            loggedUser ? () => <HomeScreen /> : () => <NotLoggedInScreen text={"Notifications"} icon={"sadasd"} />
+            loggedUser
+              ? () => <HomeScreen />
+              : () => (
+                  <NotLoggedInScreen
+                    text={"Notifications"}
+                    description={"See your activity and new challenges here"}
+                    icon={() => <Ionicons name="notifications-outline" color={Colors.white} size={56} />}
+                  />
+                )
           }
           options={{
             tabBarIcon: ({ color, size, focused }) =>
@@ -102,7 +116,17 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
         ></Tab.Screen>
         <Tab.Screen
           name="Me"
-          component={Profile}
+          component={
+            loggedUser
+              ? () => <Profile />
+              : () => (
+                  <NotLoggedInScreen
+                    text={"Profile"}
+                    description={"Sign up for an account"}
+                    icon={() => <Ionicons name="md-person-outline" color={Colors.white} size={56} />}
+                  />
+                )
+          }
           options={{
             tabBarIcon: ({ color, size, focused }) =>
               focused ? (

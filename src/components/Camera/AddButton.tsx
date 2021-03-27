@@ -36,11 +36,7 @@ export const AddButton: React.FC<Props> = ({ setIsAddButtonClicked }) => {
       navigation.navigate("Publish", { videoUri: selectedVideo.uri });
     }
   };
-  const checkIfAuth = () => {
-    // if (!loggedUser) {
-    //   navigation.navigate("NotLoggedIn");
-    // }
-  };
+
   return (
     <ActionButton
       onPress={() => setIsAddButtonClicked(true)}
@@ -66,7 +62,6 @@ export const AddButton: React.FC<Props> = ({ setIsAddButtonClicked }) => {
       >
         <FontAwesome name="picture-o" size={15} color={Colors.white} />
       </ActionButton.Item>
-      )
     </ActionButton>
   );
 };
