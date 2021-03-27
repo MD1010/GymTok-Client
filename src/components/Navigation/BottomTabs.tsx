@@ -62,31 +62,31 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
           options={{
             tabBarIcon: ({ color, size, focused }) =>
               focused ? (
-                <Ionicons name="md-home-sharp" color={color} size={size} />
+                <Ionicons name="home-sharp" color={color} size={size} />
               ) : (
-                <Ionicons name="md-home-outline" color={color} size={size} />
+                <Ionicons name="home-outline" color={color} size={size} />
               ),
           }}
         />
         <Tab.Screen
-          name="Leaderboards"
+          name="Explore"
           component={
             loggedUser
               ? () => <HomeScreen />
               : () => (
                   <NotLoggedInScreen
-                    text={"Leaderboards"}
+                    text={"Explore"}
                     description={"Discover Challenges By Categories"}
-                    icon={() => <Ionicons name="ios-trophy-outline" color={Colors.white} size={56} />}
+                    icon={() => <Ionicons name="search-outline" color={Colors.white} size={56} />}
                   />
                 )
           }
           options={{
             tabBarIcon: ({ color, size, focused }) =>
               focused ? (
-                <Ionicons name="trophy-sharp" color={color} size={size} style={{ marginRight: 50 }} />
+                <Ionicons name="search-sharp" color={color} size={size} style={{ marginRight: 50 }} />
               ) : (
-                <Ionicons name="trophy-outline" color={color} size={size} style={{ marginRight: 50 }} />
+                <Ionicons name="search-outline" color={color} size={size} style={{ marginRight: 50 }} />
               ),
           }}
         />
@@ -100,7 +100,7 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
                   <NotLoggedInScreen
                     text={"Notifications"}
                     description={"See your activity and new challenges here"}
-                    icon={() => <Ionicons name="notifications-outline" color={Colors.white} size={56} />}
+                    icon={() => <Ionicons name="notifications-sharp" color={Colors.white} size={56} />}
                   />
                 )
           }

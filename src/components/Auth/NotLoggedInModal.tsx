@@ -1,15 +1,22 @@
 import { Ionicons } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
-import React from "react";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import React, { useEffect } from "react";
 import { Dimensions, Image, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native";
 import { Colors } from "../shared/styles/variables";
+import { RouteProp } from "@react-navigation/native";
 
-export const NotLoggedInModal: React.FC = () => {
+type StackParamsList = {
+  params: { isFullScreen: boolean };
+};
+
+export const NotLoggedInModal: React.FC = ({}) => {
   const navigation = useNavigation();
+  const route = useRoute<RouteProp<StackParamsList, "params">>();
+  const modalTopGap = route.params?.isFullScreen ? { top: 0 } : { top: Dimensions.get("window").width / 2 };
 
   return (
     <View style={styles.modalContainer}>
-      <View style={styles.modalBody}>
+      <View style={[styles.modalBody, modalTopGap]}>
         <TouchableWithoutFeedback onPress={() => navigation.goBack()}>
           <Ionicons name="close-outline" size={29} color={"white"} />
         </TouchableWithoutFeedback>
@@ -82,7 +89,6 @@ const styles = StyleSheet.create({
   },
   modalBody: {
     backgroundColor: Colors.darkBlue,
-    top: Dimensions.get("window").width / 2,
     flex: 1,
     padding: 20,
   },

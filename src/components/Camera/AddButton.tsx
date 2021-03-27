@@ -1,11 +1,9 @@
 import { FontAwesome, FontAwesome5 } from "@expo/vector-icons";
-import { useNavigation, useNavigationBuilder } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import { Camera } from "expo-camera";
 import * as ImagePicker from "expo-image-picker";
-import React, { useEffect } from "react";
+import React from "react";
 import ActionButton from "react-native-action-button";
-import { useSelector } from "react-redux";
-import { authSelector } from "../../store/auth/authSlice";
 import { Colors } from "../shared/styles/variables";
 
 interface Props {
@@ -14,12 +12,13 @@ interface Props {
 
 export const AddButton: React.FC<Props> = ({ setIsAddButtonClicked }) => {
   const navigation = useNavigation();
-  const { loggedUser } = useSelector(authSelector);
   const takeVideo = async () => {
     const { status } = await Camera.requestPermissionsAsync();
     await ImagePicker.getMediaLibraryPermissionsAsync(true);
     if (status === "granted") {
-      const selectedVideo = await ImagePicker.launchCameraAsync({ mediaTypes: ImagePicker.MediaTypeOptions.Videos });
+      const selectedVideo: any = await ImagePicker.launchCameraAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Videos,
+      });
       if (!selectedVideo.cancelled) {
         navigation.navigate("Publish", { videoUri: selectedVideo.uri });
       }
@@ -29,7 +28,7 @@ export const AddButton: React.FC<Props> = ({ setIsAddButtonClicked }) => {
   };
 
   const takeVideoFromGallery = async () => {
-    const selectedVideo = await ImagePicker.launchImageLibraryAsync({
+    const selectedVideo: any = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Videos,
     });
     if (!selectedVideo.cancelled) {

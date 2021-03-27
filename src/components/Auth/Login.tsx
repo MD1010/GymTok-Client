@@ -1,9 +1,8 @@
 import { FontAwesome } from "@expo/vector-icons";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import React, { createRef, useEffect, useState } from "react";
-import { ActivityIndicator, Keyboard, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, Image, Keyboard, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
-import { Colors } from "../shared/styles/variables";
 import { styles } from "./styles";
 
 interface LoginProps {
