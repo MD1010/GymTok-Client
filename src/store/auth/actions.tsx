@@ -1,3 +1,4 @@
+import AsyncStorage from "@react-native-community/async-storage";
 import { fetchAPI, RequestMethod } from "../../utils/fetchAPI";
 import { AppDispatch, AppThunk } from "../configureStore";
 import { authActions } from "./authSlice";
@@ -32,5 +33,12 @@ export const login = (username: string, password: string): AppThunk => {
 export const logout = (): AppThunk => {
   return (dispatch: AppDispatch) => {
     dispatch(authActions.logout());
+  };
+};
+
+export const loadLoggedUser = (): AppThunk => {
+  return async (dispatch: AppDispatch) => {
+    const user = JSON.parse(await AsyncStorage.getItem("loggedUser"));
+    dispatch(authActions.loadLoggedUser(user));
   };
 };
