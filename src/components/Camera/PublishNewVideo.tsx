@@ -32,6 +32,9 @@ export const PublishNewVideoScreen: React.FC = () => {
   const [isSpinner, setIsSpinner] = useState<boolean>(false);
   const navigation = useNavigation();
   const { loggedUser } = useSelector(authSelector);
+
+  const isReplyToChallengeCase = !!route.params.challengeId;
+
   const publishChallenge = async () => {
     setIsSpinner(true);
     let formData = new FormData();
@@ -55,6 +58,30 @@ export const PublishNewVideoScreen: React.FC = () => {
     } else alert(error);
     setIsSpinner(false);
   };
+
+  const replyChallenge = async () => {
+    setIsSpinner(true);
+    let formData = new FormData();
+
+    formData.append("description", text);
+    formData.append("replierId", loggedUser._id);
+    formData.append("challengeId", route.params.challengeId);
+    formData.append("video", {
+      name: "dov-test.mp4",
+      uri: route.params.videoUri,
+      type: "video/mp4",
+    } as any);
+
+    const { res, error } = await fetchAPI(
+      RequestMethod.POST,
+      `${process.env.BASE_API_ENPOINT}/replies/upload`,
+      formData
+    );
+    if (res) {
+      navigation.navigate("Home");
+    } else alert(error);
+    setIsSpinner(false);
+  }
 
   return (
     <>
@@ -81,7 +108,21 @@ export const PublishNewVideoScreen: React.FC = () => {
               </View>
               <View style={styles.btnOptions}>
                 <TouchableOpacity
-                  style={styles.tagBtn}
+                  style={styles.publishBtn}
+                  onPress={() => {
+                    isReplyToChallengeCase ? replyChallenge() : publishChallenge();
+                  }}
+                >
+                  <View style={styles.publishIcon}>
+                    <AntDesign name="upload" size={28} color={"white"} />
+                  </View>
+
+                  <Text style={styles.btnText}>Publish</Text>
+                </TouchableOpacity>
+
+
+                {!isReplyToChallengeCase && <TouchableOpacity
+                  style={!isReplyToChallengeCase && styles.tagBtn}
                   onPress={() => {
                     setShowTaggedFriends(!showTaggedFriends);
                   }}
@@ -91,27 +132,14 @@ export const PublishNewVideoScreen: React.FC = () => {
                   </View>
 
                   <Text style={styles.btnText}>Tag Friends</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                  style={styles.publishBtn}
-                  onPress={() => {
-                    publishChallenge();
-                  }}
-                >
-                  <View style={styles.publishIcon}>
-                    <AntDesign name="upload" size={28} color={"white"} />
-                  </View>
-
-                  <Text style={styles.btnText}>Publish</Text>
-                </TouchableOpacity>
+                </TouchableOpacity>}
               </View>
             </View>
           </TouchableWithoutFeedback>
         </KeyboardAvoidingView>
         {/* </KeyboardAwareScrollView> */}
 
-        {showTaggedFriends && (
+        {!isReplyToChallengeCase && showTaggedFriends && (
           <Animatable.View animation="fadeInUpBig" duration={500} style={styles.tagFriends}>
             <FriendsModal
               selectedFriends={selectedFriends}
@@ -165,7 +193,7 @@ const styles = StyleSheet.create({
   btnOptions: {
     flex: 0.5,
     display: "flex",
-    flexDirection: "row",
+    flexDirection: "row-reverse",
     // display: "flex",
     justifyContent: "space-between",
     // height: Dimensions.get("screen").height / 10,
