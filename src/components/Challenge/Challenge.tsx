@@ -1,6 +1,7 @@
 import { FontAwesome } from "@expo/vector-icons";
-import { Dimensions, Text, View } from "react-native";
-import React, { memo, useEffect, useState } from "react";
+import { useNavigation } from "@react-navigation/core";
+import React, { memo, useContext, useEffect } from "react";
+import { Text, View } from "react-native";
 import { Avatar } from "react-native-elements";
 import { TouchableOpacity, TouchableWithoutFeedback } from "react-native-gesture-handler";
 import { useSelector } from "react-redux";
@@ -9,7 +10,8 @@ import { authSelector } from "../../store/auth/authSlice";
 import { Colors } from "../shared/styles/variables";
 import { Player } from "../shared/VideoPlayer";
 import { styles } from "./Challenge.style";
-import { useNavigation } from "@react-navigation/core";
+import { challengeContext } from "./ChallengeContext";
+// import { challengeContext } from "./ChallengesContainer";
 
 interface ChallengeProps {
   challenge: IChallenge;
@@ -78,9 +80,10 @@ const UIContainer: React.FC<IUIContainer> = ({
 
 export const Challenge: React.FC<ChallengeProps> = memo(({ challenge, isVideoPlaying }) => {
   const { video: videoURL, createdBy, likes, replies } = challenge;
+  const { containerStyle } = useContext(challengeContext);
   const { loggedUser } = useSelector(authSelector);
   const navigation = useNavigation();
-
+  const streaminServerUrl = `${process.env.VIDEO_SERVER_ENDPOINT}/${videoURL}`;
   useEffect(() => {
     console.log("video::::::" + videoURL);
   }, [videoURL]);
@@ -115,9 +118,8 @@ export const Challenge: React.FC<ChallengeProps> = memo(({ challenge, isVideoPla
     }
   };
 
-  const streaminServerUrl = `http://193.106.55.109:8000/${videoURL}`;
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, containerStyle]}>
       <Player style={styles.video} uri={streaminServerUrl} isPlaying={isVideoPlaying} resizeMode="cover" />
       <View style={styles.infoContainer}>
         <Heading createdBy={createdBy.username} onCameraPress={onCameraPress} />
