@@ -10,6 +10,8 @@ import { Colors } from "../shared/styles/variables";
 import { Player } from "../shared/VideoPlayer";
 import { styles } from "./Challenge.style";
 import { useNavigation } from "@react-navigation/core";
+import { Camera } from "expo-camera";
+import * as ImagePicker from "expo-image-picker";
 
 interface ChallengeProps {
   challenge: IChallenge;
@@ -105,9 +107,27 @@ export const Challenge: React.FC<ChallengeProps> = memo(({ challenge, isVideoPla
     }
   };
 
-  const onCameraPress = () => {
+  const takeReplyVideo = async () => {
+    console.log("44")
+    const { status } = await Camera.requestPermissionsAsync();
+    await ImagePicker.getMediaLibraryPermissionsAsync(true);
+    if (status === "granted") {
+      const replyVideo: any = await ImagePicker.launchCameraAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Videos,
+      });
+      if (!replyVideo.cancelled) {
+        navigation.navigate("Publish", { videoUri: replyVideo.uri, challengeId: challenge._id });
+      }
+    } else {
+      alert("no access to camera");
+    }
+  };
+
+  const onCameraPress = async () => {
+    console.log("333333333")
     if (loggedUser) {
-      console.log("user:" + loggedUser?.fullName + " click on comment button.");
+      console.log("user:" + loggedUser?.fullName + " click on camera button.");
+      await takeReplyVideo();
       // todo: fetch here
     } else {
       navigation.navigate("NotLoggedIn");
@@ -120,7 +140,7 @@ export const Challenge: React.FC<ChallengeProps> = memo(({ challenge, isVideoPla
     <View style={styles.container}>
       <Player style={styles.video} uri={streaminServerUrl} isPlaying={isVideoPlaying} resizeMode="cover" />
       <View style={styles.infoContainer}>
-        <Heading createdBy={createdBy.username} onCameraPress={onCameraPress} />
+        <Heading createdBy={createdBy.username} onCameraPress={() => onCameraPress()} />
 
         <View style={styles.rowContainer}>
           <Text style={styles.info}>{challenge.description}</Text>
