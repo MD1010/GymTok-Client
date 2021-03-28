@@ -38,12 +38,22 @@ export const ChallengesContainer: React.FC<ChallengesContainerProps> = ({ getOnl
   };
 
   const getExistChallenges = async () => {
-    console.log("fetching more.....", challengesEndpoint);
     const { res, error } = await fetchAPI(RequestMethod.GET, challengesEndpoint, null, {
       size: itemsToLoad,
       page: challenges.length / itemsToLoad,
     });
-    console.log(error);
+    if (isMounted.current) {
+      res && setChallenges([...challenges, ...res]);
+      error && setError(error);
+    }
+  };
+
+  const getUserChallenges = async () => {
+    const { res, error } = await fetchAPI(RequestMethod.GET, challengesEndpoint, null, {
+      size: itemsToLoad,
+      page: challenges.length / itemsToLoad,
+      uid: loggedUser._id,
+    });
     if (isMounted.current) {
       res && setChallenges([...challenges, ...res]);
       error && setError(error);
@@ -56,7 +66,7 @@ export const ChallengesContainer: React.FC<ChallengesContainerProps> = ({ getOnl
 
   const getChallenges = () => {
     if (getOnlyUserChallenges) {
-      // todo fetch only challenges that belong to user
+      getUserChallenges();
     }
     if (!loggedUser) {
       getExistChallenges();
