@@ -13,6 +13,7 @@ interface StackNavigatorProps {}
 
 export const StackNavigator: React.FC<StackNavigatorProps> = ({}) => {
   const Stack = createStackNavigator();
+
   return (
     <NavigationContainer independent={true}>
       <Stack.Navigator

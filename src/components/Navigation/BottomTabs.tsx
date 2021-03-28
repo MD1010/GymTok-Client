@@ -1,6 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation, useRoute } from "@react-navigation/native";
 import React, { useCallback, useEffect, useState } from "react";
 import { BackHandler } from "react-native";
 import { Portal, Provider } from "react-native-paper";
@@ -11,6 +11,7 @@ import { AddButton } from "../Camera/AddButton";
 import { HomeScreen } from "../Home/HomeScreen";
 import { ProfileContainer as Profile } from "../Profile/ProfileContainer";
 import { Colors, UIConsts } from "../shared/styles/variables";
+import { CommonActions } from "@react-navigation/native";
 
 interface BottomTabsProps {}
 
@@ -18,7 +19,6 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
   const navigation = useNavigation();
   // const isHomeTabActive = useRef<boolean>(true);
   const RequiredAuthModal = () => {
-    const navigation = useNavigation();
     useEffect(() => {
       // navigation.navigate("NotLoggedIn", { isFullScreen: !isHomeTabActive.current });
       navigation.navigate("NotLoggedIn");
@@ -27,16 +27,59 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
     return <AddButton setIsAddButtonClicked={setIsAddButtonClicked} />;
   };
 
-  useFocusEffect(
-    useCallback(() => {
-      const onBackPress = () => {
-        navigation.navigate("Home");
-        return true;
-      };
-      BackHandler.addEventListener("hardwareBackPress", onBackPress);
-      return () => BackHandler.removeEventListener("hardwareBackPress", onBackPress);
-    }, [])
-  );
+  // useFocusEffect(
+  //   () => {
+  //     const onBackPress = () => {
+  //       if (navigation.dangerouslyGetState().index === 0) {
+  //         console.log("roname", navigation.dangerouslyGetState().index);
+  //       } else {
+  //         navigation.navigate("Home");
+  //       }
+  //       return true;
+  //     };
+  //     BackHandler.addEventListener("hardwareBackPress", onBackPress);
+  //     return () => BackHandler.removeEventListener("hardwareBackPress", onBackPress);
+  //   }
+  // useCallback(() => {
+  //   const onBackPress = () => {
+  //     if (navigation.dangerouslyGetState().index === 0) {
+  //       console.log("roname", navigation.dangerouslyGetState().index);
+  //       return true;
+  //     }
+
+  //     navigation.navigate("Home");
+
+  //     // console.log("back pressed !@#");
+  //     // navigation.navigate("Home");
+
+  //     // navigation.reset({
+  //     //   routes: [{ name: "Home" }],
+  //     // });
+  //     // navigation.dispatch(resetAction);
+  //     // navigation.dispatch(
+  //     //   CommonActions.reset({
+  //     //     index: 0,
+  //     //     routes: [{ name: "Home" }],
+  //     //   })
+  //     // );
+
+  //     // const resetAction = CommonActions.reset({
+  //     //   index: 0,
+  //     //   actions: [CommonActions.navigate({ routeName: 'Profile' })],
+  //     // });
+  //     // this.props.navigation.dispatch(resetAction);
+  //     // navigation.reset({
+  //     //   index: 0, //the stack index
+  //     //   routes: [
+  //     //     { name: "Home" }, //to go to initial stack screen
+  //     //   ],
+  //     // });
+  //     return true;
+  //   };
+  //   BackHandler.addEventListener("hardwareBackPress", onBackPress);
+  //   return () => BackHandler.removeEventListener("hardwareBackPress", onBackPress);
+  // }, [navigation])
+  // );
 
   const Tab = createBottomTabNavigator();
   const { loggedUser } = useSelector(authSelector);
