@@ -108,7 +108,6 @@ export const Challenge: React.FC<ChallengeProps> = memo(({ challenge, isVideoPla
   };
 
   const takeReplyVideo = async () => {
-    console.log("44")
     const { status } = await Camera.requestPermissionsAsync();
     await ImagePicker.getMediaLibraryPermissionsAsync(true);
     if (status === "granted") {
@@ -124,7 +123,6 @@ export const Challenge: React.FC<ChallengeProps> = memo(({ challenge, isVideoPla
   };
 
   const onCameraPress = async () => {
-    console.log("333333333")
     if (loggedUser) {
       console.log("user:" + loggedUser?.fullName + " click on camera button.");
       await takeReplyVideo();

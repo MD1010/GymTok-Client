@@ -33,8 +33,6 @@ export const PublishNewVideoScreen: React.FC = () => {
   const navigation = useNavigation();
   const { loggedUser } = useSelector(authSelector);
 
-  console.log("route.params.challengeId", route.params.challengeId);
-
   const isReplyToChallengeCase = !!route.params.challengeId;
 
   const publishChallenge = async () => {
@@ -62,7 +60,27 @@ export const PublishNewVideoScreen: React.FC = () => {
   };
 
   const replyChallenge = async () => {
-    console.log("hereeeeeeeeeee")
+    setIsSpinner(true);
+    let formData = new FormData();
+
+    formData.append("description", text);
+    formData.append("replierId", loggedUser._id);
+    formData.append("challengeId", route.params.challengeId);
+    formData.append("video", {
+      name: "dov-test.mp4",
+      uri: route.params.videoUri,
+      type: "video/mp4",
+    } as any);
+
+    const { res, error } = await fetchAPI(
+      RequestMethod.POST,
+      `${process.env.BASE_API_ENPOINT}/replies/upload`,
+      formData
+    );
+    if (res) {
+      navigation.navigate("Home");
+    } else alert(error);
+    setIsSpinner(false);
   }
 
   return (
