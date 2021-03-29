@@ -32,26 +32,26 @@ export const Player: React.FC<VideoProps> = memo(({ uri, style, isPlaying, resiz
     ref.current.playAsync();
   };
 
-  const loadURI = async () => {
-    const path = `${Platform.OS === "ios" ? FileSystem.documentDirectory : FileSystem.cacheDirectory}${Platform.OS === "ios" ? uri.split("/")[3] : shorthash.unique(uri)
-      }`;
-    const image = await FileSystem.getInfoAsync(path);
-    if (image.exists) {
-      console.log("read image from cache");
-      console.log("uri exists is  " + image.uri);
+  // const loadURI = async () => {
+  //   const path = `${Platform.OS === "ios" ? FileSystem.documentDirectory : FileSystem.cacheDirectory}${Platform.OS === "ios" ? uri.split("/")[3] : shorthash.unique(uri)
+  //     }`;
+  //   const image = await FileSystem.getInfoAsync(path);
+  //   if (image.exists) {
+  //     console.log("read image from cache");
+  //     console.log("uri exists is  " + image.uri);
 
-      setVideoURI(image.uri);
-    } else {
-      console.log("downloading image to cache");
-      const newImage = await FileSystem.downloadAsync(uri, path);
-      console.log("cache url = ", newImage.uri);
-      setVideoURI(newImage.uri);
-    }
-  };
+  //     setVideoURI(image.uri);
+  //   } else {
+  //     console.log("downloading image to cache");
+  //     const newImage = await FileSystem.downloadAsync(uri, path);
+  //     console.log("cache url = ", newImage.uri);
+  //     setVideoURI(newImage.uri);
+  //   }
+  // };
 
-  useEffect(() => {
-    Platform.OS === "web" ? setVideoURI(uri) : loadURI();
-  }, []);
+  // useEffect(() => {
+  //   Platform.OS === "web" ? setVideoURI(uri) : loadURI();
+  // }, []);
 
   useEffect(() => {
     if (isPlaying) {
@@ -72,7 +72,7 @@ export const Player: React.FC<VideoProps> = memo(({ uri, style, isPlaying, resiz
           ref={ref}
           style={[style || styles.defaultVideoStyle]}
           source={{
-            uri: videoURI /*uri*/,
+            uri: uri /*uri*/,
             // uri: "http://193.106.55.109:8000/fdfe5570-de14-4e53-a680-cc3c3994210b.mp4",
             // uri: "http://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4",
           }}

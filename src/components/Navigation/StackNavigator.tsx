@@ -6,7 +6,7 @@ import { LoginContainer as LoginScreen } from "../Auth/LoginContainer";
 import { NotLoggedInModal } from "../Auth/NotLoggedInModal";
 import { RegisterContainer as RegisterScreen } from "../Auth/RegisterContainer";
 import { PublishNewVideoScreen } from "../Camera/PublishNewVideo";
-import { ChallengeReplies } from "../Replies/ReplyContainer";
+import { ChallengeReplies } from "../Replies/ChallengesRepliesContainer";
 import { Colors } from "../shared/styles/variables";
 import { BottomTabs } from "./BottomTabs";
 
