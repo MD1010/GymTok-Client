@@ -14,6 +14,7 @@ import { Camera } from "expo-camera";
 import * as ImagePicker from "expo-image-picker";
 import { challengeContext } from "./ChallengeContext";
 // import { challengeContext } from "./ChallengesContainer";
+import GestureRecognizer from 'react-native-swipe-gestures';
 
 interface ChallengeProps {
   challenge: IChallenge;
@@ -136,23 +137,30 @@ export const Challenge: React.FC<ChallengeProps> = memo(({ challenge, isVideoPla
     }
   };
 
+  const onSwipeRight = async () => {
+    console.log("111111111111111111111")
+    navigation.navigate("Replies", { challenge });
+  };
+
   return (
-    <View style={[styles.container, containerStyle]}>
-      <Player style={styles.video} uri={streaminServerUrl} isPlaying={isVideoPlaying} resizeMode="cover" />
-      <View style={styles.infoContainer}>
-        <Heading createdBy={createdBy.username} onCameraPress={() => onCameraPress()} />
+    <GestureRecognizer onSwipeRight={onSwipeRight}>
+      <View style={[styles.container, containerStyle]}>
+        <Player style={styles.video} uri={streaminServerUrl} isPlaying={isVideoPlaying} resizeMode="cover" />
+        <View style={styles.infoContainer}>
+          <Heading createdBy={createdBy.username} onCameraPress={() => onCameraPress()} />
 
-        <View style={styles.rowContainer}>
-          <Text style={styles.info}>{challenge.description}</Text>
+          <View style={styles.rowContainer}>
+            <Text style={styles.info}>{challenge.description}</Text>
+          </View>
+
+          <UIContainer
+            numberOfLikes={likes ? likes.length : 0}
+            numberOfComments={replies ? replies.length : 0}
+            onLikeButtonPress={() => onLikeButtonPress()}
+            onCommentButtonPress={() => onCommentButtonPress()}
+          />
         </View>
-
-        <UIContainer
-          numberOfLikes={likes ? likes.length : 0}
-          numberOfComments={replies ? replies.length : 0}
-          onLikeButtonPress={() => onLikeButtonPress()}
-          onCommentButtonPress={() => onCommentButtonPress()}
-        />
       </View>
-    </View>
+    </GestureRecognizer>
   );
 });

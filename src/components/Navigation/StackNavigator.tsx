@@ -6,12 +6,13 @@ import { LoginContainer as LoginScreen } from "../Auth/LoginContainer";
 import { NotLoggedInModal } from "../Auth/NotLoggedInModal";
 import { RegisterContainer as RegisterScreen } from "../Auth/RegisterContainer";
 import { PublishNewVideoScreen } from "../Camera/PublishNewVideo";
+import { ChallengeReplies } from "../Replies/ReplyContainer";
 import { Colors } from "../shared/styles/variables";
 import { BottomTabs } from "./BottomTabs";
 
-interface StackNavigatorProps {}
+interface StackNavigatorProps { }
 
-export const StackNavigator: React.FC<StackNavigatorProps> = ({}) => {
+export const StackNavigator: React.FC<StackNavigatorProps> = ({ }) => {
   const Stack = createStackNavigator();
   return (
     <NavigationContainer independent={true}>
@@ -59,6 +60,9 @@ export const StackNavigator: React.FC<StackNavigatorProps> = ({}) => {
             gestureEnabled: true,
           }}
         />
+        <Stack.Screen name="Replies" component={ChallengeReplies} options={{
+          headerShown: false
+        }} />
       </Stack.Navigator>
     </NavigationContainer>
   );
