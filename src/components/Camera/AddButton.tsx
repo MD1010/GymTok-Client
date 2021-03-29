@@ -21,9 +21,7 @@ export const AddButton: React.FC<Props> = ({ setIsAddButtonClicked }) => {
         mediaTypes: ImagePicker.MediaTypeOptions.Videos,
       });
       if (!selectedVideo.cancelled) {
-        const videoUri = Platform.OS === "android" && (selectedVideo.uri as string).replace("file:/", "file:///");
-        console.log("after=", videoUri);
-        navigation.navigate("Publish", { videoUri });
+        navigation.navigate("Publish", { videoUri: selectedVideo.uri });
       }
     } else {
       alert("no access to camera");
@@ -35,9 +33,7 @@ export const AddButton: React.FC<Props> = ({ setIsAddButtonClicked }) => {
       mediaTypes: ImagePicker.MediaTypeOptions.Videos,
     });
     if (!selectedVideo.cancelled) {
-      const videoUri = Platform.OS === "android" && (selectedVideo.uri as string).replace("file:/", "file:///");
-      console.log("after=", videoUri);
-      navigation.navigate("Publish", { videoUri });
+      navigation.navigate("Publish", { videoUri: selectedVideo.uri });
     }
   };
 

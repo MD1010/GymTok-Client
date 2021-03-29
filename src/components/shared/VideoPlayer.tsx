@@ -15,10 +15,27 @@ interface VideoProps {
   isPlaying: boolean;
   resizeMode: "cover" | "stretch" | "contain";
   controlsShown?: boolean;
+  hidePlayButton?: boolean;
+  containerStyle?: StyleProp<ViewStyle>;
+  full?: boolean;
+  isMuted?: boolean;
+  onVideoTap?: () => any;
 }
 
 export const Player: React.FC<VideoProps> = memo(
-  ({ uri, style, isPlaying, resizeMode, playBtnSize, controlsShown }) => {
+  ({
+    uri,
+    style,
+    isPlaying,
+    resizeMode,
+    playBtnSize,
+    controlsShown,
+    hidePlayButton,
+    containerStyle,
+    full,
+    isMuted,
+    onVideoTap,
+  }) => {
     const statusRef = useRef<any>();
     const [isPaused, setIsPaused] = useState<boolean>(false);
     const ref = useRef(null);
@@ -35,7 +52,7 @@ export const Player: React.FC<VideoProps> = memo(
     };
 
     const loadURI = async () => {
-      if (uri.startsWith("file:///")) {
+      if (uri.startsWith("file")) {
         return setVideoURI(uri);
       }
       const path = `${Platform.OS === "ios" ? FileSystem.documentDirectory : FileSystem.cacheDirectory}${
@@ -57,6 +74,9 @@ export const Player: React.FC<VideoProps> = memo(
 
     useEffect(() => {
       Platform.OS === "web" ? setVideoURI(uri) : loadURI();
+      // if (full) {
+      //   ref.current.presentFullscreenPlayer();
+      // }
     }, []);
 
     useEffect(() => {
@@ -72,8 +92,12 @@ export const Player: React.FC<VideoProps> = memo(
     }, [isPlaying]);
 
     return (
-      <TouchableWithoutFeedback onPress={() => (statusRef.current?.isPlaying ? pauseVideoByTap() : resumeVideoByTap())}>
-        <View style={styles.container}>
+      <TouchableWithoutFeedback
+        onPress={() =>
+          onVideoTap ? onVideoTap() : statusRef.current?.isPlaying ? pauseVideoByTap() : resumeVideoByTap()
+        }
+      >
+        <View style={[styles.container, containerStyle]}>
           <Video
             ref={ref}
             style={style || styles.defaultVideoStyle}
@@ -86,9 +110,10 @@ export const Player: React.FC<VideoProps> = memo(
             resizeMode={resizeMode}
             shouldPlay={isPlaying}
             isLooping
+            isMuted={isMuted}
             onPlaybackStatusUpdate={(status) => (statusRef.current = status)}
           />
-          {!controlsShown && (
+          {!controlsShown && !hidePlayButton && (
             <View style={styles.playButtonContainer}>
               {isPaused && <FontAwesome name="play" size={playBtnSize ? playBtnSize : 40} color={Colors.white} />}
             </View>
@@ -103,6 +128,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   playButtonContainer: {
+    position: "absolute",
     height: "100%",
     width: "100%",
     justifyContent: "center",

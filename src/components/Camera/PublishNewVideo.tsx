@@ -1,6 +1,6 @@
 import { useNavigation, useRoute } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
-import { Dimensions, StyleSheet, View, StatusBar } from "react-native";
+import { Dimensions, StyleSheet, View, StatusBar, Text } from "react-native";
 import { useSelector } from "react-redux";
 import { authSelector } from "../../store/auth/authSlice";
 import { fetchAPI, RequestMethod } from "../../utils/fetchAPI";
@@ -73,24 +73,64 @@ export const PublishNewVideoScreen: React.FC = () => {
   return (
     <>
       <View style={styles.container}>
-        <View style={{ flex: 1 }}>
+        {/* <View style={{ flex: 1, backgroundColor: "red" }}> */}
+        {/* <View style={{ flex: 1, width: "70%", alignSelf: "center", margin: 15 }}> */}
+
+        <Player
+          // style={{ height: 200 }}
+          hidePlayButton
+          full
+          containerStyle={{
+            // flex: 1,
+            overflow: "hidden",
+            width: 120,
+            // height: 100,
+            // alignSelf: "center",
+            margin: 15,
+            borderRadius: 10,
+            borderWidth: 1,
+          }}
+          // style={{ borderRadius: 15 }}
+          // controlsShown={true}
+          uri={route.params.videoUri}
+          // uri={"http://193.106.55.109:8000/0f294921-cbc5-455f-b577-f297c5b6c007.mp4"}
+          isPlaying={false}
+          resizeMode={"cover"}
+        />
+
+        {/* </View> */}
+        <View style={{ height: "70%" }}></View>
+        {/* <View style={{ flex: 1 }}>
           <Player
-            controlsShown
+            hidePlayButton
+            // style={{ height: "100%", width: 500 }}
+            controlsShown={false}
             uri={route.params.videoUri}
             // uri={"http://193.106.55.109:8000/0f294921-cbc5-455f-b577-f297c5b6c007.mp4"}
             isPlaying={false}
             resizeMode={"cover"}
           />
-          {/* <VideoScreen uri={route.params!.videoUri} /> */}
-        </View>
-        <View style={{ flex: 1, backgroundColor: "blue" }}>
-          {/* <Player
+        </View> */}
+
+        {/* <Player
+            hidePlayButton
+            style={{ height: 500, width: 100 }}
+            controlsShown={false}
+            uri={route.params.videoUri}
+            // uri={"http://193.106.55.109:8000/0f294921-cbc5-455f-b577-f297c5b6c007.mp4"}
+            isPlaying={false}
+            resizeMode={"cover"}
+          /> */}
+        {/* <VideoScreen uri={route.params!.videoUri} /> */}
+        {/* </View> */}
+        {/* <View style={{ flex: 1, backgroundColor: "blue" }}> */}
+        {/* <Player
             controlsShown
             uri={"http://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4"}
             isPlaying={false}
             resizeMode={"cover"}
           /> */}
-        </View>
+        {/* </View> */}
       </View>
       {/* <Spinner visible={isSpinner} textContent={"Uploading..."} textStyle={styles.spinnerTextStyle} />
       <SafeAreaView style={styles.container}>
@@ -164,6 +204,8 @@ export const PublishNewVideoScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: Colors.darkBlue,
+    // justifyContent: "center",
+    // alignItems: "center",
     // flex: 1,
     height: Dimensions.get("window").height - StatusBar.currentHeight,
     width: Dimensions.get("screen").width,
