@@ -17,9 +17,9 @@ interface VideoProps {
   controlsShown?: boolean;
   hidePlayButton?: boolean;
   containerStyle?: StyleProp<ViewStyle>;
-  full?: boolean;
   isMuted?: boolean;
   onVideoTap?: () => any;
+  onVideoLoad?: () => any;
 }
 
 export const Player: React.FC<VideoProps> = memo(
@@ -32,9 +32,9 @@ export const Player: React.FC<VideoProps> = memo(
     controlsShown,
     hidePlayButton,
     containerStyle,
-    full,
     isMuted,
     onVideoTap,
+    onVideoLoad,
   }) => {
     const statusRef = useRef<any>();
     const [isPaused, setIsPaused] = useState<boolean>(false);
@@ -99,6 +99,7 @@ export const Player: React.FC<VideoProps> = memo(
       >
         <View style={[styles.container, containerStyle]}>
           <Video
+            onLoad={onVideoLoad}
             ref={ref}
             style={style || styles.defaultVideoStyle}
             useNativeControls={!!controlsShown}

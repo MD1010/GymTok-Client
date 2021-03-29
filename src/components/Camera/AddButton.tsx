@@ -21,7 +21,10 @@ export const AddButton: React.FC<Props> = ({ setIsAddButtonClicked }) => {
         mediaTypes: ImagePicker.MediaTypeOptions.Videos,
       });
       if (!selectedVideo.cancelled) {
-        navigation.navigate("Publish", { videoUri: selectedVideo.uri });
+        navigation.navigate("NewChallengePreview", {
+          videoUri: selectedVideo.uri,
+          nextScreenToNavigate: { name: "Publish", params: selectedVideo.uri },
+        });
       }
     } else {
       alert("no access to camera");

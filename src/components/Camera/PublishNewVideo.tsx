@@ -1,212 +1,79 @@
-import { useNavigation, useRoute } from "@react-navigation/native";
+import { RouteProp, useRoute } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
-import { Dimensions, StyleSheet, View, StatusBar, Text } from "react-native";
-import { useSelector } from "react-redux";
-import { authSelector } from "../../store/auth/authSlice";
-import { fetchAPI, RequestMethod } from "../../utils/fetchAPI";
+import { Dimensions, StyleSheet, View, Image, Text } from "react-native";
+import { Loader } from "../shared/Loader";
 import { Colors } from "../shared/styles/variables";
 import { Player } from "../shared/VideoPlayer";
-import { VideoScreen } from "./publishVideo";
-import { Ionicons, FontAwesome5 } from "@expo/vector-icons";
+import { StackScreenProps } from "@react-navigation/stack";
+import { TextInput } from "react-native-gesture-handler";
+import { generateThumbnail } from "../../utils/generateThumbnail";
+import { Divider } from "react-native-elements";
+
+type StackParamsList = {
+  params: { videoUri: string };
+};
 
 export const PublishNewVideoScreen: React.FC = () => {
-  const route = useRoute<any>();
-  const [text, setText] = useState<string>("");
-  const [showTaggedFriends, setShowTaggedFriends] = useState<boolean>(false);
-  const [selectedFriends, setSelectedFriends] = useState<any[]>([]);
-  const [isSpinner, setIsSpinner] = useState<boolean>(false);
-  const navigation = useNavigation();
-  const { loggedUser } = useSelector(authSelector);
-
-  const isReplyToChallengeCase = !!route.params.challengeId;
-  useEffect(() => {
-    console.log("in publish", route.params.videoUri);
-  }, []);
-
-  const publishChallenge = async () => {
-    setIsSpinner(true);
-    let formData = new FormData();
-
-    formData.append("description", text);
-    formData.append("userId", loggedUser._id);
-    formData.append("video", {
-      name: "dov-test.mp4",
-      uri: route.params.videoUri,
-      type: "video/mp4",
-    } as any);
-    formData.append("selectedFriends", JSON.stringify(selectedFriends));
-
-    const { res, error } = await fetchAPI(
-      RequestMethod.POST,
-      `${process.env.BASE_API_ENPOINT}/challenges/upload`,
-      formData
+  // const [imageUri, setImageUri] = useState<string>();
+  // useEffect(() => {
+  //   (async () => {
+  //     const image = await generateThumbnail(route.params.videoUri);
+  //     setImageUri(image);
+  //   })();
+  // }, []);
+  const Header = () => {
+    return (
+      <View style={{ padding: 15 }}>
+        <View style={{ flexDirection: "row" }}>
+          <Player
+            uri={route.params.videoUri}
+            onVideoTap={() => null}
+            isPlaying={false}
+            resizeMode={"cover"}
+            hidePlayButton
+            containerStyle={{
+              borderRadius: 15,
+              height: 150,
+              overflow: "hidden",
+            }}
+          />
+          <View style={{ flex: 3, padding: 10 }}>
+            <TextInput
+              autoFocus
+              multiline
+              style={{
+                color: Colors.white,
+                marginLeft: 15,
+                height: 150,
+                textAlignVertical: "top",
+              }}
+              placeholder={"Add a caption..."}
+              placeholderTextColor={Colors.weakGrey}
+            />
+          </View>
+        </View>
+        <Text style={{ color: Colors.lightGrey2, alignItems: "center", alignSelf: "center" }}>
+          Your friends will be notified when you the challenge will be uplaoded.
+        </Text>
+      </View>
     );
-    if (res) {
-      navigation.navigate("Home");
-    } else alert(error);
-    setIsSpinner(false);
   };
 
-  const replyChallenge = async () => {
-    setIsSpinner(true);
-    let formData = new FormData();
+  const Options = () => <View style={{ flexDirection: "row", flex: 1 }}></View>;
 
-    formData.append("description", text);
-    formData.append("replierId", loggedUser._id);
-    formData.append("challengeId", route.params.challengeId);
-    formData.append("video", {
-      name: "dov-test.mp4",
-      uri: route.params.videoUri,
-      type: "video/mp4",
-    } as any);
+  const Footer = () => <View style={{ flexDirection: "row", flex: 1 }}></View>;
 
-    const { res, error } = await fetchAPI(
-      RequestMethod.POST,
-      `${process.env.BASE_API_ENPOINT}/replies/upload`,
-      formData
-    );
-    if (res) {
-      navigation.navigate("Home");
-    } else alert(error);
-    setIsSpinner(false);
-  };
+  const route = useRoute<RouteProp<StackParamsList, "params">>();
 
   return (
     <>
       <View style={styles.container}>
-        {/* <View style={{ flex: 1, backgroundColor: "red" }}> */}
-        {/* <View style={{ flex: 1, width: "70%", alignSelf: "center", margin: 15 }}> */}
-        <View style={{ flex: 1 }}>
-          <Player
-            // style={{ height: 200 }}
-            // hidePlayButton
-            // full
-            // controlsShown
-            containerStyle={{
-              flex: 1,
-              overflow: "hidden",
-              // width: 250,
-              // height: 100,
-              // alignSelf: "center",
-              // margin: 15,
-              // borderRadius: 5,
-              // borderWidth: 1,
-            }}
-            // style={{ borderRadius: 15 }}
-            // controlsShown={true}
-            uri={route.params.videoUri}
-            // uri={"http://193.106.55.109:8000/0f294921-cbc5-455f-b577-f297c5b6c007.mp4"}
-            isPlaying={true}
-            resizeMode={"cover"}
-          />
-        </View>
-        <View style={{ position: "absolute", right: 20, bottom: 30 }}>
-          <FontAwesome5 name="chevron-circle-right" color={Colors.lightGrey} size={32} />
-        </View>
-        {/* <View style={{ justifyContent: "center", alignItems: "center", backgroundColor: "red" }}>
-          <Ionicons name="search-sharp" color={Colors.white} size={24} />
-        </View> */}
-        {/* <View style={{ backgroundColor: Colors.black, flex: 0.1 }}></View> */}
-
-        {/* </View> */}
-        {/* <View style={{ flex: 0.5 }}></View> */}
-        {/* <View style={{ flex: 1 }}>
-          <Player
-            hidePlayButton
-            // style={{ height: "100%", width: 500 }}
-            controlsShown={false}
-            uri={route.params.videoUri}
-            // uri={"http://193.106.55.109:8000/0f294921-cbc5-455f-b577-f297c5b6c007.mp4"}
-            isPlaying={false}
-            resizeMode={"cover"}
-          />
-        </View> */}
-
-        {/* <Player
-            hidePlayButton
-            style={{ height: 500, width: 100 }}
-            controlsShown={false}
-            uri={route.params.videoUri}
-            // uri={"http://193.106.55.109:8000/0f294921-cbc5-455f-b577-f297c5b6c007.mp4"}
-            isPlaying={false}
-            resizeMode={"cover"}
-          /> */}
-        {/* <VideoScreen uri={route.params!.videoUri} /> */}
-        {/* </View> */}
-        {/* <View style={{ flex: 1, backgroundColor: "blue" }}> */}
-        {/* <Player
-            controlsShown
-            uri={"http://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4"}
-            isPlaying={false}
-            resizeMode={"cover"}
-          /> */}
-        {/* </View> */}
+        <Header />
+        <Divider />
+        <Options />
+        <Divider />
+        <Footer />
       </View>
-      {/* <Spinner visible={isSpinner} textContent={"Uploading..."} textStyle={styles.spinnerTextStyle} />
-      <SafeAreaView style={styles.container}>
-        <KeyboardAvoidingView style={{ flex: 1 }}>
-          <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-            <View style={{ flex: 1 }}>
-              <View style={{ flex: 4 }}>
-                <VideoScreen uri={route.params!.videoUri} />
-              </View>
-
-              <View style={{ flex: 0.5 }}>
-                <TextInput
-                  style={styles.description}
-                  onChangeText={(text) => setText(text)}
-                  value={text}
-                  placeholder={"write description"}
-                  placeholderTextColor={Colors.black}
-                  autoCorrect={true}
-                  autoCapitalize={"words"}
-                />
-              </View>
-              <View style={styles.btnOptions}>
-                <TouchableOpacity
-                  style={styles.publishBtn}
-                  onPress={() => {
-                    isReplyToChallengeCase ? replyChallenge() : publishChallenge();
-                  }}
-                >
-                  <View style={styles.publishIcon}>
-                    <AntDesign name="upload" size={28} color={"white"} />
-                  </View>
-
-                  <Text style={styles.btnText}>Publish</Text>
-                </TouchableOpacity>
-
-                {!isReplyToChallengeCase && (
-                  <TouchableOpacity
-                    style={!isReplyToChallengeCase && styles.tagBtn}
-                    onPress={() => {
-                      setShowTaggedFriends(!showTaggedFriends);
-                    }}
-                  >
-                    <View style={styles.tagIcon}>
-                      <EvilIcons name="tag" size={35} color={"white"} />
-                    </View>
-
-                    <Text style={styles.btnText}>Tag Friends</Text>
-                  </TouchableOpacity>
-                )}
-              </View>
-            </View>
-          </TouchableWithoutFeedback>
-        </KeyboardAvoidingView>
-
-        {!isReplyToChallengeCase && showTaggedFriends && (
-          <Animatable.View animation="fadeInUpBig" duration={500} style={styles.tagFriends}>
-            <FriendsModal
-              selectedFriends={selectedFriends}
-              close={() => setShowTaggedFriends(false)}
-              isVisible={showTaggedFriends}
-              setSelectedFriends={setSelectedFriends}
-            />
-          </Animatable.View>
-        )}
-
-      </SafeAreaView> */}
     </>
   );
 };
@@ -214,10 +81,7 @@ export const PublishNewVideoScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: Colors.darkBlue,
-    // justifyContent: "center",
-    // alignItems: "center",
-    // flex: 1,
-    height: Dimensions.get("window").height - StatusBar.currentHeight,
+    height: Dimensions.get("window").height,
     width: Dimensions.get("screen").width,
   },
   // container: {
