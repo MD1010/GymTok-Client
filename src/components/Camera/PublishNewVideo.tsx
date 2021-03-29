@@ -7,6 +7,7 @@ import { fetchAPI, RequestMethod } from "../../utils/fetchAPI";
 import { Colors } from "../shared/styles/variables";
 import { Player } from "../shared/VideoPlayer";
 import { VideoScreen } from "./publishVideo";
+import { Ionicons, FontAwesome5 } from "@expo/vector-icons";
 
 export const PublishNewVideoScreen: React.FC = () => {
   const route = useRoute<any>();
@@ -75,31 +76,40 @@ export const PublishNewVideoScreen: React.FC = () => {
       <View style={styles.container}>
         {/* <View style={{ flex: 1, backgroundColor: "red" }}> */}
         {/* <View style={{ flex: 1, width: "70%", alignSelf: "center", margin: 15 }}> */}
-
-        <Player
-          // style={{ height: 200 }}
-          hidePlayButton
-          full
-          containerStyle={{
-            // flex: 1,
-            overflow: "hidden",
-            width: 120,
-            // height: 100,
-            // alignSelf: "center",
-            margin: 15,
-            borderRadius: 10,
-            borderWidth: 1,
-          }}
-          // style={{ borderRadius: 15 }}
-          // controlsShown={true}
-          uri={route.params.videoUri}
-          // uri={"http://193.106.55.109:8000/0f294921-cbc5-455f-b577-f297c5b6c007.mp4"}
-          isPlaying={false}
-          resizeMode={"cover"}
-        />
+        <View style={{ flex: 1 }}>
+          <Player
+            // style={{ height: 200 }}
+            // hidePlayButton
+            // full
+            // controlsShown
+            containerStyle={{
+              flex: 1,
+              overflow: "hidden",
+              // width: 250,
+              // height: 100,
+              // alignSelf: "center",
+              // margin: 15,
+              // borderRadius: 5,
+              // borderWidth: 1,
+            }}
+            // style={{ borderRadius: 15 }}
+            // controlsShown={true}
+            uri={route.params.videoUri}
+            // uri={"http://193.106.55.109:8000/0f294921-cbc5-455f-b577-f297c5b6c007.mp4"}
+            isPlaying={true}
+            resizeMode={"cover"}
+          />
+        </View>
+        <View style={{ position: "absolute", right: 20, bottom: 30 }}>
+          <FontAwesome5 name="chevron-circle-right" color={Colors.lightGrey} size={32} />
+        </View>
+        {/* <View style={{ justifyContent: "center", alignItems: "center", backgroundColor: "red" }}>
+          <Ionicons name="search-sharp" color={Colors.white} size={24} />
+        </View> */}
+        {/* <View style={{ backgroundColor: Colors.black, flex: 0.1 }}></View> */}
 
         {/* </View> */}
-        <View style={{ height: "70%" }}></View>
+        {/* <View style={{ flex: 0.5 }}></View> */}
         {/* <View style={{ flex: 1 }}>
           <Player
             hidePlayButton
