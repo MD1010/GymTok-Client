@@ -71,7 +71,7 @@ export const Player: React.FC<VideoProps> = memo(({ uri, style, isPlaying, resiz
       <View style={styles.container}>
         <Video
           ref={ref}
-          style={[style]}
+          style={[style || styles.defaultVideoStyle]}
           source={{
             uri: uri /*uri*/,
             // uri: "http://193.106.55.109:8000/fdfe5570-de14-4e53-a680-cc3c3994210b.mp4",
@@ -94,5 +94,12 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+  },
+  defaultVideoStyle: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    bottom: 0,
+    right: 0,
   },
 });

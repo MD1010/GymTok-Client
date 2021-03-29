@@ -10,7 +10,7 @@ export const store = configureStore({
 });
 
 store.subscribe(() => {});
-store.dispatch(loadLoggedUser());
+// store.dispatch(loadLoggedUser());
 
 export type AppDispatch = typeof store.dispatch;
 export type AppThunk = ThunkAction<void, RootState, null, Action<string>>;

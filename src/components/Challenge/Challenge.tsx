@@ -1,7 +1,7 @@
 import { FontAwesome } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/core";
 import React, { memo, useContext, useEffect } from "react";
-import { Text, View } from "react-native";
+import { Dimensions, Text, View } from "react-native";
 import { Avatar } from "react-native-elements";
 import { TouchableOpacity, TouchableWithoutFeedback } from "react-native-gesture-handler";
 import { useSelector } from "react-redux";
@@ -14,7 +14,7 @@ import { Camera } from "expo-camera";
 import * as ImagePicker from "expo-image-picker";
 import { challengeContext } from "./ChallengeContext";
 // import { challengeContext } from "./ChallengesContainer";
-import GestureRecognizer from 'react-native-swipe-gestures';
+import GestureRecognizer from "react-native-swipe-gestures";
 
 interface ChallengeProps {
   challenge: IChallenge;
@@ -66,7 +66,7 @@ const UIContainer: React.FC<IUIContainer> = ({
         </View>
 
         <View style={[styles.rowContainer, { justifyContent: "space-between" }]}>
-          <View style={[styles.rowContainer, { marginRight: 10 }]}>
+          <View style={[styles.rowContainer, { marginLeft: 10 }]}>
             <FontAwesome name={"heart"} size={13} color={Colors.lightGrey} />
 
             <Text style={styles.amount}>{numberOfLikes}</Text>
@@ -137,13 +137,16 @@ export const Challenge: React.FC<ChallengeProps> = memo(({ challenge, isVideoPla
     }
   };
 
-  const onSwipeRight = async () => {
-    console.log("111111111111111111111")
+  const onSwipeLeft = async () => {
+    console.log("111111111111111111111");
     navigation.navigate("Replies", { challenge });
   };
 
   return (
-    <GestureRecognizer onSwipeRight={onSwipeRight}>
+    <GestureRecognizer
+      onSwipeLeft={onSwipeLeft}
+      config={{ directionalOffsetThreshold: Dimensions.get("screen").width }}
+    >
       <View style={[styles.container, containerStyle]}>
         <Player style={styles.video} uri={streaminServerUrl} isPlaying={isVideoPlaying} resizeMode="cover" />
         <View style={styles.infoContainer}>
