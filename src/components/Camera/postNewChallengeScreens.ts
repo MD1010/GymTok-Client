@@ -1,6 +1,7 @@
 import { CardStyleInterpolators } from "@react-navigation/stack";
 import { Dimensions, StatusBar } from "react-native";
 import { colors } from "react-native-elements";
+import { getModalConfig } from "../Navigation/halfScreenModalConfig";
 import { ScreenNavigationMap } from "../Navigation/ScreenNavigationMap";
 import { Colors } from "../shared";
 import { NewVideoPreview } from "./NewVideoPreview";
@@ -13,23 +14,7 @@ export const postChallengeScreens: ScreenNavigationMap[] = [
   {
     name: "TagPeople",
     screen: TagPeopleScreen,
-    options: {
-      headerTransparent: true,
-      title: "Tag People",
-      cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS,
-
-      cardStyle: {
-        top: "40%",
-        maxHeight: "60%", // todo fix this hotfix
-        backgroundColor: Colors.black,
-        borderTopRightRadius: 15,
-        borderTopLeftRadius: 15,
-      },
-      gestureDirection: "vertical",
-      gestureResponseDistance: { vertical: Dimensions.get("screen").height },
-      animationEnabled: true,
-      gestureEnabled: true,
-    },
+    options: getModalConfig(60),
   },
   { name: "SearchPerson", screen: SearchPersonScreen },
   { name: "AddHashtags", screen: TagPeopleScreen },
