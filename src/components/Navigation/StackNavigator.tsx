@@ -23,7 +23,6 @@ export const MainNavigator: React.FC<StackNavigatorProps> = ({}) => {
             headerShown: false,
           }}
         />
-        {/* <Stack.Screen name="PostChallenge" component={PostChallengeNavigationScreens} /> */}
         <Stack.Screen name="Register" component={RegisterScreen} options={{ title: "Sign up" }} />
         <Stack.Screen name="Login" component={LoginScreen} options={{ title: "Log in" }} />
         <Stack.Screen
@@ -40,7 +39,7 @@ export const MainNavigator: React.FC<StackNavigatorProps> = ({}) => {
           }}
         />
         {postChallengeScreens.map(({ name, options, screen }) => (
-          <Stack.Screen key={name} name={name} component={screen} options={{ ...options, gestureEnabled: false }} />
+          <Stack.Screen key={name} name={name} component={screen} options={{ gestureEnabled: false, ...options }} />
         ))}
       </Stack.Navigator>
     </NavigationContainer>

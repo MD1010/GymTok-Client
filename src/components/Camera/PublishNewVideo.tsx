@@ -1,10 +1,10 @@
-import { Ionicons } from "@expo/vector-icons";
-import { RouteProp, useRoute } from "@react-navigation/native";
+import { Ionicons, Fontisto } from "@expo/vector-icons";
+import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import React from "react";
 import { Dimensions, StatusBar, StyleSheet, Text, View } from "react-native";
-import { Divider } from "react-native-elements";
+import { colors, Divider } from "react-native-elements";
 import { TextInput, TouchableOpacity } from "react-native-gesture-handler";
-import { Player, DismissKeyboard, AppButton, Colors } from "../shared";
+import { Player, DismissKeyboard, AppButton, Colors, AppTouchableHighlight } from "../shared";
 
 type StackParamsList = {
   params: { videoUri: string };
@@ -12,13 +12,14 @@ type StackParamsList = {
 
 export const PublishNewVideoScreen: React.FC = () => {
   const route = useRoute<RouteProp<StackParamsList, "params">>();
+  const navigation = useNavigation();
 
   const Header = () => {
     return (
       <View style={{ padding: 15 }}>
         <View style={{ flexDirection: "row" }}>
           <Player
-            uri={route.params.videoUri}
+            uri={route.params?.videoUri}
             onVideoTap={() => null}
             isPlaying={false}
             resizeMode={"cover"}
@@ -27,7 +28,6 @@ export const PublishNewVideoScreen: React.FC = () => {
           />
           <View style={{ flex: 3 }}>
             <TextInput
-              autoFocus
               multiline
               style={styles.addCaptionInput}
               placeholder={"Add a caption..."}
@@ -42,21 +42,23 @@ export const PublishNewVideoScreen: React.FC = () => {
 
   const Options = () => (
     <View style={{ flex: 4 }}>
-      <TouchableOpacity style={styles.option}>
-        <Text style={styles.optionText}>@ Tag People</Text>
-        <Ionicons name="chevron-forward-outline" color={Colors.lightGrey2} size={22} />
-      </TouchableOpacity>
+      <AppTouchableHighlight
+        optionText={"Tag People"}
+        onSelect={() => navigation.navigate("TagPeople")}
+        icon={<Fontisto name="hashtag" color={Colors.lightGrey2} size={14} />}
+      />
 
-      <TouchableOpacity style={styles.option}>
-        <Text style={styles.optionText}># Add Hashtags</Text>
-        <Ionicons name="chevron-forward-outline" color={Colors.lightGrey2} size={22} />
-      </TouchableOpacity>
+      <AppTouchableHighlight
+        optionText={"Add Hashtags"}
+        onSelect={() => navigation.navigate("AddHashtags")}
+        icon={<Fontisto name="at" color={Colors.lightGrey2} size={14} />}
+      />
     </View>
   );
 
   const Footer = () => (
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-      <AppButton buttonText={"Post"} type="solid" backgroundColor={Colors.blue} />
+      <AppButton buttonText={"Post"} type="solid" backgroundColor={Colors.blue} containerStyle={{ marginBottom: 15 }} />
     </View>
   );
 
@@ -75,7 +77,6 @@ export const PublishNewVideoScreen: React.FC = () => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: Colors.darkBlue,
     height: Dimensions.get("window").height - StatusBar.currentHeight,
     width: Dimensions.get("screen").width,
   },
@@ -96,7 +97,7 @@ const styles = StyleSheet.create({
     flex: 4,
   },
   info: {
-    color: Colors.lightGrey2,
+    color: colors.grey3,
     alignItems: "center",
     alignSelf: "center",
     marginTop: 10,

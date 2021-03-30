@@ -17,7 +17,7 @@ export const NewVideoPreview: React.FC = () => {
   const navigateToScreen = route.params.nextScreenToNavigate.name;
   const [isVideoLoaded, setIsVideoLoaded] = useState(false);
   useEffect(() => {
-    console.log("in publish", route.params.videoUri);
+    // console.log("in publish", route.params.videoUri);
   }, []);
 
   const onVideoLoad = () => {
@@ -34,15 +34,16 @@ export const NewVideoPreview: React.FC = () => {
         {/* {!isVideoLoaded && <Loader />} */}
         <View style={{ flex: 1 }}>
           {/* <Text>asdasdasd</Text> */}
-          <Player uri={route.params.videoUri} isPlaying={true} resizeMode={"cover"} onVideoLoad={onVideoLoad} />
+          <Player uri={route.params?.videoUri} isPlaying={true} resizeMode={"cover"} onVideoLoad={onVideoLoad} />
         </View>
         <View style={styles.nextBottomBarContainer}>
           <TouchableOpacity
-            onPress={() =>
-              navigation.navigate(navigateToScreen, { videoUri: route.params.nextScreenToNavigate.params })
+            onPress={
+              // () => null
+              () => navigation.navigate(navigateToScreen, { videoUri: route.params.nextScreenToNavigate.params })
             }
           >
-            <Ionicons name="arrow-forward-circle-sharp" color={Colors.lightGrey} size={36} />
+            {isVideoLoaded && <Ionicons name="arrow-forward-circle-sharp" color={Colors.lightGrey} size={36} />}
           </TouchableOpacity>
         </View>
       </View>
@@ -52,7 +53,7 @@ export const NewVideoPreview: React.FC = () => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: Colors.darkBlue,
+    backgroundColor: "transparent",
     height: Dimensions.get("window").height,
     width: Dimensions.get("screen").width,
   },

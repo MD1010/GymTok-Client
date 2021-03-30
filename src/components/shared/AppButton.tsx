@@ -31,7 +31,6 @@ export const AppButton: React.FC<AppButtonProps> = ({
 
 const styles = StyleSheet.create({
   defaultContainerStyle: {
-    marginBottom: 10,
     borderRadius: 10,
     overflow: "hidden",
     width: "90%",
