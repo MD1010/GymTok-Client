@@ -1,26 +1,20 @@
+import { Ionicons } from "@expo/vector-icons";
 import { RouteProp, useRoute } from "@react-navigation/native";
-import React, { useEffect, useState } from "react";
-import { Dimensions, StyleSheet, View, Image, Text } from "react-native";
-import { Loader } from "../shared/Loader";
+import React from "react";
+import { Dimensions, Pressable, StatusBar, StyleSheet, Text, View } from "react-native";
+import { Divider } from "react-native-elements";
+import { ScrollView, TextInput, TouchableHighlight, TouchableOpacity } from "react-native-gesture-handler";
 import { Colors } from "../shared/styles/variables";
 import { Player } from "../shared/VideoPlayer";
-import { StackScreenProps } from "@react-navigation/stack";
-import { TextInput } from "react-native-gesture-handler";
-import { generateThumbnail } from "../../utils/generateThumbnail";
-import { Divider } from "react-native-elements";
+import { Keyboard } from "react-native";
+import { DismissKeyboard } from "../shared/DismissKeyboard";
+import { Button } from "react-native-elements";
 
 type StackParamsList = {
   params: { videoUri: string };
 };
 
 export const PublishNewVideoScreen: React.FC = () => {
-  // const [imageUri, setImageUri] = useState<string>();
-  // useEffect(() => {
-  //   (async () => {
-  //     const image = await generateThumbnail(route.params.videoUri);
-  //     setImageUri(image);
-  //   })();
-  // }, []);
   const Header = () => {
     return (
       <View style={{ padding: 15 }}>
@@ -37,14 +31,15 @@ export const PublishNewVideoScreen: React.FC = () => {
               overflow: "hidden",
             }}
           />
-          <View style={{ flex: 3, padding: 10 }}>
+          <View style={{ flex: 3 }}>
             <TextInput
-              autoFocus
+              // autoFocus
               multiline
               style={{
                 color: Colors.white,
                 marginLeft: 15,
                 height: 150,
+                padding: 10,
                 textAlignVertical: "top",
               }}
               placeholder={"Add a caption..."}
@@ -52,21 +47,48 @@ export const PublishNewVideoScreen: React.FC = () => {
             />
           </View>
         </View>
-        <Text style={{ color: Colors.lightGrey2, alignItems: "center", alignSelf: "center" }}>
+        <Text style={{ color: Colors.lightGrey2, alignItems: "center", alignSelf: "center", marginTop: 10 }}>
           Your friends will be notified when you the challenge will be uplaoded.
         </Text>
       </View>
     );
   };
 
-  const Options = () => <View style={{ flexDirection: "row", flex: 1 }}></View>;
+  const Options = () => (
+    <View style={{ flex: 4 }}>
+      <TouchableOpacity style={{ flexDirection: "row", alignItems: "center", padding: 10 }}>
+        <Text style={{ fontSize: 16, color: Colors.white, flex: 4 }}>Tag People</Text>
+        <Ionicons name="chevron-forward-outline" color={Colors.lightGrey2} size={22} />
+      </TouchableOpacity>
 
-  const Footer = () => <View style={{ flexDirection: "row", flex: 1 }}></View>;
+      <TouchableOpacity style={{ flexDirection: "row", alignItems: "center", padding: 10 }}>
+        <Text style={{ fontSize: 16, color: Colors.white, flex: 4 }}>Add Hashtags</Text>
+        <Ionicons name="chevron-forward-outline" color={Colors.lightGrey2} size={22} />
+      </TouchableOpacity>
+    </View>
+  );
+
+  const Footer = () => (
+    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+      <Button
+        title={"Post"}
+        type="solid"
+        style={{ overflow: "hidden" }}
+        buttonStyle={{ backgroundColor: Colors.blue }}
+        containerStyle={{
+          marginBottom: 10,
+          borderRadius: 10,
+          overflow: "hidden",
+          width: "90%",
+        }}
+      />
+    </View>
+  );
 
   const route = useRoute<RouteProp<StackParamsList, "params">>();
 
   return (
-    <>
+    <DismissKeyboard>
       <View style={styles.container}>
         <Header />
         <Divider />
@@ -74,79 +96,14 @@ export const PublishNewVideoScreen: React.FC = () => {
         <Divider />
         <Footer />
       </View>
-    </>
+    </DismissKeyboard>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     backgroundColor: Colors.darkBlue,
-    height: Dimensions.get("window").height,
+    height: Dimensions.get("window").height - StatusBar.currentHeight,
     width: Dimensions.get("screen").width,
   },
-  // container: {
-  //   flexDirection: "column",
-  //   flex: 1,
-  //   backgroundColor: Colors.darkBlue,
-  //   height: Dimensions.get("window").height,
-  // },
-  // description: {
-  //   height: UIConsts.bottomNavbarHeight - 15,
-
-  //   paddingLeft: 10,
-  //   opacity: 0.6,
-  //   color: Colors.black,
-  //   backgroundColor: Colors.lightGrey,
-  //   borderColor: Colors.gold,
-  //   borderWidth: 1,
-  // },
-  // tagFriends: {
-  //   position: "absolute",
-  //   backgroundColor: "#F0F0F0",
-  //   marginTop: 120,
-  //   zIndex: 1,
-  //   height: 830,
-  //   width: Dimensions.get("screen").width,
-  // },
-  // btnOptions: {
-  //   flex: 0.5,
-  //   display: "flex",
-  //   flexDirection: "row-reverse",
-  //   // display: "flex",
-  //   justifyContent: "space-between",
-  //   // height: Dimensions.get("screen").height / 10,
-
-  //   // alignContent: "center",
-  //   // width: Dimensions.get("screen").width,
-  //   // // height: Platform.OS === "android" ? 51 : 75,
-  //   // height: Dimensions.get("screen").height / 10,
-  //   // // marginTop:
-  //   // //   Platform.OS === "android"
-  //   // //     ? Dimensions.get("screen").height - 189
-  //   // //     : Dimensions.get("screen").height - 160,
-  //   // marginTop: Dimensions.get("screen").height / 1.3,
-  //   // position: "absolute",
-  //   // flexDirection: "row",
-  //   // alignItems: "center",
-  //   // backgroundColor: Colors.darkBlue,
-  // },
-  // tagBtn: {
-  //   marginLeft: 15,
-  // },
-  // tagIcon: {
-  //   marginLeft: 10,
-  // },
-  // publishBtn: {
-  //   marginRight: 15,
-  // },
-  // publishIcon: {
-  //   marginLeft: 3.5,
-  // },
-  // btnText: {
-  //   color: "white",
-  //   fontSize: 10,
-  // },
-  // spinnerTextStyle: {
-  //   color: "#FFF",
-  // },
 });
