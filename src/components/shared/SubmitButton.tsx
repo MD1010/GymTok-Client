@@ -3,7 +3,7 @@ import { StyleProp, ViewStyle, StyleSheet } from "react-native";
 import { Button } from "react-native-elements";
 import { Colors } from "./styles/variables";
 
-interface AppButtonProps {
+interface SubmitButtonProps {
   backgroundColor?: Colors;
   containerStyle?: StyleProp<ViewStyle>;
   buttonText: string;
@@ -11,7 +11,7 @@ interface AppButtonProps {
   buttonStyle?: StyleProp<ViewStyle>;
 }
 
-export const AppButton: React.FC<AppButtonProps> = ({
+export const SubmitButton: React.FC<SubmitButtonProps> = ({
   backgroundColor,
   buttonText,
   type,

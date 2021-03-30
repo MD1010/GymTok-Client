@@ -4,7 +4,7 @@ import React from "react";
 import { Dimensions, StatusBar, StyleSheet, Text, View } from "react-native";
 import { colors, Divider } from "react-native-elements";
 import { TextInput, TouchableOpacity } from "react-native-gesture-handler";
-import { Player, DismissKeyboard, AppButton, Colors, AppTouchableHighlight } from "../shared";
+import { Player, DismissKeyboard, SubmitButton, Colors, TouchableHighlightButton } from "../shared";
 
 type StackParamsList = {
   params: { videoUri: string };
@@ -42,13 +42,15 @@ export const PublishNewVideoScreen: React.FC = () => {
 
   const Options = () => (
     <View style={{ flex: 4 }}>
-      <AppTouchableHighlight
+      <TouchableHighlightButton
+        actionWillNavigate
         optionText={"Tag People"}
-        onSelect={() => navigation.navigate("TagPeople")}
+        onSelect={() => navigation.navigate("TagPeople", { videoUri: route.params?.videoUri })}
         icon={<Fontisto name="hashtag" color={Colors.lightGrey2} size={14} />}
       />
 
-      <AppTouchableHighlight
+      <TouchableHighlightButton
+        actionWillNavigate
         optionText={"Add Hashtags"}
         onSelect={() => navigation.navigate("AddHashtags")}
         icon={<Fontisto name="at" color={Colors.lightGrey2} size={14} />}
@@ -58,7 +60,12 @@ export const PublishNewVideoScreen: React.FC = () => {
 
   const Footer = () => (
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-      <AppButton buttonText={"Post"} type="solid" backgroundColor={Colors.blue} containerStyle={{ marginBottom: 15 }} />
+      <SubmitButton
+        buttonText={"Post"}
+        type="solid"
+        backgroundColor={Colors.blue}
+        containerStyle={{ marginBottom: 15 }}
+      />
     </View>
   );
 

@@ -4,18 +4,30 @@ import { StyleSheet, Text, TouchableHighlight, View } from "react-native";
 import { colors, IconProps } from "react-native-elements";
 import { Colors } from "./styles/variables";
 
-interface AppTouchableHighlightProps {
+interface TouchableHighlightButtonProps {
   optionText: string;
   onSelect: () => any;
   icon?: any;
+  actionWillNavigate?: boolean;
+  textColor?: string;
+  highlightOff?;
 }
 
-export const AppTouchableHighlight: React.FC<AppTouchableHighlightProps> = ({ optionText, onSelect, icon }) => {
+export const TouchableHighlightButton: React.FC<TouchableHighlightButtonProps> = ({
+  optionText,
+  onSelect,
+  icon,
+  actionWillNavigate,
+  textColor,
+}) => {
   return (
-    <TouchableHighlight underlayColor={Colors.blue} style={[styles.option]} onPress={onSelect}>
+    <TouchableHighlight style={[styles.option]} onPress={onSelect}>
       <>
         <View>{icon ? icon : null}</View>
-        <Text style={styles.optionText}>{optionText}</Text>
+        <Text style={[styles.optionText, textColor && { color: textColor }]}>{optionText}</Text>
+        <View>
+          {actionWillNavigate ? <Ionicons name="chevron-forward" color={Colors.lightGrey2} size={20} /> : null}
+        </View>
       </>
     </TouchableHighlight>
   );

@@ -1,9 +1,9 @@
 import React from "react";
 import { View, Text } from "react-native";
 
-interface SearchPersonScreenProps {}
+interface SearchUserScreenProps {}
 
-export const SearchPersonScreen: React.FC<SearchPersonScreenProps> = ({}) => {
+export const SearchUserScreen: React.FC<SearchUserScreenProps> = ({}) => {
   return (
     <View>
       <Text>New Screen</Text>
