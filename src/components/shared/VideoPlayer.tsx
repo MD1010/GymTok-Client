@@ -1,12 +1,10 @@
 import { FontAwesome } from "@expo/vector-icons";
-// import { Video } from "expo-av";
-import VideoPlayer from "expo-video-player";
-import React, { memo, useEffect, useRef, useState } from "react";
-import { Platform, StyleProp, StyleSheet, Text, TouchableWithoutFeedback, View, ViewStyle } from "react-native";
-import { Colors } from "./styles/variables";
+import { Video } from "expo-av";
 import * as FileSystem from "expo-file-system";
+import React, { memo, useEffect, useRef, useState } from "react";
+import { Platform, StyleProp, StyleSheet, TouchableWithoutFeedback, View, ViewStyle } from "react-native";
 import shorthash from "shorthash";
-import { ResizeMode, Video } from "expo-av";
+import { Colors } from "./styles/variables";
 
 interface VideoProps {
   uri: string;
