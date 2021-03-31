@@ -1,24 +1,46 @@
-import { FontAwesome5, Ionicons } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import React, { useState } from "react";
-import { Platform, Image } from "react-native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import React, { useCallback, useEffect, useState } from "react";
+import { BackHandler } from "react-native";
 import { Portal, Provider } from "react-native-paper";
 import { useSelector } from "react-redux";
 import { authSelector } from "../../store/auth/authSlice";
+import { NotLoggedInScreen } from "../Auth/NotLoggedInScreen";
 import { AddButton } from "../Camera/AddButton";
 import { HomeScreen } from "../Home/HomeScreen";
-import { LoginContainer as LoginScreen } from "../Login/LoginContainer";
-import { NotLoggedInScreen } from "../NotLoggedIn/NotLoggedIn";
-import { AuthModal } from "../shared/AuthModal";
 import { ProfileContainer as Profile } from "../Profile/ProfileContainer";
 import { Colors, UIConsts } from "../shared/styles/variables";
 
 interface BottomTabsProps {}
 
 export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
+  const navigation = useNavigation();
+  // const isHomeTabActive = useRef<boolean>(true);
+  const RequiredAuthModal = () => {
+    const navigation = useNavigation();
+    useEffect(() => {
+      // navigation.navigate("NotLoggedIn", { isFullScreen: !isHomeTabActive.current });
+      navigation.navigate("NotLoggedIn");
+      setIsAddButtonClicked(false);
+    }, []);
+    return <AddButton setIsAddButtonClicked={setIsAddButtonClicked} />;
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      const onBackPress = () => {
+        navigation.navigate("Home");
+        return true;
+      };
+      BackHandler.addEventListener("hardwareBackPress", onBackPress);
+      return () => BackHandler.removeEventListener("hardwareBackPress", onBackPress);
+    }, [])
+  );
+
   const Tab = createBottomTabNavigator();
   const { loggedUser } = useSelector(authSelector);
-  const [isAddButtonClicked, setIsAddButtonCLicked] = useState<boolean>(false);
+  const [isAddButtonClicked, setIsAddButtonClicked] = useState<boolean>(false);
 
   return (
     <Provider>
@@ -37,33 +59,41 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
         }}
       >
         <Tab.Screen
+          // listeners={({ navigation, route }) => ({
+          //   tabPress: (e) => {
+          //     isHomeTabActive.current = true;
+          //   },
+          // })}
           name="Home"
           component={HomeScreen}
           options={{
             tabBarIcon: ({ color, size, focused }) =>
               focused ? (
-                <Ionicons name="md-home-sharp" color={color} size={size} />
+                <Ionicons name="home-sharp" color={color} size={size} />
               ) : (
-                <Ionicons name="md-home-outline" color={color} size={size} />
+                <Ionicons name="home-outline" color={color} size={size} />
               ),
-            // <Image
-            //   style={{ width: 35, height: 35, tintColor: color }}
-            //   resizeMode={"contain"}
-            //   source={require("../../../assets/icons/home.png")}
-            // ></Image>
           }}
         />
         <Tab.Screen
-          name="Leaderboards"
+          name="Explore"
           component={
-            loggedUser ? () => <HomeScreen /> : () => <NotLoggedInScreen text={"Leaderboards"} icon={"sadasd"} />
+            loggedUser
+              ? () => <HomeScreen />
+              : () => (
+                  <NotLoggedInScreen
+                    text={"Explore"}
+                    description={"Discover Challenges By Categories"}
+                    icon={() => <Ionicons name="search-outline" color={Colors.white} size={56} />}
+                  />
+                )
           }
           options={{
             tabBarIcon: ({ color, size, focused }) =>
               focused ? (
-                <Ionicons name="trophy-sharp" color={color} size={size} style={{ marginRight: 50 }} />
+                <Ionicons name="search-sharp" color={color} size={size} style={{ marginRight: 50 }} />
               ) : (
-                <Ionicons name="trophy-outline" color={color} size={size} style={{ marginRight: 50 }} />
+                <Ionicons name="search-outline" color={color} size={size} style={{ marginRight: 50 }} />
               ),
           }}
         />
@@ -71,7 +101,15 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
         <Tab.Screen
           name="Notifications"
           component={
-            loggedUser ? () => <HomeScreen /> : () => <NotLoggedInScreen text={"Notifications"} icon={"sadasd"} />
+            loggedUser
+              ? () => <HomeScreen />
+              : () => (
+                  <NotLoggedInScreen
+                    text={"Notifications"}
+                    description={"See your activity and new challenges here"}
+                    icon={() => <Ionicons name="notifications-sharp" color={Colors.white} size={56} />}
+                  />
+                )
           }
           options={{
             tabBarIcon: ({ color, size, focused }) =>
@@ -98,7 +136,17 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
         ></Tab.Screen>
         <Tab.Screen
           name="Me"
-          component={Profile}
+          component={
+            loggedUser
+              ? () => <Profile />
+              : () => (
+                  <NotLoggedInScreen
+                    text={"Profile"}
+                    description={"Sign up for an account"}
+                    icon={() => <Ionicons name="md-person-outline" color={Colors.white} size={56} />}
+                  />
+                )
+          }
           options={{
             tabBarIcon: ({ color, size, focused }) =>
               focused ? (
@@ -111,9 +159,9 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
       </Tab.Navigator>
       <Portal>
         {!loggedUser && isAddButtonClicked ? (
-          <AuthModal close={() => setIsAddButtonCLicked(false)} />
+          <RequiredAuthModal />
         ) : (
-          <AddButton isAddButtonClicked={isAddButtonClicked} setIsAddButtonCLicked={setIsAddButtonCLicked} />
+          <AddButton setIsAddButtonClicked={setIsAddButtonClicked} />
         )}
       </Portal>
     </Provider>

@@ -8,9 +8,12 @@ export enum Colors {
   gold = "#B29B00",
   white = "#FFF",
   lightGrey = "#D1C7C7",
+  lightGrey2 = "#a09b9b",
   darkGrey = "#625959",
+  weakGrey = "#F0F0F0",
   red = "#fe0000",
   black = "#000000",
+  darkBlueOpaque = "#141422",
 }
 
 export enum UIConsts {

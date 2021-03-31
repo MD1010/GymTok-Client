@@ -1,15 +1,19 @@
 import { FontAwesome } from "@expo/vector-icons";
-import { Dimensions, Text, View } from "react-native";
-import React, { memo, useEffect, useState } from "react";
+import { useNavigation } from "@react-navigation/core";
+import React, { memo, useContext, useEffect } from "react";
+import { Text, View } from "react-native";
 import { Avatar } from "react-native-elements";
 import { TouchableOpacity, TouchableWithoutFeedback } from "react-native-gesture-handler";
 import { useSelector } from "react-redux";
 import { IChallenge } from "../../interfaces";
 import { authSelector } from "../../store/auth/authSlice";
-import { AuthModal } from "../shared/AuthModal";
 import { Colors } from "../shared/styles/variables";
 import { Player } from "../shared/VideoPlayer";
 import { styles } from "./Challenge.style";
+import { Camera } from "expo-camera";
+import * as ImagePicker from "expo-image-picker";
+import { challengeContext } from "./ChallengeContext";
+// import { challengeContext } from "./ChallengesContainer";
 
 interface ChallengeProps {
   challenge: IChallenge;
@@ -23,43 +27,21 @@ interface IUIContainer {
   onCommentButtonPress: () => void;
 }
 
-const Heading = ({ createdBy }) => {
-  const { loggedUser } = useSelector(authSelector);
-  const [showAuthModal, setShowAuthModal] = useState<boolean>(false);
-
-  const onCammeraPressed = () => {
-    if (loggedUser) {
-      console.log("user:" + loggedUser?.fullName + " click on like button.");
-      // todo: fetch here
-    } else {
-      setShowAuthModal(true);
-      console.log("guest click on like button, need to log-in");
-    }
-  };
+const Heading = ({ createdBy, onCameraPress }) => {
   return (
-    <>
-      {showAuthModal && !loggedUser ? (
-        <View
-          style={{ height: Dimensions.get("window").height - 50, width: Dimensions.get("window").width, zIndex: 100 }}
-        >
-          <AuthModal close={() => setShowAuthModal(false)} />
-        </View>
-      ) : (
-        <View style={[styles.rowContainer, { marginVertical: 10, justifyContent: "space-between" }]}>
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <TouchableWithoutFeedback onPress={() => console.log("avatar clicked!")}>
-              <Avatar source={require("../../../assets/avatar/01.jpg")} rounded></Avatar>
-            </TouchableWithoutFeedback>
-            <Text style={styles.creator}>@{createdBy}</Text>
-          </View>
-          <View>
-            <TouchableOpacity onPress={() => onCammeraPressed()}>
-              <FontAwesome name={"camera"} size={22} color={Colors.white} />
-            </TouchableOpacity>
-          </View>
-        </View>
-      )}
-    </>
+    <View style={[styles.rowContainer, { marginVertical: 20, justifyContent: "space-between" }]}>
+      <View style={{ flexDirection: "row", alignItems: "center" }}>
+        <TouchableWithoutFeedback onPress={() => console.log("avatar clicked!")}>
+          <Avatar source={require("../../../assets/avatar/01.jpg")} rounded></Avatar>
+        </TouchableWithoutFeedback>
+        <Text style={styles.creator}>@{createdBy}</Text>
+      </View>
+      <View>
+        <TouchableOpacity onPress={() => onCameraPress()}>
+          <FontAwesome name={"camera"} size={22} color={Colors.white} />
+        </TouchableOpacity>
+      </View>
+    </View>
   );
 };
 
@@ -100,10 +82,10 @@ const UIContainer: React.FC<IUIContainer> = ({
 
 export const Challenge: React.FC<ChallengeProps> = memo(({ challenge, isVideoPlaying }) => {
   const { video: videoURL, createdBy, likes, replies } = challenge;
+  const { containerStyle } = useContext(challengeContext);
   const { loggedUser } = useSelector(authSelector);
-
-  const [showAuthModal, setShowAuthModal] = useState<boolean>(false);
-
+  const navigation = useNavigation();
+  const streaminServerUrl = `${process.env.VIDEO_SERVER_ENDPOINT}/${videoURL}`;
   useEffect(() => {
     console.log("video::::::" + videoURL);
   }, [videoURL]);
@@ -113,7 +95,7 @@ export const Challenge: React.FC<ChallengeProps> = memo(({ challenge, isVideoPla
       console.log("user:" + loggedUser?.fullName + " click on like button.");
       // todo: fetch here
     } else {
-      setShowAuthModal(true);
+      navigation.navigate("NotLoggedIn");
       console.log("guest click on like button, need to log-in");
     }
   };
@@ -123,18 +105,42 @@ export const Challenge: React.FC<ChallengeProps> = memo(({ challenge, isVideoPla
       console.log("user:" + loggedUser?.fullName + " click on comment button.");
       // todo: fetch here
     } else {
-      setShowAuthModal(true);
+      navigation.navigate("NotLoggedIn");
       console.log("guest click on comment button, need to login");
     }
   };
 
-  const streaminServerUrl = `http://193.106.55.109:8000/${videoURL}`;
+  const takeReplyVideo = async () => {
+    const { status } = await Camera.requestPermissionsAsync();
+    await ImagePicker.getMediaLibraryPermissionsAsync(true);
+    if (status === "granted") {
+      const replyVideo: any = await ImagePicker.launchCameraAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Videos,
+      });
+      if (!replyVideo.cancelled) {
+        navigation.navigate("Publish", { videoUri: replyVideo.uri, challengeId: challenge._id });
+      }
+    } else {
+      alert("no access to camera");
+    }
+  };
+
+  const onCameraPress = async () => {
+    if (loggedUser) {
+      console.log("user:" + loggedUser?.fullName + " click on camera button.");
+      await takeReplyVideo();
+      // todo: fetch here
+    } else {
+      navigation.navigate("NotLoggedIn");
+      console.log("guest click on comment button, need to login");
+    }
+  };
+
   return (
-    <View style={styles.container}>
-      {showAuthModal && !loggedUser && <AuthModal close={() => setShowAuthModal(false)} />}
+    <View style={[styles.container, containerStyle]}>
       <Player style={styles.video} uri={streaminServerUrl} isPlaying={isVideoPlaying} resizeMode="cover" />
       <View style={styles.infoContainer}>
-        <Heading createdBy={createdBy.username} />
+        <Heading createdBy={createdBy.username} onCameraPress={() => onCameraPress()} />
 
         <View style={styles.rowContainer}>
           <Text style={styles.info}>{challenge.description}</Text>

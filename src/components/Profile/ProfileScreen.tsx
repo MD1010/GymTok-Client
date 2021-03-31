@@ -1,23 +1,11 @@
-import { useNavigation } from "@react-navigation/native";
-import React, { useEffect, useRef, useState } from "react";
-import {
-  StyleSheet,
-  Button,
-  View,
-  Image,
-  Text,
-  ImageBackground,
-  SafeAreaView,
-  FlatList,
-  Platform,
-  Dimensions,
-} from "react-native";
-import { GestureHandlerRootView, NativeViewGestureHandler, PanGestureHandler } from "react-native-gesture-handler";
-import { Colors, UIConsts } from "../shared/styles/variables";
-import * as VideoThumbnails from "expo-video-thumbnails";
-import { TouchableOpacity } from "react-native-gesture-handler";
-import { ProfileVideoModal } from "./ProfileVideoModal";
 import { FontAwesome } from "@expo/vector-icons";
+import * as VideoThumbnails from "expo-video-thumbnails";
+import React, { useEffect, useState } from "react";
+import { Dimensions, FlatList, ImageBackground, SafeAreaView, StyleSheet, Text, View } from "react-native";
+import { TouchableOpacity } from "react-native-gesture-handler";
+import { useIsMount } from "../../hooks/useIsMount";
+import { Colors } from "../shared/styles/variables";
+import { ProfileVideoModal } from "./ProfileVideoModal";
 
 interface ProfileProps {
   challenges: any[];
@@ -28,6 +16,7 @@ export const ProfileScreen: React.FC<ProfileProps> = ({ challenges, numColumns }
   const [tempChallanges, setTempChallanges] = useState<any[]>([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedVideoUri, setSelectedVideoUri] = useState(null);
+  const isMounted = useIsMount();
 
   useEffect(() => {
     (async () => {
@@ -37,7 +26,7 @@ export const ProfileScreen: React.FC<ProfileProps> = ({ challenges, numColumns }
           return Object.assign({ image: imageURI }, { ...challenge });
         })
       );
-      setTempChallanges(asyncRes);
+      isMounted.current && setTempChallanges(asyncRes);
     })();
   }, []);
 
@@ -135,3 +124,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
 });
+function useIsMounted() {
+  throw new Error("Function not implemented.");
+}

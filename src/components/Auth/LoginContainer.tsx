@@ -1,10 +1,8 @@
 import { useNavigation } from "@react-navigation/native";
-import React, { createRef, useEffect, useState } from "react";
-import { TextInput } from "react-native";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../../store/auth/actions";
 import { authSelector } from "../../store/auth/authSlice";
-import { Loader } from "../shared/Loader";
 import { LoginScreen } from "./Login";
 
 interface LoginContainerProps {}
@@ -13,26 +11,17 @@ export const LoginContainer: React.FC<LoginContainerProps> = () => {
   const [isLoading, setLoading] = useState(false);
   const navigation = useNavigation();
   const dispatch = useDispatch();
-  const passwordInputRef = createRef<TextInput>();
   const { authError, loggedUser } = useSelector(authSelector);
 
   useEffect(() => {
     loggedUser && navigation.navigate("Home");
   }, [loggedUser]);
 
- const handleSubmitPress = async (username: string, password: string) => {
-
-    if (!username) {
-      alert("Please fill UserName");
-      return;
-    }
-    if (!password) {
-      alert("Please fill Password");
-      return;
-    }
+  const handleSubmitPress = async (username: string, password: string) => {
     setLoading(true);
     dispatch(login(username, password));
     setLoading(false);
   };
-  return isLoading ? <Loader /> : <LoginScreen error={authError} onSubmit={handleSubmitPress} />;
+
+  return <LoginScreen authError={authError} onSubmit={handleSubmitPress} isLoading={isLoading} />;
 };

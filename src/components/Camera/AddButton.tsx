@@ -7,18 +7,18 @@ import ActionButton from "react-native-action-button";
 import { Colors } from "../shared/styles/variables";
 
 interface Props {
-  isAddButtonClicked: boolean;
-  setIsAddButtonCLicked: (isClicked: boolean) => void;
+  setIsAddButtonClicked: (isClicked: boolean) => void;
 }
 
-export const AddButton: React.FC<Props> = ({ isAddButtonClicked, setIsAddButtonCLicked }) => {
+export const AddButton: React.FC<Props> = ({ setIsAddButtonClicked }) => {
   const navigation = useNavigation();
-
   const takeVideo = async () => {
     const { status } = await Camera.requestPermissionsAsync();
     await ImagePicker.getMediaLibraryPermissionsAsync(true);
     if (status === "granted") {
-      const selectedVideo = await ImagePicker.launchCameraAsync({ mediaTypes: ImagePicker.MediaTypeOptions.Videos });
+      const selectedVideo: any = await ImagePicker.launchCameraAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Videos,
+      });
       if (!selectedVideo.cancelled) {
         navigation.navigate("Publish", { videoUri: selectedVideo.uri });
       }
@@ -28,7 +28,7 @@ export const AddButton: React.FC<Props> = ({ isAddButtonClicked, setIsAddButtonC
   };
 
   const takeVideoFromGallery = async () => {
-    const selectedVideo = await ImagePicker.launchImageLibraryAsync({
+    const selectedVideo: any = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Videos,
     });
     if (!selectedVideo.cancelled) {
@@ -38,7 +38,7 @@ export const AddButton: React.FC<Props> = ({ isAddButtonClicked, setIsAddButtonC
 
   return (
     <ActionButton
-      onPress={() => setIsAddButtonCLicked(!isAddButtonClicked)}
+      onPress={() => setIsAddButtonClicked(true)}
       backdrop
       bgOpacity={0.75}
       bgColor={"#101010"}
@@ -61,7 +61,6 @@ export const AddButton: React.FC<Props> = ({ isAddButtonClicked, setIsAddButtonC
       >
         <FontAwesome name="picture-o" size={15} color={Colors.white} />
       </ActionButton.Item>
-      )
     </ActionButton>
   );
 };
