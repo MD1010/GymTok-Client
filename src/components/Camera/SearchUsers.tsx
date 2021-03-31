@@ -1,6 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/core";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Dimensions, StyleSheet, TextInput, View } from "react-native";
 import { colors } from "react-native-elements";
 import { FlatList } from "react-native-gesture-handler";
@@ -31,18 +31,22 @@ interface SearchUsersScreenProps {}
 
 export const SearchUsersScreen: React.FC<SearchUsersScreenProps> = ({}) => {
   const navigation = useNavigation();
-  const [isTyping, setIsTyping] = useState(false);
   const [results, setResults] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const fetchUsers = debounce(async (searchTerm: string) => {
-    console.log("here!!!");
-    if (searchTerm) {
-      const { res } = await fetchAPI(RequestMethod.GET, `${process.env.BASE_API_ENPOINT}/users`, null, {
-        searchTerm,
-      });
-      res && setResults(res);
-    }
-  }, 600);
+  const fetchUsers = useCallback(
+    debounce(async (searchTerm: string) => {
+      if (searchTerm) {
+        console.log("search!!");
+        const { res } = await fetchAPI(RequestMethod.GET, `${process.env.BASE_API_ENPOINT}/users`, null, {
+          searchTerm,
+        });
+        res && setResults(res);
+      }
+      setIsLoading(false);
+    }, 500),
+    []
+  );
 
   return (
     <View style={{ flex: 1 }}>
@@ -61,11 +65,19 @@ export const SearchUsersScreen: React.FC<SearchUsersScreenProps> = ({}) => {
           style={{ marginHorizontal: 5 }}
           onPress={() => navigation.goBack()}
         />
-        <SearchInput placeholder={"Search a user"} onSearch={fetchUsers} />
+        <SearchInput
+          debounceTime={2}
+          placeholder={"Search a user"}
+          onSearch={(termToSearch) => {
+            // console.log("term=-", termToSearch);
+            !isLoading && setIsLoading(true);
+            fetchUsers(termToSearch);
+          }}
+        />
       </View>
       <View style={{ flex: 1, margin: 10 }}>
         {/* <MyLoader /> */}
-        {isTyping ? <Skeltons /> : null}
+        {isLoading ? <Skeltons /> : null}
 
         {/* <Avatar source={require("../../../assets/avatar/01.jpg")} rounded size={40}></Avatar>
           <Text style={styles.creator}>@{"asdasdasd"}</Text> */}

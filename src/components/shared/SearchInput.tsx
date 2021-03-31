@@ -2,15 +2,31 @@ import { Ionicons } from "@expo/vector-icons";
 import React, { forwardRef, useState } from "react";
 import { TextInput, View } from "react-native";
 import { Colors } from "../shared";
+import debounce from "lodash/debounce";
+
 interface SearchInputProps {
   placeholder: string;
   onSearch?: (searchValue) => any;
-  // setInputValue?: (value) => any;
-}
-// type TextInputProps = React.HTMLProps<TextInput>;
 
-export const SearchInput: React.FC<SearchInputProps> = ({ placeholder, onSearch }) => {
+  /**
+   * Time in seconds to wait after user stops typing before calling onSearch()
+   */
+  debounceTime?: number;
+}
+
+export const SearchInput: React.FC<SearchInputProps> = ({ placeholder, onSearch, debounceTime = 0 }) => {
   const [searchText, setSearchText] = useState("");
+
+  // let startTime: Date;
+  // const checkIfDoneTyping = () => {
+  //   const currentTime = new Date();
+  //   const timeElapsed = (currentTime.valueOf() - startTime.valueOf()) / 1000;
+  //   return timeElapsed >= debounceTime;
+  // };
+
+  // const [typingTimeout, setTypingTimeout] = useState<NodeJS.Timeout>()
+  let typingTimeout: NodeJS.Timeout = null;
+  // const debouncedOnSearch = debounce(onSearch, 700);
 
   return (
     <View style={{ flex: 1, flexDirection: "row" }}>
@@ -18,6 +34,17 @@ export const SearchInput: React.FC<SearchInputProps> = ({ placeholder, onSearch 
         <Ionicons name="search" color={Colors.white} size={23} />
         <TextInput
           autoFocus
+          onStartShouldSetResponder={(e) => {
+            console.log(e);
+            return true;
+          }}
+          onResponderRelease={(e) => {
+            console.log("released", e);
+            return true;
+          }}
+          // onEndEditing={() => console.log("123")}
+          // onTouchEnd={() => console.log(123123123)}
+
           // onResponderRelease={() => console.log("onRelease")}
           // onResponderStart={() => console.log("onStart")}
           // onTouchStart={() => console.log("onStart")}
@@ -27,9 +54,16 @@ export const SearchInput: React.FC<SearchInputProps> = ({ placeholder, onSearch 
           blurOnSubmit={false}
           value={searchText}
           onChangeText={(text) => {
+            // if (typingTimeout) {
+            //   console.log("cleared!!!@");
+            //   clearTimeout(typingTimeout);
+            // }
+            // typingTimeout = setTimeout(() => , debounceTime * 1000);
+            onSearch && onSearch(text);
+            // startTime = new Date();
             setSearchText(text);
             // setInputValue && setInputValue(text);
-            onSearch && onSearch(text);
+            // console.log(checkIfDoneTyping());
           }}
         ></TextInput>
         {searchText.length ? (
