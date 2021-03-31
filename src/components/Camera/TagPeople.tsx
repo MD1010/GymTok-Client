@@ -27,15 +27,6 @@ export const TagPeopleScreen: React.FC<TagPeopleScreenProps> = ({}) => {
 
   useLayoutEffect(() => {
     navigation.setOptions({
-      headerLeft: () => (
-        <MaterialIcons
-          name="close"
-          size={29}
-          color={Colors.white}
-          style={{ padding: 10 }}
-          onPress={() => returnToPublishScreen(false)}
-        />
-      ),
       headerRight: () => (
         <MaterialIcons
           name="check"
