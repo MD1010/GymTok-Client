@@ -8,6 +8,7 @@ import { RegisterContainer as RegisterScreen } from "../Auth/RegisterContainer";
 import { PublishNewVideoScreen } from "../Camera/PublishNewVideo";
 import { Colors } from "../shared/styles/variables";
 import { BottomTabs } from "./BottomTabs";
+import { ProfileVideoModal } from "../Profile/ProfileVideoModal";
 
 interface StackNavigatorProps {}
 
@@ -54,6 +55,21 @@ export const StackNavigator: React.FC<StackNavigatorProps> = ({}) => {
             cardStyle: { backgroundColor: "transparent" },
             cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS,
             safeAreaInsets: { top: Dimensions.get("screen").width / 2 },
+            gestureResponseDistance: { vertical: Dimensions.get("screen").height },
+            gestureDirection: "vertical",
+            gestureEnabled: true,
+          }}
+        />
+
+        <Stack.Screen
+          name="Users Profile"
+          component={ProfileVideoModal}
+          options={{
+            headerShown: true,
+            headerTitle: "",
+            cardStyle: { backgroundColor: "transparent" },
+            cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS,
+            safeAreaInsets: { top: 35 },
             gestureResponseDistance: { vertical: Dimensions.get("screen").height },
             gestureDirection: "vertical",
             gestureEnabled: true,

@@ -6,6 +6,7 @@ export const styles = StyleSheet.create({
     // flex: 1,
     width: "100%",
     height: Dimensions.get("window").height - UIConsts.bottomNavbarHeight,
+    // height: Dimensions.get("screen").height,
   },
   video: {
     // flex: 1,

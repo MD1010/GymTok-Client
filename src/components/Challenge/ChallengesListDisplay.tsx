@@ -8,13 +8,19 @@ import { Challenge } from "./Challenge";
 interface ChallengesListDisplayProps {
   challenges: IChallenge[];
   getChallenges: () => any;
+  currentIndexVideo?: number;
 }
 
-export const ChallengesListDisplay: React.FC<ChallengesListDisplayProps> = ({ challenges, getChallenges }) => {
+export const ChallengesListDisplay: React.FC<ChallengesListDisplayProps> = ({
+  challenges,
+  getChallenges,
+  currentIndexVideo,
+}) => {
   const navigation = useNavigation();
   const [navigatedOutOfScreen, setNavigatedOutOfScreen] = useState(false);
   const scrollEnded = useRef<boolean>(false);
   const [currentlyPlaying, setCurrentlyPlaying] = useState(0);
+  const flatListRef = useRef<FlatList>(null);
 
   useEffect(() => {
     navigation.addListener("blur", () => {
@@ -23,11 +29,18 @@ export const ChallengesListDisplay: React.FC<ChallengesListDisplayProps> = ({ ch
     navigation.addListener("focus", () => {
       setNavigatedOutOfScreen(false);
     });
+
     return () => {
       navigation.removeListener("blur", null);
       navigation.removeListener("focus", null);
     };
   }, [navigation]);
+
+  useEffect(() => {
+    if (challenges.length > 0) {
+      goIndex(currentIndexVideo);
+    }
+  }, [challenges, currentIndexVideo]);
 
   // track view changes in order to control when video is starting to play
   const onViewRef = useRef(({ viewableItems }) => {
@@ -37,6 +50,10 @@ export const ChallengesListDisplay: React.FC<ChallengesListDisplayProps> = ({ ch
     console.log("playing", viewableItems[0]?.index);
     scrollEnded.current && setCurrentlyPlaying(viewableItems[0]?.index);
   });
+
+  const goIndex = (index: number) => {
+    flatListRef.current.scrollToIndex({ animated: true, index: index });
+  };
 
   const renderItem = ({ item, index }) => (
     <Challenge challenge={item} isVideoPlaying={index === currentlyPlaying && !navigatedOutOfScreen} />
@@ -51,6 +68,10 @@ export const ChallengesListDisplay: React.FC<ChallengesListDisplayProps> = ({ ch
         snapToInterval={Dimensions.get("window").height - UIConsts.bottomNavbarHeight}
         snapToAlignment={"start"}
         decelerationRate={"fast"}
+        ref={(ref) => {
+          flatListRef.current = ref;
+        }}
+        onScrollToIndexFailed={() => alert("no such index")}
         onViewableItemsChanged={onViewRef.current}
         onScrollEndDrag={() => (scrollEnded.current = true)}
         onScrollBeginDrag={() => (scrollEnded.current = false)}

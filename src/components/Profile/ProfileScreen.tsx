@@ -1,22 +1,30 @@
 import { FontAwesome } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
 import * as VideoThumbnails from "expo-video-thumbnails";
 import React, { useEffect, useState } from "react";
-import { Dimensions, FlatList, ImageBackground, SafeAreaView, StyleSheet, Text, View } from "react-native";
+import { Dimensions, FlatList, ImageBackground, SafeAreaView, StyleSheet, Text, View, ViewStyle } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useIsMount } from "../../hooks/useIsMount";
 import { Colors } from "../shared/styles/variables";
-import { ProfileVideoModal } from "./ProfileVideoModal";
 
 interface ProfileProps {
   challenges: any[];
   numColumns: number;
+  upperStyle?: ViewStyle;
+  bottomStyle?: ViewStyle;
+  horizontalView?: boolean;
 }
 
-export const ProfileScreen: React.FC<ProfileProps> = ({ challenges, numColumns }) => {
+export const ProfileScreen: React.FC<ProfileProps> = ({
+  challenges,
+  numColumns,
+  upperStyle,
+  bottomStyle,
+  horizontalView,
+}) => {
   const [tempChallanges, setTempChallanges] = useState<any[]>([]);
-  const [modalVisible, setModalVisible] = useState(false);
-  const [selectedVideoUri, setSelectedVideoUri] = useState(null);
   const isMounted = useIsMount();
+  const navigation = useNavigation();
 
   useEffect(() => {
     (async () => {
@@ -42,8 +50,7 @@ export const ProfileScreen: React.FC<ProfileProps> = ({ challenges, numColumns }
   };
 
   const showVideo = (videoURL) => {
-    setModalVisible(!modalVisible);
-    setSelectedVideoUri(videoURL);
+    navigation.navigate("Users Profile", { videoURL: videoURL });
   };
 
   const renderItem = ({ item }) => {
@@ -70,21 +77,16 @@ export const ProfileScreen: React.FC<ProfileProps> = ({ challenges, numColumns }
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <View style={{ flex: 1 }}>
+      <View style={upperStyle}>
         <Text>Profile</Text>
       </View>
-      <View style={{ flex: 1 }}>
+      <View style={bottomStyle}>
         <FlatList
           data={tempChallanges}
           renderItem={renderItem}
           keyExtractor={(item) => item._id}
-          horizontal={false}
-          numColumns={numColumns}
-        />
-        <ProfileVideoModal
-          videoUri={selectedVideoUri}
-          modalVisible={modalVisible}
-          setModalVisible={(isModalVisible) => setModalVisible(isModalVisible)}
+          horizontal={horizontalView !== undefined ? horizontalView : false}
+          numColumns={horizontalView !== undefined ? 0 : numColumns}
         />
       </View>
     </SafeAreaView>
