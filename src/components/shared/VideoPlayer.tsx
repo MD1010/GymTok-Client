@@ -1,4 +1,5 @@
 import { FontAwesome } from "@expo/vector-icons";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { Video } from "expo-av";
 import * as FileSystem from "expo-file-system";
 import React, { memo, useEffect, useRef, useState } from "react";
@@ -38,6 +39,23 @@ export const Player: React.FC<VideoProps> = memo(
     const [isPaused, setIsPaused] = useState<boolean>(false);
     const ref = useRef(null);
     const [videoURI, setVideoURI] = useState<string>();
+    const navigation = useNavigation();
+
+    // useFocusEffect(
+    //   React.useCallback(() => {
+    //     navigation.addListener("blur", () => {
+    //       ref.current?.pauseAsync();
+    //     });
+    //     navigation.addListener("focus", () => {
+    //       ref.current?.replayAsync();
+    //     });
+
+    //     return () => {
+    //       navigation.removeListener("blur", null);
+    //       navigation.removeListener("focus", null);
+    //     };
+    //   }, [navigation])
+    // );
 
     const pauseVideoByTap = () => {
       setIsPaused(true);

@@ -1,9 +1,5 @@
 import { CardStyleInterpolators } from "@react-navigation/stack";
-import { Dimensions, StatusBar, View } from "react-native";
-import { colors } from "react-native-elements";
-import { getModalConfig } from "../Navigation/halfScreenModalConfig";
 import { ScreenNavigationMap } from "../Navigation/ScreenNavigationMap";
-import { Colors } from "../shared";
 import { NewVideoPreview } from "./NewVideoPreview";
 import { PublishNewVideoScreen } from "./PublishNewVideo";
 import { SearchUserScreen } from "./SearchUser";
@@ -23,10 +19,9 @@ export const postChallengeScreens: ScreenNavigationMap[] = [
     name: "SearchUser",
     screen: SearchUserScreen,
     options: {
-      animationEnabled: false,
       headerShown: false,
-      gestureEnabled: true,
-      gestureDirection: "horizontal",
+      animationEnabled: false,
+      // gestureDirection: "horizontal",
     },
   },
   { name: "AddHashtags", screen: () => null },

@@ -1,7 +1,16 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import React, { useEffect } from "react";
-import { Dimensions, Image, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native";
+import {
+  Dimensions,
+  Image,
+  StatusBar,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  View,
+} from "react-native";
 import { Colors } from "../shared/styles/variables";
 import { RouteProp } from "@react-navigation/native";
 
@@ -92,7 +101,6 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.darkBlue,
     flex: 1,
     padding: 30,
-    top: 10,
   },
   title: {
     fontSize: 25,
@@ -130,7 +138,7 @@ const styles = StyleSheet.create({
   loginFooter: {
     flexDirection: "row",
     position: "absolute",
-    bottom: 60,
+    bottom: 80,
     alignSelf: "center",
     color: Colors.white,
     justifyContent: "center",

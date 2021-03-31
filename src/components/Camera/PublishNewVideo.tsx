@@ -4,6 +4,7 @@ import React from "react";
 import { Dimensions, StatusBar, StyleSheet, Text, View } from "react-native";
 import { colors, Divider } from "react-native-elements";
 import { TextInput, TouchableOpacity } from "react-native-gesture-handler";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { Player, DismissKeyboard, SubmitButton, Colors, TouchableHighlightButton } from "../shared";
 
 type StackParamsList = {
@@ -59,25 +60,20 @@ export const PublishNewVideoScreen: React.FC = () => {
   );
 
   const Footer = () => (
-    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-      <SubmitButton
-        buttonText={"Post"}
-        type="solid"
-        backgroundColor={Colors.blue}
-        containerStyle={{ marginBottom: 15 }}
-      />
+    <View style={{ flex: 1, alignItems: "center", top: 20 }}>
+      <SubmitButton buttonText={"Post"} type="solid" backgroundColor={Colors.blue} />
     </View>
   );
 
   return (
     <DismissKeyboard>
-      <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
         <Header />
         <Divider />
         <Options />
         <Divider />
         <Footer />
-      </View>
+      </SafeAreaView>
     </DismissKeyboard>
   );
 };
@@ -105,8 +101,6 @@ const styles = StyleSheet.create({
   },
   info: {
     color: colors.grey3,
-    alignItems: "center",
-    alignSelf: "center",
     marginTop: 10,
   },
   addCaptionInput: {

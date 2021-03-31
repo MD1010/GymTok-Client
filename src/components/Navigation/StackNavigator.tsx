@@ -30,9 +30,9 @@ export const MainNavigator: React.FC<StackNavigatorProps> = ({}) => {
           component={NotLoggedInModal}
           options={{
             headerShown: false,
-            cardStyle: { backgroundColor: "transparent" },
+            cardStyle: { backgroundColor: "transparent", maxHeight: "95%", top: "5%" },
             cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS,
-            safeAreaInsets: { top: Dimensions.get("screen").width / 2 },
+            safeAreaInsets: { top: Dimensions.get("window").width / 2 },
             gestureResponseDistance: { vertical: Dimensions.get("screen").height },
             gestureDirection: "vertical",
             gestureEnabled: true,

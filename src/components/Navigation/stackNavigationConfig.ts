@@ -5,6 +5,7 @@ import { Colors } from "../shared/styles/variables";
 export const config: StackNavigationOptions = {
   headerTitleAlign: "center",
   headerTintColor: "#fff",
+  headerBackTitleVisible: false,
   cardStyle: {
     backgroundColor: Colors.darkBlue,
   },
