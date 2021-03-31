@@ -2,7 +2,7 @@ import { CardStyleInterpolators } from "@react-navigation/stack";
 import { ScreenNavigationMap } from "../Navigation/ScreenNavigationMap";
 import { NewVideoPreview } from "./NewVideoPreview";
 import { PublishNewVideoScreen } from "./PublishNewVideo";
-import { SearchUserScreen } from "./SearchUser";
+import { SearchUsersScreen } from "./SearchUsers";
 import { TagPeopleScreen } from "./TagPeople";
 
 export const postChallengeScreens: ScreenNavigationMap[] = [
@@ -17,7 +17,7 @@ export const postChallengeScreens: ScreenNavigationMap[] = [
   },
   {
     name: "SearchUser",
-    screen: SearchUserScreen,
+    screen: SearchUsersScreen,
     options: {
       headerShown: false,
       animationEnabled: false,

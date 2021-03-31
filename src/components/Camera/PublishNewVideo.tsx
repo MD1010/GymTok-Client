@@ -21,13 +21,14 @@ export const PublishNewVideoScreen: React.FC = () => {
         <View style={{ flexDirection: "row" }}>
           <Player
             uri={route.params?.videoUri}
-            onVideoTap={() => null}
-            isPlaying={false}
+            // onVideoTap={() => null}
+            isPlaying={true}
+            isMuted
             resizeMode={"cover"}
             hidePlayButton
             containerStyle={styles.videoPlayerContainer}
           />
-          <View style={{ flex: 3 }}>
+          <View style={{ flex: 2 }}>
             <TextInput
               multiline
               style={styles.addCaptionInput}
@@ -46,7 +47,7 @@ export const PublishNewVideoScreen: React.FC = () => {
       <TouchableHighlightButton
         actionWillNavigate
         optionText={"Tag People"}
-        onSelect={() => navigation.navigate("TagPeople", { videoUri: route.params?.videoUri })}
+        onSelect={() => navigation.navigate("SearchUser")}
         icon={<Fontisto name="hashtag" color={Colors.lightGrey2} size={14} />}
       />
 
@@ -85,7 +86,7 @@ const styles = StyleSheet.create({
   },
   videoPlayerContainer: {
     borderRadius: 15,
-    height: 150,
+    height: 200,
     overflow: "hidden",
   },
 

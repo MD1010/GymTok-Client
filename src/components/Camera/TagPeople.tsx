@@ -40,14 +40,14 @@ export const TagPeopleScreen: React.FC<TagPeopleScreenProps> = ({}) => {
   }, []);
   return (
     <View style={styles.container}>
-      <Player
+      {/* <Player
         uri={route.params?.videoUri}
         isPlaying={true}
         hidePlayButton
         resizeMode={"cover"}
         style={{ flex: 1, width: 220, borderRadius: 15, overflow: "hidden" }}
         containerStyle={{ alignItems: "center" }}
-      />
+      /> */}
 
       <View style={{ flex: 1, marginTop: 10 }}>
         <TouchableHighlightButton
