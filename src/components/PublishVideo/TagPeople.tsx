@@ -6,7 +6,7 @@ import { Ionicons, FontAwesome, MaterialIcons } from "@expo/vector-icons";
 import { Divider, SearchBar } from "react-native-elements";
 import { TouchableHighlightButton, Colors, DismissKeyboard, Player } from "../shared";
 import { IUser } from "../../interfaces";
-import { UserList } from "./SearchUsers";
+import { UserList } from "../shared/UserList";
 
 interface TagPeopleScreenProps {}
 
