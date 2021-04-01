@@ -19,8 +19,7 @@ export const TagPeopleScreen: React.FC<TagPeopleScreenProps> = ({}) => {
   const navigation = useNavigation();
   const route = useRoute<RouteProp<StackParamsList, "params">>();
   const [taggedPeople, setTaggedPeople] = useState<IUser[]>([]);
-  // const []
-  console.log("people", taggedPeople.length);
+
   useEffect(() => {
     setTaggedPeople(cloneDeep([...taggedPeople, ...route.params?.selectedUsers]));
   }, [route.params?.selectedUsers]);
@@ -30,7 +29,6 @@ export const TagPeopleScreen: React.FC<TagPeopleScreenProps> = ({}) => {
   }, [taggedPeople]);
 
   const returnToPublishScreen = () => {
-    // console.log("tagged", taggedPeople);
     navigation.navigate("Publish", { taggedPeople });
   };
 

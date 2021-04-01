@@ -43,11 +43,19 @@ export const PublishScreen: React.FC = () => {
     );
   };
 
+  const displaySelectedTaggedFriends = () => {
+    if (!route?.params?.taggedPeople?.length) return null;
+    if (route?.params?.taggedPeople?.length === 1) {
+      return route?.params?.taggedPeople[0].fullName;
+    }
+    return `${route.params.taggedPeople.length} selected`;
+  };
+
   const Options = () => (
     <View style={{ flex: 4 }}>
       <TouchableHighlightButton
         actionWillNavigate
-        optionInfoText={route?.params?.taggedPeople?.length ? `${route.params.taggedPeople.length} selected` : null}
+        optionInfoText={displaySelectedTaggedFriends()}
         optionText={"Tag People"}
         onSelect={() =>
           route.params?.taggedPeople?.length
