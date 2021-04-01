@@ -1,16 +1,95 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import React, { useEffect } from "react";
-import { Dimensions, Image, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native";
+import { Alert, Dimensions, Image, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native";
 import { Colors } from "../shared/styles/variables";
 import { RouteProp } from "@react-navigation/native";
+import * as Facebook from "expo-facebook";
+import * as Google from 'expo-google-app-auth';
+import { useDispatch } from "react-redux";
+import { registerIfNeed } from "../../store/auth/actions";
 
 type StackParamsList = {
   params: { isFullScreen: boolean; redirectedFromHome: string };
 };
 
+async function loginWithFacebook() {
+  try {
+    await Facebook.initializeAsync({
+      appId: process.env.FACEBOOK_APP_ID,
+    });
+    const result = await Facebook.logInWithReadPermissionsAsync({
+      permissions: ['public_profile', "email"],
+    });
+    if (result.type === 'success') {
+      // Get the user's name using Facebook's Graph API
+      const response = await fetch(`https://graph.facebook.com/me?fields=name,email,picture.width(300).height(300)&access_token=${result.token}`);
+      // console.log(await response.json(), ' ', result.token);
+
+      const res = await response.json();
+      Alert.alert('Logged in!', `Hi ${res.name}!`);
+      return res;
+    } else {
+      // type === 'cancel'
+      return null;
+    }
+  } catch ({ message }) {
+    alert(`Facebook Login Error: ${message}`);
+    return null;
+  }
+}
+
+async function loginWithGoogle() {
+  try {
+    const result = await Google.logInAsync({
+      androidClientId: process.env.GOOGLE_ANDROID_CLIENT_ID,
+      iosClientId: process.env.GOOGLE_IOS_CLIENT_ID,
+      scopes: ['profile', 'email'],
+    });
+
+    if (result.type === 'success') {
+      console.log(result.user)
+      return result;
+    } else {
+      return null;
+    }
+  } catch (e) {
+    alert(`Google Login Error: ${e}`);
+    return null;
+  }
+}
+
 export const NotLoggedInModal: React.FC = () => {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
+
+  const handleFacebookPress = async () => {
+
+    const response = await loginWithFacebook();
+
+    if(response != null) {
+      const email = response.email;
+      const username = email.substring(0, email.indexOf('@'));
+      const password = '123456';
+      const fullName = response.name;
+      const photoUrl = response.photoUrl;
+      dispatch(registerIfNeed(username, password, fullName, email, photoUrl));
+    }
+  };
+
+  const handleGooglePress = async () => {
+
+    const result = await loginWithGoogle();
+
+    if(result != null) {
+      const email = result.user.email;
+      const username = email.substring(0, email.indexOf('@'));
+      const password = '123456';
+      const fullName = username;
+      const photoUrl = result.user.photoUrl;
+      dispatch(registerIfNeed(username, password, fullName, email, photoUrl));
+    }
+  };
   // const route = useRoute<RouteProp<StackParamsList, "params">>();
   // const isFullScreen = route.params?.isFullScreen;
   return (
@@ -42,6 +121,7 @@ export const NotLoggedInModal: React.FC = () => {
           <TouchableOpacity
             onPress={() => {
               console.log("facebook login!!");
+              handleFacebookPress();
             }}
           >
             <View style={styles.loginOption}>
@@ -58,6 +138,7 @@ export const NotLoggedInModal: React.FC = () => {
           <TouchableOpacity
             onPress={() => {
               console.log("google login!!");
+              handleGooglePress();
             }}
           >
             <View style={styles.loginOption}>
