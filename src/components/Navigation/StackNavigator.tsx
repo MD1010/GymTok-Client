@@ -5,7 +5,7 @@ import { Dimensions } from "react-native";
 import { LoginContainer as LoginScreen } from "../Auth/LoginContainer";
 import { NotLoggedInModal } from "../Auth/NotLoggedInModal";
 import { RegisterContainer as RegisterScreen } from "../Auth/RegisterContainer";
-import { postChallengeScreens } from "../Camera/postNewChallengeScreens";
+import { postChallengeScreens } from "../PublishVideo/publishScreens";
 import { BottomTabs } from "./BottomTabs";
 import { config } from "./stackNavigationConfig";
 

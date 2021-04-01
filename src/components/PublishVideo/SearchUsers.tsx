@@ -15,7 +15,7 @@ import { CommonActions } from "@react-navigation/native";
 
 const UserWithAvatar: FC<{ username: string; fullName: string }> = ({ fullName, username }) => (
   <View style={{ flexDirection: "row", alignItems: "center" }}>
-    <Avatar source={require("../../../assets/avatar/user.png")} rounded size={48}></Avatar>
+    <Avatar source={require("../../../assets/avatar/user.png")} rounded size={45}></Avatar>
     <View>
       <Text style={styles.userFullName}>{fullName}</Text>
       <Text style={styles.username}>@{username}</Text>
@@ -36,13 +36,10 @@ export const UserList: FC<IUserListProps> = ({ results, onUserSelect, onUserRemo
       <TouchableWithoutFeedback onPress={() => (onUserSelect ? onUserSelect({ fullName, username }) : null)}>
         <View
           style={{
-            // height: 50,
             marginBottom: 15,
-            // paddingHorizontal: 10,
             flexDirection: "row",
             alignItems: "center",
             justifyContent: "space-between",
-            // backgroundColor: "red",
             flex: 1,
           }}
         >
@@ -75,7 +72,7 @@ export const SearchUsersScreen: React.FC<SearchUsersScreenProps> = ({}) => {
         index: routes.length - 1,
       });
     });
-    // navigation.dispatch({ source: "Publish", type: "stack",target:"TagPeople",payload:{} });
+
     navigation.navigate("TagPeople", { selectedUser: user });
   };
 
