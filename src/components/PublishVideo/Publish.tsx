@@ -5,23 +5,24 @@ import { Dimensions, StatusBar, StyleSheet, Text, View } from "react-native";
 import { colors, Divider } from "react-native-elements";
 import { TextInput, TouchableOpacity } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { IUser } from "../../interfaces";
 import { Player, DismissKeyboard, SubmitButton, Colors, TouchableHighlightButton } from "../shared";
 
 type StackParamsList = {
-  params: { videoUri: string };
+  params: { videoUri: string; taggedPeople: IUser[] };
 };
 
 export const PublishScreen: React.FC = () => {
   const route = useRoute<RouteProp<StackParamsList, "params">>();
   const navigation = useNavigation();
 
+  console.log("render no tagged", route.params.taggedPeople?.length);
   const Header = () => {
     return (
       <View style={{ padding: 15 }}>
         <View style={{ flexDirection: "row" }}>
           <Player
             uri={route.params?.videoUri}
-            // onVideoTap={() => null}
             isPlaying={true}
             isMuted
             resizeMode={"cover"}
@@ -46,11 +47,15 @@ export const PublishScreen: React.FC = () => {
     <View style={{ flex: 4 }}>
       <TouchableHighlightButton
         actionWillNavigate
+        optionInfoText={route?.params?.taggedPeople?.length ? `${route.params.taggedPeople.length} selected` : null}
         optionText={"Tag People"}
-        onSelect={() => navigation.navigate("SearchUser")}
+        onSelect={() =>
+          route.params?.taggedPeople?.length
+            ? navigation.navigate("TagPeople", { selectedUsers: route.params?.taggedPeople })
+            : navigation.navigate("SearchUser")
+        }
         icon={<Fontisto name="at" color={Colors.lightGrey2} size={14} />}
       />
-
       <TouchableHighlightButton
         actionWillNavigate
         optionText={"Add Hashtags"}

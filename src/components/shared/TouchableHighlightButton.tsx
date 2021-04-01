@@ -12,6 +12,7 @@ interface TouchableHighlightButtonProps {
   actionWillNavigate?: boolean;
   textColor?: string;
   highlightOff?: boolean;
+  optionInfoText?: string;
 }
 
 export const TouchableHighlightButton: React.FC<TouchableHighlightButtonProps> = ({
@@ -20,13 +21,17 @@ export const TouchableHighlightButton: React.FC<TouchableHighlightButtonProps> =
   icon,
   actionWillNavigate,
   textColor,
+  optionInfoText,
 }) => {
   return (
     <TouchableHighlight style={[styles.option]} onPress={onSelect}>
       <>
         <View>{icon ? icon : null}</View>
         <Text style={[styles.optionText, textColor && { color: textColor }]}>{optionText}</Text>
-        <View>
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
+          {optionInfoText && (
+            <Text style={{ marginRight: 10, color: Colors.lightGrey2, fontSize: 15 }}>{optionInfoText}</Text>
+          )}
           {actionWillNavigate ? <Ionicons name="chevron-forward" color={Colors.lightGrey2} size={20} /> : null}
         </View>
       </>

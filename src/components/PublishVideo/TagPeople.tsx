@@ -1,53 +1,53 @@
-import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
+import { RouteProp, useFocusEffect, useNavigation, useRoute } from "@react-navigation/native";
 import { StackNavigationOptions } from "@react-navigation/stack";
-import React, { useEffect, useLayoutEffect, useState } from "react";
+import React, { useCallback, useEffect, useLayoutEffect, useState } from "react";
 import { View, StyleSheet, Dimensions, KeyboardAvoidingView, Text, StatusBar, Appearance } from "react-native";
 import { Ionicons, FontAwesome, MaterialIcons } from "@expo/vector-icons";
 import { Divider, SearchBar } from "react-native-elements";
 import { TouchableHighlightButton, Colors, DismissKeyboard, Player } from "../shared";
 import { IUser } from "../../interfaces";
 import { UserList } from "../shared/UserList";
+import cloneDeep from "lodash/cloneDeep";
 
 interface TagPeopleScreenProps {}
 
 type StackParamsList = {
-  params: { selectedUser: IUser };
+  params: { selectedUsers: IUser[] };
 };
 
 export const TagPeopleScreen: React.FC<TagPeopleScreenProps> = ({}) => {
   const navigation = useNavigation();
   const route = useRoute<RouteProp<StackParamsList, "params">>();
   const [taggedPeople, setTaggedPeople] = useState<IUser[]>([]);
+  // const []
+  console.log("people", taggedPeople.length);
   useEffect(() => {
-    console.log("selected user =", route.params.selectedUser);
-    setTaggedPeople((tagged) => [...tagged, route.params.selectedUser]);
-  }, []);
-  const returnToPublishScreen = (approved: boolean) => {
-    if (approved) {
-      //todo send the count of how many added
-      navigation.navigate("Publish");
-    } else {
-      navigation.goBack();
-    }
+    setTaggedPeople(cloneDeep([...taggedPeople, ...route.params?.selectedUsers]));
+  }, [route.params?.selectedUsers]);
+
+  useEffect(() => {
+    console.log("tagged People changed!!", taggedPeople);
+  }, [taggedPeople]);
+
+  const returnToPublishScreen = () => {
+    // console.log("tagged", taggedPeople);
+    navigation.navigate("Publish", { taggedPeople });
   };
 
   const handleUserRemove = (i: number) => {
     setTaggedPeople(taggedPeople.filter((_, index) => index !== i));
   };
 
-  useLayoutEffect(() => {
+  const headerRight = () => (
+    <MaterialIcons name="check" size={29} color={Colors.cyan} style={{ padding: 10 }} onPress={returnToPublishScreen} />
+  );
+
+  useEffect(() => {
     navigation.setOptions({
-      headerRight: () => (
-        <MaterialIcons
-          name="check"
-          size={29}
-          color={Colors.cyan}
-          style={{ padding: 10 }}
-          onPress={() => returnToPublishScreen(true)}
-        />
-      ),
+      headerRight,
     } as StackNavigationOptions);
-  }, []);
+  }, [headerRight]);
+
   return (
     <View style={styles.container}>
       <View style={{ marginTop: 10 }}>

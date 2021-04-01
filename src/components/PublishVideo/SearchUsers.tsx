@@ -27,8 +27,7 @@ export const SearchUsersScreen: React.FC = () => {
         index: routes.length - 1,
       });
     });
-
-    navigation.navigate("TagPeople", { selectedUser: user });
+    navigation.navigate("TagPeople", { selectedUsers: [user] });
   };
 
   const fetchUsers = useCallback(
