@@ -77,10 +77,10 @@ export const ProfileScreen: React.FC<ProfileProps> = ({
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <View style={upperStyle}>
+      <View style={upperStyle !== undefined ? upperStyle : { flex: 1 }}>
         <Text>Profile</Text>
       </View>
-      <View style={bottomStyle}>
+      <View style={bottomStyle !== undefined ? bottomStyle : { flex: 1 }}>
         <FlatList
           data={tempChallanges}
           renderItem={renderItem}
