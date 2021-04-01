@@ -14,7 +14,7 @@ interface IUserListProps {
 
 const UserWithAvatar: FC<{ user: IUser }> = ({ user: { fullName, username } }) => (
   <View style={{ flexDirection: "row", alignItems: "center" }}>
-    <Avatar source={require("../../../assets/avatar/user.png")} rounded size={45}></Avatar>
+    <Avatar source={require("../../../assets/avatar/user.png")} rounded size={50}></Avatar>
     <View>
       <Text style={styles.userFullName}>{fullName}</Text>
       <Text style={styles.username}>@{username}</Text>
