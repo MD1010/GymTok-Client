@@ -1,8 +1,8 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/core";
-import { CommonActions } from "@react-navigation/native";
+import { CommonActions, RouteProp, useRoute } from "@react-navigation/native";
 import debounce from "lodash/debounce";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { View } from "react-native";
 import { IUser } from "../../interfaces";
 import { fetchAPI, RequestMethod } from "../../utils/fetchAPI";
@@ -11,10 +11,16 @@ import { SearchInput } from "../shared/SearchInput";
 import { UserSkeletons } from "../shared/skeletons/UserSkeletons";
 import { UserList } from "../shared/UserList";
 
+type StackParamsList = {
+  params: { excludedUsersToSearch: IUser[] };
+};
+
 export const SearchUsersScreen: React.FC = () => {
   const navigation = useNavigation();
   const [results, setResults] = useState<IUser[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const route = useRoute<RouteProp<StackParamsList, "params">>();
+  const excludedIdsToSearch = route.params?.excludedUsersToSearch?.map((user) => user._id) || [];
 
   const selectUser = (user) => {
     navigation.dispatch((state) => {
@@ -36,6 +42,7 @@ export const SearchUsersScreen: React.FC = () => {
         console.log("search!!");
         const { res } = await fetchAPI(RequestMethod.GET, `${process.env.BASE_API_ENPOINT}/users`, null, {
           searchTerm,
+          excludedIds: excludedIdsToSearch,
         });
         res && setResults(res);
       }

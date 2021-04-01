@@ -54,7 +54,7 @@ export const TagPeopleScreen: React.FC<TagPeopleScreenProps> = ({}) => {
           textColor={Colors.cyan}
           actionWillNavigate={false}
           optionText={"Tap to tag more people"}
-          onSelect={() => navigation.navigate("SearchUser")}
+          onSelect={() => navigation.navigate("SearchUser", { excludedUsersToSearch: taggedPeople })}
           icon={<MaterialIcons name="add" size={29} color={Colors.cyan} />}
         />
       </View>

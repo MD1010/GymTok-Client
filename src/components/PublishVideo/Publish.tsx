@@ -60,7 +60,7 @@ export const PublishScreen: React.FC = () => {
         onSelect={() =>
           route.params?.taggedPeople?.length
             ? navigation.navigate("TagPeople", { selectedUsers: route.params?.taggedPeople })
-            : navigation.navigate("SearchUser")
+            : navigation.navigate("SearchUser", { excludedUsersToSearch: route.params?.taggedPeople })
         }
         icon={<Fontisto name="at" color={Colors.lightGrey2} size={14} />}
       />
