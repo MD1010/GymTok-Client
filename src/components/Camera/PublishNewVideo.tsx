@@ -37,7 +37,7 @@ export const PublishNewVideoScreen: React.FC = () => {
             />
           </View>
         </View>
-        <Text style={styles.info}>Your friends will be notified when you the challenge will be uplaoded.</Text>
+        <Text style={styles.info}>Your friends will be notified when your challenge is uploaded.</Text>
       </View>
     );
   };

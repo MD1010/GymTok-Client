@@ -11,7 +11,7 @@ export const postChallengeScreens: ScreenNavigationMap[] = [
     name: "TagPeople",
     screen: TagPeopleScreen,
     options: {
-      title: "Tag People",
+      title: "Tagged People",
     },
     // options: getModalConfig(60),
   },

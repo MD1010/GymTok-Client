@@ -5,17 +5,23 @@ import { View, StyleSheet, Dimensions, KeyboardAvoidingView, Text, StatusBar, Ap
 import { Ionicons, FontAwesome, MaterialIcons } from "@expo/vector-icons";
 import { Divider, SearchBar } from "react-native-elements";
 import { TouchableHighlightButton, Colors, DismissKeyboard, Player } from "../shared";
+import { IUser } from "../../interfaces";
+import { UserList } from "./SearchUsers";
 
 interface TagPeopleScreenProps {}
 
 type StackParamsList = {
-  params: { videoUri: string };
+  params: { selectedUser: IUser };
 };
 
 export const TagPeopleScreen: React.FC<TagPeopleScreenProps> = ({}) => {
   const navigation = useNavigation();
   const route = useRoute<RouteProp<StackParamsList, "params">>();
-
+  const [taggedPeople, setTaggedPeople] = useState<IUser[]>([]);
+  useEffect(() => {
+    console.log("selected user =", route.params.selectedUser);
+    setTaggedPeople((tagged) => [...tagged, route.params.selectedUser]);
+  }, []);
   const returnToPublishScreen = (approved: boolean) => {
     if (approved) {
       //todo send the count of how many added
@@ -23,6 +29,10 @@ export const TagPeopleScreen: React.FC<TagPeopleScreenProps> = ({}) => {
     } else {
       navigation.goBack();
     }
+  };
+
+  const handleUserRemove = (i: number) => {
+    setTaggedPeople(taggedPeople.filter((_, index) => index !== i));
   };
 
   useLayoutEffect(() => {
@@ -40,24 +50,19 @@ export const TagPeopleScreen: React.FC<TagPeopleScreenProps> = ({}) => {
   }, []);
   return (
     <View style={styles.container}>
-      {/* <Player
-        uri={route.params?.videoUri}
-        isPlaying={true}
-        hidePlayButton
-        resizeMode={"cover"}
-        style={{ flex: 1, width: 220, borderRadius: 15, overflow: "hidden" }}
-        containerStyle={{ alignItems: "center" }}
-      /> */}
-
-      <View style={{ flex: 1, marginTop: 10 }}>
+      <View style={{ marginTop: 10 }}>
         <TouchableHighlightButton
           highlightOff
           textColor={Colors.cyan}
           actionWillNavigate={false}
-          optionText={"Tap to tag people"}
+          optionText={"Tap to tag more people"}
           onSelect={() => navigation.navigate("SearchUser")}
           icon={<MaterialIcons name="add" size={29} color={Colors.cyan} />}
         />
+      </View>
+
+      <View style={{ flex: 1, marginTop: 10, paddingHorizontal: 15 }}>
+        <UserList onUserRemove={handleUserRemove} results={taggedPeople} />
       </View>
     </View>
   );
