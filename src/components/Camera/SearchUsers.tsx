@@ -11,6 +11,7 @@ import { IUser } from "../../interfaces";
 import { fetchAPI, RequestMethod } from "../../utils/fetchAPI";
 import { Colors } from "../shared";
 import { SearchInput } from "../shared/SearchInput";
+import { CommonActions } from "@react-navigation/native";
 
 const UserWithAvatar: FC<{ username: string; fullName: string }> = ({ fullName, username }) => (
   <View style={{ flexDirection: "row", alignItems: "center" }}>
@@ -64,6 +65,17 @@ export const SearchUsersScreen: React.FC<SearchUsersScreenProps> = ({}) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const selectUser = (user) => {
+    navigation.dispatch((state) => {
+      // Remove the SearchUser route from the stack
+      const routes = state.routes.filter((r) => r.name !== "SearchUser");
+
+      return CommonActions.reset({
+        ...state,
+        routes,
+        index: routes.length - 1,
+      });
+    });
+    // navigation.dispatch({ source: "Publish", type: "stack",target:"TagPeople",payload:{} });
     navigation.navigate("TagPeople", { selectedUser: user });
   };
 
