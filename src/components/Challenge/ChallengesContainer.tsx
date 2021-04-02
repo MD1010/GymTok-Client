@@ -25,7 +25,8 @@ export const ChallengesContainer: React.FC<ChallengesContainerProps> = ({
   const isMounted = useIsMount();
   const itemsToLoad = 10;
   const challengesEndpoint = `${process.env.BASE_API_ENPOINT}/challenges`;
-  const [currentIndexVideo, setCurrentIndexVideo] = useState<number>(0);
+  // const [currentIndexVideo, setCurrentIndexVideo] = useState<number>(0);
+  let indexToRender = 0;
 
   const getRecommendedChallenges = async () => {
     console.log("getting recomended");
@@ -75,14 +76,15 @@ export const ChallengesContainer: React.FC<ChallengesContainerProps> = ({
 
   useEffect(() => {
     if (currentVideoID && challenges.length > 0) {
-      setCurrentIndexVideo(challenges.findIndex((challenge) => challenge.video === currentVideoID));
+      console.log("video idooooo " + currentVideoID);
+      challenges.map;
+      indexToRender = challenges.findIndex((challenge) => challenge.video === currentVideoID);
+      console.log("mishoj index!!!!! " + indexToRender);
+      // setCurrentIndexVideo(index);
     }
   }, [challenges, currentVideoID]);
 
   const getChallenges = () => {
-    if (getOnlyUserChallenges) {
-      getUserChallenges();
-    }
     if (!loggedUser) {
       getExistChallenges();
     } else {
@@ -94,13 +96,13 @@ export const ChallengesContainer: React.FC<ChallengesContainerProps> = ({
     getChallenges();
   }, []);
 
+  useEffect(() => {
+    getOnlyUserChallenges && getUserChallenges();
+  }, [getOnlyUserChallenges]);
+
   return (
     <Provider value={{ containerStyle }}>
-      <ChallengesListDisplay
-        challenges={challenges}
-        getChallenges={getChallenges}
-        currentIndexVideo={currentIndexVideo}
-      />
+      <ChallengesListDisplay challenges={challenges} getChallenges={getChallenges} currentIndexVideo={indexToRender} />
     </Provider>
   );
 };

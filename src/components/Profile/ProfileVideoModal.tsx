@@ -21,6 +21,6 @@ export const ProfileVideoModal: React.FC = () => {
 
 const styles = StyleSheet.create({
   modalView: {
-    height: Dimensions.get("screen").height,
+    height: Dimensions.get("window").height,
   },
 });
