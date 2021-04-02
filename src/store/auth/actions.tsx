@@ -52,7 +52,8 @@ export const registerIfNeed = (username: string, password: string, fullName: str
   return async (dispatch: AppDispatch) => {
     const registerIfNeedEnpoint = `${process.env.BASE_API_ENPOINT}/users/registerIfNeed`;
 
-    const body = { email, username, password, fullName};
+    const body = { email, username, password, fullName, photoUrl};
+    
     dispatch(authActions.resetAuthError());
     const { res, error } = await fetchAPI(RequestMethod.POST, registerIfNeedEnpoint, body);
 

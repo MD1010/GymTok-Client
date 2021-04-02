@@ -72,7 +72,8 @@ export const NotLoggedInModal: React.FC = () => {
       const username = email.substring(0, email.indexOf('@'));
       const password = '123456';
       const fullName = response.name;
-      const photoUrl = response.photoUrl;
+      const photoUrl = response.picture.data.url;
+      
       dispatch(registerIfNeed(username, password, fullName, email, photoUrl));
     }
   };
@@ -87,6 +88,7 @@ export const NotLoggedInModal: React.FC = () => {
       const password = '123456';
       const fullName = username;
       const photoUrl = result.user.photoUrl;
+
       dispatch(registerIfNeed(username, password, fullName, email, photoUrl));
     }
   };
