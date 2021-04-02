@@ -22,6 +22,7 @@ export const ChallengesContainer: React.FC<ChallengesContainerProps> = ({ getOnl
   const challengesEndpoint = `${process.env.BASE_API_ENPOINT}/challenges`;
 
   const getRecommendedChallenges = async () => {
+    console.log("getting recomended");
     const { res, error } = await fetchAPI(
       RequestMethod.GET,
       `${process.env.BASE_API_ENPOINT}/users/${loggedUser?.username}/recommendedChallenges`,
@@ -61,7 +62,7 @@ export const ChallengesContainer: React.FC<ChallengesContainerProps> = ({ getOnl
   };
 
   useEffect(() => {
-    error && alert(error);
+    error && alert(JSON.stringify(error));
   }, [error]);
 
   const getChallenges = () => {
