@@ -12,7 +12,7 @@ import { fetchAPI, RequestMethod } from "../../utils/fetchAPI";
 import { Player, DismissKeyboard, SubmitButton, Colors, TouchableHighlightButton, Loader } from "../shared";
 
 type StackParamsList = {
-  params: { videoUri: string; taggedPeople: IUser[]; isReply: boolean };
+  params: { videoUri: string; taggedPeople: IUser[]; isReply: boolean, challengeId?: string };
 };
 
 export const PublishScreen: React.FC = () => {
@@ -54,7 +54,9 @@ export const PublishScreen: React.FC = () => {
             />
           </View>
         </View>
-        <Text style={styles.info}>Your friends will be notified when your challenge is uploaded.</Text>
+        {
+          !route.params?.isReply && <Text style={styles.info}>Your friends will be notified when your challenge is uploaded.</Text>
+        }
       </View>
     );
   };
@@ -92,9 +94,34 @@ export const PublishScreen: React.FC = () => {
     setIsLoading(false);
   };
 
+  const replyChallenge = async () => {
+    setIsLoading(true);
+    let formData = new FormData();
+
+    formData.append("description", captionInput.current);
+    formData.append("replierId", loggedUser._id);
+    formData.append("challengeId", route.params.challengeId);
+    formData.append("video", {
+      name: "dov-test.mp4",
+      uri: route.params.videoUri,
+      type: "video/mp4",
+    } as any);
+
+    const { res, error } = await fetchAPI(
+      RequestMethod.POST,
+      `${process.env.BASE_API_ENPOINT}/replies/upload`,
+      formData
+    );
+    if (res) {
+      navigation.navigate("Home");
+    } else alert(error);
+    setIsLoading(false);
+  }
+
   const onSubmit = () => {
+    console.log("333333")
     if (isReply) {
-      // todo chuck fetch here
+      replyChallenge();
     } else {
       // challenge
       publishChallenge();

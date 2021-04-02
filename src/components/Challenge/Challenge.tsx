@@ -119,7 +119,7 @@ export const Challenge: React.FC<ChallengeProps> = memo(({ challenge, isVideoPla
         mediaTypes: ImagePicker.MediaTypeOptions.Videos,
       });
       if (!replyVideo.cancelled) {
-        navigation.navigate("Publish", { videoUri: replyVideo.uri, challengeId: challenge._id });
+        navigation.navigate("Publish", { videoUri: replyVideo.uri, challengeId: challenge._id, isReply: true });
       }
     } else {
       alert("no access to camera");
