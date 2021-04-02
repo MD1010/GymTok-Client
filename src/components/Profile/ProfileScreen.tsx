@@ -1,11 +1,10 @@
 import { FontAwesome } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-import * as VideoThumbnails from "expo-video-thumbnails";
 import React, { useEffect, useState } from "react";
 import { Dimensions, FlatList, ImageBackground, SafeAreaView, StyleSheet, Text, View, ViewStyle } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useIsMount } from "../../hooks/useIsMount";
-
+import { generateThumbnail } from "../../utils/generateThumbnail";
 import { Colors } from "../shared/styles/variables";
 import { Item } from "./interfaces";
 
@@ -39,17 +38,6 @@ export const ProfileScreen: React.FC<ProfileProps> = ({
       isMounted.current && setTempChallanges(asyncRes);
     })();
   }, []);
-
-  const generateThumbnail = async (url) => {
-    try {
-      const { uri } = await VideoThumbnails.getThumbnailAsync(url, {
-        //time: 15000,
-      });
-      return uri;
-    } catch (e) {
-      console.warn(e);
-    }
-  };
 
   const showVideo = (videoURL) => {
     navigation.navigate("UsersProfile", { videoURL: videoURL });

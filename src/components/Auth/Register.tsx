@@ -18,12 +18,15 @@ import { FontAwesome } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 
 interface RegisterProps {
-  onSubmit: (username: string, fullName: string, password: string) => any;
+  onSubmit: (username: string, fullName: string, password: string, email: string) => any;
   error: string | null;
   isLoading: boolean;
 }
 
+const emailRegex = new RegExp('[a-zA-Z0-9_\\.\\+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-\\.]+');
+
 export const RegisterScreen: React.FC<RegisterProps> = ({ onSubmit, isLoading }) => {
+  const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -32,7 +35,7 @@ export const RegisterScreen: React.FC<RegisterProps> = ({ onSubmit, isLoading })
   const navigation = useNavigation();
 
   const checkIfFieldsAreNotEmpty = () => {
-    return password.length && fullName.length && username.length && confirmPassword.length;
+    return email.length && password.length && fullName.length && username.length && confirmPassword.length;
   };
 
   const checkIfPasswordsMatch = () => {
@@ -49,6 +52,7 @@ export const RegisterScreen: React.FC<RegisterProps> = ({ onSubmit, isLoading })
     navigation.addListener("blur", () => {
       setPassword("");
       setUsername("");
+      setEmail("");
       setErrorText("");
       setFullName("");
       setConfirmPassword("");
@@ -73,6 +77,11 @@ export const RegisterScreen: React.FC<RegisterProps> = ({ onSubmit, isLoading })
       setErrorText("name has to include only characters");
       return false;
     }
+    
+    if (!emailRegex.test(email)) {
+      setErrorText("Invalid email");
+      return false;
+    }
 
     if (!checkIfPasswordsMatch()) {
       setErrorText("Passwords don't match");
@@ -84,6 +93,23 @@ export const RegisterScreen: React.FC<RegisterProps> = ({ onSubmit, isLoading })
   return (
     <View style={styles.container}>
       <View style={styles.form}>
+      <View style={styles.inputRow}>
+          <TextInput
+            value={email}
+            style={styles.inputStyle}
+            onChangeText={(email) => setEmail(email)}
+            placeholder="Email"
+            placeholderTextColor="#8b9cb5"
+            autoCapitalize="none"
+            returnKeyType="next"
+            blurOnSubmit={true}
+          />
+          {username.length ? (
+            <TouchableWithoutFeedback onPress={() => setEmail("")}>
+              <FontAwesome name="times-circle" size={16} color={"white"} />
+            </TouchableWithoutFeedback>
+          ) : null}
+        </View>
         <View style={styles.inputRow}>
           <TextInput
             value={username}
@@ -175,7 +201,7 @@ export const RegisterScreen: React.FC<RegisterProps> = ({ onSubmit, isLoading })
           style={styles.buttonStyle}
           disabled={!checkIfFieldsAreNotEmpty()}
           onPress={() => {
-            if (validateForm()) onSubmit(username, fullName, password);
+            if (validateForm()) onSubmit(username, fullName, password, email);
           }}
         >
           <View style={{ flexDirection: "row", justifyContent: "center", height: 40 }}>
