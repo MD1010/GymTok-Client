@@ -5,6 +5,7 @@ import React, { useEffect, useState } from "react";
 import { Dimensions, FlatList, ImageBackground, SafeAreaView, StyleSheet, Text, View, ViewStyle } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useIsMount } from "../../hooks/useIsMount";
+
 import { Colors } from "../shared/styles/variables";
 import { Item } from "./interfaces";
 
@@ -51,7 +52,7 @@ export const ProfileScreen: React.FC<ProfileProps> = ({
   };
 
   const showVideo = (videoURL) => {
-    navigation.navigate("Users Profile", { videoURL: videoURL });
+    navigation.navigate("UsersProfile", { videoURL: videoURL });
   };
 
   const renderItem = ({ item }) => {

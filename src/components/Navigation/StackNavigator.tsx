@@ -62,14 +62,15 @@ export const StackNavigator: React.FC<StackNavigatorProps> = ({}) => {
         />
 
         <Stack.Screen
-          name="Users Profile"
+          name="UsersProfile"
           component={ProfileVideoModal}
           options={{
             headerShown: true,
             headerTitle: "",
+            headerTransparent: true,
             cardStyle: { backgroundColor: "transparent" },
             cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS,
-            gestureDirection: "vertical",
+            gestureEnabled: false,
           }}
         />
       </Stack.Navigator>
