@@ -1,23 +1,35 @@
 import { Ionicons, Fontisto } from "@expo/vector-icons";
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
-import React from "react";
+import React, { useRef, useState } from "react";
 import { Dimensions, StatusBar, StyleSheet, Text, View } from "react-native";
 import { colors, Divider } from "react-native-elements";
 import { TextInput, TouchableOpacity } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useSelector } from "react-redux";
 import { IUser } from "../../interfaces";
-import { Player, DismissKeyboard, SubmitButton, Colors, TouchableHighlightButton } from "../shared";
+import { authSelector } from "../../store/auth/authSlice";
+import { fetchAPI, RequestMethod } from "../../utils/fetchAPI";
+import { Player, DismissKeyboard, SubmitButton, Colors, TouchableHighlightButton, Loader } from "../shared";
 
 type StackParamsList = {
-  params: { videoUri: string; taggedPeople: IUser[] };
+  params: { videoUri: string; taggedPeople: IUser[]; isReply: boolean };
 };
 
 export const PublishScreen: React.FC = () => {
   const route = useRoute<RouteProp<StackParamsList, "params">>();
   const navigation = useNavigation();
+  const isReply = route.params.isReply;
+  const taggedPeople = route?.params?.taggedPeople;
+  const [isLoading, setIsLoading] = useState(false);
+  const { loggedUser } = useSelector(authSelector);
+  const captionInput = useRef<string>();
 
-  console.log("render no tagged", route.params.taggedPeople?.length);
   const Header = () => {
+    const handleSetCaption = (text: string) => {
+      setCaption(text);
+      captionInput.current = text;
+    };
+    const [caption, setCaption] = useState(null);
     return (
       <View style={{ padding: 15 }}>
         <View style={{ flexDirection: "row" }}>
@@ -35,6 +47,10 @@ export const PublishScreen: React.FC = () => {
               style={styles.addCaptionInput}
               placeholder={"Add a caption..."}
               placeholderTextColor={Colors.weakGrey}
+              value={caption}
+              onChangeText={(text) => {
+                handleSetCaption(text);
+              }}
             />
           </View>
         </View>
@@ -44,11 +60,45 @@ export const PublishScreen: React.FC = () => {
   };
 
   const displaySelectedTaggedFriends = () => {
-    if (!route?.params?.taggedPeople?.length) return null;
-    if (route?.params?.taggedPeople?.length === 1) {
-      return route?.params?.taggedPeople[0].fullName;
+    if (!taggedPeople?.length) return null;
+    if (taggedPeople?.length === 1) {
+      return taggedPeople[0].fullName;
     }
-    return `${route.params.taggedPeople.length} selected`;
+    return `${taggedPeople.length} selected`;
+  };
+
+  const publishChallenge = async () => {
+    let formData = new FormData();
+
+    formData.append("description", captionInput.current);
+    formData.append("userId", loggedUser._id);
+    formData.append("video", {
+      name: "dov-test.mp4",
+      uri: route.params.videoUri,
+      type: "video/mp4",
+    } as any);
+    formData.append("selectedFriends", JSON.stringify(taggedPeople));
+
+    setIsLoading(true);
+    const { res, error } = await fetchAPI(
+      RequestMethod.POST,
+      `${process.env.BASE_API_ENPOINT}/challenges/upload`,
+      formData
+    );
+    if (res) {
+      console.log("res = !", res);
+      navigation.navigate("Home");
+    } else alert(error);
+    setIsLoading(false);
+  };
+
+  const onSubmit = () => {
+    if (isReply) {
+      // todo chuck fetch here
+    } else {
+      // challenge
+      publishChallenge();
+    }
   };
 
   const Options = () => (
@@ -75,7 +125,7 @@ export const PublishScreen: React.FC = () => {
 
   const Footer = () => (
     <View style={{ flex: 1, alignItems: "center", top: 20 }}>
-      <SubmitButton buttonText={"Post"} type="solid" backgroundColor={Colors.blue} />
+      <SubmitButton buttonText={"Post"} type="solid" backgroundColor={Colors.blue} onSubmit={onSubmit} />
     </View>
   );
 
@@ -83,10 +133,20 @@ export const PublishScreen: React.FC = () => {
     <DismissKeyboard>
       <SafeAreaView style={styles.container}>
         <Header />
-        <Divider />
-        <Options />
-        <Divider />
-        <Footer />
+        {!isReply && (
+          <>
+            <Divider />
+            <Options />
+          </>
+        )}
+        {!isLoading ? (
+          <>
+            <Divider />
+            <Footer />
+          </>
+        ) : (
+          <Loader style={{ marginBottom: 50 }} />
+        )}
       </SafeAreaView>
     </DismissKeyboard>
   );

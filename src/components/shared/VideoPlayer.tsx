@@ -41,22 +41,6 @@ export const Player: React.FC<VideoProps> = memo(
     const [videoURI, setVideoURI] = useState<string>();
     const navigation = useNavigation();
 
-    // useFocusEffect(
-    //   React.useCallback(() => {
-    //     navigation.addListener("blur", () => {
-    //       ref.current?.pauseAsync();
-    //     });
-    //     navigation.addListener("focus", () => {
-    //       ref.current?.replayAsync();
-    //     });
-
-    //     return () => {
-    //       navigation.removeListener("blur", null);
-    //       navigation.removeListener("focus", null);
-    //     };
-    //   }, [navigation])
-    // );
-
     const pauseVideoByTap = () => {
       setIsPaused(true);
       ref.current.pauseAsync();

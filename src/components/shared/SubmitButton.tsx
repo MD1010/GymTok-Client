@@ -9,6 +9,7 @@ interface SubmitButtonProps {
   buttonText: string;
   type: "clear" | "solid" | "outline";
   buttonStyle?: StyleProp<ViewStyle>;
+  onSubmit: () => any;
 }
 
 export const SubmitButton: React.FC<SubmitButtonProps> = ({
@@ -17,6 +18,7 @@ export const SubmitButton: React.FC<SubmitButtonProps> = ({
   type,
   buttonStyle,
   containerStyle,
+  onSubmit,
 }) => {
   return (
     <Button
@@ -24,6 +26,7 @@ export const SubmitButton: React.FC<SubmitButtonProps> = ({
       type={type}
       style={buttonStyle}
       buttonStyle={{ backgroundColor }}
+      onPress={onSubmit}
       containerStyle={[styles.defaultContainerStyle, containerStyle]}
     />
   );
