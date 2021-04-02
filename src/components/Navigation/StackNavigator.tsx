@@ -69,10 +69,7 @@ export const StackNavigator: React.FC<StackNavigatorProps> = ({}) => {
             headerTitle: "",
             cardStyle: { backgroundColor: "transparent" },
             cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS,
-            safeAreaInsets: { top: 35 },
-            gestureResponseDistance: { vertical: Dimensions.get("screen").height },
             gestureDirection: "vertical",
-            gestureEnabled: true,
           }}
         />
       </Stack.Navigator>

@@ -6,17 +6,18 @@ import { Dimensions, FlatList, ImageBackground, SafeAreaView, StyleSheet, Text, 
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useIsMount } from "../../hooks/useIsMount";
 import { Colors } from "../shared/styles/variables";
+import { Item } from "./interfaces";
 
 interface ProfileProps {
-  challenges: any[];
-  numColumns: number;
+  items: Item[];
+  numColumns?: number;
   upperStyle?: ViewStyle;
   bottomStyle?: ViewStyle;
   horizontalView?: boolean;
 }
 
 export const ProfileScreen: React.FC<ProfileProps> = ({
-  challenges,
+  items,
   numColumns,
   upperStyle,
   bottomStyle,
@@ -29,9 +30,9 @@ export const ProfileScreen: React.FC<ProfileProps> = ({
   useEffect(() => {
     (async () => {
       const asyncRes = await Promise.all(
-        challenges.map(async (challenge) => {
-          const imageURI = await generateThumbnail(challenge.url);
-          return Object.assign({ image: imageURI }, { ...challenge });
+        items.map(async (item) => {
+          const imageURI = await generateThumbnail(item.url);
+          return Object.assign({ image: imageURI }, { ...item });
         })
       );
       isMounted.current && setTempChallanges(asyncRes);
@@ -67,7 +68,7 @@ export const ProfileScreen: React.FC<ProfileProps> = ({
           <View style={{ display: "flex", justifyContent: "flex-end", flexDirection: "column", height: 120 }}>
             <View style={[styles.rowContainer, { marginRight: 10 }]}>
               <FontAwesome name={"heart"} size={13} color={Colors.lightGrey} />
-              <Text style={styles.amount}>138k</Text>
+              <Text style={styles.amount}>{item.numOfLikes}</Text>
             </View>
           </View>
         </ImageBackground>
@@ -126,6 +127,3 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
 });
-function useIsMounted() {
-  throw new Error("Function not implemented.");
-}
