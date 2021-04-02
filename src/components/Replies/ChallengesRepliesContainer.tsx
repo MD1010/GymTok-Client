@@ -8,6 +8,7 @@ import { fetchAPI, RequestMethod } from "../../utils/fetchAPI";
 import { Challenge } from "../Challenge/Challenge";
 import { ProfileContainer } from "../Profile/ProfileContainer";
 import { ProfileScreen } from "../Profile/ProfileScreen";
+import { Colors } from "../shared/styles/variables";
 import { Player } from "../shared/VideoPlayer";
 
 interface ChallengeRepliesProps { }
@@ -64,14 +65,31 @@ export const ChallengeReplies: React.FC<ChallengeRepliesProps> = ({ }) => {
   console.log("challengeReplies", challengeReplies);
 
   return (
-    <View style={{ height: Dimensions.get("window").height }}>
-      <View style={{ flex: 1 }}>
-        <Player uri={streaminServerUrl} isPlaying={false} resizeMode="cover" />
+    <View style={{
+      height: Dimensions.get("window").height, backgroundColor: "black", marginTop: 20,
+
+    }}>
+      <View style={styles.challengeVideoContainter}>
+        {/* <View style={{
+          flexDirection: "row-reverse"
+        }}> */}
+        <Player style={styles.video} uri={streaminServerUrl} isPlaying={false} resizeMode="cover" />
+        <View style={styles.challengeVideoDetails}>
+          <View style={styles.likesView}>
+            <Text style={styles.likesText}>likes:</Text>
+            <Text style={styles.likesText}>{route.params.challenge.likes.length}</Text>
+          </View>
+          <View style={styles.commentsView}>
+            <Text style={styles.commentsText}>comments:</Text>
+            <Text style={styles.commentsText}>{route.params.challenge.replies.length}</Text>
+          </View>
+          {/* </View> */}
+        </View>
       </View>
-      <View style={{ flex: 1 }}>
+      <View style={{ flex: 4 }}>
         <ProfileScreen numColumns={2} challenges={challengeReplies} />
       </View>
-    </View>
+    </View >
     // <View style={{ backgroundColor: "red" }}>
     //   {/* <ProfileContainer /> */}
     //   {/* <View style={styles.challengeVideo}> */}
@@ -90,11 +108,30 @@ export const ChallengeReplies: React.FC<ChallengeRepliesProps> = ({ }) => {
 };
 
 const styles = StyleSheet.create({
-  //   container: {
-  //     flex: 1,
-  //     padding: 25,
-  //   },
-  // challengeVideo: {
-  //     height: '90%'
-  // }
+  challengeVideoContainter: {
+    flex: 3,
+    flexDirection: 'row'
+  },
+  challengeVideoDetails: {
+  },
+  likesView: {
+
+  },
+  likesText: {
+    color: Colors.white
+  },
+  commentsView: {
+  },
+  commentsText: {
+    color: Colors.white
+  },
+  video: {
+    position: "absolute",
+    top: 10,
+    left: 5,
+    bottom: 0,
+    right: 0,
+    height: "80%",
+    width: "50%"
+  }
 });
