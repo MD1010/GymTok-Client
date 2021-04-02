@@ -1,10 +1,15 @@
 import React from "react";
-import { ActivityIndicator, StyleSheet, View } from "react-native";
+import { Dimensions, Image, ImageStyle, StatusBar, StyleProp, StyleSheet, View, ViewStyle } from "react-native";
 
-export const Loader: React.FC = () => {
+interface LoaderProps {
+  style?: StyleProp<ImageStyle>;
+  isFullScreen?: boolean;
+}
+
+export const Loader: React.FC<LoaderProps> = ({ style, isFullScreen }) => {
   return (
-    <View style={[styles.container, styles.horizontal]}>
-      <ActivityIndicator animating={true} />
+    <View style={[styles.container, isFullScreen && { marginBottom: StatusBar.currentHeight }]}>
+      <Image source={require("../../../assets/loader.gif")} style={[styles.defaultLoaderStyles, style]} />
     </View>
   );
 };
@@ -13,10 +18,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
+    alignItems: "center",
   },
-  horizontal: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    padding: 10,
+  defaultLoaderStyles: {
+    height: 150,
+    width: 150,
   },
 });

@@ -2,10 +2,13 @@ import AsyncStorage from "@react-native-community/async-storage";
 import { fetchAPI, RequestMethod } from "../../utils/fetchAPI";
 import { AppDispatch, AppThunk } from "../configureStore";
 import { authActions } from "./authSlice";
-export const register = (username: string, fullName: string, password: string): AppThunk => {
+import * as Facebook from "expo-facebook";
+import * as Google from 'expo-google-app-auth';
+
+export const register = (username: string, fullName: string, password: string, email: string): AppThunk => {
   return async (dispatch: AppDispatch) => {
     const registerEnpoint = `${process.env.BASE_API_ENPOINT}/users/register`;
-    const body = { username, fullName, password };
+    const body = { username, fullName, password, email};
     dispatch(authActions.resetAuthError());
     const { res, error } = await fetchAPI(RequestMethod.POST, registerEnpoint, body);
     if (res) {
@@ -42,3 +45,22 @@ export const loadLoggedUser = (): AppThunk => {
     dispatch(authActions.loadLoggedUser(user));
   };
 };
+
+
+export const registerIfNeed = (username: string, password: string, fullName: string, email: string, photoUrl: string) : AppThunk => {
+
+  return async (dispatch: AppDispatch) => {
+    const registerIfNeedEnpoint = `${process.env.BASE_API_ENPOINT}/users/registerIfNeed`;
+
+    const body = { email, username, password, fullName, photoUrl};
+    
+    dispatch(authActions.resetAuthError());
+    const { res, error } = await fetchAPI(RequestMethod.POST, registerIfNeedEnpoint, body);
+
+    if (res) {
+      dispatch(authActions.signWith({user: res.user, accessToken: res.accessToken, photoUrl}));
+    } else {
+      dispatch(authActions.authFailed({ error }));
+    }
+  };
+}

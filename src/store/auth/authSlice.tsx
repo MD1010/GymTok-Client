@@ -23,6 +23,14 @@ const authSlice = createSlice({
       state.loggedUser = payload.user;
       state.authError = null;
     },
+    signWith: (state, action: PayloadAction<{ user: IUser; accessToken: string; photoUrl: string }>) => {
+      const { payload } = action;      
+      AsyncStorage.setItem("accessToken", payload.accessToken);
+      AsyncStorage.setItem("photoUrl", payload.photoUrl);
+      AsyncStorage.setItem("loggedUser", JSON.stringify(payload.user));
+      state.loggedUser = payload.user;
+      state.authError = null;
+    },
     logout: (state) => {
       AsyncStorage.clear();
       state.authError = null;

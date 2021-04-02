@@ -129,6 +129,7 @@ export const Challenge: React.FC<ChallengeProps> = memo(({ challenge, isVideoPla
   const onCameraPress = async () => {
     if (loggedUser) {
       console.log("user:" + loggedUser?.fullName + " click on camera button.");
+      // navigation.navigate("NewChallengePreview");
       await takeReplyVideo();
       // todo: fetch here
     } else {

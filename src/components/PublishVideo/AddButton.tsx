@@ -3,6 +3,7 @@ import { useNavigation } from "@react-navigation/native";
 import { Camera } from "expo-camera";
 import * as ImagePicker from "expo-image-picker";
 import React from "react";
+import { Platform } from "react-native";
 import ActionButton from "react-native-action-button";
 import { Colors } from "../shared/styles/variables";
 
@@ -20,7 +21,9 @@ export const AddButton: React.FC<Props> = ({ setIsAddButtonClicked }) => {
         mediaTypes: ImagePicker.MediaTypeOptions.Videos,
       });
       if (!selectedVideo.cancelled) {
-        navigation.navigate("Publish", { videoUri: selectedVideo.uri });
+        navigation.navigate("Publish", {
+          videoUri: selectedVideo.uri,
+        });
       }
     } else {
       alert("no access to camera");

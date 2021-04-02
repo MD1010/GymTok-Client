@@ -17,9 +17,9 @@ export const RegisterContainer: React.FC<RegisterContainerProps> = () => {
     loggedUser && navigation.navigate("Home");
   }, [loggedUser]);
 
-  const handleSubmitPress = async (username: string, fullName: string, password: string) => {
+  const handleSubmitPress = async (username: string, fullName: string, password: string, email: string) => {
     setLoading(true);
-    dispatch(register(username, fullName, password));
+    dispatch(register(username, fullName, password, email));
     setLoading(false);
   };
   return <RegisterScreen isLoading={isLoading} error={authError} onSubmit={handleSubmitPress} />;
