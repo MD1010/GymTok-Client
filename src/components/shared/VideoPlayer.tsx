@@ -3,7 +3,14 @@ import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { Video } from "expo-av";
 import * as FileSystem from "expo-file-system";
 import React, { memo, useEffect, useRef, useState } from "react";
-import { Platform, StyleProp, StyleSheet, TouchableWithoutFeedback, View, ViewStyle } from "react-native";
+import {
+  Platform,
+  StyleProp,
+  StyleSheet,
+  TouchableWithoutFeedback,
+  View,
+  ViewStyle,
+} from "react-native";
 import shorthash from "shorthash";
 import { Colors } from "./styles/variables";
 
@@ -55,9 +62,11 @@ export const Player: React.FC<VideoProps> = memo(
       if (uri.startsWith("file")) {
         return setVideoURI(uri);
       }
-      const path = `${Platform.OS === "ios" ? FileSystem.documentDirectory : FileSystem.cacheDirectory}${
-        Platform.OS === "ios" ? uri.split("/")[3] : shorthash.unique(uri)
-      }`;
+      const path = `${
+        Platform.OS === "ios"
+          ? FileSystem.documentDirectory
+          : FileSystem.cacheDirectory
+      }${Platform.OS === "ios" ? uri.split("/")[3] : shorthash.unique(uri)}`;
       const image = await FileSystem.getInfoAsync(path);
       if (image.exists) {
         console.log("read image from cache");
@@ -66,6 +75,7 @@ export const Player: React.FC<VideoProps> = memo(
         setVideoURI(image.uri);
       } else {
         console.log("downloading image to cache");
+        console.log("blaaaaaaaa", " ", uri);
         const newImage = await FileSystem.downloadAsync(uri, path);
         console.log("cache url = ", newImage.uri);
         setVideoURI(newImage.uri);
@@ -94,7 +104,11 @@ export const Player: React.FC<VideoProps> = memo(
     return (
       <TouchableWithoutFeedback
         onPress={() =>
-          onVideoTap ? onVideoTap() : statusRef.current?.isPlaying ? pauseVideoByTap() : resumeVideoByTap()
+          onVideoTap
+            ? onVideoTap()
+            : statusRef.current?.isPlaying
+            ? pauseVideoByTap()
+            : resumeVideoByTap()
         }
       >
         <View style={[styles.container, containerStyle]}>
@@ -116,7 +130,13 @@ export const Player: React.FC<VideoProps> = memo(
           />
           {!controlsShown && !hidePlayButton && (
             <View style={styles.playButtonContainer}>
-              {isPaused && <FontAwesome name="play" size={playBtnSize ? playBtnSize : 40} color={Colors.white} />}
+              {isPaused && (
+                <FontAwesome
+                  name="play"
+                  size={playBtnSize ? playBtnSize : 40}
+                  color={Colors.white}
+                />
+              )}
             </View>
           )}
         </View>
