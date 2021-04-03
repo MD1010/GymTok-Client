@@ -11,6 +11,7 @@ import { AddButton } from "../PublishVideo/AddButton";
 import { HomeScreen } from "../Home/HomeScreen";
 import { ProfileContainer as Profile } from "../Profile/ProfileContainer";
 import { Colors, UIConsts } from "../shared/styles/variables";
+import { colors } from "react-native-elements";
 
 interface BottomTabsProps {}
 
@@ -34,7 +35,8 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
         return true;
       };
       BackHandler.addEventListener("hardwareBackPress", onBackPress);
-      return () => BackHandler.removeEventListener("hardwareBackPress", onBackPress);
+      return () =>
+        BackHandler.removeEventListener("hardwareBackPress", onBackPress);
     }, [])
   );
 
@@ -46,6 +48,8 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
     <Provider>
       <Tab.Navigator
         initialRouteName="Home"
+        backBehavior={"initialRoute"}
+        sceneContainerStyle={{ backgroundColor: Colors.black }}
         tabBarOptions={{
           activeTintColor: Colors.cyan,
           activeBackgroundColor: Colors.darkBlue,
@@ -84,16 +88,32 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
                   <NotLoggedInScreen
                     text={"Explore"}
                     description={"Discover Challenges By Categories"}
-                    icon={() => <Ionicons name="search-outline" color={Colors.white} size={56} />}
+                    icon={() => (
+                      <Ionicons
+                        name="search-outline"
+                        color={Colors.white}
+                        size={56}
+                      />
+                    )}
                   />
                 )
           }
           options={{
             tabBarIcon: ({ color, size, focused }) =>
               focused ? (
-                <Ionicons name="search-sharp" color={color} size={size} style={{ marginRight: 50 }} />
+                <Ionicons
+                  name="search-sharp"
+                  color={color}
+                  size={size}
+                  style={{ marginRight: 50 }}
+                />
               ) : (
-                <Ionicons name="search-outline" color={color} size={size} style={{ marginRight: 50 }} />
+                <Ionicons
+                  name="search-outline"
+                  color={color}
+                  size={size}
+                  style={{ marginRight: 50 }}
+                />
               ),
           }}
         />
@@ -107,7 +127,13 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
                   <NotLoggedInScreen
                     text={"Notifications"}
                     description={"See your activity and new challenges here"}
-                    icon={() => <Ionicons name="notifications-sharp" color={Colors.white} size={56} />}
+                    icon={() => (
+                      <Ionicons
+                        name="notifications-sharp"
+                        color={Colors.white}
+                        size={56}
+                      />
+                    )}
                   />
                 )
           }
@@ -143,7 +169,13 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
                   <NotLoggedInScreen
                     text={"Profile"}
                     description={"Sign up for an account"}
-                    icon={() => <Ionicons name="md-person-outline" color={Colors.white} size={56} />}
+                    icon={() => (
+                      <Ionicons
+                        name="md-person-outline"
+                        color={Colors.white}
+                        size={56}
+                      />
+                    )}
                   />
                 )
           }

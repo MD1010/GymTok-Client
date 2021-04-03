@@ -31,9 +31,9 @@ interface ProfileProps {
 const ProfileHeader: React.FC = () => {
   const [activeIndex, setActiveIndex] = useState<number>(0);
   return (
-    <View style={{ paddingTop: 10 }}>
+    <View style={{ paddingTop: 20 }}>
       <View style={{ flexDirection: "row" }}>
-        <View style={{ flex: 1, alignItems: "center", paddingTop: 10 }}>
+        <View style={{ flex: 1, alignItems: "center" }}>
           <Image
             source={require("../../../assets/avatar/01.jpg")}
             style={{ width: 75, height: 75, borderRadius: 37.5 }}
@@ -45,31 +45,49 @@ const ProfileHeader: React.FC = () => {
           >
             <View style={{ alignItems: "center" }}>
               <Text
-                style={{ color: "black", fontSize: 20, fontWeight: "bold" }}
+                style={{
+                  color: Colors.white,
+                  fontSize: 20,
+                  fontWeight: "bold",
+                }}
               >
                 20
               </Text>
-              <Text style={{ fontSize: 10, color: "grey" }}>Challenges</Text>
+              <Text style={{ fontSize: 10, color: Colors.lightGrey }}>
+                Challenges
+              </Text>
             </View>
             <View style={{ alignItems: "center" }}>
               <Text
-                style={{ color: "black", fontSize: 20, fontWeight: "bold" }}
+                style={{
+                  color: Colors.white,
+                  fontSize: 20,
+                  fontWeight: "bold",
+                }}
               >
                 35
               </Text>
-              <Text style={{ fontSize: 10, color: "grey" }}>Replies</Text>
+              <Text style={{ fontSize: 10, color: Colors.lightGrey }}>
+                Replies
+              </Text>
             </View>
             <View style={{ alignItems: "center" }}>
               <Text
-                style={{ color: "black", fontSize: 20, fontWeight: "bold" }}
+                style={{
+                  color: Colors.white,
+                  fontSize: 20,
+                  fontWeight: "bold",
+                }}
               >
                 217
               </Text>
-              <Text style={{ fontSize: 10, color: "grey" }}>Likes</Text>
+              <Text style={{ fontSize: 10, color: Colors.lightGrey }}>
+                Likes
+              </Text>
             </View>
           </View>
           <View style={{ flexDirection: "row", paddingTop: 10 }}>
-            <Button
+            {/* <Button
               dark
               style={{
                 flex: 3,
@@ -82,14 +100,18 @@ const ProfileHeader: React.FC = () => {
               }}
             >
               <Text style={{ color: "black" }}>Edit Profile</Text>
-            </Button>
+            </Button> */}
           </View>
         </View>
       </View>
-      <View style={{ paddingVertical: 10, paddingHorizontal: 10 }}>
-        <Text style={{ fontWeight: "bold" }}>Moris Angus</Text>
-        <Text>Basketball player | Runner | Swimmer </Text>
-        <Text>www.mysite.com</Text>
+      <View style={{ padding: 10 }}>
+        <Text style={{ fontWeight: "bold", color: Colors.white }}>
+          Moris Angus
+        </Text>
+        <Text style={{ color: Colors.white }}>
+          Basketball player | Runner | Swimmer{" "}
+        </Text>
+        <Text style={{ color: Colors.white }}>www.mysite.com</Text>
       </View>
       <View>
         <View
@@ -100,7 +122,7 @@ const ProfileHeader: React.FC = () => {
             borderTopColor: "grey",
           }}
         >
-          <Button onPress={() => setActiveIndex(0)}>
+          <Button onPress={() => setActiveIndex(0)} style={{ elevation: 0 }}>
             <Icon
               name="ios-apps"
               style={{
@@ -185,16 +207,17 @@ export const ProfileScreen: React.FC<ProfileProps> = ({
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <View style={upperStyle !== undefined ? upperStyle : { flex: 1 }}>
+      <View>
         <ProfileHeader />
       </View>
-      <View style={bottomStyle !== undefined ? bottomStyle : { flex: 1 }}>
+      <View>
         <FlatList
           data={tempChallanges}
           renderItem={renderItem}
           keyExtractor={(item) => item._id}
           horizontal={horizontalView !== undefined ? horizontalView : false}
           numColumns={horizontalView !== undefined ? 0 : numColumns}
+          scrollEnabled={false}
         />
       </View>
     </SafeAreaView>
