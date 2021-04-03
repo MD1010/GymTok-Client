@@ -24,6 +24,7 @@ export const ChallengesContainer: React.FC<ChallengesContainerProps> = ({
   const [error, setError] = useState<string | null>();
   const isMounted = useIsMount();
   const itemsToLoad = 10;
+  console.log("bla", process.env.BASE_API_ENPOINT);
   const challengesEndpoint = `${process.env.BASE_API_ENPOINT}/challenges`;
   const [currentIndexVideo, setCurrentIndexVideo] = useState<number>(0);
 
@@ -46,10 +47,15 @@ export const ChallengesContainer: React.FC<ChallengesContainerProps> = ({
   };
 
   const getExistChallenges = async () => {
-    const { res, error } = await fetchAPI(RequestMethod.GET, challengesEndpoint, null, {
-      size: itemsToLoad,
-      page: challenges.length / itemsToLoad,
-    });
+    const { res, error } = await fetchAPI(
+      RequestMethod.GET,
+      challengesEndpoint,
+      null,
+      {
+        size: itemsToLoad,
+        page: challenges.length / itemsToLoad,
+      }
+    );
 
     if (isMounted.current) {
       res && setChallenges([...challenges, ...res]);
@@ -58,11 +64,16 @@ export const ChallengesContainer: React.FC<ChallengesContainerProps> = ({
   };
 
   const getUserChallenges = async () => {
-    const { res, error } = await fetchAPI(RequestMethod.GET, challengesEndpoint, null, {
-      size: itemsToLoad,
-      page: challenges.length / itemsToLoad,
-      uid: loggedUser._id,
-    });
+    const { res, error } = await fetchAPI(
+      RequestMethod.GET,
+      challengesEndpoint,
+      null,
+      {
+        size: itemsToLoad,
+        page: challenges.length / itemsToLoad,
+        uid: loggedUser._id,
+      }
+    );
     if (isMounted.current) {
       res && setChallenges([...challenges, ...res]);
       error && setError(error);
@@ -75,7 +86,9 @@ export const ChallengesContainer: React.FC<ChallengesContainerProps> = ({
 
   useEffect(() => {
     if (currentVideoID && challenges.length > 0) {
-      setCurrentIndexVideo(challenges.findIndex((challenge) => challenge.video === currentVideoID));
+      setCurrentIndexVideo(
+        challenges.findIndex((challenge) => challenge.video === currentVideoID)
+      );
     }
   }, [challenges, currentVideoID]);
 

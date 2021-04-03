@@ -13,10 +13,12 @@ import {
   Image,
 } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import { Button } from "react-native-paper";
 import { useIsMount } from "../../hooks/useIsMount";
 import { generateThumbnail } from "../../utils/generateThumbnail";
 import { Colors } from "../shared/styles/variables";
 import { Item } from "./interfaces";
+import Icon from "react-native-vector-icons/Ionicons";
 
 interface ProfileProps {
   items: Item[];
@@ -27,28 +29,95 @@ interface ProfileProps {
 }
 
 const ProfileHeader: React.FC = () => {
+  const [activeIndex, setActiveIndex] = useState<number>(0);
   return (
-    <View style={{ flexDirection: "row" }}>
-      <View style={{ flex: 1 }}>
-        <Image
-          source={require("../../../assets/avatar/01.jpg")}
-          style={{ width: 75, height: 75, borderRadius: 37.5 }}
-        />
+    <View style={{ paddingTop: 10 }}>
+      <View style={{ flexDirection: "row" }}>
+        <View style={{ flex: 1, alignItems: "center", paddingTop: 10 }}>
+          <Image
+            source={require("../../../assets/avatar/01.jpg")}
+            style={{ width: 75, height: 75, borderRadius: 37.5 }}
+          />
+        </View>
+        <View style={{ flex: 3, paddingTop: 15 }}>
+          <View
+            style={{ flexDirection: "row", justifyContent: "space-around" }}
+          >
+            <View style={{ alignItems: "center" }}>
+              <Text
+                style={{ color: "black", fontSize: 20, fontWeight: "bold" }}
+              >
+                20
+              </Text>
+              <Text style={{ fontSize: 10, color: "grey" }}>Challenges</Text>
+            </View>
+            <View style={{ alignItems: "center" }}>
+              <Text
+                style={{ color: "black", fontSize: 20, fontWeight: "bold" }}
+              >
+                35
+              </Text>
+              <Text style={{ fontSize: 10, color: "grey" }}>Replies</Text>
+            </View>
+            <View style={{ alignItems: "center" }}>
+              <Text
+                style={{ color: "black", fontSize: 20, fontWeight: "bold" }}
+              >
+                217
+              </Text>
+              <Text style={{ fontSize: 10, color: "grey" }}>Likes</Text>
+            </View>
+          </View>
+          <View style={{ flexDirection: "row", paddingTop: 10 }}>
+            <Button
+              dark
+              style={{
+                flex: 3,
+                marginLeft: 10,
+                justifyContent: "center",
+                height: 30,
+                borderRadius: 10,
+                borderWidth: 1,
+                borderColor: "black",
+              }}
+            >
+              <Text style={{ color: "black" }}>Edit Profile</Text>
+            </Button>
+          </View>
+        </View>
       </View>
-      <View style={{ flex: 3 }}>
-        <View style={{ flexDirection: "row", justifyContent: "space-around" }}>
-          <View style={{ alignItems: "center" }}>
-            <Text style={{ color: "black" }}>20</Text>
-            <Text style={{ fontSize: 10, color: "grey" }}>Challenges</Text>
-          </View>
-          <View style={{ alignItems: "center" }}>
-            <Text style={{ color: "black" }}>35</Text>
-            <Text style={{ fontSize: 10, color: "grey" }}>Replies</Text>
-          </View>
-          <View style={{ alignItems: "center" }}>
-            <Text style={{ color: "black" }}>217</Text>
-            <Text style={{ fontSize: 10, color: "grey" }}>Likes</Text>
-          </View>
+      <View style={{ paddingVertical: 10, paddingHorizontal: 10 }}>
+        <Text style={{ fontWeight: "bold" }}>Moris Angus</Text>
+        <Text>Basketball player | Runner | Swimmer </Text>
+        <Text>www.mysite.com</Text>
+      </View>
+      <View>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-around",
+            borderTopWidth: 1,
+            borderTopColor: "grey",
+          }}
+        >
+          <Button onPress={() => setActiveIndex(0)}>
+            <Icon
+              name="ios-apps"
+              style={{
+                fontSize: 30,
+                color: activeIndex == 0 ? "blue" : "grey",
+              }}
+            />
+          </Button>
+          <Button onPress={() => setActiveIndex(1)}>
+            <Icon
+              name="person-circle"
+              style={{
+                fontSize: 30,
+                color: activeIndex == 1 ? "blue" : "grey",
+              }}
+            />
+          </Button>
         </View>
       </View>
     </View>
