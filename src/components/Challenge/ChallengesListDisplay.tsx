@@ -3,153 +3,142 @@ import { cloneDeep, uniqueId } from "lodash";
 import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Dimensions, FlatList, View, Text } from "react-native";
 import { IChallenge } from "../../interfaces";
-import { UIConsts } from "../shared/styles/variables";
+import { Colors, UIConsts } from "../shared/styles/variables";
 import { Challenge } from "./Challenge";
 import { v4 as uuidv4 } from "uuid";
+import { Loader } from "../shared";
 
 interface ChallengesListDisplayProps {
   challenges: IChallenge[];
-  // getChallenges: () => any;
+  getChallenges: () => any;
+  hasToLoadMore: boolean;
   // currentIndexVideo?: number;
 }
 
-export const ChallengesListDisplay: React.FC<ChallengesListDisplayProps> = memo(({ challenges }) => {
-  const navigation = useNavigation();
-  const [navigatedOutOfScreen, setNavigatedOutOfScreen] = useState(false);
-  const scrollEnded = useRef<boolean>(false);
-  const [currentlyPlaying, setCurrentlyPlaying] = useState(0);
-  const flatListRef = useRef<FlatList>(null);
+export const ChallengesListDisplay: React.FC<ChallengesListDisplayProps> = memo(
+  ({ challenges, hasToLoadMore, getChallenges }) => {
+    const navigation = useNavigation();
+    const [navigatedOutOfScreen, setNavigatedOutOfScreen] = useState(false);
+    const scrollEnded = useRef<boolean>(false);
+    const [currentlyPlaying, setCurrentlyPlaying] = useState(0);
+    const flatListRef = useRef<FlatList>(null);
+    const [showFooter, setShowFooter] = useState(false);
 
-  const [currentVideos, setCurrentVideos] = useState([]);
-  useEffect(() => {
-    console.log("challenges changes!!!");
-    // console.log("!!@#!@#!@2!", challenges.length);
-    // console.log("use effect", currentVideos);
-    // setCurrentVideos(challenges.slice(0, 3));
-  }, [challenges]);
+    const [currentVideos, setCurrentVideos] = useState([]);
+    useEffect(() => {
+      console.log("challenges fetched", challenges.length);
+      // challenges.length hasMoreToLoad
+      // console.log("!!@#!@#!@2!", challenges.length);
+      // console.log("use effect", currentVideos);
+      // setCurrentVideos(challenges.slice(0, 3));
 
-  // useEffect(() => {
-  //   navigation.addListener("blur", () => {
-  //     setNavigatedOutOfScreen(true);
-  //   });
-  //   navigation.addListener("focus", () => {
-  //     setNavigatedOutOfScreen(false);
-  //   });
+      setShowFooter(false);
+    }, [challenges]);
 
-  //   return () => {
-  //     navigation.removeListener("blur", null);
-  //     navigation.removeListener("focus", null);
-  //   };
-  // }, [navigation]);
+    const onViewRef = useRef(({ viewableItems }) => {
+      // change playing video only after user stop dragging
+      // console.log("playing", viewableItems[0]?.index);
+      // scrollEnded.current && setCurrentlyPlaying(viewableItems[0]?.index);
+    });
 
-  // useEffect(() => {
-  //   console.log("scrolling!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-  //   if (challenges.length > 0) {
-  //     goIndex(currentIndexVideo);
-  //   }
-  // }, [challenges, currentIndexVideo]);
+    const goIndex = (index: number) => {
+      flatListRef.current.scrollToIndex({ animated: false, index: index });
+    };
 
-  // track view changes in order to control when video is starting to play
-  // useEffect(() => {
-  //   // if (currentlyPlaying === currentVideos.length - 1) {
-  //   //   damog();
-  //   // }
-  //   // if (currentlyPlaying) {
-  //   //   setCurrentVideos(challenges.slice(currentlyPlaying, currentlyPlaying + currentVideos.length));
-  //   //   goIndex(0);
-  //   // }
-  //   // if (currentlyPlaying === 2) {
-  //   //   let temp = currentVideos;
-  //   //   temp.shift();
-  //   //   setCurrentVideos(temp);
-  //   // }
-  //   // console.log("leng", challenges.length);
-  //   // currentlyPlaying && setCurrentVideos([...currentVideos, ...challenges.slice(0, 5)]);
-  // }, [currentlyPlaying]);
+    const renderItem = ({ item, index }) => {
+      // console.log("rendering item!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+      // return (
+      //   <View>
+      //     <Text>asdasd</Text>
+      //   </View>
+      // );
+      return <Challenge challenge={item} isVideoPlaying={false} />;
+    };
 
-  // const damog = () => {
-  //   let temp = currentVideos;
+    // ) : null;
+    // };
 
-  //   // console.log("challenges in view ref", challenges.length);
-  //   // console.log("index 3", challenges[3]);
-  //   temp.push(challenges[3]);
-  //   console.log(":temp:", temp);
-  //   setCurrentVideos(temp);
-  // };
-  const onViewRef = useRef(({ viewableItems }) => {
-    // change playing video only after user stop dragging
+    const beginDarg = () => {
+      scrollEnded.current = false;
 
-    console.log("playing", viewableItems[0]?.index);
+      // console.log("before", challenges.length);
+      // currentlyPlaying === 2 && challenges.push(...challenges.slice(0, 3));
+      // challenges.slice(0, 2);
+    };
+    const endDrag = () => {
+      scrollEnded.current = true;
+    };
+    console.log("render!!!!");
+    const onScrollEndDrag = useCallback(() => {
+      scrollEnded.current = true;
+    }, []);
 
-    // scrollEnded.current && setCurrentlyPlaying(viewableItems[0]?.index);
-  });
+    const keyExtractor = useCallback((challenge, i) => {
+      return i.toString();
+      // return challenge._id;
+    }, []);
 
-  const goIndex = (index: number) => {
-    flatListRef.current.scrollToIndex({ animated: false, index: index });
-  };
+    const snapToInterval = useMemo(() => Dimensions.get("window").height - UIConsts.bottomNavbarHeight, []);
+    // const getItemLayout = (data, index) => ({
+    //   length: Dimensions.get("window").height - UIConsts.bottomNavbarHeight,
+    //   offset: (Dimensions.get("window").height - UIConsts.bottomNavbarHeight) * index,
+    //   index,
+    // });
 
-  const renderItem = ({ item, index }) => {
-    // console.log("rendering item!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-    // return (
-    //   <View>
-    //     <Text>asdasd</Text>
-    //   </View>
-    // );
-    return <Challenge challenge={item} isVideoPlaying={false} />;
-  };
+    // useEffect(() => {
+    //   console.log("footer has to dissapear!");
+    // }, [isNewDataFetched]);
 
-  // ) : null;
-  // };
+    const Footer = () => {
+      if (challenges.length) {
+        if (hasToLoadMore) {
+          return <Loader style={{ height: 100, width: 100 }} />;
+        } else {
+          return <Text style={{ color: Colors.lightGrey2, fontSize: 15 }}>You have reached the end</Text>;
+        }
+      }
+      return null;
+    };
 
-  const beginDarg = () => {
-    scrollEnded.current = false;
-    // console.log("before", challenges.length);
-    // currentlyPlaying === 2 && challenges.push(...challenges.slice(0, 3));
-    // challenges.slice(0, 2);
-  };
-  console.log("render!!!!");
-  const onScrollEndDrag = useCallback(() => {
-    scrollEnded.current = true;
-  }, []);
+    const handleLoadMore = () => {
+      setShowFooter(true);
+      hasToLoadMore && getChallenges();
+    };
+    return (
+      <View style={{ flex: 1 }}>
+        <FlatList
+          initialNumToRender={5}
+          maxToRenderPerBatch={3}
+          windowSize={3}
+          data={challenges}
+          renderItem={renderItem}
+          keyExtractor={keyExtractor}
+          showsVerticalScrollIndicator={false}
+          snapToInterval={snapToInterval}
+          snapToAlignment={"start"}
+          decelerationRate={"fast"}
+          ref={(ref) => {
+            flatListRef.current = ref;
+          }}
+          // getItemLayout={getItemLayout}
+          // onScrollToIndexFailed={() => alert("no such index")}
+          onViewableItemsChanged={onViewRef.current}
+          onScrollEndDrag={endDrag}
+          onScrollBeginDrag={beginDarg}
+          // onEndReached={(info) => !scrollEnded.current && currentlyPlaying === 2 && goIndex(0)}
+          onEndReached={handleLoadMore}
+          onEndReachedThreshold={0.5}
+          ListFooterComponent={showFooter ? <Footer /> : null}
+          ListFooterComponentStyle={{
+            height: 80,
+            backgroundColor: Colors.darkBlueOpaque,
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        ></FlatList>
 
-  const keyExtractor = useCallback((challenge, i) => {
-    return challenge._id;
-  }, []);
-
-  const snapToInterval = useMemo(() => Dimensions.get("window").height - UIConsts.bottomNavbarHeight, []);
-  // const getItemLayout = (data, index) => ({
-  //   length: Dimensions.get("window").height - UIConsts.bottomNavbarHeight,
-  //   offset: (Dimensions.get("window").height - UIConsts.bottomNavbarHeight) * index,
-  //   index,
-  // });
-
-  return (
-    <View style={{ flex: 1 }}>
-      <FlatList
-        initialNumToRender={2}
-        maxToRenderPerBatch={5}
-        windowSize={9}
-        data={challenges}
-        renderItem={renderItem}
-        keyExtractor={keyExtractor}
-        showsVerticalScrollIndicator={false}
-        snapToInterval={snapToInterval}
-        snapToAlignment={"start"}
-        decelerationRate={"fast"}
-        ref={(ref) => {
-          flatListRef.current = ref;
-        }}
-        // getItemLayout={getItemLayout}
-        // onScrollToIndexFailed={() => alert("no such index")}
-        onViewableItemsChanged={onViewRef.current}
-        // onScrollEndDrag={() => (scrollEnded.current = true)}
-        // onScrollBeginDrag={beginDarg}
-
-        // onEndReached={(info) => !scrollEnded.current && currentlyPlaying === 2 && goIndex(0)}
-        // onEndReached={getChallenges}
-        // onEndReachedThreshold={3}
-        // ListFooterComponent={() => (challenges.length ? <Text>Loading more..</Text> : null)}
-      ></FlatList>
-    </View>
-  );
-});
+        {/* {showFooter && <Footer />} */}
+      </View>
+    );
+  }
+);

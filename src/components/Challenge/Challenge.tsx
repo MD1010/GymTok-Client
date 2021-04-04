@@ -90,7 +90,7 @@ export const Challenge: React.FC<ChallengeProps> = memo(({ challenge, isVideoPla
     // console.log("video::::::" + videoURL);
   }, [videoURL]);
 
-  console.log("challenge rendered!!");
+  // console.log("challenge rendered!!");
 
   const onLikeButtonPress = () => {
     if (loggedUser) {
