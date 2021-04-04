@@ -87,8 +87,10 @@ export const Challenge: React.FC<ChallengeProps> = memo(({ challenge, isVideoPla
   const navigation = useNavigation();
   const streaminServerUrl = `${process.env.VIDEO_SERVER_ENDPOINT}/${videoURL}`;
   useEffect(() => {
-    console.log("video::::::" + videoURL);
+    // console.log("video::::::" + videoURL);
   }, [videoURL]);
+
+  console.log("challenge rendered!!");
 
   const onLikeButtonPress = () => {
     if (loggedUser) {
