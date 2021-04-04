@@ -1,12 +1,10 @@
 import { useNavigation } from "@react-navigation/native";
-import { cloneDeep, uniqueId } from "lodash";
 import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Dimensions, FlatList, View, Text } from "react-native";
+import { Dimensions, FlatList, Text, View } from "react-native";
 import { IChallenge } from "../../interfaces";
+import { Loader } from "../shared";
 import { Colors, UIConsts } from "../shared/styles/variables";
 import { Challenge } from "./Challenge";
-import { v4 as uuidv4 } from "uuid";
-import { Loader } from "../shared";
 
 interface ChallengesListDisplayProps {
   challenges: IChallenge[];
@@ -26,18 +24,19 @@ export const ChallengesListDisplay: React.FC<ChallengesListDisplayProps> = memo(
 
     const [currentVideos, setCurrentVideos] = useState([]);
     useEffect(() => {
-      console.log("challenges fetched", challenges.length);
+      // console.log("challenges fetched", challenges.length);
       // challenges.length hasMoreToLoad
       // console.log("!!@#!@#!@2!", challenges.length);
       // console.log("use effect", currentVideos);
       // setCurrentVideos(challenges.slice(0, 3));
-
       setShowFooter(false);
+      // console.log("footer set");
     }, [challenges]);
 
+    // console.log("after footer set");
     const onViewRef = useRef(({ viewableItems }) => {
       // change playing video only after user stop dragging
-      // console.log("playing", viewableItems[0]?.index);
+      console.log("playing", viewableItems[0]?.index);
       // scrollEnded.current && setCurrentlyPlaying(viewableItems[0]?.index);
     });
 
@@ -46,17 +45,8 @@ export const ChallengesListDisplay: React.FC<ChallengesListDisplayProps> = memo(
     };
 
     const renderItem = ({ item, index }) => {
-      // console.log("rendering item!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-      // return (
-      //   <View>
-      //     <Text>asdasd</Text>
-      //   </View>
-      // );
       return <Challenge challenge={item} isVideoPlaying={false} />;
     };
-
-    // ) : null;
-    // };
 
     const beginDarg = () => {
       scrollEnded.current = false;
@@ -107,9 +97,9 @@ export const ChallengesListDisplay: React.FC<ChallengesListDisplayProps> = memo(
     return (
       <View style={{ flex: 1 }}>
         <FlatList
-          initialNumToRender={5}
-          maxToRenderPerBatch={3}
-          windowSize={3}
+          initialNumToRender={3}
+          maxToRenderPerBatch={4}
+          windowSize={5}
           data={challenges}
           renderItem={renderItem}
           keyExtractor={keyExtractor}

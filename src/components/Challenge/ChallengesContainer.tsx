@@ -25,7 +25,7 @@ export const ChallengesContainer: React.FC<ChallengesContainerProps> = ({
   // console.log("logged as ", loggedUser);
   const [error, setError] = useState<string | null>();
   const isMounted = useIsMount();
-  const itemsToLoad = 10;
+  const itemsToLoad = 40;
   const challengesEndpoint = `${process.env.BASE_API_ENPOINT}/challenges`;
   const [currentIndexVideo, setCurrentIndexVideo] = useState<number>(0);
   const [hasToLoadMore, setHasToLoadMore] = useState(true);
