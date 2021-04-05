@@ -78,7 +78,7 @@ export const ChallengeReplies: React.FC<ChallengeRepliesProps> = ({ }) => {
         </View>
       </View>
       <View style={{ flex: 1 }}>
-        <ProfileScreen numColumns={2} items={challengeReplies} />
+        <ProfileScreen numColumns={2} items={challengeReplies} upperStyle={{}} />
       </View>
     </View >
   );
