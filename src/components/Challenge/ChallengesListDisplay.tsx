@@ -112,9 +112,9 @@ export const ChallengesListDisplay: React.FC<ChallengesListDisplayProps> = memo(
           //   let index = Math.floor(+(offset / Dimensions.get("window").height - StatusBar.currentHeight - 60));
           //   console.log("index", index);
           // }}
-          initialNumToRender={3}
-          maxToRenderPerBatch={4}
-          windowSize={5}
+          initialNumToRender={5}
+          maxToRenderPerBatch={5}
+          windowSize={7}
           data={challenges}
           renderItem={renderItem}
           keyExtractor={keyExtractor}
