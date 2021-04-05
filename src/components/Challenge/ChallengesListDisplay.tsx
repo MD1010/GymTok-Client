@@ -1,6 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
 import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Dimensions, FlatList, Text, View } from "react-native";
+import { Dimensions, FlatList, StatusBar, Text, View } from "react-native";
 import { IChallenge } from "../../interfaces";
 import { Loader } from "../shared";
 import { Colors, UIConsts } from "../shared/styles/variables";
@@ -33,11 +33,17 @@ export const ChallengesListDisplay: React.FC<ChallengesListDisplayProps> = memo(
       // console.log("footer set");
     }, [challenges]);
 
+    useEffect(() => {
+      console.log("WJAT", scrollEnded.current);
+    }, [scrollEnded.current]);
+
     // console.log("after footer set");
     const onViewRef = useRef(({ viewableItems }) => {
       // change playing video only after user stop dragging
-      console.log("playing", viewableItems[0]?.index);
-      // scrollEnded.current && setCurrentlyPlaying(viewableItems[0]?.index);
+      // console.log(viewableItems);
+      // scrollEnded.current && console.log("switch!");
+      // console.log("playing", viewableItems[0]?.index);
+      scrollEnded.current && setCurrentlyPlaying(viewableItems[0]?.index);
     });
 
     const goIndex = (index: number) => {
@@ -45,23 +51,24 @@ export const ChallengesListDisplay: React.FC<ChallengesListDisplayProps> = memo(
     };
 
     const renderItem = ({ item, index }) => {
-      return <Challenge challenge={item} isVideoPlaying={false} />;
+      return <Challenge challenge={item} isVideoPlaying={index === currentlyPlaying} />;
     };
 
     const beginDarg = () => {
       scrollEnded.current = false;
-
+      console.log("begin drag");
       // console.log("before", challenges.length);
       // currentlyPlaying === 2 && challenges.push(...challenges.slice(0, 3));
       // challenges.slice(0, 2);
     };
     const endDrag = () => {
       scrollEnded.current = true;
+      console.log("end drag");
     };
     console.log("render!!!!");
-    const onScrollEndDrag = useCallback(() => {
+    const onScrollEndDrag = () => {
       scrollEnded.current = true;
-    }, []);
+    };
 
     const keyExtractor = useCallback((challenge, i) => {
       return i.toString();
@@ -78,6 +85,9 @@ export const ChallengesListDisplay: React.FC<ChallengesListDisplayProps> = memo(
     // useEffect(() => {
     //   console.log("footer has to dissapear!");
     // }, [isNewDataFetched]);
+    const config = useRef({
+      itemVisiblePercentThreshold: 10,
+    });
 
     const Footer = () => {
       if (challenges.length) {
@@ -97,6 +107,11 @@ export const ChallengesListDisplay: React.FC<ChallengesListDisplayProps> = memo(
     return (
       <View style={{ flex: 1 }}>
         <FlatList
+          // onScroll={(e) => {
+          //   let offset = e.nativeEvent.contentOffset.y;
+          //   let index = Math.floor(+(offset / Dimensions.get("window").height - StatusBar.currentHeight - 60));
+          //   console.log("index", index);
+          // }}
           initialNumToRender={3}
           maxToRenderPerBatch={4}
           windowSize={5}
@@ -113,6 +128,7 @@ export const ChallengesListDisplay: React.FC<ChallengesListDisplayProps> = memo(
           // getItemLayout={getItemLayout}
           // onScrollToIndexFailed={() => alert("no such index")}
           onViewableItemsChanged={onViewRef.current}
+          viewabilityConfig={config.current}
           onScrollEndDrag={endDrag}
           onScrollBeginDrag={beginDarg}
           // onEndReached={(info) => !scrollEnded.current && currentlyPlaying === 2 && goIndex(0)}
