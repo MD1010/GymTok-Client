@@ -7,13 +7,13 @@ import { NotLoggedInModal } from "../Auth/NotLoggedInModal";
 import { RegisterContainer as RegisterScreen } from "../Auth/RegisterContainer";
 import { ProfileVideoModal } from "../Profile/ProfileVideoModal";
 import { postChallengeScreens } from "../PublishVideo/publishScreens";
-import { ChallengeReplies } from "../Replies/ChallengesRepliesContainer";
+import { ChallengeReplies } from "../Replies/ChallengesReplies";
 import { BottomTabs } from "./BottomTabs";
 import { config } from "./stackNavigationConfig";
 
 interface StackNavigatorProps { }
 
-export const MainNavigator: React.FC<StackNavigatorProps> = ({}) => {
+export const MainNavigator: React.FC<StackNavigatorProps> = ({ }) => {
   const Stack = createStackNavigator();
   return (
     <NavigationContainer independent={true}>

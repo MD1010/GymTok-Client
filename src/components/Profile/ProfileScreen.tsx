@@ -35,7 +35,7 @@ export const ProfileScreen: React.FC<ProfileProps> = ({
           return Object.assign({ image: imageURI }, { ...item });
         })
       );
-      isMounted.current && setTempChallanges(asyncRes);
+      setTempChallanges(asyncRes);
     })();
   }, []);
 

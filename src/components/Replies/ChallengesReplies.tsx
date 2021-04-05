@@ -20,7 +20,10 @@ export const ChallengeReplies: React.FC<ChallengeRepliesProps> = ({ }) => {
 
   const getChallengeReplies = async () => {
     const challengesEndpoint = `${process.env.BASE_API_ENPOINT}/challenges/${route.params.challenge._id}/replies`;
+    console.log("before")
     const { res, error } = await fetchAPI(RequestMethod.GET, challengesEndpoint);
+
+    console.log("after")
 
     // console.log("res", res)
     // res &&
@@ -36,23 +39,23 @@ export const ChallengeReplies: React.FC<ChallengeRepliesProps> = ({ }) => {
 
     res && setChallengeReplies([{
       _id: 1,
-      url: "http://193.106.55.109:8000/fdfe5570-de14-4e53-a680-cc3c3994210b.mp4",
+      url: "http://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4",
     },
     {
       _id: 2,
-      url: "http://193.106.55.109:8000/fdfe5570-de14-4e53-a680-cc3c3994210b.mp4",
+      url: "http://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4",
     },
     {
       _id: 3,
-      url: "http://193.106.55.109:8000/fdfe5570-de14-4e53-a680-cc3c3994210b.mp4",
+      url: "http://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4",
     },
     {
       _id: 4,
-      url: "http://193.106.55.109:8000/fdfe5570-de14-4e53-a680-cc3c3994210b.mp4",
+      url: "http://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4",
     },
     {
       _id: 5,
-      url: "http://193.106.55.109:8000/fdfe5570-de14-4e53-a680-cc3c3994210b.mp4",
+      url: "http://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4",
     },])
   };
 
@@ -66,72 +69,67 @@ export const ChallengeReplies: React.FC<ChallengeRepliesProps> = ({ }) => {
 
   return (
     <View style={{
-      height: Dimensions.get("window").height, backgroundColor: "black", marginTop: 20,
+      flex: 1, backgroundColor: "black", marginTop: 20,
 
     }}>
       <View style={styles.challengeVideoContainter}>
-        {/* <View style={{
-          flexDirection: "row-reverse"
-        }}> */}
-        <Player style={styles.video} uri={streaminServerUrl} isPlaying={false} resizeMode="cover" />
-        <View style={styles.challengeVideoDetails}>
-          <View style={styles.likesView}>
-            <Text style={styles.likesText}>likes:</Text>
-            <Text style={styles.likesText}>{route.params.challenge.likes.length}</Text>
-          </View>
-          <View style={styles.commentsView}>
-            <Text style={styles.commentsText}>comments:</Text>
-            <Text style={styles.commentsText}>{route.params.challenge.replies.length}</Text>
-          </View>
-          {/* </View> */}
+        <View style={styles.videoContianiter}>
+          <Player style={styles.video} uri={streaminServerUrl} isPlaying={false} resizeMode="cover" />
         </View>
       </View>
-      <View style={{ flex: 4 }}>
-        <ProfileScreen numColumns={2} challenges={challengeReplies} />
+      <View style={{ flex: 1 }}>
+        <ProfileScreen numColumns={2} items={challengeReplies} />
       </View>
     </View >
-    // <View style={{ backgroundColor: "red" }}>
-    //   {/* <ProfileContainer /> */}
-    //   {/* <View style={styles.challengeVideo}> */}
-    //   {/* </View> */}
-    //   <View style={{ width: "100%", height: "50%" }}>
-    //     <Player uri={"http://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4"} isPlaying={false} resizeMode="cover" />
-
-    //     {/* <Challenge challenge={route.params.challenge} isVideoPlaying /> */}
-    //     {/* <Text>asdasdasdsd</Text> */}
-    //   </View>
-    //   <View style={{ backgroundColor: "red" }}>
-    //     <ProfileScreen numColumns={2} challenges={challengeReplies} />
-    //   </View>
-    // </View>
   );
 };
 
 const styles = StyleSheet.create({
+  videoContianiter: {
+    flex: 1,
+    width: '100%',
+    height: "100%",
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: "#fafafa",
+  },
   challengeVideoContainter: {
-    flex: 3,
-    flexDirection: 'row'
+    flex: 1,
+    alignItems: 'center',
+    width: '100%',
+    backgroundColor: 'white'
   },
   challengeVideoDetails: {
+    flex: 1,
+    width: "50%",
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   likesView: {
-
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   likesText: {
-    color: Colors.white
+    color: Colors.black
   },
   commentsView: {
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   commentsText: {
-    color: Colors.white
+    color: Colors.black
   },
   video: {
-    position: "absolute",
-    top: 10,
-    left: 5,
-    bottom: 0,
-    right: 0,
-    height: "80%",
-    width: "50%"
+    flex: 0.9,
+    width: "90%",
+    borderRadius: 20,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
   }
 });
