@@ -12,7 +12,7 @@ import { fetchAPI, RequestMethod } from "../../utils/fetchAPI";
 import { Player, DismissKeyboard, SubmitButton, Colors, TouchableHighlightButton, Loader } from "../shared";
 
 type StackParamsList = {
-  params: { videoUri: string; taggedPeople: IUser[]; isReply: boolean };
+  params: { videoUri: string; taggedPeople: IUser[]; isReply: boolean, hashtags: string[] };
 };
 
 export const PublishScreen: React.FC = () => {
@@ -20,6 +20,7 @@ export const PublishScreen: React.FC = () => {
   const navigation = useNavigation();
   const isReply = route.params.isReply;
   const taggedPeople = route?.params?.taggedPeople;
+  const hashtags = route?.params?.hashtags;
   const [isLoading, setIsLoading] = useState(false);
   const { loggedUser } = useSelector(authSelector);
   const captionInput = useRef<string>();
@@ -65,6 +66,14 @@ export const PublishScreen: React.FC = () => {
       return taggedPeople[0].fullName;
     }
     return `${taggedPeople.length} selected`;
+  };
+
+  const displaySelectedHashtags = () => {
+    if (!hashtags?.length) return null;
+    if (hashtags?.length === 1) {
+      return hashtags[0];
+    }
+    return `${hashtags.length} selected`;
   };
 
   const publishChallenge = async () => {
@@ -116,8 +125,13 @@ export const PublishScreen: React.FC = () => {
       />
       <TouchableHighlightButton
         actionWillNavigate
+        optionInfoText={displaySelectedHashtags()}
         optionText={"Add Hashtags"}
-        onSelect={() => navigation.navigate("AddHashtags")}
+        onSelect={() => 
+          route.params?.hashtags?.length
+          ? navigation.navigate("AddHashtag", { selectedHashtags: route.params?.hashtags })
+          : navigation.navigate("SearchHashtags", { excludedHashtagsToSearch: route.params?.hashtags })
+        }
         icon={<Fontisto name="hashtag" color={Colors.lightGrey2} size={14} />}
       />
     </View>
