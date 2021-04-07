@@ -1,10 +1,11 @@
-import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Dimensions, FlatList, StatusBar, Text, View } from "react-native";
 import { IChallenge } from "../../interfaces";
 import { Loader } from "../shared";
 import { Colors, UIConsts } from "../shared/styles/variables";
 import { Challenge } from "./Challenge";
+import { PanGestureHandler } from "react-native-gesture-handler";
 
 interface ChallengesListDisplayProps {
   challenges: IChallenge[];
@@ -22,27 +23,33 @@ export const ChallengesListDisplay: React.FC<ChallengesListDisplayProps> = memo(
     const flatListRef = useRef<FlatList>(null);
     const [showFooter, setShowFooter] = useState(false);
 
-    const [currentVideos, setCurrentVideos] = useState([]);
     useEffect(() => {
-      // console.log("challenges fetched", challenges.length);
-      // challenges.length hasMoreToLoad
-      // console.log("!!@#!@#!@2!", challenges.length);
-      // console.log("use effect", currentVideos);
-      // setCurrentVideos(challenges.slice(0, 3));
       setShowFooter(false);
-      // console.log("footer set");
     }, [challenges]);
 
-    useEffect(() => {
-      console.log("WJAT", scrollEnded.current);
-    }, [scrollEnded.current]);
+    // useEffect(() => {
+    //   if (challenges.length > 0) {
+    //     goIndex(currentIndexVideo);
+    //   }
+    // }, [challenges, currentIndexVideo]);
 
-    // console.log("after footer set");
+    useFocusEffect(
+      React.useCallback(() => {
+        navigation.addListener("blur", () => {
+          setNavigatedOutOfScreen(true);
+        });
+        navigation.addListener("focus", () => {
+          setNavigatedOutOfScreen(false);
+        });
+
+        return () => {
+          navigation.removeListener("blur", null);
+          navigation.removeListener("focus", null);
+        };
+      }, [])
+    );
+
     const onViewRef = useRef(({ viewableItems }) => {
-      // change playing video only after user stop dragging
-      // console.log(viewableItems);
-      // scrollEnded.current && console.log("switch!");
-      // console.log("playing", viewableItems[0]?.index);
       scrollEnded.current && setCurrentlyPlaying(viewableItems[0]?.index);
     });
 
@@ -51,42 +58,15 @@ export const ChallengesListDisplay: React.FC<ChallengesListDisplayProps> = memo(
     };
 
     const renderItem = ({ item, index }) => {
-      return <Challenge challenge={item} isVideoPlaying={index === currentlyPlaying} />;
+      return <Challenge challenge={item} isVideoPlaying={index === currentlyPlaying && !navigatedOutOfScreen} />;
     };
 
-    const beginDarg = () => {
-      scrollEnded.current = false;
-      console.log("begin drag");
-      // console.log("before", challenges.length);
-      // currentlyPlaying === 2 && challenges.push(...challenges.slice(0, 3));
-      // challenges.slice(0, 2);
-    };
-    const endDrag = () => {
-      scrollEnded.current = true;
-      console.log("end drag");
-    };
-    console.log("render!!!!");
-    const onScrollEndDrag = () => {
-      scrollEnded.current = true;
-    };
-
-    const keyExtractor = useCallback((challenge, i) => {
-      return i.toString();
-      // return challenge._id;
-    }, []);
-
+    const beginDarg = useCallback(() => (scrollEnded.current = false), []);
+    const endDrag = useCallback(() => (scrollEnded.current = true), []);
+    const keyExtractor = useCallback((challenge, i) => challenge._id, []);
     const snapToInterval = useMemo(() => Dimensions.get("window").height - UIConsts.bottomNavbarHeight, []);
-    // const getItemLayout = (data, index) => ({
-    //   length: Dimensions.get("window").height - UIConsts.bottomNavbarHeight,
-    //   offset: (Dimensions.get("window").height - UIConsts.bottomNavbarHeight) * index,
-    //   index,
-    // });
-
-    // useEffect(() => {
-    //   console.log("footer has to dissapear!");
-    // }, [isNewDataFetched]);
     const config = useRef({
-      itemVisiblePercentThreshold: 10,
+      viewAreaCoveragePercentThreshold: 100,
     });
 
     const Footer = () => {
@@ -105,46 +85,39 @@ export const ChallengesListDisplay: React.FC<ChallengesListDisplayProps> = memo(
       hasToLoadMore && getChallenges();
     };
     return (
-      <View style={{ flex: 1 }}>
-        <FlatList
-          // onScroll={(e) => {
-          //   let offset = e.nativeEvent.contentOffset.y;
-          //   let index = Math.floor(+(offset / Dimensions.get("window").height - StatusBar.currentHeight - 60));
-          //   console.log("index", index);
-          // }}
-          initialNumToRender={5}
-          maxToRenderPerBatch={5}
-          windowSize={7}
-          data={challenges}
-          renderItem={renderItem}
-          keyExtractor={keyExtractor}
-          showsVerticalScrollIndicator={false}
-          snapToInterval={snapToInterval}
-          snapToAlignment={"start"}
-          decelerationRate={"fast"}
-          ref={(ref) => {
-            flatListRef.current = ref;
-          }}
-          // getItemLayout={getItemLayout}
-          // onScrollToIndexFailed={() => alert("no such index")}
-          onViewableItemsChanged={onViewRef.current}
-          viewabilityConfig={config.current}
-          onScrollEndDrag={endDrag}
-          onScrollBeginDrag={beginDarg}
-          // onEndReached={(info) => !scrollEnded.current && currentlyPlaying === 2 && goIndex(0)}
-          onEndReached={handleLoadMore}
-          onEndReachedThreshold={0.5}
-          ListFooterComponent={showFooter ? <Footer /> : null}
-          ListFooterComponentStyle={{
-            height: 80,
-            backgroundColor: Colors.darkBlueOpaque,
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        ></FlatList>
-
-        {/* {showFooter && <Footer />} */}
-      </View>
+      <>
+        <View style={{ flex: 1 }}>
+          <FlatList
+            initialNumToRender={5}
+            maxToRenderPerBatch={5}
+            windowSize={7}
+            data={challenges}
+            renderItem={renderItem}
+            keyExtractor={keyExtractor}
+            showsVerticalScrollIndicator={false}
+            snapToInterval={snapToInterval}
+            snapToAlignment={"start"}
+            decelerationRate={"fast"}
+            ref={(ref) => {
+              flatListRef.current = ref;
+            }}
+            onScrollToIndexFailed={() => alert("no such index")}
+            onViewableItemsChanged={onViewRef.current}
+            viewabilityConfig={config.current}
+            onScrollEndDrag={endDrag}
+            onScrollBeginDrag={beginDarg}
+            onEndReached={handleLoadMore}
+            onEndReachedThreshold={0.5}
+            ListFooterComponent={showFooter ? <Footer /> : null}
+            ListFooterComponentStyle={{
+              height: 80,
+              backgroundColor: Colors.darkBlueOpaque,
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          ></FlatList>
+        </View>
+      </>
     );
   }
 );
