@@ -5,6 +5,7 @@ import { useIsFocused, useNavigation } from "@react-navigation/native";
 import * as ImagePicker from "expo-image-picker";
 import { Fontisto, MaterialIcons, Ionicons, Feather } from "@expo/vector-icons";
 import { PinchGestureHandler } from "react-native-gesture-handler";
+import { StopWatchContainer } from "./StopWatch";
 
 export const CameraScreen: React.FC = () => {
   const navigation = useNavigation();
@@ -15,6 +16,18 @@ export const CameraScreen: React.FC = () => {
   const [zoom, setZoom] = useState<any>(0);
   const isFocused = useIsFocused();
   const cameraRef = useRef(null);
+  const [stopwatchStart, setStopwatchStart] = useState<boolean>(false);
+  const [stopwatchReset, setStopwatchReset] = useState<boolean>(false);
+
+  const toggleStopwatch = () => {
+    setStopwatchStart(!stopwatchStart);
+    setStopwatchReset(false);
+  };
+
+  const resetStopwatch = () => {
+    setStopwatchStart(false);
+    setStopwatchReset(true);
+  };
 
   useEffect(() => {
     (async () => {
@@ -92,6 +105,8 @@ export const CameraScreen: React.FC = () => {
                   <Text style={styles.text}> Back </Text>
                 </TouchableOpacity>
 
+                <StopWatchContainer stopwatchReset={stopwatchReset} stopwatchStart={stopwatchStart} />
+
                 <TouchableOpacity
                   onPress={() => {
                     setFlash(
@@ -122,6 +137,7 @@ export const CameraScreen: React.FC = () => {
                     style={styles.button}
                     onPress={() => {
                       record();
+                      toggleStopwatch();
                     }}
                   >
                     <Fontisto name={"record"} color={"red"} size={60} />
@@ -145,6 +161,7 @@ export const CameraScreen: React.FC = () => {
                     style={styles.button}
                     onPress={() => {
                       stopRecord();
+                      toggleStopwatch();
                     }}
                   >
                     <Feather name={"stop-circle"} color={"red"} size={50} />
