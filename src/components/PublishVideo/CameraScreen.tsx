@@ -59,7 +59,8 @@ export const CameraScreen: React.FC = () => {
       setRecording(true);
       let video = await cameraRef.current.recordAsync();
       console.log(video.uri);
-      navigation.navigate("Publish", { videoUri: video.uri });
+      // navigation.navigate("Publish", { videoUri: video.uri });
+      navigation.navigate("ApproveVideo", { videoURL: video.uri });
     }
   };
 
