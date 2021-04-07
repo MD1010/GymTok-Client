@@ -24,13 +24,13 @@ const UIContainer: React.FC<IUIContainer> = ({ goBack, goForward }) => {
       <View style={styles.uiContainer}>
         <View style={[styles.rowContainer, { width: 60, justifyContent: "space-between" }]}>
           <TouchableOpacity onPress={() => goBack()}>
-            <Text>Retake</Text>
+            <Text style={{ color: "#fff", fontSize: 18 }}>Retake</Text>
           </TouchableOpacity>
         </View>
 
         <View style={[styles.rowContainer, { justifyContent: "space-between" }]}>
           <TouchableOpacity onPress={() => goForward()}>
-            <Text>Use Video</Text>
+            <Text style={{ color: "#fff", fontSize: 18 }}>Use Video</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -54,10 +54,10 @@ export const ApproveVideo: React.FC = () => {
   return (
     <View style={[styles.container]}>
       <Player style={styles.video} uri={videoURL} isPlaying={true} resizeMode="cover" />
-      {/* <View style={styles.infoContainer}>
+      <View style={styles.infoContainer}>
         <UIContainer goBack={goBack} goForward={goForward} />
-      </View> */}
-      <UIContainer goBack={goBack} goForward={goForward} />
+      </View>
+      {/* <UIContainer goBack={goBack} goForward={goForward} /> */}
     </View>
   );
 };
