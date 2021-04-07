@@ -21,7 +21,7 @@ const postsSlice = createSlice({
   name: "posts",
   initialState,
   reducers: {
-    latestPostsFetchSuccess: (state, action: PayloadAction<IPost[]>) => {
+    fetchMoreSuccess: (state, action: PayloadAction<IPost[]>) => {
       if (action.payload.length < itemsToFetch) state.hasMoreToFetch = false;
       state.latestFetchedPosts = [...state.latestFetchedPosts, ...action.payload];
       state.error = null;
@@ -31,7 +31,10 @@ const postsSlice = createSlice({
       state.userPosts = [...state.userPosts, ...action.payload];
       state.error = null;
     },
-    postsFetchFailed: (state, action: PayloadAction<string>) => {
+    refreshSuccess: (state, action: PayloadAction<IPost[]>) => {
+      state.latestFetchedPosts = action.payload;
+    },
+    fetchFailed: (state, action: PayloadAction<string>) => {
       state.error = action.payload;
     },
     resetFetchFailedError: (state) => {

@@ -1,16 +1,14 @@
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import isEmpty from "lodash/isEmpty";
 import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Dimensions, FlatList, StatusBar, Text, View } from "react-native";
-import { IPost } from "../../interfaces";
+import { Dimensions, FlatList, Text, View } from "react-native";
+import { useDispatch, useSelector } from "react-redux";
+import { authSelector } from "../../store/auth/authSlice";
+import { getMorePosts, getMostRecommended, getUserPosts } from "../../store/posts/actions";
+import { postsSelector } from "../../store/posts/postsSlice";
 import { Loader } from "../shared";
 import { Colors, UIConsts } from "../shared/styles/variables";
 import { Post } from "./Post";
-import { PanGestureHandler } from "react-native-gesture-handler";
-import { useDispatch, useSelector } from "react-redux";
-import { postsSelector } from "../../store/posts/postsSlice";
-import { authSelector } from "../../store/auth/authSlice";
-import { getLatestPosts, getMostRecommended, getUserPosts } from "../../store/posts/actions";
-import isEmpty from "lodash/isEmpty";
 
 interface PostsListProps {
   /**
@@ -44,7 +42,7 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed }) => {
       isFeed ? dispatch(getMostRecommended()) : dispatch(getUserPosts());
     } else {
       // loggedUser is null -> didnt log in yet
-      dispatch(getLatestPosts());
+      dispatch(getMorePosts());
     }
   };
   useEffect(() => {
