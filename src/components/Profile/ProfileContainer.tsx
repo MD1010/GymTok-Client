@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { IChallenge } from "../../interfaces/Challenge";
+import { IPost } from "../../interfaces/Post";
 import { fetchAPI, RequestMethod } from "../../utils/fetchAPI";
 import { ProfileScreen } from "./ProfileScreen";
 
