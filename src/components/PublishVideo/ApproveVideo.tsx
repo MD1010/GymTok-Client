@@ -6,7 +6,7 @@ import { Avatar } from "react-native-elements";
 import { TouchableOpacity, TouchableWithoutFeedback } from "react-native-gesture-handler";
 import { Colors } from "../shared/styles/variables";
 import { Player } from "../shared/VideoPlayer";
-import { styles } from "../Challenge/Challenge.style";
+import { styles } from "../Posts/Posts.style";
 import { RouteProp, useRoute } from "@react-navigation/native";
 
 type StackParamsList = {
@@ -52,7 +52,7 @@ export const ApproveVideo: React.FC = () => {
   };
 
   return (
-    <View style={[styles.container]}>
+    <View style={styles.container}>
       <Player style={styles.video} uri={videoURL} isPlaying={true} resizeMode="cover" />
       <View style={styles.infoContainer}>
         <UIContainer goBack={goBack} goForward={goForward} />
