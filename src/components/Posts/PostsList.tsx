@@ -17,14 +17,14 @@ interface PostsListProps {
   isFeed?: boolean;
 }
 
-export const PostsList: React.FC<PostsListProps> = ({ isFeed }) => {
+export const PostsList: React.FC<PostsListProps> = memo(({ isFeed }) => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const [navigatedOutOfScreen, setNavigatedOutOfScreen] = useState(false);
   const { loggedUser } = useSelector(authSelector);
   const scrollEnded = useRef<boolean>(false);
-  const [currentlyPlaying, setCurrentlyPlaying] = useState(0);
-  // let previousPlaying = 0;
+  const playingVideoIndex = useRef(0);
+  const [currentlyPlaying, setCurrentlyPlaying] = useState(playingVideoIndex.current);
   const flatListRef = useRef<FlatList>(null);
   const [showFooter, setShowFooter] = useState(false);
   const { hasMoreToFetch, error, latestFetchedPosts, userPosts } = useSelector(postsSelector);
@@ -71,7 +71,8 @@ export const PostsList: React.FC<PostsListProps> = ({ isFeed }) => {
 
   const onViewRef = useRef(({ viewableItems }) => {
     if (viewableItems[0]?.index === undefined) return;
-    scrollEnded.current && setCurrentlyPlaying(viewableItems[0]?.index);
+    playingVideoIndex.current = viewableItems[0]?.index;
+    // scrollEnded.current && setCurrentlyPlaying(viewableItems[0]?.index);
   });
 
   const goIndex = (index: number) => {
@@ -88,10 +89,18 @@ export const PostsList: React.FC<PostsListProps> = ({ isFeed }) => {
     [isFeed]
   );
   const config = useRef<ViewabilityConfig>({
-    // viewAreaCoveragePercentThreshold: 90,
     itemVisiblePercentThreshold: 90,
     minimumViewTime: 150,
   });
+
+  const itemLayout = useCallback(
+    (_, index) => ({
+      length: viewHeight,
+      offset: viewHeight * index,
+      index,
+    }),
+    []
+  );
 
   const Footer = () => {
     if (posts.length) {
@@ -120,21 +129,17 @@ export const PostsList: React.FC<PostsListProps> = ({ isFeed }) => {
   };
   return (
     <>
-      <View style={{ height: Dimensions.get("window").height - UIConsts.bottomNavbarHeight }}>
+      <View style={{ height: viewHeight }}>
         <FlatList
           initialNumToRender={5}
           maxToRenderPerBatch={3}
-          windowSize={7}
+          windowSize={3}
           data={posts}
           pagingEnabled
           renderItem={renderItem}
           keyExtractor={keyExtractor}
           showsVerticalScrollIndicator={false}
-          getItemLayout={(_, index) => ({
-            length: viewHeight,
-            offset: viewHeight * index,
-            index,
-          })}
+          getItemLayout={itemLayout}
           snapToAlignment={"start"}
           decelerationRate={"fast"}
           ref={(ref) => {
@@ -145,7 +150,13 @@ export const PostsList: React.FC<PostsListProps> = ({ isFeed }) => {
           viewabilityConfig={config.current}
           onScrollBeginDrag={beginDarg}
           onScrollEndDrag={endDrag}
-          // onMomentumScrollEnd={() => console.log("momentum end")}
+          //onTouchEnd={() => console.log("end")}
+
+          onMomentumScrollEnd={() => {
+            // console.log("momentum end", playingVideoIndex.current);
+            // only now set the currently playing take it from variable
+            setCurrentlyPlaying(playingVideoIndex.current);
+          }}
           onEndReached={handleLoadMore}
           onEndReachedThreshold={0.5}
           ListFooterComponent={showFooter ? <Footer /> : null}
@@ -159,4 +170,4 @@ export const PostsList: React.FC<PostsListProps> = ({ isFeed }) => {
       </View>
     </>
   );
-};
+});
