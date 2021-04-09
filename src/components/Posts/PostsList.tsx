@@ -1,7 +1,7 @@
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import isEmpty from "lodash/isEmpty";
 import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Dimensions, FlatList, StatusBar, Text, View } from "react-native";
+import { Dimensions, FlatList, StatusBar, Text, View, ViewabilityConfig } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { IPost } from "../../interfaces/Post";
 import { authSelector } from "../../store/auth/authSlice";
@@ -25,7 +25,8 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentVideoI
   const [navigatedOutOfScreen, setNavigatedOutOfScreen] = useState<boolean>(false);
   const { loggedUser } = useSelector(authSelector);
   const scrollEnded = useRef<boolean>(false);
-  const [currentlyPlaying, setCurrentlyPlaying] = useState<number>(0);
+  const playingVideoIndex = useRef(0);
+  const [currentlyPlaying, setCurrentlyPlaying] = useState(playingVideoIndex.current);
   const flatListRef = useRef<FlatList>(null);
   const [showFooter, setShowFooter] = useState<boolean>(false);
   const { hasMoreToFetch, error, latestFetchedPosts, userPosts } = useSelector(postsSelector);
@@ -82,8 +83,9 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentVideoI
   );
 
   const onViewRef = useRef(({ viewableItems }) => {
-    if (!viewableItems[0]?.index) return;
-    scrollEnded.current && setCurrentlyPlaying(viewableItems[0]?.index);
+    if (viewableItems[0]?.index === undefined) return;
+    playingVideoIndex.current = viewableItems[0]?.index;
+    // scrollEnded.current && setCurrentlyPlaying(viewableItems[0]?.index);
   });
 
   const goIndex = (index: number) => {
@@ -99,10 +101,19 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentVideoI
     () => (isFeed ? Dimensions.get("window").height - UIConsts.bottomNavbarHeight : Dimensions.get("window").height),
     [isFeed]
   );
-  const config = useRef({
-    viewAreaCoveragePercentThreshold: 90,
+  const config = useRef<ViewabilityConfig>({
+    itemVisiblePercentThreshold: 90,
     minimumViewTime: 150,
   });
+
+  const itemLayout = useCallback(
+    (_, index) => ({
+      length: viewHeight,
+      offset: viewHeight * index,
+      index,
+    }),
+    []
+  );
 
   const Footer = () => {
     if (posts.length) {
@@ -131,21 +142,17 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentVideoI
   };
   return (
     <>
-      <View style={{ height: Dimensions.get("window").height - UIConsts.bottomNavbarHeight }}>
+      <View style={{ height: viewHeight }}>
         <FlatList
           initialNumToRender={5}
           maxToRenderPerBatch={3}
-          windowSize={7}
+          windowSize={3}
           data={posts}
           pagingEnabled
           renderItem={renderItem}
           keyExtractor={keyExtractor}
           showsVerticalScrollIndicator={false}
-          getItemLayout={(_, index) => ({
-            length: viewHeight,
-            offset: viewHeight * index,
-            index,
-          })}
+          getItemLayout={itemLayout}
           snapToAlignment={"start"}
           decelerationRate={"fast"}
           ref={(ref) => {
@@ -163,7 +170,13 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentVideoI
           viewabilityConfig={config.current}
           onScrollBeginDrag={beginDarg}
           onScrollEndDrag={endDrag}
-          // onMomentumScrollEnd={() => console.log("momentum end")}
+          //onTouchEnd={() => console.log("end")}
+
+          onMomentumScrollEnd={() => {
+            // console.log("momentum end", playingVideoIndex.current);
+            // only now set the currently playing take it from variable
+            setCurrentlyPlaying(playingVideoIndex.current);
+          }}
           onEndReached={handleLoadMore}
           onEndReachedThreshold={0.5}
           ListFooterComponent={showFooter ? <Footer /> : null}
@@ -177,4 +190,4 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentVideoI
       </View>
     </>
   );
-};
+});
