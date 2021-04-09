@@ -50,7 +50,7 @@ export const CameraScreen: React.FC = () => {
   }
 
   const pickVideo = async () => {
-    const selectedVideo = await ImagePicker.launchImageLibraryAsync({
+    const selectedVideo: any = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Videos,
     });
     if (!selectedVideo.cancelled) {
