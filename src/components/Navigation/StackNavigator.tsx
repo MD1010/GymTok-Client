@@ -41,7 +41,7 @@ export const MainNavigator: React.FC<StackNavigatorProps> = ({ }) => {
           }}
         />
         <Stack.Screen name="Replies" component={ChallengeReplies} options={{
-          headerShown: false
+          title: "Replies"
         }} />
 
         <Stack.Screen
