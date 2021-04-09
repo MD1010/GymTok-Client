@@ -53,6 +53,10 @@ export const styles = StyleSheet.create({
     marginTop: 7,
     color: Colors.white,
   },
+  hashtag: {
+    marginTop: 7,
+    color: Colors.white,
+  },
   challengeScore: {
     color: Colors.white,
     alignSelf: "flex-end",

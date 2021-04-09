@@ -11,4 +11,5 @@ export interface IPost {
   video: string;
   likes: string[];
   replies: string[];
+  hashtags: string[];
 }
