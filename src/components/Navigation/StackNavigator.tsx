@@ -10,6 +10,7 @@ import { postChallengeScreens } from "../PublishVideo/publishScreens";
 import { BottomTabs } from "./BottomTabs";
 import { config } from "./stackNavigationConfig";
 import { ApproveVideo } from "../PublishVideo/ApproveVideo";
+import { CameraScreen } from "../PublishVideo/CameraScreen";
 
 interface StackNavigatorProps {}
 
@@ -27,6 +28,16 @@ export const MainNavigator: React.FC<StackNavigatorProps> = ({}) => {
         />
         <Stack.Screen name="Register" component={RegisterScreen} options={{ title: "Sign up" }} />
         <Stack.Screen name="Login" component={LoginScreen} options={{ title: "Log in" }} />
+        <Stack.Screen
+          name="Camera"
+          component={CameraScreen}
+          options={{
+            cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS,
+            animationEnabled: true,
+            headerTransparent: true,
+          }}
+        />
+
         <Stack.Screen
           name="NotLoggedIn"
           component={NotLoggedInModal}

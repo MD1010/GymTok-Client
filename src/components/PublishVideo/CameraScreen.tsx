@@ -1,12 +1,14 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useLayoutEffect, FC } from "react";
 import { Camera } from "expo-camera";
 import { StyleSheet, Text, View, TouchableOpacity, Platform } from "react-native";
-import { useIsFocused, useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useIsFocused, useNavigation } from "@react-navigation/native";
 import * as ImagePicker from "expo-image-picker";
 import { Fontisto, MaterialIcons, Ionicons, Feather } from "@expo/vector-icons";
 import { PinchGestureHandler } from "react-native-gesture-handler";
 import { StopWatchContainer } from "./StopWatch";
 import * as Permissions from "expo-permissions";
+import { Colors } from "../shared/styles/variables";
+import { StackNavigationOptions } from "@react-navigation/stack";
 
 export const CameraScreen: React.FC = () => {
   const navigation = useNavigation();
@@ -15,7 +17,6 @@ export const CameraScreen: React.FC = () => {
   const [flash, setFlash] = useState(Camera.Constants.FlashMode.off);
   const [recording, setRecording] = useState<boolean>(false);
   const [zoom, setZoom] = useState<any>(0);
-  const isFocused = useIsFocused();
   const cameraRef = useRef(null);
   const [stopwatchStart, setStopwatchStart] = useState<boolean>(false);
   const [stopwatchReset, setStopwatchReset] = useState<boolean>(false);
@@ -30,6 +31,29 @@ export const CameraScreen: React.FC = () => {
     setStopwatchReset(true);
   };
 
+  const headerRight = () => (
+    <MaterialIcons
+      name={flash === Camera.Constants.FlashMode.on ? "flash-on" : "flash-off"}
+      size={25}
+      color={Colors.white}
+      style={{ padding: 10 }}
+      onPress={() => {
+        setFlash(
+          flash === Camera.Constants.FlashMode.on ? Camera.Constants.FlashMode.off : Camera.Constants.FlashMode.on
+        );
+      }}
+    />
+  );
+
+  const centerHeader = () => <StopWatchContainer stopwatchReset={stopwatchReset} stopwatchStart={stopwatchStart} />;
+
+  useEffect(() => {
+    navigation.setOptions({
+      headerRight,
+      headerTitle: centerHeader,
+    } as StackNavigationOptions);
+  }, [headerRight]);
+
   useEffect(() => {
     (async () => {
       const audioRecording =
@@ -41,13 +65,6 @@ export const CameraScreen: React.FC = () => {
       setHasPermission(audioRecording.granted);
     })();
   }, []);
-
-  if (hasPermission === null) {
-    return <View />;
-  }
-  // if (hasPermission === false) {
-  //   return <Text>No access to camera</Text>;
-  // }
 
   const pickVideo = async () => {
     const selectedVideo: any = await ImagePicker.launchImageLibraryAsync({
@@ -98,85 +115,61 @@ export const CameraScreen: React.FC = () => {
   return (
     <PinchGestureHandler onGestureEvent={onPinchGestureEvent}>
       <View style={styles.container}>
-        {isFocused && (
-          <Camera ref={cameraRef} style={styles.camera} type={type} flashMode={flash} zoom={zoom}>
-            <View style={{ flex: 1, flexDirection: "column", justifyContent: "space-between" }}>
-              <View style={styles.button}>
+        <Camera ref={cameraRef} style={styles.camera} type={type} flashMode={flash} zoom={zoom}>
+          <View style={{ flex: 1, flexDirection: "column", justifyContent: "space-between" }}>
+            <View style={styles.button}></View>
+            {!recording && (
+              <View style={styles.buttonContainer}>
                 <TouchableOpacity
+                  style={styles.button}
                   onPress={() => {
-                    navigation.goBack();
-                  }}
-                >
-                  <Ionicons name={"arrow-back"} color={"white"} size={35} />
-                  <Text style={styles.text}> Back </Text>
-                </TouchableOpacity>
-
-                <StopWatchContainer stopwatchReset={stopwatchReset} stopwatchStart={stopwatchStart} />
-
-                <TouchableOpacity
-                  onPress={() => {
-                    setFlash(
-                      flash === Camera.Constants.FlashMode.on
-                        ? Camera.Constants.FlashMode.off
-                        : Camera.Constants.FlashMode.on
+                    setType(
+                      type === Camera.Constants.Type.back ? Camera.Constants.Type.front : Camera.Constants.Type.back
                     );
                   }}
                 >
-                  <Ionicons name={"ios-flash-outline"} color={"white"} size={35} />
-                  <Text style={styles.text}> Flash </Text>
+                  <MaterialIcons
+                    name={Platform.OS === "android" ? "flip-camera-android" : "flip-camera-ios"}
+                    color={"white"}
+                    size={35}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.button}
+                  onPress={() => {
+                    record();
+                    toggleStopwatch();
+                  }}
+                >
+                  <Fontisto name={"record"} color={"red"} size={60} />
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  style={styles.button}
+                  onPress={() => {
+                    pickVideo();
+                  }}
+                >
+                  <Ionicons name={"md-image-outline"} color={"white"} size={35} />
                 </TouchableOpacity>
               </View>
-              {!recording && (
-                <View style={styles.buttonContainer}>
-                  <TouchableOpacity
-                    style={styles.button}
-                    onPress={() => {
-                      setType(
-                        type === Camera.Constants.Type.back ? Camera.Constants.Type.front : Camera.Constants.Type.back
-                      );
-                    }}
-                  >
-                    <MaterialIcons name={"flip-camera-android"} color={"white"} size={35} />
-                    <Text style={styles.text}> Flip </Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={styles.button}
-                    onPress={() => {
-                      record();
-                      toggleStopwatch();
-                    }}
-                  >
-                    <Fontisto name={"record"} color={"red"} size={60} />
-                  </TouchableOpacity>
+            )}
 
-                  <TouchableOpacity
-                    style={styles.button}
-                    onPress={() => {
-                      pickVideo();
-                    }}
-                  >
-                    <Ionicons name={"md-image-outline"} color={"white"} size={35} />
-                    <Text style={styles.text}> Gallery </Text>
-                  </TouchableOpacity>
-                </View>
-              )}
-
-              {recording && (
-                <View style={{ flexDirection: "row", justifyContent: "center" }}>
-                  <TouchableOpacity
-                    style={styles.button}
-                    onPress={() => {
-                      stopRecord();
-                      toggleStopwatch();
-                    }}
-                  >
-                    <Feather name={"stop-circle"} color={"red"} size={50} />
-                  </TouchableOpacity>
-                </View>
-              )}
-            </View>
-          </Camera>
-        )}
+            {recording && (
+              <View style={{ flexDirection: "row", justifyContent: "center" }}>
+                <TouchableOpacity
+                  style={styles.button}
+                  onPress={() => {
+                    stopRecord();
+                    toggleStopwatch();
+                  }}
+                >
+                  <Feather name={"stop-circle"} color={"red"} size={50} />
+                </TouchableOpacity>
+              </View>
+            )}
+          </View>
+        </Camera>
       </View>
     </PinchGestureHandler>
   );
