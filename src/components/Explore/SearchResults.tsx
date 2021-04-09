@@ -1,10 +1,9 @@
 import { useNavigation, useRoute } from "@react-navigation/native";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 
 // import all the components we are going to use
 import { SafeAreaView, Text, StyleSheet, View, FlatList, Dimensions } from "react-native";
 import { SearchBar } from "react-native-elements";
-import { SearchResults } from "./SearchResult2";
 
 const ITEMS = [
   {
@@ -21,24 +20,17 @@ const ITEMS = [
   },
 ];
 
-export const CustomSearchBar: React.FC = () => {
+export const SearchResults: React.FC = () => {
+  const route = useRoute<any>();
+  const navigation = useNavigation();
   const [search, setSearch] = useState("");
   const [filteredDataSource, setFilteredDataSource] = useState([]);
   const [masterDataSource, setMasterDataSource] = useState([]);
-  const navigation = useNavigation();
-  const route = useRoute<any>();
-  const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
 
   useEffect(() => {
     setFilteredDataSource(ITEMS);
     setMasterDataSource(ITEMS);
   }, []);
-
-  useEffect(() => {
-    if (route.params?.searchText) {
-      setSearch(route.params?.searchText);
-    }
-  }, [route.params]);
 
   const searchFilterFunction = (text) => {
     // Check if searched text is not blank
@@ -61,35 +53,54 @@ export const CustomSearchBar: React.FC = () => {
     }
   };
 
-  const handleSelectItem = (title) => {
-    setSearch(title);
-    setIsModalVisible(false);
+  const ItemView = ({ item }) => {
+    return (
+      // Flat List Item
+      <Text style={styles.itemStyle} onPress={() => getItem(item)}>
+        {item.id}
+        {"."}
+        {item.title.toUpperCase()}
+      </Text>
+    );
+  };
+
+  const ItemSeparatorView = () => {
+    return (
+      // Flat List Item Separator
+      <View
+        style={{
+          height: 0.5,
+          width: "100%",
+          backgroundColor: "#C8C8C8",
+        }}
+      />
+    );
+  };
+
+  const getItem = (item) => {
+    // Function for click on an item
+    alert("Id : " + item.id + " Title : " + item.title);
   };
 
   return (
     <SafeAreaView style={{ flex: 1, height: Dimensions.get("screen").height, width: Dimensions.get("screen").width }}>
       <View style={styles.container}>
         <SearchBar
-          style={{ height: 40 }}
-          onFocus={() => setIsModalVisible(true)}
-          onSubmitEditing={() => setIsModalVisible(false)}
+          onSubmitEditing={() => navigation.navigate("Explore", { searchText: search })}
           round
+          focusable={true}
           searchIcon={{ size: 24 }}
           onChangeText={(text) => searchFilterFunction(text)}
           onClear={(text) => searchFilterFunction("")}
           placeholder="Type Here..."
           value={search}
         />
-        {isModalVisible && (
-          <SearchResults filteredDataSource={filteredDataSource} handleSelectItem={handleSelectItem} />
-        )}
-
-        {/* <FlatList
+        <FlatList
           data={filteredDataSource}
           keyExtractor={(item, index) => index.toString()}
           ItemSeparatorComponent={ItemSeparatorView}
           renderItem={ItemView}
-        /> */}
+        />
       </View>
     </SafeAreaView>
   );
@@ -98,8 +109,6 @@ export const CustomSearchBar: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "white",
-    flex: 1,
-    flexDirection: "column",
   },
   itemStyle: {
     padding: 10,
