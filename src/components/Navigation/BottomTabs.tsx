@@ -7,6 +7,7 @@ import { Portal, Provider } from "react-native-paper";
 import { useSelector } from "react-redux";
 import { authSelector } from "../../store/auth/authSlice";
 import { NotLoggedInScreen } from "../Auth/NotLoggedInScreen";
+import { NotLoggedInModal } from "../Auth/NotLoggedInModal";
 import { CameraScreen } from "../PublishVideo/CameraScreen";
 import { HomeScreen } from "../Home/HomeScreen";
 import { ProfileContainer as Profile } from "../Profile/ProfileContainer";
@@ -88,17 +89,7 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
 
         <Tab.Screen
           name="New"
-          component={
-            loggedUser
-              ? () => <CameraScreen />
-              : () => (
-                  <NotLoggedInScreen
-                    text={"Explore"}
-                    description={"Discover Challenges By Categories"}
-                    icon={() => <Ionicons name="search-outline" color={Colors.white} size={56} />}
-                  />
-                )
-          }
+          component={loggedUser ? () => <CameraScreen /> : () => <NotLoggedInModal />}
           options={{
             tabBarVisible: false,
             unmountOnBlur: true,
