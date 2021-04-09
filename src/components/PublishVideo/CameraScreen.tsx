@@ -45,9 +45,9 @@ export const CameraScreen: React.FC = () => {
   if (hasPermission === null) {
     return <View />;
   }
-  if (hasPermission === false) {
-    return <Text>No access to camera</Text>;
-  }
+  // if (hasPermission === false) {
+  //   return <Text>No access to camera</Text>;
+  // }
 
   const pickVideo = async () => {
     const selectedVideo: any = await ImagePicker.launchImageLibraryAsync({

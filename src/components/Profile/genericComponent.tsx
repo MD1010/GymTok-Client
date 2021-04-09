@@ -7,6 +7,7 @@ import { useIsMount } from "../../hooks/useIsMount";
 import { generateThumbnail } from "../../utils/generateThumbnail";
 import { Colors } from "../shared/styles/variables";
 import { Item } from "./interfaces";
+import { ChallangeSkeleton } from "../shared/skeletons/ChallangeSkeleton";
 
 interface Props {
   items: Item[];
@@ -18,6 +19,7 @@ export const GenericComponent: React.FC<Props> = ({ items, horizontal, component
   const [thumbnailItems, setThumbnailItems] = useState<any[]>([]);
   const isMounted = useIsMount();
   const navigation = useNavigation();
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const isHorizontal: boolean = horizontal ? horizontal : false;
 
   useEffect(() => {
@@ -28,6 +30,7 @@ export const GenericComponent: React.FC<Props> = ({ items, horizontal, component
           return Object.assign({ image: imageURI }, { ...item });
         })
       );
+      setIsLoading(false);
       isMounted.current && setThumbnailItems(asyncRes);
     })();
   }, []);
@@ -64,9 +67,13 @@ export const GenericComponent: React.FC<Props> = ({ items, horizontal, component
   return (
     <ScrollView contentInsetAdjustmentBehavior="automatic" horizontal={isHorizontal}>
       <SafeAreaView style={{ ...styles.safeArea, flexDirection: isHorizontal ? "row" : "column" }}>
-        {thumbnailItems.map((item, index) => {
-          return renderItem(item, index);
-        })}
+        {isLoading ? (
+          <ChallangeSkeleton />
+        ) : (
+          thumbnailItems.map((item, index) => {
+            return renderItem(item, index);
+          })
+        )}
       </SafeAreaView>
     </ScrollView>
   );
@@ -91,6 +98,7 @@ const styles = StyleSheet.create({
   },
   safeArea: {
     flex: 1,
+    // height: 500,
     height: Dimensions.get("screen").height,
     display: "flex",
     flexWrap: "wrap",
