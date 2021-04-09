@@ -37,7 +37,7 @@ export const ProfileScreen: React.FC<ProfileProps> = ({
       );
       setTempChallanges(asyncRes);
     })();
-  }, []);
+  }, [items]);
 
   const showVideo = (videoURL) => {
     navigation.navigate("UsersProfile", { videoURL: videoURL });

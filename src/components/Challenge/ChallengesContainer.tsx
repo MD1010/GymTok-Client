@@ -38,7 +38,6 @@ export const ChallengesContainer: React.FC<ChallengesContainerProps> = ({
         page: challenges.length / itemsToLoad,
       }
     );
-    console.log("challenges", challenges.length / itemsToLoad);
     if (isMounted.current) {
       res && setChallenges([...challenges, ...res]);
       error && setError(error);
@@ -46,15 +45,15 @@ export const ChallengesContainer: React.FC<ChallengesContainerProps> = ({
   };
 
   const getExistChallenges = async () => {
+    console.log("BASE_API_ENPOINT", process.env.BASE_API_ENPOINT)
+
     const { res, error } = await fetchAPI(RequestMethod.GET, challengesEndpoint, null, {
       size: itemsToLoad,
       page: challenges.length / itemsToLoad,
     });
 
-    if (isMounted.current) {
-      res && setChallenges([...challenges, ...res]);
-      error && setError(error);
-    }
+    res && setChallenges([...challenges, ...res]);
+    error && setError(error);
   };
 
   const getUserChallenges = async () => {

@@ -139,7 +139,6 @@ export const Challenge: React.FC<ChallengeProps> = memo(({ challenge, isVideoPla
   };
 
   const onSwipeLeft = async () => {
-    console.log("111111111111111111111");
     navigation.navigate("Replies", { challenge });
   };
 

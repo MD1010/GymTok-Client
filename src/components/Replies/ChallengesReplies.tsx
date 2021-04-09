@@ -1,5 +1,5 @@
 import { useRoute } from "@react-navigation/core";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { StyleSheet, View, Text, Dimensions } from "react-native";
 import { useSelector } from "react-redux";
 import { IReply } from "../../interfaces";
@@ -8,6 +8,7 @@ import { fetchAPI, RequestMethod } from "../../utils/fetchAPI";
 import { Challenge } from "../Challenge/Challenge";
 import { ProfileContainer } from "../Profile/ProfileContainer";
 import { ProfileScreen } from "../Profile/ProfileScreen";
+import { VideoSkeleton } from "../shared/skeletons/VideoSkeleton";
 import { Colors } from "../shared/styles/variables";
 import { Player } from "../shared/VideoPlayer";
 
@@ -20,10 +21,7 @@ export const ChallengeReplies: React.FC<ChallengeRepliesProps> = ({ }) => {
 
   const getChallengeReplies = async () => {
     const challengesEndpoint = `${process.env.BASE_API_ENPOINT}/challenges/${route.params.challenge._id}/replies`;
-    console.log("before")
     const { res, error } = await fetchAPI(RequestMethod.GET, challengesEndpoint);
-
-    console.log("after")
 
     // console.log("res", res)
     // res &&
@@ -63,18 +61,22 @@ export const ChallengeReplies: React.FC<ChallengeRepliesProps> = ({ }) => {
     getChallengeReplies();
   }, []);
 
-  const streaminServerUrl = `${process.env.VIDEO_SERVER_ENDPOINT}/${route.params.challenge.video}`;
 
-  console.log("challengeReplies", challengeReplies);
+  const streaminServerUrl = `${process.env.VIDEO_SERVER_ENDPOINT}/${route.params.challenge.video}`;
 
   return (
     <View style={{
-      flex: 1, backgroundColor: "black", marginTop: 20,
+      flex: 1, backgroundColor: Colors.darkBlueOpaque, marginTop: 20,
 
     }}>
       <View style={styles.challengeVideoContainter}>
         <View style={styles.videoContianiter}>
-          <Player style={styles.video} uri={streaminServerUrl} isPlaying={false} resizeMode="cover" />
+          {
+            // false ? 
+            <Player style={styles.video} uri={streaminServerUrl} isPlaying={false} resizeMode="cover" >
+              <VideoSkeleton />
+            </Player>
+          }
         </View>
       </View>
       <View style={{ flex: 1 }}>
@@ -91,13 +93,13 @@ const styles = StyleSheet.create({
     height: "100%",
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: "#fafafa",
+    backgroundColor: Colors.darkBlueOpaque,
   },
   challengeVideoContainter: {
     flex: 1,
     alignItems: 'center',
     width: '100%',
-    backgroundColor: 'white'
+    backgroundColor: Colors.darkBlueOpaque
   },
   challengeVideoDetails: {
     flex: 1,
@@ -106,24 +108,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
-  likesView: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  likesText: {
-    color: Colors.black
-  },
-  commentsView: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  commentsText: {
-    color: Colors.black
-  },
   video: {
     flex: 0.9,
     width: "90%",
-    borderRadius: 20,
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
