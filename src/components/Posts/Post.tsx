@@ -1,23 +1,23 @@
 import { FontAwesome } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/core";
-import React, { memo, useContext, useEffect } from "react";
-import { Text, View } from "react-native";
+import { Camera } from "expo-camera";
+import * as ImagePicker from "expo-image-picker";
+import React, { memo, useEffect } from "react";
+import { Text, View, ViewStyle } from "react-native";
 import { Avatar } from "react-native-elements";
 import { TouchableOpacity, TouchableWithoutFeedback } from "react-native-gesture-handler";
 import { useSelector } from "react-redux";
-import { IChallenge } from "../../interfaces";
+import { IPost } from "../../interfaces";
 import { authSelector } from "../../store/auth/authSlice";
 import { Colors } from "../shared/styles/variables";
 import { Player } from "../shared/VideoPlayer";
-import { styles } from "./Challenge.style";
-import { Camera } from "expo-camera";
-import * as ImagePicker from "expo-image-picker";
-import { challengeContext } from "./ChallengeContext";
+import { styles } from "./Posts.style";
 // import { challengeContext } from "./ChallengesContainer";
 
-interface ChallengeProps {
-  challenge: IChallenge;
+interface PostProps {
+  post: IPost;
   isVideoPlaying: boolean;
+  containerStyle?: ViewStyle;
 }
 
 interface IUIContainer {
@@ -80,15 +80,16 @@ const UIContainer: React.FC<IUIContainer> = ({
   );
 };
 
-export const Challenge: React.FC<ChallengeProps> = memo(({ challenge, isVideoPlaying }) => {
-  const { video: videoURL, createdBy, likes, replies } = challenge;
-  const { containerStyle } = useContext(challengeContext);
+export const Post: React.FC<PostProps> = memo(({ post, isVideoPlaying, containerStyle }) => {
+  const { video: videoURL, createdBy, likes, replies } = post;
   const { loggedUser } = useSelector(authSelector);
   const navigation = useNavigation();
   const streaminServerUrl = `${process.env.VIDEO_SERVER_ENDPOINT}/${videoURL}`;
   useEffect(() => {
-    console.log("video::::::" + videoURL);
+    // console.log("video::::::" + videoURL);
   }, [videoURL]);
+
+  // console.log("challenge rendered!!");
 
   const onLikeButtonPress = () => {
     if (loggedUser) {
@@ -118,7 +119,7 @@ export const Challenge: React.FC<ChallengeProps> = memo(({ challenge, isVideoPla
         mediaTypes: ImagePicker.MediaTypeOptions.Videos,
       });
       if (!replyVideo.cancelled) {
-        navigation.navigate("Publish", { videoUri: replyVideo.uri, challengeId: challenge._id });
+        navigation.navigate("Publish", { videoUri: replyVideo.uri, challengeId: post._id });
       }
     } else {
       alert("no access to camera");
@@ -144,7 +145,7 @@ export const Challenge: React.FC<ChallengeProps> = memo(({ challenge, isVideoPla
         <Heading createdBy={createdBy.username} onCameraPress={() => onCameraPress()} />
 
         <View style={styles.rowContainer}>
-          <Text style={styles.info}>{challenge.description}</Text>
+          <Text style={styles.info}>{post.description}</Text>
         </View>
 
         <UIContainer
