@@ -1,12 +1,9 @@
 import { useRoute } from "@react-navigation/core";
-import React, { useCallback, useEffect, useState } from "react";
-import { StyleSheet, View, Text, Dimensions } from "react-native";
+import React, { useEffect, useState } from "react";
+import { StyleSheet, View } from "react-native";
 import { useSelector } from "react-redux";
-import { IReply } from "../../interfaces";
 import { authSelector } from "../../store/auth/authSlice";
 import { fetchAPI, RequestMethod } from "../../utils/fetchAPI";
-import { Challenge } from "../Challenge/Challenge";
-import { ProfileContainer } from "../Profile/ProfileContainer";
 import { ProfileScreen } from "../Profile/ProfileScreen";
 import { VideoSkeleton } from "../shared/skeletons/VideoSkeleton";
 import { Colors } from "../shared/styles/variables";
