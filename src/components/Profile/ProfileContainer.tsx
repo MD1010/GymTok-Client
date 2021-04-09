@@ -21,6 +21,31 @@ const challenges = [
     url: "http://193.106.55.109:8000/fdfe5570-de14-4e53-a680-cc3c3994210b.mp4",
     numOfLikes: "100K",
   },
+  {
+    _id: 4,
+    url: "http://193.106.55.109:8000/fdfe5570-de14-4e53-a680-cc3c3994210b.mp4",
+    numOfLikes: "100K",
+  },
+  {
+    _id: 5,
+    url: "http://193.106.55.109:8000/fdfe5570-de14-4e53-a680-cc3c3994210b.mp4",
+    numOfLikes: "100K",
+  },
+  {
+    _id: 6,
+    url: "http://193.106.55.109:8000/fdfe5570-de14-4e53-a680-cc3c3994210b.mp4",
+    numOfLikes: "100K",
+  },
+  {
+    _id: 7,
+    url: "http://193.106.55.109:8000/fdfe5570-de14-4e53-a680-cc3c3994210b.mp4",
+    numOfLikes: "100K",
+  },
+  {
+    _id: 8,
+    url: "http://193.106.55.109:8000/fdfe5570-de14-4e53-a680-cc3c3994210b.mp4",
+    numOfLikes: "100K",
+  },
   // {
   //   _id: 4,
   //   url: "http://193.106.55.109:8000/fdfe5570-de14-4e53-a680-cc3c3994210b.mp4",
@@ -75,5 +100,5 @@ export const ProfileContainer: React.FC<ProfileContainerProps> = ({}) => {
   //   useEffect(() => {
   //     fetchChallenges();
   //   }, []);
-  return <ProfileScreen items={challenges} numColumns={3} />;
+  return <ProfileScreen items={challenges} />;
 };

@@ -57,10 +57,10 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentVideoI
   // todo Dov
   useEffect(() => {
     if (currentVideoID && posts.length > 0) {
-      console.log("video idddddddddddddd: " + currentVideoID);
-      console.log("postssss lengthhhhhh: " + posts.length);
+      // console.log("video idddddddddddddd: " + currentVideoID);
+      // console.log("postssss lengthhhhhh: " + posts.length);
       let wantedIndex = posts.findIndex((post) => post.video === currentVideoID);
-      console.log("wanteddddd indexxxxx: " + wantedIndex);
+      // console.log("wanteddddd indexxxxx: " + wantedIndex);
       goIndex(wantedIndex);
     }
   }, [posts, currentVideoID]);
@@ -148,7 +148,7 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentVideoI
               if (posts.length !== 0 && flatListRef.current !== null) {
                 flatListRef.current.scrollToIndex({ index: error.index, animated: true });
               }
-            }, 100);
+            }, 0);
           }}
           onViewableItemsChanged={onViewRef.current}
           viewabilityConfig={config.current}
