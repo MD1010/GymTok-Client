@@ -1,7 +1,7 @@
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import isEmpty from "lodash/isEmpty";
 import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Dimensions, FlatList, StatusBar, Text, View } from "react-native";
+import { Dimensions, FlatList, StatusBar, Text, View, ViewabilityConfig } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { authSelector } from "../../store/auth/authSlice";
 import { getMorePosts, getMostRecommended, getUserPosts } from "../../store/posts/actions";
@@ -70,7 +70,7 @@ export const PostsList: React.FC<PostsListProps> = ({ isFeed }) => {
   );
 
   const onViewRef = useRef(({ viewableItems }) => {
-    if (!viewableItems[0]?.index) return;
+    if (viewableItems[0]?.index === undefined) return;
     scrollEnded.current && setCurrentlyPlaying(viewableItems[0]?.index);
   });
 
@@ -87,8 +87,9 @@ export const PostsList: React.FC<PostsListProps> = ({ isFeed }) => {
     () => (isFeed ? Dimensions.get("window").height - UIConsts.bottomNavbarHeight : Dimensions.get("window").height),
     [isFeed]
   );
-  const config = useRef({
-    viewAreaCoveragePercentThreshold: 90,
+  const config = useRef<ViewabilityConfig>({
+    // viewAreaCoveragePercentThreshold: 90,
+    itemVisiblePercentThreshold: 90,
     minimumViewTime: 150,
   });
 
