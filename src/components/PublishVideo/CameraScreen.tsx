@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Camera } from "expo-camera";
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity, Platform } from "react-native";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
 import * as ImagePicker from "expo-image-picker";
 import { Fontisto, MaterialIcons, Ionicons, Feather } from "@expo/vector-icons";
 import { PinchGestureHandler } from "react-native-gesture-handler";
 import { StopWatchContainer } from "./StopWatch";
+import * as Permissions from "expo-permissions";
 
 export const CameraScreen: React.FC = () => {
   const navigation = useNavigation();
@@ -31,9 +32,13 @@ export const CameraScreen: React.FC = () => {
 
   useEffect(() => {
     (async () => {
-      const { status } = await Camera.requestPermissionsAsync();
+      const audioRecording =
+        Platform.OS === "ios"
+          ? await Camera.requestPermissionsAsync()
+          : (await Permissions.askAsync(Permissions.AUDIO_RECORDING)) &&
+            (await Permissions.askAsync(Permissions.CAMERA));
       await ImagePicker.getMediaLibraryPermissionsAsync(true);
-      setHasPermission(status === "granted");
+      setHasPermission(audioRecording.granted);
     })();
   }, []);
 
