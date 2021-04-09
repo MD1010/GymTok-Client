@@ -1,12 +1,12 @@
-import { RouteProp, useFocusEffect, useNavigation, useRoute } from "@react-navigation/native";
+import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import { StackNavigationOptions } from "@react-navigation/stack";
-import React, { useCallback, useEffect, useLayoutEffect, useState } from "react";
-import { View, StyleSheet, Dimensions, KeyboardAvoidingView, Text, StatusBar, Appearance } from "react-native";
-import { Ionicons, FontAwesome, MaterialIcons } from "@expo/vector-icons";
-import { Divider, SearchBar } from "react-native-elements";
-import { TouchableHighlightButton, Colors, DismissKeyboard, Player } from "../shared";
+import React, { useEffect, useState } from "react";
+import { View, StyleSheet, Text, Platform } from "react-native";
+import { MaterialIcons } from "@expo/vector-icons";
+import { Colors } from "../shared";
 import cloneDeep from "lodash/cloneDeep";
-import { HashtagsList } from "../shared/HashtagsList";
+import TagInput from 'react-native-tag-input';
+
 
 interface AddHashtagsScreenProps {}
 
@@ -14,25 +14,53 @@ type StackParamsList = {
   params: { selectedHashtags: string[] };
 };
 
+const inputProps = {
+  keyboardType: 'default',
+  placeholder: '',
+  autoFocus: true,
+  style: {
+    fontSize: 14,
+    color: Colors.white,
+    marginVertical: Platform.OS == 'ios' ? 10 : -2,
+  },
+};
+
+
 export const AddHashtagScreen: React.FC<AddHashtagsScreenProps> = ({}) => {
   const navigation = useNavigation();
   const route = useRoute<RouteProp<StackParamsList, "params">>();
   const [hashtags, setHashtags] = useState([]);
+  const [text, setText] = useState('');
+
+  const onChangeTags = (tags) => {
+    setHashtags(tags);
+  }
+
+  const onChangeText = (text) => {
+    setText( text );
+
+    const lastTyped = text.charAt(text.length - 1);
+    const parseWhen = [',', ' ', ';', '\n'];
+
+    text = text.trim();
+    if (parseWhen.indexOf(lastTyped) > -1) {
+      setHashtags([...hashtags, text])
+      setText("");
+    }
+  }
+
+  const labelExtractor = (tag) => tag;
+
 
   useEffect(() => {
     setHashtags(cloneDeep([...hashtags, ...route.params?.selectedHashtags]));
   }, [route.params?.selectedHashtags]);
 
   useEffect(() => {
-    // console.log("hashtag changed!!", hashtags);
   }, [hashtags]);
 
   const returnToPublishScreen = () => {
     navigation.navigate("Publish", { hashtags });
-  };
-
-  const handleHashtagsRemove = (i: number) => {
-    setHashtags(hashtags.filter((_, index) => index !== i));
   };
 
   const headerRight = () => (
@@ -47,19 +75,21 @@ export const AddHashtagScreen: React.FC<AddHashtagsScreenProps> = ({}) => {
 
   return (
     <View style={styles.container}>
-      <View style={{ marginTop: 10 }}>
-        <TouchableHighlightButton
-          highlightOff
-          textColor={Colors.cyan}
-          actionWillNavigate={false}
-          optionText={"Tap to add more hashtags"}
-          onSelect={() => navigation.navigate("SearchHashtags", { excludedHashtagsToSearch: hashtags })}
-          icon={<MaterialIcons name="add" size={29} color={Colors.cyan} />}
-        />
-      </View>
-
-      <View style={{ flex: 1, marginTop: 10, paddingHorizontal: 15 }}>
-        <HashtagsList onHashtagRemove={handleHashtagsRemove} results={hashtags} />
+      <View style={{ flex: 1, margin: 10, marginTop: 15 }}>
+        <Text style={{marginVertical: 10, color: Colors.white}}>Add some hashtags:</Text>
+        <View style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: Colors.darkBlueOpaque}}>
+          <TagInput
+            value={hashtags}
+            onChange={onChangeTags}
+            labelExtractor={labelExtractor}
+            text={text}
+            onChangeText={onChangeText}
+            tagColor={Colors.blue}
+            tagTextColor="white"
+            inputProps={inputProps}
+            maxHeight={75}
+          />
+        </View>
       </View>
     </View>
   );

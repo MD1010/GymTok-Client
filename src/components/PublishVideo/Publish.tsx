@@ -87,6 +87,7 @@ export const PublishScreen: React.FC = () => {
       type: "video/mp4",
     } as any);
     formData.append("selectedFriends", JSON.stringify(taggedPeople));
+    formData.append("hashtags", JSON.stringify(hashtags))
 
     setIsLoading(true);
     const { res, error } = await fetchAPI(
@@ -127,10 +128,8 @@ export const PublishScreen: React.FC = () => {
         actionWillNavigate
         optionInfoText={displaySelectedHashtags()}
         optionText={"Add Hashtags"}
-        onSelect={() => 
-          route.params?.hashtags?.length
-          ? navigation.navigate("AddHashtag", { selectedHashtags: route.params?.hashtags })
-          : navigation.navigate("SearchHashtags", { excludedHashtagsToSearch: route.params?.hashtags })
+        onSelect={() =>
+          navigation.navigate("AddHashtag", { selectedHashtags: route.params?.hashtags?.length ? route.params?.hashtags : [] }) 
         }
         icon={<Fontisto name="hashtag" color={Colors.lightGrey2} size={14} />}
       />
