@@ -1,7 +1,7 @@
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import isEmpty from "lodash/isEmpty";
 import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Dimensions, FlatList, Text, View } from "react-native";
+import { Dimensions, FlatList, StatusBar, Text, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { authSelector } from "../../store/auth/authSlice";
 import { getMorePosts, getMostRecommended, getUserPosts } from "../../store/posts/actions";
@@ -17,13 +17,14 @@ interface PostsListProps {
   isFeed?: boolean;
 }
 
-export const PostsList: React.FC<PostsListProps> = memo(({ isFeed }) => {
+export const PostsList: React.FC<PostsListProps> = ({ isFeed }) => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const [navigatedOutOfScreen, setNavigatedOutOfScreen] = useState(false);
   const { loggedUser } = useSelector(authSelector);
   const scrollEnded = useRef<boolean>(false);
   const [currentlyPlaying, setCurrentlyPlaying] = useState(0);
+  // let previousPlaying = 0;
   const flatListRef = useRef<FlatList>(null);
   const [showFooter, setShowFooter] = useState(false);
   const { hasMoreToFetch, error, latestFetchedPosts, userPosts } = useSelector(postsSelector);
@@ -52,13 +53,6 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed }) => {
     }
   }, [loggedUser]);
 
-  // todo Dov
-  // useEffect(() => {
-  //   if (challenges.length > 0) {
-  //     goIndex(currentIndexVideo);
-  //   }
-  // }, [challenges, currentIndexVideo]);
-
   useFocusEffect(
     React.useCallback(() => {
       navigation.addListener("blur", () => {
@@ -76,6 +70,7 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed }) => {
   );
 
   const onViewRef = useRef(({ viewableItems }) => {
+    if (!viewableItems[0]?.index) return;
     scrollEnded.current && setCurrentlyPlaying(viewableItems[0]?.index);
   });
 
@@ -84,14 +79,17 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed }) => {
   };
 
   const beginDarg = useCallback(() => (scrollEnded.current = false), []);
-  const endDrag = useCallback(() => (scrollEnded.current = true), []);
+  const endDrag = useCallback(() => {
+    scrollEnded.current = true;
+  }, []);
   const keyExtractor = useCallback((challenge, i) => challenge._id, []);
-  const snapToInterval = useMemo(
+  const viewHeight = useMemo(
     () => (isFeed ? Dimensions.get("window").height - UIConsts.bottomNavbarHeight : Dimensions.get("window").height),
     [isFeed]
   );
   const config = useRef({
-    viewAreaCoveragePercentThreshold: 100,
+    viewAreaCoveragePercentThreshold: 90,
+    minimumViewTime: 150,
   });
 
   const Footer = () => {
@@ -115,22 +113,27 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed }) => {
       <Post
         post={item}
         isVideoPlaying={index === currentlyPlaying && !navigatedOutOfScreen}
-        containerStyle={isFeed && { height: Dimensions.get("window").height - UIConsts.bottomNavbarHeight }}
+        containerStyle={{ height: viewHeight }}
       />
     );
   };
   return (
     <>
-      <View style={{ flex: 1 }}>
+      <View style={{ height: Dimensions.get("window").height - UIConsts.bottomNavbarHeight }}>
         <FlatList
           initialNumToRender={5}
-          maxToRenderPerBatch={5}
+          maxToRenderPerBatch={3}
           windowSize={7}
           data={posts}
+          pagingEnabled
           renderItem={renderItem}
           keyExtractor={keyExtractor}
           showsVerticalScrollIndicator={false}
-          snapToInterval={snapToInterval}
+          getItemLayout={(_, index) => ({
+            length: viewHeight,
+            offset: viewHeight * index,
+            index,
+          })}
           snapToAlignment={"start"}
           decelerationRate={"fast"}
           ref={(ref) => {
@@ -139,8 +142,9 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed }) => {
           onScrollToIndexFailed={() => alert("no such index")}
           onViewableItemsChanged={onViewRef.current}
           viewabilityConfig={config.current}
-          onScrollEndDrag={endDrag}
           onScrollBeginDrag={beginDarg}
+          onScrollEndDrag={endDrag}
+          // onMomentumScrollEnd={() => console.log("momentum end")}
           onEndReached={handleLoadMore}
           onEndReachedThreshold={0.5}
           ListFooterComponent={showFooter ? <Footer /> : null}
@@ -154,4 +158,4 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed }) => {
       </View>
     </>
   );
-});
+};
