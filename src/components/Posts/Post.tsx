@@ -3,7 +3,7 @@ import { useNavigation } from "@react-navigation/core";
 import { Camera } from "expo-camera";
 import * as ImagePicker from "expo-image-picker";
 import React, { memo, useEffect } from "react";
-import { Text, View, ViewStyle } from "react-native";
+import { Dimensions, Text, View, ViewStyle } from "react-native";
 import { Avatar } from "react-native-elements";
 import { TouchableOpacity, TouchableWithoutFeedback } from "react-native-gesture-handler";
 import { useSelector } from "react-redux";
@@ -12,6 +12,7 @@ import { authSelector } from "../../store/auth/authSlice";
 import { Colors } from "../shared/styles/variables";
 import { Player } from "../shared/VideoPlayer";
 import { styles } from "./Posts.style";
+import GestureRecognizer from "react-native-swipe-gestures";
 // import { challengeContext } from "./ChallengesContainer";
 
 interface PostProps {
@@ -138,23 +139,32 @@ export const Post: React.FC<PostProps> = memo(({ post, isVideoPlaying, container
     }
   };
 
+  const onSwipeLeft = async () => {
+    navigation.navigate("Replies", { post });
+  };
+
   return (
-    <View style={[styles.container, containerStyle]}>
-      <Player style={styles.video} uri={streaminServerUrl} isPlaying={isVideoPlaying} resizeMode="cover" />
-      <View style={styles.infoContainer}>
-        <Heading createdBy={createdBy.username} onCameraPress={() => onCameraPress()} />
+    <GestureRecognizer
+      onSwipeLeft={onSwipeLeft}
+      config={{ directionalOffsetThreshold: Dimensions.get("screen").width }}
+    >
+      <View style={[styles.container, containerStyle]}>
+        <Player style={styles.video} uri={streaminServerUrl} isPlaying={isVideoPlaying} resizeMode="cover" />
+        <View style={styles.infoContainer}>
+          <Heading createdBy={createdBy.username} onCameraPress={() => onCameraPress()} />
 
-        <View style={styles.rowContainer}>
-          <Text style={styles.info}>{post.description}</Text>
+          <View style={styles.rowContainer}>
+            <Text style={styles.info}>{post.description}</Text>
+          </View>
+
+          <UIContainer
+            numberOfLikes={likes ? likes.length : 0}
+            numberOfComments={replies ? replies.length : 0}
+            onLikeButtonPress={() => onLikeButtonPress()}
+            onCommentButtonPress={() => onCommentButtonPress()}
+          />
         </View>
-
-        <UIContainer
-          numberOfLikes={likes ? likes.length : 0}
-          numberOfComments={replies ? replies.length : 0}
-          onLikeButtonPress={() => onLikeButtonPress()}
-          onCommentButtonPress={() => onCommentButtonPress()}
-        />
       </View>
-    </View>
+    </GestureRecognizer>
   );
 });

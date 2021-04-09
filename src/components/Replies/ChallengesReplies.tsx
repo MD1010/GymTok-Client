@@ -20,7 +20,7 @@ export const ChallengeReplies: React.FC<ChallengeRepliesProps> = ({ }) => {
   const { loggedUser } = useSelector(authSelector);
 
   const getChallengeReplies = async () => {
-    const challengesEndpoint = `${process.env.BASE_API_ENPOINT}/challenges/${route.params.challenge._id}/replies`;
+    const challengesEndpoint = `${process.env.BASE_API_ENPOINT}/challenges/${route.params.post._id}/replies`;
     const { res, error } = await fetchAPI(RequestMethod.GET, challengesEndpoint);
 
     // console.log("res", res)
@@ -62,7 +62,7 @@ export const ChallengeReplies: React.FC<ChallengeRepliesProps> = ({ }) => {
   }, []);
 
 
-  const streaminServerUrl = `${process.env.VIDEO_SERVER_ENDPOINT}/${route.params.challenge.video}`;
+  const streaminServerUrl = `${process.env.VIDEO_SERVER_ENDPOINT}/${route.params.post.video}`;
 
   return (
     <View style={{
@@ -73,7 +73,7 @@ export const ChallengeReplies: React.FC<ChallengeRepliesProps> = ({ }) => {
         <View style={styles.videoContianiter}>
           {
             // false ? 
-            <Player style={styles.video} uri={streaminServerUrl} isPlaying={false} resizeMode="cover" >
+            <Player style={styles.video} uri={streaminServerUrl} isPlaying={true} resizeMode="cover">
               <VideoSkeleton />
             </Player>
           }
