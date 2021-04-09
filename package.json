@@ -24,6 +24,7 @@
     "babel-plugin-inline-dotenv": "^1.6.0",
     "expo": "~40.0.0",
     "expo-av": "^9.0.0",
+    "expo-background-fetch": "^9.0.0",
     "expo-barcode-scanner": "^10.0.0",
     "expo-camera": "^10.0.0",
     "expo-face-detector": "^9.0.1",
@@ -74,7 +75,8 @@
     "redux": "^4.0.5",
     "redux-devtools-extension": "^2.13.8",
     "redux-thunk": "^2.3.0",
-    "shorthash": "0.0.2"
+    "shorthash": "0.0.2",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "@babel/core": "~7.9.0",

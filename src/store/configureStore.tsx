@@ -8,8 +8,7 @@ export const store = configureStore({
 });
 
 store.subscribe(() => {});
-// store.dispatch(loadLoggedUser());
 
 export type AppDispatch = typeof store.dispatch;
-export type AppThunk = ThunkAction<void, RootState, null, Action<string>>;
+export type AppThunk = ThunkAction<any, RootState, null, Action<string>>;
 export type RootState = ReturnType<typeof store.getState>;

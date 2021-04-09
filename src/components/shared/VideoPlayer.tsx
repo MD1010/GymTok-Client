@@ -42,6 +42,7 @@ export const Player: React.FC<VideoProps> = memo(
     const ref = useRef(null);
     const [videoURI, setVideoURI] = useState<string>();
     const navigation = useNavigation();
+    const [isLoading, setIsLoading] = useState(false);
 
     const pauseVideoByTap = () => {
       setIsPaused(true);
@@ -76,7 +77,7 @@ export const Player: React.FC<VideoProps> = memo(
     };
 
     useEffect(() => {
-      Platform.OS === "web" ? setVideoURI(uri) : loadURI();
+      // Platform.OS === "web" ? setVideoURI(uri) : loadURI();
       // if (full) {
       //   ref.current.presentFullscreenPlayer();
       // }
@@ -102,16 +103,17 @@ export const Player: React.FC<VideoProps> = memo(
       >
         <View style={[styles.container, containerStyle]}>
           <Video
-            onLoad={onVideoLoad}
+            onLoadStart={() => setIsLoading(true)}
+            onLoad={() => {
+              onVideoLoad && onVideoLoad();
+              setIsLoading(false);
+            }}
             ref={ref}
             style={style || styles.defaultVideoStyle}
             useNativeControls={!!controlsShown}
             children={children}
             source={{
-              uri: videoURI,
-              // uri: uri
-              // uri: "http://193.106.55.109:8000/fdfe5570-de14-4e53-a680-cc3c3994210b.mp4",
-              // uri: "http://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4",
+              uri,
             }}
             resizeMode={resizeMode}
             shouldPlay={isPlaying}
