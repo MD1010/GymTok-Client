@@ -23,39 +23,16 @@ export const ChallengeReplies: React.FC<ChallengeRepliesProps> = ({ }) => {
     const challengesEndpoint = `${process.env.BASE_API_ENPOINT}/challenges/${route.params.post._id}/replies`;
     const { res, error } = await fetchAPI(RequestMethod.GET, challengesEndpoint);
 
-    // console.log("res", res)
-    // res &&
-    //   setChallengeReplies(
-    //     res.map((reply, index) => {
-    //       return {
-    //         _id: index,
-    //         // url: "http://193.106.55.109:8000/fdfe5570-de14-4e53-a680-cc3c3994210b.mp4",
-    //         url: reply.video
-    //       };
-    //     })
-    //   );
-
-    res && setChallengeReplies([{
-      _id: 1,
-      url: "http://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4",
-    },
-    {
-      _id: 2,
-      url: "http://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4",
-    },
-    {
-      _id: 3,
-      url: "http://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4",
-    },
-    {
-      _id: 4,
-      url: "http://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4",
-    },
-    {
-      _id: 5,
-      url: "http://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4",
-    },])
-  };
+    res &&
+      setChallengeReplies(
+        res.map((reply, index) => {
+          return {
+            _id: index,
+            url: reply.video
+          };
+        })
+      );
+  }
 
   useEffect(() => {
     getChallengeReplies();
