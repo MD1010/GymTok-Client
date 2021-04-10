@@ -2,7 +2,7 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import React, { useState, useEffect, useRef } from "react";
 
 // import all the components we are going to use
-import { SafeAreaView, Text, StyleSheet, View, FlatList, Dimensions } from "react-native";
+import { SafeAreaView, Text, StyleSheet, View, FlatList, Dimensions, ScrollView } from "react-native";
 import { SearchBar } from "react-native-elements";
 import { SearchResults } from "./SearchResult2";
 import Spinner from "react-native-loading-spinner-overlay";
@@ -79,7 +79,7 @@ const challenges: Item[] = [
   {
     _id: 10,
     url: "http://193.106.55.109:8000/fdfe5570-de14-4e53-a680-cc3c3994210b.mp4",
-    numOfLikes: "100K",
+    numOfLikes: "300K",
   },
   {
     _id: 11,
@@ -222,7 +222,7 @@ export const CustomSearchBar: React.FC = () => {
           <SearchResults filteredDataSource={filteredDataSource} handleSelectItem={handleSelectItem} />
         )}
         {relvantItems !== undefined && (
-          <View>
+          <View style={{ flex: 1 }}>
             <Text style={{ fontSize: 20, margin: 5 }}>Videos</Text>
             <GenericComponent
               items={relvantItems}

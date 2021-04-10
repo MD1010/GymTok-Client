@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { IPost } from "../../interfaces/Post";
 import { fetchAPI, RequestMethod } from "../../utils/fetchAPI";
 import { ProfileScreen } from "./ProfileScreen";
+import { SafeAreaView, Text, StyleSheet, View, FlatList, Dimensions, ScrollView } from "react-native";
 
 interface ProfileContainerProps {}
 
@@ -15,11 +16,13 @@ const challenges = [
     _id: 2,
     url: "http://193.106.55.109:8000/7b910ff9-7f85-4fb5-a0e3-bc13f05ae732.mp4",
     numOfLikes: "100K",
+    component: <Text>fdfdff</Text>,
   },
   {
     _id: 3,
     url: "http://193.106.55.109:8000/fdfe5570-de14-4e53-a680-cc3c3994210b.mp4",
     numOfLikes: "100K",
+    component: <Text>fdfdff</Text>,
   },
   {
     _id: 4,
@@ -56,56 +59,56 @@ const challenges = [
     url: "http://193.106.55.109:8000/fdfe5570-de14-4e53-a680-cc3c3994210b.mp4",
     numOfLikes: "100K",
   },
-  // {
-  //   _id: 11,
-  //   url: "http://193.106.55.109:8000/fdfe5570-de14-4e53-a680-cc3c3994210b.mp4",
-  //   numOfLikes: "100K",
-  // },
-  // {
-  //   _id: 12,
-  //   url: "http://193.106.55.109:8000/fdfe5570-de14-4e53-a680-cc3c3994210b.mp4",
-  //   numOfLikes: "100K",
-  // },
-  // {
-  //   _id: 13,
-  //   url: "http://193.106.55.109:8000/fdfe5570-de14-4e53-a680-cc3c3994210b.mp4",
-  //   numOfLikes: "100K",
-  // },
-  // {
-  //   _id: 14,
-  //   url: "http://193.106.55.109:8000/fdfe5570-de14-4e53-a680-cc3c3994210b.mp4",
-  //   numOfLikes: "100K",
-  // },
-  // {
-  //   _id: 15,
-  //   url: "http://193.106.55.109:8000/fdfe5570-de14-4e53-a680-cc3c3994210b.mp4",
-  //   numOfLikes: "100K",
-  // },
-  // {
-  //   _id: 16,
-  //   url: "http://193.106.55.109:8000/fdfe5570-de14-4e53-a680-cc3c3994210b.mp4",
-  //   numOfLikes: "100K",
-  // },
-  // {
-  //   _id: 17,
-  //   url: "http://193.106.55.109:8000/fdfe5570-de14-4e53-a680-cc3c3994210b.mp4",
-  //   numOfLikes: "100K",
-  // },
-  // {
-  //   _id: 18,
-  //   url: "http://193.106.55.109:8000/fdfe5570-de14-4e53-a680-cc3c3994210b.mp4",
-  //   numOfLikes: "100K",
-  // },
-  // {
-  //   _id: 19,
-  //   url: "http://193.106.55.109:8000/fdfe5570-de14-4e53-a680-cc3c3994210b.mp4",
-  //   numOfLikes: "100K",
-  // },
-  // {
-  //   _id: 20,
-  //   url: "http://193.106.55.109:8000/fdfe5570-de14-4e53-a680-cc3c3994210b.mp4",
-  //   numOfLikes: "100K",
-  // },
+  {
+    _id: 11,
+    url: "http://193.106.55.109:8000/fdfe5570-de14-4e53-a680-cc3c3994210b.mp4",
+    numOfLikes: "100K",
+  },
+  {
+    _id: 12,
+    url: "http://193.106.55.109:8000/fdfe5570-de14-4e53-a680-cc3c3994210b.mp4",
+    numOfLikes: "100K",
+  },
+  {
+    _id: 13,
+    url: "http://193.106.55.109:8000/fdfe5570-de14-4e53-a680-cc3c3994210b.mp4",
+    numOfLikes: "100K",
+  },
+  {
+    _id: 14,
+    url: "http://193.106.55.109:8000/fdfe5570-de14-4e53-a680-cc3c3994210b.mp4",
+    numOfLikes: "100K",
+  },
+  {
+    _id: 15,
+    url: "http://193.106.55.109:8000/fdfe5570-de14-4e53-a680-cc3c3994210b.mp4",
+    numOfLikes: "100K",
+  },
+  {
+    _id: 16,
+    url: "http://193.106.55.109:8000/fdfe5570-de14-4e53-a680-cc3c3994210b.mp4",
+    numOfLikes: "100K",
+  },
+  {
+    _id: 17,
+    url: "http://193.106.55.109:8000/fdfe5570-de14-4e53-a680-cc3c3994210b.mp4",
+    numOfLikes: "100K",
+  },
+  {
+    _id: 18,
+    url: "http://193.106.55.109:8000/fdfe5570-de14-4e53-a680-cc3c3994210b.mp4",
+    numOfLikes: "100K",
+  },
+  {
+    _id: 19,
+    url: "http://193.106.55.109:8000/fdfe5570-de14-4e53-a680-cc3c3994210b.mp4",
+    numOfLikes: "100K",
+  },
+  {
+    _id: 20,
+    url: "http://193.106.55.109:8000/fdfe5570-de14-4e53-a680-cc3c3994210b.mp4",
+    numOfLikes: "600K",
+  },
   // {
   //   _id: 4,
   //   url: "http://193.106.55.109:8000/fdfe5570-de14-4e53-a680-cc3c3994210b.mp4",

@@ -1,11 +1,21 @@
 import React from "react";
+import { FlatList } from "react-native-gesture-handler";
 import SkeletonPlaceholder from "react-native-skeleton-placeholder";
 
-export const ChallangeSkeleton = () => (
-  <>
-    {Array.from(Array(100).keys()).map((v, i) => {
-      return (
-        <SkeletonPlaceholder key={i}>
+interface Props {
+  isHorizontal: boolean;
+  numOfColumns: number;
+}
+
+export const ChallangeSkeleton: React.FC<Props> = ({ isHorizontal, numOfColumns }) => {
+  return (
+    <FlatList
+      data={Array.from(Array(100).keys())}
+      keyExtractor={(item, index) => index.toString()}
+      horizontal={isHorizontal}
+      numColumns={!isHorizontal ? numOfColumns : 0}
+      renderItem={() => (
+        <SkeletonPlaceholder>
           <SkeletonPlaceholder.Item flexDirection="row" alignItems="center">
             <SkeletonPlaceholder.Item flexDirection="column" margin={5}>
               <SkeletonPlaceholder.Item width={60} height={60} />
@@ -13,7 +23,7 @@ export const ChallangeSkeleton = () => (
             </SkeletonPlaceholder.Item>
           </SkeletonPlaceholder.Item>
         </SkeletonPlaceholder>
-      );
-    })}
-  </>
-);
+      )}
+    />
+  );
+};

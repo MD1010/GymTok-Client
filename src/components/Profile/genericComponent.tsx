@@ -1,26 +1,29 @@
 import { FontAwesome } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
-import { Dimensions, ImageBackground, SafeAreaView, StyleSheet, Text, View, ViewStyle } from "react-native";
+import { Dimensions, ImageBackground, FlatList, SafeAreaView, StyleSheet, Text, View, ViewStyle } from "react-native";
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import { useIsMount } from "../../hooks/useIsMount";
 import { generateThumbnail } from "../../utils/generateThumbnail";
 import { Colors } from "../shared/styles/variables";
 import { Item } from "./interfaces";
 import { ChallangeSkeleton } from "../shared/skeletons/ChallangeSkeleton";
+import { render } from "react-dom";
 
 interface Props {
   items: Item[];
   horizontal?: boolean;
+  numColumns?: number;
   customStyle?: ViewStyle;
 }
 
-export const GenericComponent: React.FC<Props> = ({ items, horizontal, customStyle }) => {
+export const GenericComponent: React.FC<Props> = ({ items, horizontal, customStyle, numColumns }) => {
   const [thumbnailItems, setThumbnailItems] = useState<any[]>([]);
   const isMounted = useIsMount();
   const navigation = useNavigation();
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const isHorizontal: boolean = horizontal ? horizontal : false;
+  const numOfColumns: number = numColumns ? numColumns : 3;
 
   useEffect(() => {
     (async () => {
@@ -39,16 +42,20 @@ export const GenericComponent: React.FC<Props> = ({ items, horizontal, customSty
     navigation.navigate("UsersProfile", { videoURL: videoURL });
   };
 
-  const renderItem = (item, index) => {
+  const renderItem = ({ item }) => {
     return (
-      <View key={index} style={{ margin: 2, flexBasis: "33%" /*width: Dimensions.get("window").width / 3*/ }}>
+      <View
+        style={{
+          margin: 1,
+        }}
+      >
         <TouchableOpacity
           onPress={() => {
             showVideo(item.url);
           }}
         >
           <ImageBackground
-            style={{ ...styles.theImage, width: Dimensions.get("window").width / 3 /*numColumns*/ }}
+            style={{ ...styles.theImage, width: Dimensions.get("screen").width / numOfColumns }}
             source={{ uri: item.image }}
           >
             <View style={{ display: "flex", justifyContent: "flex-end", flexDirection: "column", height: 120 }}>
@@ -65,19 +72,19 @@ export const GenericComponent: React.FC<Props> = ({ items, horizontal, customSty
   };
 
   return (
-    <View style={{ height: Dimensions.get("screen").height }}>
-      <ScrollView contentInsetAdjustmentBehavior="automatic" horizontal={isHorizontal}>
-        <SafeAreaView style={{ ...styles.safeArea, flexDirection: isHorizontal ? "row" : "column" }}>
-          {isLoading ? (
-            <ChallangeSkeleton />
-          ) : (
-            thumbnailItems.map((item, index) => {
-              return renderItem(item, index);
-            })
-          )}
-        </SafeAreaView>
-      </ScrollView>
-    </View>
+    <SafeAreaView style={{ flex: 1, flexDirection: isHorizontal ? "row" : "column" }}>
+      {isLoading ? (
+        <ChallangeSkeleton isHorizontal={isHorizontal} numOfColumns={numOfColumns} />
+      ) : (
+        <FlatList
+          data={thumbnailItems}
+          keyExtractor={(item, index) => index.toString()}
+          horizontal={isHorizontal}
+          numColumns={!isHorizontal ? numOfColumns : 0}
+          renderItem={renderItem}
+        />
+      )}
+    </SafeAreaView>
   );
 };
 
@@ -102,9 +109,6 @@ const styles = StyleSheet.create({
     flex: 1,
     width: Dimensions.get("screen").width,
     height: Dimensions.get("screen").height,
-    display: "flex",
-    flexGrow: 0,
-    flexWrap: "wrap",
   },
   amount: {
     color: Colors.white,
