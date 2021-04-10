@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useLayoutEffect, FC, useCallback } from "react";
 import { Camera } from "expo-camera";
-import { StyleSheet, Text, View, Platform } from "react-native";
+import { StyleSheet, Text, View, Platform, Dimensions } from "react-native";
 import { useFocusEffect, useIsFocused, useNavigation } from "@react-navigation/native";
 import * as ImagePicker from "expo-image-picker";
 import { Fontisto, MaterialIcons, Ionicons, Feather } from "@expo/vector-icons";
@@ -21,6 +21,10 @@ export const CameraScreen: React.FC = () => {
   const cameraRef = useRef(null);
   const [stopwatchStart, setStopwatchStart] = useState<boolean>(false);
   const [stopwatchReset, setStopwatchReset] = useState<boolean>(false);
+  // const isFocused = useIsFocused();
+  const [isCameraEnabled, setIsCameraEnabled] = useState(false);
+  // const isCameraShown = useState(false);
+  const stateSub = useRef(null);
 
   const toggleStopwatch = () => {
     setStopwatchStart(!stopwatchStart);
@@ -65,7 +69,26 @@ export const CameraScreen: React.FC = () => {
       await ImagePicker.getMediaLibraryPermissionsAsync(true);
       setHasPermission(audioRecording.granted);
     })();
+    return () => navigation.removeListener("focus", null);
   }, []);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      navigation.addListener("state", (e) => {
+        if (e.data.state.index === 2) {
+          // in approve screen -> not done in blur as it screws the animation
+          setIsCameraEnabled(false);
+        }
+      });
+      navigation.addListener("focus", () => {
+        setTimeout(() => setIsCameraEnabled(true));
+      });
+
+      return () => {
+        navigation.removeListener("focus", null);
+      };
+    }, [])
+  );
 
   const pickVideo = async () => {
     const selectedVideo: any = await ImagePicker.launchImageLibraryAsync({
@@ -128,63 +151,78 @@ export const CameraScreen: React.FC = () => {
   //   </View>
   // );
 
-  const PauseButton = () => {
-    return (
-      <View style={{ flex: 1, flexDirection: "row", justifyContent: "center", alignItems: "flex-end" }}>
-        <TouchableOpacity
-          onPress={() => {
-            stopRecord();
-            toggleStopwatch();
-          }}
-        >
-          <Feather name={"stop-circle"} color={"red"} size={60} />
-        </TouchableOpacity>
-      </View>
-    );
-  };
+  // const PauseButton = () => {
+  //   return (
+  //     <View style={{ flex: 1, flexDirection: "row", justifyContent: "center", alignItems: "flex-end" }}>
+  //       <TouchableOpacity
+  //         onPress={() => {
+  //           stopRecord();
+  //           toggleStopwatch();
+  //         }}
+  //       >
+  //         <Feather name={"stop-circle"} color={"red"} size={60} />
+  //       </TouchableOpacity>
+  //     </View>
+  //   );
+  // };
 
   return (
     <PinchGestureHandler onGestureEvent={onPinchGestureEvent}>
       <View style={styles.container}>
-        <Camera ref={cameraRef} style={styles.camera} type={type} flashMode={flash} zoom={zoom} ratio={"16:9"}>
-          <View style={{ flex: 1, padding: 25 }}>
-            {!recording && !isRecordingDone ? (
-              <View style={styles.menuButtons}>
-                <TouchableOpacity
-                  onPress={() => {
-                    setType(
-                      type === Camera.Constants.Type.back ? Camera.Constants.Type.front : Camera.Constants.Type.back
-                    );
-                  }}
-                >
-                  <MaterialIcons
-                    name={Platform.OS === "android" ? "flip-camera-android" : "flip-camera-ios"}
-                    color={"white"}
-                    size={35}
-                  />
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => {
-                    record();
-                    toggleStopwatch();
-                  }}
-                >
-                  <Fontisto name={"record"} color={"red"} size={60} />
-                </TouchableOpacity>
+        {isCameraEnabled ? (
+          <Camera ref={cameraRef} style={styles.camera} type={type} flashMode={flash} zoom={zoom} ratio={"16:9"}>
+            <View style={{ flex: 1, padding: 25 }}>
+              {!recording && !isRecordingDone ? (
+                <View style={styles.menuButtons}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      setType(
+                        type === Camera.Constants.Type.back ? Camera.Constants.Type.front : Camera.Constants.Type.back
+                      );
+                    }}
+                  >
+                    <MaterialIcons
+                      name={Platform.OS === "android" ? "flip-camera-android" : "flip-camera-ios"}
+                      color={"white"}
+                      size={35}
+                    />
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => {
+                      record();
+                      toggleStopwatch();
+                    }}
+                  >
+                    <Fontisto name={"record"} color={"red"} size={60} />
+                  </TouchableOpacity>
 
-                <TouchableOpacity
-                  onPress={() => {
-                    pickVideo();
-                  }}
-                >
-                  <Ionicons name={"md-image-outline"} color={"white"} size={35} />
-                </TouchableOpacity>
-              </View>
-            ) : (
-              !isRecordingDone && <PauseButton />
-            )}
-          </View>
-        </Camera>
+                  <TouchableOpacity
+                    onPress={() => {
+                      pickVideo();
+                    }}
+                  >
+                    <Ionicons name={"md-image-outline"} color={"white"} size={35} />
+                  </TouchableOpacity>
+                </View>
+              ) : (
+                !isRecordingDone && (
+                  <View style={{ flex: 1, flexDirection: "row", justifyContent: "center", alignItems: "flex-end" }}>
+                    <TouchableOpacity
+                      onPress={() => {
+                        stopRecord();
+                        toggleStopwatch();
+                      }}
+                    >
+                      <Feather name={"stop-circle"} color={"red"} size={60} />
+                    </TouchableOpacity>
+                  </View>
+                )
+              )}
+            </View>
+          </Camera>
+        ) : (
+          <View style={{ flex: 1, backgroundColor: "black" }}></View>
+        )}
       </View>
     </PinchGestureHandler>
   );
@@ -192,7 +230,8 @@ export const CameraScreen: React.FC = () => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    height: Dimensions.get("window").height,
+    backgroundColor: "black",
   },
   camera: {
     flex: 1,
