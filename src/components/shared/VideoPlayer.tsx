@@ -2,7 +2,7 @@ import { FontAwesome } from "@expo/vector-icons";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { Video } from "expo-av";
 import * as FileSystem from "expo-file-system";
-import React, { memo, useEffect, useRef, useState } from "react";
+import React, { memo, ReactNode, useEffect, useRef, useState } from "react";
 import { Platform, StyleProp, StyleSheet, TouchableWithoutFeedback, View, ViewStyle } from "react-native";
 import shorthash from "shorthash";
 import { Colors } from "./styles/variables";
@@ -19,6 +19,7 @@ interface VideoProps {
   isMuted?: boolean;
   onVideoTap?: () => any;
   onVideoLoad?: () => any;
+  children?: ReactNode
 }
 
 export const Player: React.FC<VideoProps> = memo(
@@ -34,6 +35,7 @@ export const Player: React.FC<VideoProps> = memo(
     isMuted,
     onVideoTap,
     onVideoLoad,
+    children
   }) => {
     const statusRef = useRef<any>();
     const [isPaused, setIsPaused] = useState<boolean>(false);
@@ -56,9 +58,10 @@ export const Player: React.FC<VideoProps> = memo(
       if (uri.startsWith("file")) {
         return setVideoURI(uri);
       }
-      const path = `${Platform.OS === "ios" ? FileSystem.documentDirectory : FileSystem.cacheDirectory}${
-        Platform.OS === "ios" ? uri.split("/")[3] : shorthash.unique(uri)
-      }`;
+      const path = `${Platform.OS === "ios" ?
+        FileSystem.documentDirectory :
+        FileSystem.cacheDirectory}${Platform.OS === "ios" ? uri.split("/")[3] : shorthash.unique(uri)
+        }`;
       const image = await FileSystem.getInfoAsync(path);
       if (image.exists) {
         console.log("read image from cache");
@@ -108,6 +111,7 @@ export const Player: React.FC<VideoProps> = memo(
             ref={ref}
             style={style || styles.defaultVideoStyle}
             useNativeControls={!!controlsShown}
+            children={children}
             source={{
               uri,
             }}
@@ -130,6 +134,9 @@ export const Player: React.FC<VideoProps> = memo(
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: "center"
   },
   playButtonContainer: {
     position: "absolute",

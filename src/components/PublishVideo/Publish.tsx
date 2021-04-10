@@ -43,19 +43,23 @@ export const PublishScreen: React.FC = () => {
             containerStyle={styles.videoPlayerContainer}
           />
           <View style={{ flex: 2 }}>
-            <TextInput
-              multiline
-              style={styles.addCaptionInput}
-              placeholder={"Add a caption..."}
-              placeholderTextColor={Colors.weakGrey}
-              value={caption}
-              onChangeText={(text) => {
-                handleSetCaption(text);
-              }}
-            />
+            <DismissKeyboard>
+              <TextInput
+                multiline
+                style={styles.addCaptionInput}
+                placeholder={"Add a caption..."}
+                placeholderTextColor={Colors.weakGrey}
+                value={caption}
+                onChangeText={(text) => {
+                  handleSetCaption(text);
+                }}
+              />
+            </DismissKeyboard>
           </View>
         </View>
-        <Text style={styles.info}>Your friends will be notified when your challenge is uploaded.</Text>
+        {
+          !isReply && <Text style={styles.info}>Your friends will be notified when your challenge is uploaded.</Text>
+        }
       </View>
     );
   };
@@ -102,9 +106,36 @@ export const PublishScreen: React.FC = () => {
     setIsLoading(false);
   };
 
+  const replyChallenge = async () => {
+    setIsLoading(true);
+    let formData = new FormData();
+
+    formData.append("description", captionInput.current);
+    formData.append("replierId", loggedUser._id);
+    formData.append("challengeId", route.params.challengeId);
+    formData.append("video", {
+      name: "dov-test.mp4",
+      uri: route.params.videoUri,
+      type: "video/mp4",
+    } as any);
+
+    const { res, error } = await fetchAPI(
+      RequestMethod.POST,
+      `${process.env.BASE_API_ENPOINT}/replies/upload`,
+      formData
+    );
+
+    console.log("res", res);
+    console.log("error", error)
+    if (res) {
+      navigation.navigate("Home");
+    } else alert(error);
+    setIsLoading(false);
+  }
+
   const onSubmit = () => {
     if (isReply) {
-      // todo chuck fetch here
+      replyChallenge();
     } else {
       // challenge
       publishChallenge();
@@ -137,31 +168,35 @@ export const PublishScreen: React.FC = () => {
   );
 
   const Footer = () => (
-    <View style={{ flex: 1, alignItems: "center", top: 20 }}>
+    <View style={{ flex: 1, alignItems: "center", marginTop: 20 }}>
       <SubmitButton buttonText={"Post"} type="solid" backgroundColor={Colors.blue} onSubmit={onSubmit} />
     </View>
   );
 
   return (
-    <DismissKeyboard>
-      <SafeAreaView style={styles.container}>
-        <Header />
-        {!isReply && (
-          <>
-            <Divider />
-            <Options />
-          </>
-        )}
-        {!isLoading ? (
-          <>
-            <Divider />
-            <Footer />
-          </>
-        ) : (
-          <Loader style={{ marginBottom: 50 }} />
-        )}
-      </SafeAreaView>
-    </DismissKeyboard>
+
+    <SafeAreaView style={styles.container}>
+
+      <Header />
+
+      {!isReply && (
+        <>
+          <Divider />
+          <Options />
+        </>
+      )}
+      {!isLoading ? (
+        <>
+          <Divider />
+          {/* <SubmitButton buttonText={"CHECK"} onSubmit={() => console.log(123123)} type={"solid"} /> */}
+          <Footer />
+        </>
+      ) : (
+        <Loader style={{ marginBottom: 50 }} />
+      )}
+    </SafeAreaView>
+
+
   );
 };
 
@@ -169,6 +204,7 @@ const styles = StyleSheet.create({
   container: {
     height: Dimensions.get("window").height - StatusBar.currentHeight,
     width: Dimensions.get("screen").width,
+    flex: 1
   },
   videoPlayerContainer: {
     borderRadius: 15,

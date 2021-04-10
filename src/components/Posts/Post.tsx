@@ -3,7 +3,7 @@ import { useNavigation } from "@react-navigation/core";
 import { Camera } from "expo-camera";
 import * as ImagePicker from "expo-image-picker";
 import React, { memo, useEffect } from "react";
-import { Text, View, ViewStyle } from "react-native";
+import { Dimensions, Text, View, ViewStyle } from "react-native";
 import { Avatar } from "react-native-elements";
 import { TouchableOpacity, TouchableWithoutFeedback } from "react-native-gesture-handler";
 import { useSelector } from "react-redux";
@@ -136,6 +136,10 @@ export const Post: React.FC<PostProps> = memo(({ post, isVideoPlaying, container
       navigation.navigate("NotLoggedIn");
       console.log("guest click on comment button, need to login");
     }
+  };
+
+  const onSwipeLeft = async () => {
+    navigation.navigate("Replies", { post });
   };
 
   return (

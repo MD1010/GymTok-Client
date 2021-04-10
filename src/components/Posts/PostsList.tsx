@@ -40,6 +40,12 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentVideoI
     posts && setShowFooter(false);
   }, [posts]);
 
+
+  useEffect(() => {
+    navigation.setParams({ post: posts[currentlyPlaying] })
+
+  }, [currentlyPlaying, posts])
+
   const getPosts = () => {
     if (loggedUser) {
       isFeed ? dispatch(getMostRecommended()) : dispatch(getUserPosts());
@@ -58,10 +64,7 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentVideoI
   // todo Dov
   useEffect(() => {
     if (currentVideoID && posts.length > 0) {
-      // console.log("video idddddddddddddd: " + currentVideoID);
-      // console.log("postssss lengthhhhhh: " + posts.length);
       let wantedIndex = posts.findIndex((post) => post.video === currentVideoID);
-      // console.log("wanteddddd indexxxxx: " + wantedIndex);
       goIndex(wantedIndex);
     }
   }, [posts, currentVideoID]);

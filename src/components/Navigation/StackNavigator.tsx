@@ -7,13 +7,14 @@ import { NotLoggedInModal } from "../Auth/NotLoggedInModal";
 import { RegisterContainer as RegisterScreen } from "../Auth/RegisterContainer";
 import { ProfileVideoModal } from "../Profile/ProfileVideoModal";
 import { postChallengeScreens } from "../PublishVideo/publishScreens";
+import { PostReplies } from "../Replies/PostReplies";
 import { BottomTabs } from "./BottomTabs";
 import { config } from "./stackNavigationConfig";
 import { ApproveVideo } from "../PublishVideo/ApproveVideo";
 
-interface StackNavigatorProps {}
+interface StackNavigatorProps { }
 
-export const MainNavigator: React.FC<StackNavigatorProps> = ({}) => {
+export const MainNavigator: React.FC<StackNavigatorProps> = ({ }) => {
   const Stack = createStackNavigator();
   return (
     <NavigationContainer independent={true}>
@@ -40,6 +41,9 @@ export const MainNavigator: React.FC<StackNavigatorProps> = ({}) => {
             gestureEnabled: true,
           }}
         />
+        {/* <Stack.Screen name="Replies" component={PostReplies} options={{
+          title: "Replies"
+        }} /> */}
 
         <Stack.Screen
           name="UsersProfile"
