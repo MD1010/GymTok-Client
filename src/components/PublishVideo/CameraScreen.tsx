@@ -1,10 +1,10 @@
-import React, { useState, useEffect, useRef, useLayoutEffect, FC } from "react";
+import React, { useState, useEffect, useRef, useLayoutEffect, FC, useCallback } from "react";
 import { Camera } from "expo-camera";
-import { StyleSheet, Text, View, TouchableOpacity, Platform } from "react-native";
+import { StyleSheet, Text, View, Platform } from "react-native";
 import { useFocusEffect, useIsFocused, useNavigation } from "@react-navigation/native";
 import * as ImagePicker from "expo-image-picker";
 import { Fontisto, MaterialIcons, Ionicons, Feather } from "@expo/vector-icons";
-import { PinchGestureHandler } from "react-native-gesture-handler";
+import { PinchGestureHandler, TouchableOpacity } from "react-native-gesture-handler";
 import { StopWatchContainer } from "./StopWatch";
 import * as Permissions from "expo-permissions";
 import { Colors } from "../shared/styles/variables";
@@ -16,6 +16,7 @@ export const CameraScreen: React.FC = () => {
   const [type, setType] = useState(Camera.Constants.Type.back);
   const [flash, setFlash] = useState(Camera.Constants.FlashMode.off);
   const [recording, setRecording] = useState<boolean>(false);
+  const [isRecordingDone, setIsRecordingDone] = useState<boolean>(false);
   const [zoom, setZoom] = useState<any>(0);
   const cameraRef = useRef(null);
   const [stopwatchStart, setStopwatchStart] = useState<boolean>(false);
@@ -79,6 +80,7 @@ export const CameraScreen: React.FC = () => {
   const record = async () => {
     if (cameraRef && cameraRef.current) {
       setRecording(true);
+      console.log("red!!@#!@#!@#!@");
       let video = await cameraRef.current.recordAsync();
       console.log(video.uri);
       // navigation.navigate("Publish", { videoUri: video.uri });
@@ -89,6 +91,7 @@ export const CameraScreen: React.FC = () => {
   const stopRecord = () => {
     if (cameraRef && cameraRef.current) {
       setRecording(false);
+      setIsRecordingDone(true);
       cameraRef.current.stopRecording();
     }
   };
@@ -112,16 +115,42 @@ export const CameraScreen: React.FC = () => {
     }
   };
 
+  // const StopButton = (
+  //   <View style={{ flex: 1, flexDirection: "row", justifyContent: "center", alignItems: "flex-end" }}>
+  //     <TouchableOpacity
+  //       onPress={() => {
+  //         stopRecord();
+  //         toggleStopwatch();
+  //       }}
+  //     >
+  //       <Feather name={"stop-circle"} color={"red"} size={60} />
+  //     </TouchableOpacity>
+  //   </View>
+  // );
+
+  const PauseButton = () => {
+    return (
+      <View style={{ flex: 1, flexDirection: "row", justifyContent: "center", alignItems: "flex-end" }}>
+        <TouchableOpacity
+          onPress={() => {
+            stopRecord();
+            toggleStopwatch();
+          }}
+        >
+          <Feather name={"stop-circle"} color={"red"} size={60} />
+        </TouchableOpacity>
+      </View>
+    );
+  };
+
   return (
     <PinchGestureHandler onGestureEvent={onPinchGestureEvent}>
       <View style={styles.container}>
-        <Camera ref={cameraRef} style={styles.camera} type={type} flashMode={flash} zoom={zoom}>
-          <View style={{ flex: 1, flexDirection: "column", justifyContent: "space-between" }}>
-            <View style={styles.button}></View>
-            {!recording && (
-              <View style={styles.buttonContainer}>
+        <Camera ref={cameraRef} style={styles.camera} type={type} flashMode={flash} zoom={zoom} ratio={"16:9"}>
+          <View style={{ flex: 1, padding: 25 }}>
+            {!recording && !isRecordingDone ? (
+              <View style={styles.menuButtons}>
                 <TouchableOpacity
-                  style={styles.button}
                   onPress={() => {
                     setType(
                       type === Camera.Constants.Type.back ? Camera.Constants.Type.front : Camera.Constants.Type.back
@@ -135,7 +164,6 @@ export const CameraScreen: React.FC = () => {
                   />
                 </TouchableOpacity>
                 <TouchableOpacity
-                  style={styles.button}
                   onPress={() => {
                     record();
                     toggleStopwatch();
@@ -145,7 +173,6 @@ export const CameraScreen: React.FC = () => {
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                  style={styles.button}
                   onPress={() => {
                     pickVideo();
                   }}
@@ -153,20 +180,8 @@ export const CameraScreen: React.FC = () => {
                   <Ionicons name={"md-image-outline"} color={"white"} size={35} />
                 </TouchableOpacity>
               </View>
-            )}
-
-            {recording && (
-              <View style={{ flexDirection: "row", justifyContent: "center" }}>
-                <TouchableOpacity
-                  style={styles.button}
-                  onPress={() => {
-                    stopRecord();
-                    toggleStopwatch();
-                  }}
-                >
-                  <Feather name={"stop-circle"} color={"red"} size={50} />
-                </TouchableOpacity>
-              </View>
+            ) : (
+              !isRecordingDone && <PauseButton />
             )}
           </View>
         </Camera>
@@ -182,21 +197,5 @@ const styles = StyleSheet.create({
   camera: {
     flex: 1,
   },
-  buttonContainer: {
-    backgroundColor: "transparent",
-    justifyContent: "space-between",
-    flexDirection: "row",
-    margin: 20,
-  },
-  button: {
-    justifyContent: "space-between",
-    marginTop: 35,
-    flexDirection: "row",
-    alignItems: "center",
-  },
-
-  text: {
-    fontSize: 10,
-    color: "white",
-  },
+  menuButtons: { flex: 1, flexDirection: "row", justifyContent: "space-between", alignItems: "flex-end" },
 });

@@ -32,9 +32,10 @@ export const MainNavigator: React.FC<StackNavigatorProps> = ({}) => {
           name="Camera"
           component={CameraScreen}
           options={{
-            cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS,
             animationEnabled: true,
+            cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS,
             headerTransparent: true,
+            gestureEnabled: false,
           }}
         />
 
