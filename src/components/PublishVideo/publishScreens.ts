@@ -1,5 +1,6 @@
 import { CardStyleInterpolators } from "@react-navigation/stack";
 import { ScreenNavigationMap } from "../Navigation/ScreenNavigationMap";
+import { AddHashtagScreen } from "./AddHashtags";
 import { PublishScreen } from "./Publish";
 import { SearchUsersScreen } from "./SearchUsers";
 import { TagPeopleScreen } from "./TagPeople";
@@ -21,5 +22,11 @@ export const postChallengeScreens: ScreenNavigationMap[] = [
       animationEnabled: false,
     },
   },
-  { name: "AddHashtags", screen: () => null },
+  { 
+    name: "AddHashtag",
+    screen: AddHashtagScreen,
+    options: {
+      title: "Add hashtags",
+    },
+   },
 ];

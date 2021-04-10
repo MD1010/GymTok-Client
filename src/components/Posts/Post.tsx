@@ -149,6 +149,8 @@ export const Post: React.FC<PostProps> = memo(({ post, isVideoPlaying, container
         <Heading createdBy={createdBy.username} onCameraPress={() => onCameraPress()} />
 
         <View style={styles.rowContainer}>
+          {/** was commented as it caused compilation errors, please check  */}
+          {/* {post?.hashtags.map(tag => <Text key={tag} style={styles.hashtag}>#{tag}</Text>)} */}
           <Text style={styles.info}>{post.description}</Text>
         </View>
 

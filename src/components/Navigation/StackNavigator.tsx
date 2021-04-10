@@ -10,6 +10,7 @@ import { postChallengeScreens } from "../PublishVideo/publishScreens";
 import { PostReplies } from "../Replies/PostReplies";
 import { BottomTabs } from "./BottomTabs";
 import { config } from "./stackNavigationConfig";
+import { ApproveVideo } from "../PublishVideo/ApproveVideo";
 
 interface StackNavigatorProps { }
 
@@ -47,6 +48,19 @@ export const MainNavigator: React.FC<StackNavigatorProps> = ({ }) => {
         <Stack.Screen
           name="UsersProfile"
           component={ProfileVideoModal}
+          options={{
+            headerShown: true,
+            headerTitle: "",
+            headerTransparent: true,
+            cardStyle: { backgroundColor: "transparent" },
+            cardStyleInterpolator: CardStyleInterpolators.forNoAnimation,
+            gestureEnabled: false,
+          }}
+        />
+
+        <Stack.Screen
+          name="ApproveVideo"
+          component={ApproveVideo}
           options={{
             headerShown: true,
             headerTitle: "",

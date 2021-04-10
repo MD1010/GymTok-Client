@@ -1,9 +1,7 @@
-import { useFocusEffect, useNavigation, useRoute } from "@react-navigation/core";
-import React, { useCallback, useEffect, useState } from "react";
+import { useNavigation } from "@react-navigation/core";
+import React, { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
-import { useSelector } from "react-redux";
 import { IPost } from "../../interfaces";
-import { authSelector } from "../../store/auth/authSlice";
 import { fetchAPI, RequestMethod } from "../../utils/fetchAPI";
 import { ProfileScreen } from "../Profile/ProfileScreen";
 import { VideoSkeleton } from "../shared/skeletons/VideoSkeleton";
@@ -11,16 +9,13 @@ import { Colors } from "../shared/styles/variables";
 import { Player } from "../shared/VideoPlayer";
 
 interface PostRepliesProps {
-  // post: IPost;
   route: any;
 }
 
 export const PostReplies: React.FC<PostRepliesProps> = ({ }) => {
-  const route = useRoute<any>();
   const navigation = useNavigation();
   const [challengeReplies, setChallengeReplies] = useState<any[]>([]);
   const [streaminServerUrl, setStreaminServerUrl] = useState<string>('');
-  const { loggedUser } = useSelector(authSelector);
   const [post, setPost] = useState<IPost>();
 
   const getChallengeReplies = async () => {
@@ -41,13 +36,10 @@ export const PostReplies: React.FC<PostRepliesProps> = ({ }) => {
 
   useEffect(() => {
     const unsubscribe = navigation.addListener("state", (e) => {
-      // console.log(e.data.state.routes[0])
       setPost(e.data.state.routes[0].params["post"])
     })
     return unsubscribe;
   }, [])
-
-  // console.log("!@?#!@#")
 
   useEffect(() => {
     if (post) {
@@ -63,16 +55,13 @@ export const PostReplies: React.FC<PostRepliesProps> = ({ }) => {
     }}>
       <View style={styles.challengeVideoContainter}>
         <View style={styles.videoContianiter}>
-          {
-            // false ? 
-            <Player style={styles.video} uri={streaminServerUrl} isPlaying={false} resizeMode="cover">
-              <VideoSkeleton />
-            </Player>
-          }
+          <Player style={styles.video} uri={streaminServerUrl} isPlaying={false} resizeMode="cover">
+            <VideoSkeleton />
+          </Player>
         </View>
       </View>
       <View style={{ flex: 1 }}>
-        <ProfileScreen numColumns={2} items={challengeReplies} upperStyle={{}} />
+        <ProfileScreen items={challengeReplies} />
       </View>
     </View >
   );

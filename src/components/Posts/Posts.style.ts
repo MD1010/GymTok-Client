@@ -4,7 +4,8 @@ import { Colors, UIConsts } from "../shared/styles/variables";
 export const styles = StyleSheet.create({
   container: {
     width: "100%",
-    height: Dimensions.get("window").height,
+    height: Dimensions.get("screen").height,
+    flex: 1,
   },
   video: {
     position: "absolute",
@@ -50,6 +51,10 @@ export const styles = StyleSheet.create({
     marginTop: 5,
   },
   info: {
+    marginTop: 7,
+    color: Colors.white,
+  },
+  hashtag: {
     marginTop: 7,
     color: Colors.white,
   },

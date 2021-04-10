@@ -10,7 +10,7 @@ export const ProfileVideoModal: React.FC = () => {
   // todo Dov modify postlist to display correct index
   return (
     <View style={styles.modalView}>
-      <PostsList />
+      <PostsList isFeed={false} currentVideoID={route.params.videoURL?.split("/")[3]} />
       {/* <ChallengesContainer
         currentVideoID={route.params.videoURL?.split("/")[3]}
         getOnlyUserChallenges={true}
@@ -22,6 +22,6 @@ export const ProfileVideoModal: React.FC = () => {
 
 const styles = StyleSheet.create({
   modalView: {
-    height: Dimensions.get("screen").height,
+    height: Dimensions.get("window").height,
   },
 });

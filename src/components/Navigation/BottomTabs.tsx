@@ -2,12 +2,13 @@ import { Ionicons } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import React, { useCallback, useEffect, useState } from "react";
-import { BackHandler } from "react-native";
+import { BackHandler, View } from "react-native";
 import { Portal, Provider } from "react-native-paper";
 import { useSelector } from "react-redux";
 import { authSelector } from "../../store/auth/authSlice";
 import { NotLoggedInScreen } from "../Auth/NotLoggedInScreen";
-import { AddButton } from "../PublishVideo/AddButton";
+import { NotLoggedInModal } from "../Auth/NotLoggedInModal";
+import { CameraScreen } from "../PublishVideo/CameraScreen";
 import { HomeScreen } from "../Home/HomeScreen";
 import { ProfileContainer as Profile } from "../Profile/ProfileContainer";
 import { Colors, UIConsts } from "../shared/styles/variables";
@@ -16,16 +17,8 @@ interface BottomTabsProps {}
 
 export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
   const navigation = useNavigation();
-  // const isHomeTabActive = useRef<boolean>(true);
-  const RequiredAuthModal = () => {
-    const navigation = useNavigation();
-    useEffect(() => {
-      // navigation.navigate("NotLoggedIn", { isFullScreen: !isHomeTabActive.current });
-      navigation.navigate("NotLoggedIn");
-      setIsAddButtonClicked(false);
-    }, []);
-    return <AddButton setIsAddButtonClicked={setIsAddButtonClicked} />;
-  };
+  const Tab = createBottomTabNavigator();
+  const { loggedUser } = useSelector(authSelector);
 
   useFocusEffect(
     useCallback(() => {
@@ -37,10 +30,6 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
       return () => BackHandler.removeEventListener("hardwareBackPress", onBackPress);
     }, [])
   );
-
-  const Tab = createBottomTabNavigator();
-  const { loggedUser } = useSelector(authSelector);
-  const [isAddButtonClicked, setIsAddButtonClicked] = useState<boolean>(false);
 
   return (
     <Provider>
@@ -94,6 +83,32 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
                 <Ionicons name="search-sharp" color={color} size={size} style={{ marginRight: 50 }} />
               ) : (
                 <Ionicons name="search-outline" color={color} size={size} style={{ marginRight: 50 }} />
+              ),
+          }}
+        />
+
+        <Tab.Screen
+          name="New"
+          component={loggedUser ? () => <CameraScreen /> : () => <NotLoggedInModal />}
+          options={{
+            tabBarVisible: false,
+            unmountOnBlur: true,
+            tabBarIcon: ({ color, size, focused }) =>
+              !focused && (
+                <View
+                  style={{
+                    borderWidth: 1,
+                    borderColor: color,
+                    alignItems: "center",
+                    justifyContent: "center",
+                    width: 60,
+                    height: 60,
+                    backgroundColor: "#4B0082",
+                    borderRadius: 50,
+                  }}
+                >
+                  <Ionicons name="camera-outline" color={color} size={50} />
+                </View>
               ),
           }}
         />
@@ -157,13 +172,6 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
           }}
         />
       </Tab.Navigator>
-      <Portal>
-        {!loggedUser && isAddButtonClicked ? (
-          <RequiredAuthModal />
-        ) : (
-          <AddButton setIsAddButtonClicked={setIsAddButtonClicked} />
-        )}
-      </Portal>
     </Provider>
   );
 };
