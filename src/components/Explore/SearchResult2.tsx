@@ -12,14 +12,25 @@ export const SearchResults: React.FC<Props> = ({ filteredDataSource, handleSelec
   const ItemView = ({ item }) => {
     return (
       // Flat List Item
-      <Text style={styles.itemStyle} onPress={() => getItem(item)}>
-        <View style={{ marginRight: 10, alignSelf: "center" }}>
-          <Ionicons name="search-outline" color={"black"} size={25} />
-        </View>
-        <View style={{ alignSelf: "center" }}>
-          <Text>{item.title.toUpperCase()}</Text>
-        </View>
-      </Text>
+      <View style={styles.itemStyle}>
+        <Text onPress={() => getItem(item)}>
+          <View style={{ marginRight: 5 }}>
+            <Ionicons name="search-outline" color={"black"} size={25} />
+          </View>
+          <View>
+            <Text>{item.title.toUpperCase()}</Text>
+          </View>
+        </Text>
+      </View>
+
+      // <Text style={styles.itemStyle} onPress={() => getItem(item)}>
+      //   {/* <Ionicons name="search-outline" color={"black"} size={15} />
+      //   <Text>{item.title.toUpperCase()}</Text> */}
+      //   <View style={{}}>
+      //     <Ionicons name="search-outline" color={"black"} size={25} />
+      //   </View>
+      //   <Text>{item.title.toUpperCase()}</Text>
+      // </Text>
     );
   };
 

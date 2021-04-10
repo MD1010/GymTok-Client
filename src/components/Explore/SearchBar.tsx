@@ -8,6 +8,7 @@ import { SearchResults } from "./SearchResult2";
 import Spinner from "react-native-loading-spinner-overlay";
 import { GenericComponent } from "../Profile/genericComponent";
 import { Item } from "../Profile/interfaces";
+import { UIConsts } from "../shared";
 
 const ITEMS = [
   {
@@ -79,6 +80,66 @@ const challenges: Item[] = [
     _id: 10,
     url: "http://193.106.55.109:8000/fdfe5570-de14-4e53-a680-cc3c3994210b.mp4",
     numOfLikes: "100K",
+  },
+  {
+    _id: 11,
+    url: "http://193.106.55.109:8000/fdfe5570-de14-4e53-a680-cc3c3994210b.mp4",
+    numOfLikes: "100K",
+  },
+  {
+    _id: 12,
+    url: "http://193.106.55.109:8000/fdfe5570-de14-4e53-a680-cc3c3994210b.mp4",
+    numOfLikes: "100K",
+  },
+  {
+    _id: 13,
+    url: "http://193.106.55.109:8000/fdfe5570-de14-4e53-a680-cc3c3994210b.mp4",
+    numOfLikes: "100K",
+  },
+  {
+    _id: 14,
+    url: "http://193.106.55.109:8000/fdfe5570-de14-4e53-a680-cc3c3994210b.mp4",
+    numOfLikes: "100K",
+  },
+  {
+    _id: 15,
+    url: "http://193.106.55.109:8000/fdfe5570-de14-4e53-a680-cc3c3994210b.mp4",
+    numOfLikes: "100K",
+  },
+  {
+    _id: 16,
+    url: "http://193.106.55.109:8000/fdfe5570-de14-4e53-a680-cc3c3994210b.mp4",
+    numOfLikes: "100K",
+  },
+  {
+    _id: 17,
+    url: "http://193.106.55.109:8000/fdfe5570-de14-4e53-a680-cc3c3994210b.mp4",
+    numOfLikes: "100K",
+  },
+  {
+    _id: 18,
+    url: "http://193.106.55.109:8000/fdfe5570-de14-4e53-a680-cc3c3994210b.mp4",
+    numOfLikes: "100K",
+  },
+  {
+    _id: 19,
+    url: "http://193.106.55.109:8000/fdfe5570-de14-4e53-a680-cc3c3994210b.mp4",
+    numOfLikes: "100K",
+  },
+  {
+    _id: 20,
+    url: "http://193.106.55.109:8000/fdfe5570-de14-4e53-a680-cc3c3994210b.mp4",
+    numOfLikes: "100K",
+  },
+  {
+    _id: 21,
+    url: "http://193.106.55.109:8000/fdfe5570-de14-4e53-a680-cc3c3994210b.mp4",
+    numOfLikes: "200K",
+  },
+  {
+    _id: 22,
+    url: "http://193.106.55.109:8000/fdfe5570-de14-4e53-a680-cc3c3994210b.mp4",
+    numOfLikes: "300K",
   },
 ];
 
@@ -160,7 +221,15 @@ export const CustomSearchBar: React.FC = () => {
         {isModalVisible && (
           <SearchResults filteredDataSource={filteredDataSource} handleSelectItem={handleSelectItem} />
         )}
-        {relvantItems !== undefined && <GenericComponent items={relvantItems} />}
+        {relvantItems !== undefined && (
+          <View>
+            <Text style={{ fontSize: 20, margin: 5 }}>Videos</Text>
+            <GenericComponent
+              items={relvantItems}
+              //customStyle={{ height: Dimensions.get("screen").height - UIConsts.bottomNavbarHeight }}
+            />
+          </View>
+        )}
 
         {/* <FlatList
           data={filteredDataSource}
