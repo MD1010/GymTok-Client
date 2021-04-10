@@ -36,7 +36,7 @@ export const PostReplies: React.FC<PostRepliesProps> = ({ }) => {
 
   useEffect(() => {
     const unsubscribe = navigation.addListener("state", (e) => {
-      setPost(e.data.state.routes[0].params["post"])
+      setPost(e.data?.state?.routes[0]?.params["post"])
     })
     return unsubscribe;
   }, [])
