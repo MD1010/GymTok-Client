@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { Animated, Text, View, StyleSheet, Button, Dimensions, FlatList } from "react-native";
 import * as Animatable from "react-native-animatable";
+import { Ionicons } from "@expo/vector-icons";
 
 interface Props {
   filteredDataSource: any[];
@@ -12,9 +13,12 @@ export const SearchResults: React.FC<Props> = ({ filteredDataSource, handleSelec
     return (
       // Flat List Item
       <Text style={styles.itemStyle} onPress={() => getItem(item)}>
-        {item.id}
-        {"."}
-        {item.title.toUpperCase()}
+        <View style={{ marginRight: 10, alignSelf: "center" }}>
+          <Ionicons name="search-outline" color={"black"} size={25} />
+        </View>
+        <View style={{ alignSelf: "center" }}>
+          <Text>{item.title.toUpperCase()}</Text>
+        </View>
       </Text>
     );
   };
@@ -53,6 +57,7 @@ const styles = StyleSheet.create({
   tagFriends: {
     backgroundColor: "#F0F0F0",
     width: Dimensions.get("screen").width,
+    height: Dimensions.get("screen").height,
   },
   itemStyle: {
     padding: 10,

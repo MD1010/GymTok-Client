@@ -12,10 +12,9 @@ import { ChallangeSkeleton } from "../shared/skeletons/ChallangeSkeleton";
 interface Props {
   items: Item[];
   horizontal?: boolean;
-  component?: React.ReactNode;
 }
 
-export const GenericComponent: React.FC<Props> = ({ items, horizontal, component }) => {
+export const GenericComponent: React.FC<Props> = ({ items, horizontal }) => {
   const [thumbnailItems, setThumbnailItems] = useState<any[]>([]);
   const isMounted = useIsMount();
   const navigation = useNavigation();
@@ -59,7 +58,7 @@ export const GenericComponent: React.FC<Props> = ({ items, horizontal, component
             </View>
           </ImageBackground>
         </TouchableOpacity>
-        {component}
+        {item.component}
       </View>
     );
   };

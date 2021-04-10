@@ -5,6 +5,9 @@ import React, { useState, useEffect, useRef } from "react";
 import { SafeAreaView, Text, StyleSheet, View, FlatList, Dimensions } from "react-native";
 import { SearchBar } from "react-native-elements";
 import { SearchResults } from "./SearchResult2";
+import Spinner from "react-native-loading-spinner-overlay";
+import { GenericComponent } from "../Profile/genericComponent";
+import { Item } from "../Profile/interfaces";
 
 const ITEMS = [
   {
@@ -21,6 +24,64 @@ const ITEMS = [
   },
 ];
 
+const challenges: Item[] = [
+  {
+    _id: 1,
+    url: "http://193.106.55.109:8000/cda641c5-b707-4511-bbf0-7801e9e2177f.mp4",
+    numOfLikes: "100K",
+    component: <Text>fdfdff</Text>,
+  },
+  {
+    _id: 2,
+    url: "http://193.106.55.109:8000/7b910ff9-7f85-4fb5-a0e3-bc13f05ae732.mp4",
+    numOfLikes: "100K",
+    component: <Text>fdfdff</Text>,
+  },
+  {
+    _id: 3,
+    url: "http://193.106.55.109:8000/fdfe5570-de14-4e53-a680-cc3c3994210b.mp4",
+    numOfLikes: "100K",
+    component: <Text>fdfdff</Text>,
+  },
+  {
+    _id: 4,
+    url: "http://193.106.55.109:8000/fdfe5570-de14-4e53-a680-cc3c3994210b.mp4",
+    numOfLikes: "100K",
+    component: <Text>fdfdff</Text>,
+  },
+  {
+    _id: 5,
+    url: "http://193.106.55.109:8000/fdfe5570-de14-4e53-a680-cc3c3994210b.mp4",
+    numOfLikes: "100K",
+    component: <Text>fdfdff</Text>,
+  },
+  {
+    _id: 6,
+    url: "http://193.106.55.109:8000/fdfe5570-de14-4e53-a680-cc3c3994210b.mp4",
+    numOfLikes: "100K",
+  },
+  {
+    _id: 7,
+    url: "http://193.106.55.109:8000/fdfe5570-de14-4e53-a680-cc3c3994210b.mp4",
+    numOfLikes: "100K",
+  },
+  {
+    _id: 8,
+    url: "http://193.106.55.109:8000/fdfe5570-de14-4e53-a680-cc3c3994210b.mp4",
+    numOfLikes: "100K",
+  },
+  {
+    _id: 9,
+    url: "http://193.106.55.109:8000/fdfe5570-de14-4e53-a680-cc3c3994210b.mp4",
+    numOfLikes: "100K",
+  },
+  {
+    _id: 10,
+    url: "http://193.106.55.109:8000/fdfe5570-de14-4e53-a680-cc3c3994210b.mp4",
+    numOfLikes: "100K",
+  },
+];
+
 export const CustomSearchBar: React.FC = () => {
   const [search, setSearch] = useState("");
   const [filteredDataSource, setFilteredDataSource] = useState([]);
@@ -28,6 +89,8 @@ export const CustomSearchBar: React.FC = () => {
   const navigation = useNavigation();
   const route = useRoute<any>();
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [relvantItems, setRelavantItems] = useState<Item[] | undefined>(undefined);
 
   useEffect(() => {
     setFilteredDataSource(ITEMS);
@@ -64,15 +127,29 @@ export const CustomSearchBar: React.FC = () => {
   const handleSelectItem = (title) => {
     setSearch(title);
     setIsModalVisible(false);
+    handleSubmit(title);
   };
+
+  const handleSubmit = async (title: string) => {
+    setIsLoading(true);
+    // need to be fetch
+    await delay(5000);
+    console.log("finish delay!!!!!!!!!!!");
+    setIsLoading(false);
+    setRelavantItems(challenges);
+  };
+
+  const delay = (ms) => new Promise((res) => setTimeout(res, ms));
 
   return (
     <SafeAreaView style={{ flex: 1, height: Dimensions.get("screen").height, width: Dimensions.get("screen").width }}>
       <View style={styles.container}>
+        <Spinner visible={isLoading} textLoading={"Loading..."} textStyle={{ color: "#FFF" }} />
+
         <SearchBar
           style={{ height: 40 }}
           onFocus={() => setIsModalVisible(true)}
-          onSubmitEditing={() => setIsModalVisible(false)}
+          onSubmitEditing={(event) => handleSubmit(event.nativeEvent.text)}
           round
           searchIcon={{ size: 24 }}
           onChangeText={(text) => searchFilterFunction(text)}
@@ -83,6 +160,7 @@ export const CustomSearchBar: React.FC = () => {
         {isModalVisible && (
           <SearchResults filteredDataSource={filteredDataSource} handleSelectItem={handleSelectItem} />
         )}
+        {relvantItems !== undefined && <GenericComponent items={relvantItems} />}
 
         {/* <FlatList
           data={filteredDataSource}
