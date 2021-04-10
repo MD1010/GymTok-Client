@@ -1,7 +1,8 @@
-import { useRoute } from "@react-navigation/core";
-import React, { useEffect, useState } from "react";
+import { useFocusEffect, useNavigation, useRoute } from "@react-navigation/core";
+import React, { useCallback, useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { useSelector } from "react-redux";
+import { IPost } from "../../interfaces";
 import { authSelector } from "../../store/auth/authSlice";
 import { fetchAPI, RequestMethod } from "../../utils/fetchAPI";
 import { ProfileScreen } from "../Profile/ProfileScreen";
@@ -9,15 +10,21 @@ import { VideoSkeleton } from "../shared/skeletons/VideoSkeleton";
 import { Colors } from "../shared/styles/variables";
 import { Player } from "../shared/VideoPlayer";
 
-interface ChallengeRepliesProps { }
+interface PostRepliesProps {
+  // post: IPost;
+  route: any;
+}
 
-export const ChallengeReplies: React.FC<ChallengeRepliesProps> = ({ }) => {
+export const PostReplies: React.FC<PostRepliesProps> = ({ }) => {
   const route = useRoute<any>();
+  const navigation = useNavigation();
   const [challengeReplies, setChallengeReplies] = useState<any[]>([]);
+  const [streaminServerUrl, setStreaminServerUrl] = useState<string>('');
   const { loggedUser } = useSelector(authSelector);
+  const [post, setPost] = useState<IPost>();
 
   const getChallengeReplies = async () => {
-    const challengesEndpoint = `${process.env.BASE_API_ENPOINT}/challenges/${route.params.post._id}/replies`;
+    const challengesEndpoint = `${process.env.BASE_API_ENPOINT}/challenges/${post._id}/replies`;
     const { res, error } = await fetchAPI(RequestMethod.GET, challengesEndpoint);
 
     res &&
@@ -31,12 +38,23 @@ export const ChallengeReplies: React.FC<ChallengeRepliesProps> = ({ }) => {
       );
   }
 
+
   useEffect(() => {
-    getChallengeReplies();
-  }, []);
+    const unsubscribe = navigation.addListener("state", (e) => {
+      // console.log(e.data.state.routes[0])
+      setPost(e.data.state.routes[0].params["post"])
+    })
+    return unsubscribe;
+  }, [])
 
+  // console.log("!@?#!@#")
 
-  const streaminServerUrl = `${process.env.VIDEO_SERVER_ENDPOINT}/${route.params.post.video}`;
+  useEffect(() => {
+    if (post) {
+      getChallengeReplies();
+      setStreaminServerUrl(`${process.env.VIDEO_SERVER_ENDPOINT}/${post.video}`);
+    }
+  }, [post]);
 
   return (
     <View style={{
@@ -47,7 +65,7 @@ export const ChallengeReplies: React.FC<ChallengeRepliesProps> = ({ }) => {
         <View style={styles.videoContianiter}>
           {
             // false ? 
-            <Player style={styles.video} uri={streaminServerUrl} isPlaying={true} resizeMode="cover">
+            <Player style={styles.video} uri={streaminServerUrl} isPlaying={false} resizeMode="cover">
               <VideoSkeleton />
             </Player>
           }

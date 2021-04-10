@@ -3,6 +3,7 @@ import isEmpty from "lodash/isEmpty";
 import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Dimensions, FlatList, Text, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
+import { IPost } from "../../interfaces";
 import { authSelector } from "../../store/auth/authSlice";
 import { getMorePosts, getMostRecommended, getUserPosts } from "../../store/posts/actions";
 import { postsSelector } from "../../store/posts/postsSlice";
@@ -15,9 +16,11 @@ interface PostsListProps {
    *  in home page isFeed is true, else it is false
    */
   isFeed?: boolean;
+  navigation: any;
+  route: any
 }
 
-export const PostsList: React.FC<PostsListProps> = memo(({ isFeed }) => {
+export const PostsList: React.FC<PostsListProps> = ({ isFeed }) => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const [navigatedOutOfScreen, setNavigatedOutOfScreen] = useState(false);
@@ -36,6 +39,19 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed }) => {
   useEffect(() => {
     posts && setShowFooter(false);
   }, [posts]);
+
+
+  useEffect(() => {
+    // console.log("sssssssssssss")
+    // nav && nav.setParams({ post: posts[currentlyPlaying] })
+
+    console.log("currentlyPlaying", currentlyPlaying);
+    console.log("posts", posts);
+    navigation.setParams({ post: posts[currentlyPlaying] })
+    // console.log("currently change", currentlyPlaying)
+    // console.log("currently change", navigation.dangerouslyGetState().routes)
+
+  }, [currentlyPlaying, posts])
 
   const getPosts = () => {
     if (loggedUser) {
@@ -154,4 +170,4 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed }) => {
       </View>
     </>
   );
-});
+};

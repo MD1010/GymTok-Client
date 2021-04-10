@@ -7,7 +7,7 @@ import { NotLoggedInModal } from "../Auth/NotLoggedInModal";
 import { RegisterContainer as RegisterScreen } from "../Auth/RegisterContainer";
 import { ProfileVideoModal } from "../Profile/ProfileVideoModal";
 import { postChallengeScreens } from "../PublishVideo/publishScreens";
-import { ChallengeReplies } from "../Replies/ChallengesReplies";
+import { PostReplies } from "../Replies/PostReplies";
 import { BottomTabs } from "./BottomTabs";
 import { config } from "./stackNavigationConfig";
 
@@ -40,9 +40,9 @@ export const MainNavigator: React.FC<StackNavigatorProps> = ({ }) => {
             gestureEnabled: true,
           }}
         />
-        <Stack.Screen name="Replies" component={ChallengeReplies} options={{
+        {/* <Stack.Screen name="Replies" component={PostReplies} options={{
           title: "Replies"
-        }} />
+        }} /> */}
 
         <Stack.Screen
           name="UsersProfile"

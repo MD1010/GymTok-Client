@@ -12,7 +12,6 @@ import { authSelector } from "../../store/auth/authSlice";
 import { Colors } from "../shared/styles/variables";
 import { Player } from "../shared/VideoPlayer";
 import { styles } from "./Posts.style";
-import GestureRecognizer from "react-native-swipe-gestures";
 // import { challengeContext } from "./ChallengesContainer";
 
 interface PostProps {
@@ -144,27 +143,22 @@ export const Post: React.FC<PostProps> = memo(({ post, isVideoPlaying, container
   };
 
   return (
-    <GestureRecognizer
-      onSwipeLeft={onSwipeLeft}
-      config={{ directionalOffsetThreshold: Dimensions.get("screen").width }}
-    >
-      <View style={[styles.container, containerStyle]}>
-        <Player style={styles.video} uri={streaminServerUrl} isPlaying={isVideoPlaying} resizeMode="cover" />
-        <View style={styles.infoContainer}>
-          <Heading createdBy={createdBy.username} onCameraPress={() => onCameraPress()} />
+    <View style={[styles.container, containerStyle]}>
+      <Player style={styles.video} uri={streaminServerUrl} isPlaying={isVideoPlaying} resizeMode="cover" />
+      <View style={styles.infoContainer}>
+        <Heading createdBy={createdBy.username} onCameraPress={() => onCameraPress()} />
 
-          <View style={styles.rowContainer}>
-            <Text style={styles.info}>{post.description}</Text>
-          </View>
-
-          <UIContainer
-            numberOfLikes={likes ? likes.length : 0}
-            numberOfComments={replies ? replies.length : 0}
-            onLikeButtonPress={() => onLikeButtonPress()}
-            onCommentButtonPress={() => onCommentButtonPress()}
-          />
+        <View style={styles.rowContainer}>
+          <Text style={styles.info}>{post.description}</Text>
         </View>
+
+        <UIContainer
+          numberOfLikes={likes ? likes.length : 0}
+          numberOfComments={replies ? replies.length : 0}
+          onLikeButtonPress={() => onLikeButtonPress()}
+          onCommentButtonPress={() => onCommentButtonPress()}
+        />
       </View>
-    </GestureRecognizer>
+    </View>
   );
 });
