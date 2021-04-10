@@ -119,7 +119,7 @@ export const Post: React.FC<PostProps> = memo(({ post, isVideoPlaying, container
         mediaTypes: ImagePicker.MediaTypeOptions.Videos,
       });
       if (!replyVideo.cancelled) {
-        navigation.navigate("Publish", { videoUri: replyVideo.uri, challengeId: post._id });
+        navigation.navigate("Publish", { videoUri: replyVideo.uri, challengeId: post._id, isReply: true });
       }
     } else {
       alert("no access to camera");
@@ -136,10 +136,6 @@ export const Post: React.FC<PostProps> = memo(({ post, isVideoPlaying, container
       navigation.navigate("NotLoggedIn");
       console.log("guest click on comment button, need to login");
     }
-  };
-
-  const onSwipeLeft = async () => {
-    navigation.navigate("Replies", { post });
   };
 
   return (

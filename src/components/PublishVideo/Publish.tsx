@@ -12,7 +12,7 @@ import { fetchAPI, RequestMethod } from "../../utils/fetchAPI";
 import { Player, DismissKeyboard, SubmitButton, Colors, TouchableHighlightButton, Loader } from "../shared";
 
 type StackParamsList = {
-  params: { videoUri: string; taggedPeople: IUser[]; isReply: boolean, hashtags: string[] };
+  params: { videoUri: string; taggedPeople: IUser[]; isReply: boolean, hashtags: string[], challengeId: string };
 };
 
 export const PublishScreen: React.FC = () => {
@@ -99,6 +99,7 @@ export const PublishScreen: React.FC = () => {
       `${process.env.BASE_API_ENPOINT}/challenges/upload`,
       formData
     );
+
     if (res) {
       console.log("res = !", res);
       navigation.navigate("Home");
@@ -125,8 +126,6 @@ export const PublishScreen: React.FC = () => {
       formData
     );
 
-    console.log("res", res);
-    console.log("error", error)
     if (res) {
       navigation.navigate("Home");
     } else alert(error);
@@ -160,7 +159,7 @@ export const PublishScreen: React.FC = () => {
         optionInfoText={displaySelectedHashtags()}
         optionText={"Add Hashtags"}
         onSelect={() =>
-          navigation.navigate("AddHashtag", { selectedHashtags: route.params?.hashtags?.length ? route.params?.hashtags : [] }) 
+          navigation.navigate("AddHashtag", { selectedHashtags: route.params?.hashtags?.length ? route.params?.hashtags : [] })
         }
         icon={<Fontisto name="hashtag" color={Colors.lightGrey2} size={14} />}
       />
