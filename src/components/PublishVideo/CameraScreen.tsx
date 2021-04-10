@@ -51,10 +51,14 @@ export const CameraScreen: React.FC = () => {
   );
 
   const centerHeader = () => <StopWatchContainer stopwatchReset={stopwatchReset} stopwatchStart={stopwatchStart} />;
+  const headerLeft = () => (
+    <MaterialIcons name="close" size={29} style={{ padding: 10 }} onPress={() => navigation.goBack()} />
+  );
 
   useEffect(() => {
     navigation.setOptions({
       headerRight,
+      headerLeft,
       headerTitle: centerHeader,
     } as StackNavigationOptions);
   }, [headerRight]);
@@ -69,7 +73,7 @@ export const CameraScreen: React.FC = () => {
       await ImagePicker.getMediaLibraryPermissionsAsync(true);
       setHasPermission(audioRecording.granted);
     })();
-    return () => navigation.removeListener("focus", null);
+    return () => navigation.removeListener("state", null);
   }, []);
 
   useFocusEffect(
@@ -78,9 +82,13 @@ export const CameraScreen: React.FC = () => {
         if (e.data.state.index === 2) {
           // in approve screen -> not done in blur as it screws the animation
           setIsCameraEnabled(false);
+          setIsRecordingDone(false);
+          setIsRecordingDone(false);
+          toggleStopwatch();
         }
       });
       navigation.addListener("focus", () => {
+        resetStopwatch();
         setTimeout(() => setIsCameraEnabled(true));
       });
 
