@@ -1,18 +1,17 @@
-import React, { useState, useEffect, useRef, useLayoutEffect, FC, useCallback } from "react";
-import { Camera } from "expo-camera";
-import { StyleSheet, Text, View, Platform, Dimensions } from "react-native";
-import { useFocusEffect, useIsFocused, useNavigation } from "@react-navigation/native";
-import * as ImagePicker from "expo-image-picker";
-import { Fontisto, MaterialIcons, Ionicons, Feather } from "@expo/vector-icons";
-import { PinchGestureHandler, TouchableOpacity } from "react-native-gesture-handler";
-import { StopWatchContainer } from "./StopWatch";
-import * as Permissions from "expo-permissions";
-import { Colors } from "../shared/styles/variables";
+import { Feather, Fontisto, Ionicons, MaterialIcons } from "@expo/vector-icons";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { StackNavigationOptions } from "@react-navigation/stack";
+import { Camera } from "expo-camera";
+import * as ImagePicker from "expo-image-picker";
+import * as Permissions from "expo-permissions";
+import React, { useEffect, useRef, useState } from "react";
+import { Dimensions, Platform, StyleSheet, View } from "react-native";
+import { PinchGestureHandler, TouchableOpacity } from "react-native-gesture-handler";
+import { Colors } from "../shared/styles/variables";
+import { StopWatchContainer } from "./StopWatch";
 
 export const CameraScreen: React.FC = () => {
   const navigation = useNavigation();
-  const [hasPermission, setHasPermission] = useState<boolean>(false);
   const [type, setType] = useState(Camera.Constants.Type.back);
   const [flash, setFlash] = useState(Camera.Constants.FlashMode.off);
   const [recording, setRecording] = useState<boolean>(false);
@@ -21,10 +20,8 @@ export const CameraScreen: React.FC = () => {
   const cameraRef = useRef(null);
   const [stopwatchStart, setStopwatchStart] = useState<boolean>(false);
   const [stopwatchReset, setStopwatchReset] = useState<boolean>(false);
-  // const isFocused = useIsFocused();
   const [isCameraEnabled, setIsCameraEnabled] = useState(false);
-  // const isCameraShown = useState(false);
-  const stateSub = useRef(null);
+  const [isPermissionGranted, setPermissionGranted] = useState(false);
 
   const toggleStopwatch = () => {
     setStopwatchStart(!stopwatchStart);
@@ -71,7 +68,7 @@ export const CameraScreen: React.FC = () => {
           : (await Permissions.askAsync(Permissions.AUDIO_RECORDING)) &&
             (await Permissions.askAsync(Permissions.CAMERA));
       await ImagePicker.getMediaLibraryPermissionsAsync(true);
-      setHasPermission(audioRecording.granted);
+      setPermissionGranted(audioRecording.granted);
     })();
     return () => navigation.removeListener("state", null);
   }, []);
@@ -87,14 +84,8 @@ export const CameraScreen: React.FC = () => {
           toggleStopwatch();
         }
       });
-      navigation.addListener("focus", () => {
-        resetStopwatch();
-        setTimeout(() => setIsCameraEnabled(true));
-      });
-
-      return () => {
-        navigation.removeListener("focus", null);
-      };
+      resetStopwatch();
+      setTimeout(() => setIsCameraEnabled(true), 100);
     }, [])
   );
 
@@ -112,10 +103,14 @@ export const CameraScreen: React.FC = () => {
     if (cameraRef && cameraRef.current) {
       setRecording(true);
       console.log("red!!@#!@#!@#!@");
-      let video = await cameraRef.current.recordAsync();
-      console.log(video.uri);
+      try {
+        let video = await cameraRef.current.recordAsync();
+        console.log(video.uri);
+        navigation.navigate("ApproveVideo", { videoURL: video.uri });
+      } catch (e) {
+        console.error(e);
+      }
       // navigation.navigate("Publish", { videoUri: video.uri });
-      navigation.navigate("ApproveVideo", { videoURL: video.uri });
     }
   };
 

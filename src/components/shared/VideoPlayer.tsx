@@ -41,7 +41,7 @@ export const Player: React.FC<VideoProps> = memo(
     const [videoURI, setVideoURI] = useState<string>();
     const navigation = useNavigation();
     const [isLoading, setIsLoading] = useState(false);
-
+    // const [isVisible, setIsVisible] = useState(false);
     const pauseVideoByTap = () => {
       setIsPaused(true);
       ref.current.pauseAsync();
@@ -78,7 +78,30 @@ export const Player: React.FC<VideoProps> = memo(
       // if (full) {
       //   ref.current.presentFullscreenPlayer();
       // }
+      // return () => navigation.removeListener("state", null);
     }, []);
+
+    // useFocusEffect(
+    //   React.useCallback(() => {
+    //     navigation.addListener("state", (e) => {
+    //       // console.log(e.data.state.index);
+    //       if (e.data.state.index === 2) {
+    //         setIsVisible(true);
+    //       }
+    //       // if (e.data.state.index === 2) {
+    //       //   // in approve screen -> not done in blur as it screws the animation
+
+    //       // }
+    //     });
+    //     // navigation.addListener("focus", () => {
+
+    //     // });
+
+    //     // return () => {
+    //     //   navigation.removeListener("focus", null);
+    //     // };
+    //   }, [])
+    // );
 
     useEffect(() => {
       if (isPlaying) {
@@ -98,31 +121,35 @@ export const Player: React.FC<VideoProps> = memo(
           onVideoTap ? onVideoTap() : statusRef.current?.isPlaying ? pauseVideoByTap() : resumeVideoByTap()
         }
       >
-        <View style={[styles.container, containerStyle]}>
-          <Video
-            onLoadStart={() => setIsLoading(true)}
-            onLoad={() => {
-              onVideoLoad && onVideoLoad();
-              setIsLoading(false);
-            }}
-            ref={ref}
-            style={style || styles.defaultVideoStyle}
-            useNativeControls={!!controlsShown}
-            source={{
-              uri,
-            }}
-            resizeMode={resizeMode}
-            shouldPlay={isPlaying}
-            isLooping
-            isMuted={isMuted}
-            onPlaybackStatusUpdate={(status) => (statusRef.current = status)}
-          />
-          {!controlsShown && !hidePlayButton && (
-            <View style={styles.playButtonContainer}>
-              {isPaused && <FontAwesome name="play" size={playBtnSize ? playBtnSize : 40} color={Colors.white} />}
-            </View>
-          )}
-        </View>
+        {
+          <View style={[styles.container, containerStyle]}>
+            {
+              <Video
+                onLoadStart={() => setIsLoading(true)}
+                onLoad={() => {
+                  onVideoLoad && onVideoLoad();
+                  setIsLoading(false);
+                }}
+                ref={ref}
+                style={style || styles.defaultVideoStyle}
+                useNativeControls={!!controlsShown}
+                source={{
+                  uri,
+                }}
+                resizeMode={resizeMode}
+                shouldPlay={isPlaying}
+                isLooping
+                isMuted={isMuted}
+                onPlaybackStatusUpdate={(status) => (statusRef.current = status)}
+              />
+            }
+            {!controlsShown && !hidePlayButton && (
+              <View style={styles.playButtonContainer}>
+                {isPaused && <FontAwesome name="play" size={playBtnSize ? playBtnSize : 40} color={Colors.white} />}
+              </View>
+            )}
+          </View>
+        }
       </TouchableWithoutFeedback>
     );
   }
