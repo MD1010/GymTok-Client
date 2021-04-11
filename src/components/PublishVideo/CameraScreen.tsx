@@ -49,7 +49,13 @@ export const CameraScreen: React.FC = () => {
 
   const centerHeader = () => <StopWatchContainer stopwatchReset={stopwatchReset} stopwatchStart={stopwatchStart} />;
   const headerLeft = () => (
-    <MaterialIcons name="close" size={29} style={{ padding: 10 }} onPress={() => navigation.goBack()} />
+    <MaterialIcons
+      name="close"
+      color={Colors.white}
+      size={29}
+      style={{ padding: 10 }}
+      onPress={() => navigation.goBack()}
+    />
   );
 
   useEffect(() => {
