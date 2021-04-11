@@ -19,7 +19,7 @@ interface VideoProps {
   isMuted?: boolean;
   onVideoTap?: () => any;
   onVideoLoad?: () => any;
-  children?: ReactNode
+  children?: ReactNode;
 }
 
 export const Player: React.FC<VideoProps> = memo(
@@ -35,7 +35,7 @@ export const Player: React.FC<VideoProps> = memo(
     isMuted,
     onVideoTap,
     onVideoLoad,
-    children
+    children,
   }) => {
     const statusRef = useRef<any>();
     const [isPaused, setIsPaused] = useState<boolean>(false);
@@ -43,7 +43,7 @@ export const Player: React.FC<VideoProps> = memo(
     const [videoURI, setVideoURI] = useState<string>();
     const navigation = useNavigation();
     const [isLoading, setIsLoading] = useState(false);
-
+    // const [isVisible, setIsVisible] = useState(false);
     const pauseVideoByTap = () => {
       setIsPaused(true);
       ref.current.pauseAsync();
@@ -58,10 +58,9 @@ export const Player: React.FC<VideoProps> = memo(
       if (uri.startsWith("file")) {
         return setVideoURI(uri);
       }
-      const path = `${Platform.OS === "ios" ?
-        FileSystem.documentDirectory :
-        FileSystem.cacheDirectory}${Platform.OS === "ios" ? uri.split("/")[3] : shorthash.unique(uri)
-        }`;
+      const path = `${Platform.OS === "ios" ? FileSystem.documentDirectory : FileSystem.cacheDirectory}${
+        Platform.OS === "ios" ? uri.split("/")[3] : shorthash.unique(uri)
+      }`;
       const image = await FileSystem.getInfoAsync(path);
       if (image.exists) {
         console.log("read image from cache");
@@ -81,7 +80,30 @@ export const Player: React.FC<VideoProps> = memo(
       // if (full) {
       //   ref.current.presentFullscreenPlayer();
       // }
+      // return () => navigation.removeListener("state", null);
     }, []);
+
+    // useFocusEffect(
+    //   React.useCallback(() => {
+    //     navigation.addListener("state", (e) => {
+    //       // console.log(e.data.state.index);
+    //       if (e.data.state.index === 2) {
+    //         setIsVisible(true);
+    //       }
+    //       // if (e.data.state.index === 2) {
+    //       //   // in approve screen -> not done in blur as it screws the animation
+
+    //       // }
+    //     });
+    //     // navigation.addListener("focus", () => {
+
+    //     // });
+
+    //     // return () => {
+    //     //   navigation.removeListener("focus", null);
+    //     // };
+    //   }, [])
+    // );
 
     useEffect(() => {
       if (isPlaying) {
@@ -101,32 +123,35 @@ export const Player: React.FC<VideoProps> = memo(
           onVideoTap ? onVideoTap() : statusRef.current?.isPlaying ? pauseVideoByTap() : resumeVideoByTap()
         }
       >
-        <View style={[styles.container, containerStyle]}>
-          <Video
-            onLoadStart={() => setIsLoading(true)}
-            onLoad={() => {
-              onVideoLoad && onVideoLoad();
-              setIsLoading(false);
-            }}
-            ref={ref}
-            style={style || styles.defaultVideoStyle}
-            useNativeControls={!!controlsShown}
-            children={children}
-            source={{
-              uri,
-            }}
-            resizeMode={resizeMode}
-            shouldPlay={isPlaying}
-            isLooping
-            isMuted={isMuted}
-            onPlaybackStatusUpdate={(status) => (statusRef.current = status)}
-          />
-          {!controlsShown && !hidePlayButton && (
-            <View style={styles.playButtonContainer}>
-              {isPaused && <FontAwesome name="play" size={playBtnSize ? playBtnSize : 40} color={Colors.white} />}
-            </View>
-          )}
-        </View>
+        {
+          <View style={[styles.container, containerStyle]}>
+            {
+              <Video
+                onLoadStart={() => setIsLoading(true)}
+                onLoad={() => {
+                  onVideoLoad && onVideoLoad();
+                  setIsLoading(false);
+                }}
+                ref={ref}
+                style={style || styles.defaultVideoStyle}
+                useNativeControls={!!controlsShown}
+                source={{
+                  uri,
+                }}
+                resizeMode={resizeMode}
+                shouldPlay={isPlaying}
+                isLooping
+                isMuted={isMuted}
+                onPlaybackStatusUpdate={(status) => (statusRef.current = status)}
+              />
+            }
+            {!controlsShown && !hidePlayButton && (
+              <View style={styles.playButtonContainer}>
+                {isPaused && <FontAwesome name="play" size={playBtnSize ? playBtnSize : 40} color={Colors.white} />}
+              </View>
+            )}
+          </View>
+        }
       </TouchableWithoutFeedback>
     );
   }
@@ -134,9 +159,9 @@ export const Player: React.FC<VideoProps> = memo(
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    width: '100%',
-    justifyContent: 'center',
-    alignItems: "center"
+    width: "100%",
+    justifyContent: "center",
+    alignItems: "center",
   },
   playButtonContainer: {
     position: "absolute",

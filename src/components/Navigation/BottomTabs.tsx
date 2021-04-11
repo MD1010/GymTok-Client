@@ -1,40 +1,30 @@
-import { Ionicons } from "@expo/vector-icons";
+import { FontAwesome5, Ionicons } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { useFocusEffect, useNavigation } from "@react-navigation/native";
-import React, { useCallback, useEffect, useState } from "react";
-import { BackHandler, View } from "react-native";
-import { Portal, Provider } from "react-native-paper";
+import { useNavigation } from "@react-navigation/native";
+import React, { useCallback } from "react";
+import { View } from "react-native";
+import { IconButton, Provider } from "react-native-paper";
 import { useSelector } from "react-redux";
 import { authSelector } from "../../store/auth/authSlice";
 import { NotLoggedInScreen } from "../Auth/NotLoggedInScreen";
-import { NotLoggedInModal } from "../Auth/NotLoggedInModal";
-import { CameraScreen } from "../PublishVideo/CameraScreen";
 import { HomeScreen } from "../Home/HomeScreen";
 import { ProfileContainer as Profile } from "../Profile/ProfileContainer";
 import { Colors, UIConsts } from "../shared/styles/variables";
 
 interface BottomTabsProps {}
 
+const EmptyTab = () => null;
+
 export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
   const navigation = useNavigation();
   const Tab = createBottomTabNavigator();
   const { loggedUser } = useSelector(authSelector);
 
-  useFocusEffect(
-    useCallback(() => {
-      const onBackPress = () => {
-        navigation.navigate("Home");
-        return true;
-      };
-      BackHandler.addEventListener("hardwareBackPress", onBackPress);
-      return () => BackHandler.removeEventListener("hardwareBackPress", onBackPress);
-    }, [])
-  );
-
   return (
     <Provider>
       <Tab.Navigator
         initialRouteName="Home"
+        backBehavior="initialRoute"
         tabBarOptions={{
           activeTintColor: Colors.cyan,
           activeBackgroundColor: Colors.darkBlue,
@@ -80,36 +70,39 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
           options={{
             tabBarIcon: ({ color, size, focused }) =>
               focused ? (
-                <Ionicons name="search-sharp" color={color} size={size} style={{ marginRight: 50 }} />
+                <Ionicons name="search-sharp" color={color} size={size} />
               ) : (
-                <Ionicons name="search-outline" color={color} size={size} style={{ marginRight: 50 }} />
+                <Ionicons name="search-outline" color={color} size={size} />
               ),
           }}
         />
 
         <Tab.Screen
-          name="New"
-          component={loggedUser ? () => <CameraScreen /> : () => <NotLoggedInModal />}
-          options={{
-            tabBarVisible: false,
-            unmountOnBlur: true,
-            tabBarIcon: ({ color, size, focused }) =>
-              !focused && (
+          name="UploadPost"
+          component={EmptyTab}
+          options={({ navigation }) => {
+            return {
+              tabBarButton: () => (
                 <View
                   style={{
-                    borderWidth: 1,
-                    borderColor: color,
-                    alignItems: "center",
                     justifyContent: "center",
-                    width: 60,
-                    height: 60,
-                    backgroundColor: "#4B0082",
-                    borderRadius: 50,
+                    alignItems: "center",
+                    flex: 1,
+                    bottom: 20,
                   }}
                 >
-                  <Ionicons name="camera-outline" color={color} size={50} />
+                  <IconButton
+                    style={{ backgroundColor: Colors.lightPurpule }}
+                    color={Colors.white}
+                    size={40}
+                    icon={() => <FontAwesome5 name="plus" size={20} color={Colors.white} />}
+                    onPress={() => {
+                      navigation.navigate("Camera");
+                    }}
+                  ></IconButton>
                 </View>
               ),
+            };
           }}
         />
 
@@ -129,23 +122,9 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
           options={{
             tabBarIcon: ({ color, size, focused }) =>
               focused ? (
-                <Ionicons
-                  name={"notifications-sharp"}
-                  color={color}
-                  size={size}
-                  style={{
-                    marginLeft: 50,
-                  }}
-                />
+                <Ionicons name={"notifications-sharp"} color={color} size={size} />
               ) : (
-                <Ionicons
-                  name={"notifications-outline"}
-                  color={color}
-                  size={size}
-                  style={{
-                    marginLeft: 50,
-                  }}
-                />
+                <Ionicons name={"notifications-outline"} color={color} size={size} />
               ),
           }}
         ></Tab.Screen>
