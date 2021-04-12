@@ -1,14 +1,15 @@
 import { FontAwesome } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/core";
+import { useNavigation, useRoute } from "@react-navigation/core";
 import { Camera } from "expo-camera";
 import * as ImagePicker from "expo-image-picker";
-import React, { memo, useEffect } from "react";
+import React, { memo, useEffect, useState } from "react";
 import { Dimensions, Text, View, ViewStyle } from "react-native";
 import { Avatar } from "react-native-elements";
 import { TouchableOpacity, TouchableWithoutFeedback } from "react-native-gesture-handler";
 import { useSelector } from "react-redux";
 import { IPost } from "../../interfaces";
 import { authSelector } from "../../store/auth/authSlice";
+import { fetchAPI, RequestMethod } from "../../utils/fetchAPI";
 import { Colors } from "../shared/styles/variables";
 import { Player } from "../shared/VideoPlayer";
 import { styles } from "./Posts.style";
@@ -23,6 +24,7 @@ interface PostProps {
 interface IUIContainer {
   numberOfLikes: number;
   numberOfComments: number;
+  isUserLikeChallenge: boolean;
   onLikeButtonPress: () => void;
   onCommentButtonPress: () => void;
 }
@@ -50,13 +52,15 @@ const UIContainer: React.FC<IUIContainer> = ({
   numberOfLikes,
   onLikeButtonPress,
   onCommentButtonPress,
+  isUserLikeChallenge
 }) => {
+  console.log("isUserLifkesPost", isUserLikeChallenge)
   return (
     <>
       <View style={styles.uiContainer}>
         <View style={[styles.rowContainer, { width: 60, justifyContent: "space-between" }]}>
           <TouchableOpacity onPress={() => onLikeButtonPress()}>
-            <FontAwesome name={"heart"} size={22} color={Colors.lightGrey} />
+            <FontAwesome name={"heart"} size={22} color={isUserLikeChallenge ? Colors.red : Colors.lightGrey} />
           </TouchableOpacity>
 
           <TouchableOpacity onPress={() => onCommentButtonPress()}>
@@ -84,16 +88,41 @@ export const Post: React.FC<PostProps> = memo(({ post, isVideoPlaying, container
   const { video: videoURL, createdBy, likes, replies } = post;
   const { loggedUser } = useSelector(authSelector);
   const navigation = useNavigation();
+  const [isUserLikePost, setÌsUserLikePost] = useState<boolean>(false);
   const streaminServerUrl = `${process.env.VIDEO_SERVER_ENDPOINT}/${videoURL}`;
   useEffect(() => {
     // console.log("video::::::" + videoURL);
   }, [videoURL]);
 
+  useEffect(() => {
+    console.log("aaaaaaaaaaaaaasaaaaaaaaasassaaasaaa", post.likes.includes(loggedUser._id), post._id)
+    setÌsUserLikePost(post.likes.includes(loggedUser._id))
+  }, [post])
+
   // console.log("challenge rendered!!");
 
-  const onLikeButtonPress = () => {
+  const onLikeButtonPress = async () => {
     if (loggedUser) {
       console.log("user:" + loggedUser?.fullName + " click on like button.");
+      if (!isUserLikePost) {
+        const challengesEndpoint = `${process.env.BASE_API_ENPOINT}/users/${loggedUser._id}/challenges/${post._id}/like`;
+        const { res, error } = await fetchAPI(RequestMethod.POST, challengesEndpoint);
+        if (res) {
+          setÌsUserLikePost(true)
+        }
+      } else {
+        console.log("loggedUssser._id", loggedUser._id)
+        console.log("poaaast._id", post._id)
+
+        const challengesEndpoint = `${process.env.BASE_API_ENPOINT}/users/${loggedUser._id}/challenges/${post._id}/like`;
+        const { res, error } = await fetchAPI(RequestMethod.DELETE, challengesEndpoint);
+
+        console.log("res", res)
+        console.log("error", error)
+        if (res) {
+          setÌsUserLikePost(false)
+        }
+      }
       // todo: fetch here
     } else {
       navigation.navigate("NotLoggedIn");
@@ -152,6 +181,7 @@ export const Post: React.FC<PostProps> = memo(({ post, isVideoPlaying, container
 
         <UIContainer
           numberOfLikes={likes ? likes.length : 0}
+          isUserLikeChallenge={isUserLikePost}
           numberOfComments={replies ? replies.length : 0}
           onLikeButtonPress={() => onLikeButtonPress()}
           onCommentButtonPress={() => onCommentButtonPress()}
