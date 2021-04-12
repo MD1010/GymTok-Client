@@ -40,11 +40,9 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentVideoI
     posts && setShowFooter(false);
   }, [posts]);
 
-
   useEffect(() => {
-    navigation.setParams({ post: posts[currentlyPlaying] })
-
-  }, [currentlyPlaying, posts])
+    navigation.setParams({ post: posts[currentlyPlaying] });
+  }, [currentlyPlaying, posts]);
 
   const getPosts = () => {
     if (loggedUser) {
@@ -61,7 +59,6 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentVideoI
     }
   }, [loggedUser]);
 
-  // todo Dov
   useEffect(() => {
     if (currentVideoID && posts.length > 0) {
       let wantedIndex = posts.findIndex((post) => post.video === currentVideoID);
@@ -77,18 +74,20 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentVideoI
       navigation.addListener("focus", () => {
         setNavigatedOutOfScreen(false);
       });
-
-      return () => {
-        navigation.removeListener("blur", null);
-        navigation.removeListener("focus", null);
-      };
     }, [])
   );
+
+  useEffect(() => {
+    return () => {
+      navigation.removeListener("blur", null);
+      navigation.removeListener("focus", null);
+    };
+  }, []);
 
   const onViewRef = useRef(({ viewableItems }) => {
     if (viewableItems[0]?.index === undefined) return;
     playingVideoIndex.current = viewableItems[0]?.index;
-    // scrollEnded.current && setCurrentlyPlaying(viewableItems[0]?.index);
+    scrollEnded.current && setCurrentlyPlaying(viewableItems[0]?.index);
   });
 
   const goIndex = (index: number) => {
@@ -147,17 +146,21 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentVideoI
     <>
       <View style={{ height: viewHeight }}>
         <FlatList
-          initialNumToRender={5}
-          maxToRenderPerBatch={3}
-          windowSize={3}
+          initialNumToRender={6}
+          maxToRenderPerBatch={10}
+          windowSize={5}
           data={posts}
-          pagingEnabled
+          snapToInterval={viewHeight}
+          // pagingEnabled
+          bounces={true}
+          alwaysBounceVertical
           renderItem={renderItem}
           keyExtractor={keyExtractor}
           showsVerticalScrollIndicator={false}
           getItemLayout={itemLayout}
           snapToAlignment={"start"}
           decelerationRate={"fast"}
+          disableIntervalMomentum
           ref={(ref) => {
             flatListRef.current = ref;
           }}
@@ -175,11 +178,11 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentVideoI
           onScrollEndDrag={endDrag}
           //onTouchEnd={() => console.log("end")}
 
-          onMomentumScrollEnd={() => {
-            // console.log("momentum end", playingVideoIndex.current);
-            // only now set the currently playing take it from variable
-            setCurrentlyPlaying(playingVideoIndex.current);
-          }}
+          // onMomentumScrollEnd={() => {
+          //   // console.log("momentum end", playingVideoIndex.current);
+          //   // only now set the currently playing take it from variable
+          //   setCurrentlyPlaying(playingVideoIndex.current);
+          // }}
           onEndReached={handleLoadMore}
           onEndReachedThreshold={0.5}
           ListFooterComponent={showFooter ? <Footer /> : null}

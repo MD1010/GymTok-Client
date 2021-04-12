@@ -76,34 +76,17 @@ export const Player: React.FC<VideoProps> = memo(
     };
 
     useEffect(() => {
-      // Platform.OS === "web" ? setVideoURI(uri) : loadURI();
-      // if (full) {
-      //   ref.current.presentFullscreenPlayer();
-      // }
-      // return () => navigation.removeListener("state", null);
+      return () => navigation.removeListener("blur", null);
     }, []);
 
-    // useFocusEffect(
-    //   React.useCallback(() => {
-    //     navigation.addListener("state", (e) => {
-    //       // console.log(e.data.state.index);
-    //       if (e.data.state.index === 2) {
-    //         setIsVisible(true);
-    //       }
-    //       // if (e.data.state.index === 2) {
-    //       //   // in approve screen -> not done in blur as it screws the animation
-
-    //       // }
-    //     });
-    //     // navigation.addListener("focus", () => {
-
-    //     // });
-
-    //     // return () => {
-    //     //   navigation.removeListener("focus", null);
-    //     // };
-    //   }, [])
-    // );
+    useFocusEffect(
+      React.useCallback(() => {
+        navigation.addListener("blur", (e) => {
+          ref.current?.pauseAsync();
+        });
+        isPlaying && ref.current?.replayAsync();
+      }, [])
+    );
 
     useEffect(() => {
       if (isPlaying) {
