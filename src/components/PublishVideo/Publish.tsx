@@ -12,7 +12,7 @@ import { fetchAPI, RequestMethod } from "../../utils/fetchAPI";
 import { Player, DismissKeyboard, SubmitButton, Colors, TouchableHighlightButton, Loader } from "../shared";
 
 type StackParamsList = {
-  params: { videoUri: string; taggedPeople: IUser[]; isReply: boolean };
+  params: { videoUri: string; taggedPeople: IUser[]; isReply: boolean, hashtags: string[], challengeId: string };
 };
 
 export const PublishScreen: React.FC = () => {
@@ -20,6 +20,7 @@ export const PublishScreen: React.FC = () => {
   const navigation = useNavigation();
   const isReply = route.params.isReply;
   const taggedPeople = route?.params?.taggedPeople;
+  const hashtags = route?.params?.hashtags;
   const [isLoading, setIsLoading] = useState(false);
   const { loggedUser } = useSelector(authSelector);
   const captionInput = useRef<string>();
@@ -42,19 +43,23 @@ export const PublishScreen: React.FC = () => {
             containerStyle={styles.videoPlayerContainer}
           />
           <View style={{ flex: 2 }}>
-            <TextInput
-              multiline
-              style={styles.addCaptionInput}
-              placeholder={"Add a caption..."}
-              placeholderTextColor={Colors.weakGrey}
-              value={caption}
-              onChangeText={(text) => {
-                handleSetCaption(text);
-              }}
-            />
+            <DismissKeyboard>
+              <TextInput
+                multiline
+                style={styles.addCaptionInput}
+                placeholder={"Add a caption..."}
+                placeholderTextColor={Colors.weakGrey}
+                value={caption}
+                onChangeText={(text) => {
+                  handleSetCaption(text);
+                }}
+              />
+            </DismissKeyboard>
           </View>
         </View>
-        <Text style={styles.info}>Your friends will be notified when your challenge is uploaded.</Text>
+        {
+          !isReply && <Text style={styles.info}>Your friends will be notified when your challenge is uploaded.</Text>
+        }
       </View>
     );
   };
@@ -65,6 +70,14 @@ export const PublishScreen: React.FC = () => {
       return taggedPeople[0].fullName;
     }
     return `${taggedPeople.length} selected`;
+  };
+
+  const displaySelectedHashtags = () => {
+    if (!hashtags?.length) return null;
+    if (hashtags?.length === 1) {
+      return hashtags[0];
+    }
+    return `${hashtags.length} selected`;
   };
 
   const publishChallenge = async () => {
@@ -78,6 +91,7 @@ export const PublishScreen: React.FC = () => {
       type: "video/mp4",
     } as any);
     formData.append("selectedFriends", JSON.stringify(taggedPeople));
+    formData.append("hashtags", JSON.stringify(hashtags))
 
     setIsLoading(true);
     const { res, error } = await fetchAPI(
@@ -85,6 +99,7 @@ export const PublishScreen: React.FC = () => {
       `${process.env.BASE_API_ENPOINT}/challenges/upload`,
       formData
     );
+
     if (res) {
       console.log("res = !", res);
       navigation.navigate("Home");
@@ -92,9 +107,34 @@ export const PublishScreen: React.FC = () => {
     setIsLoading(false);
   };
 
+  const replyChallenge = async () => {
+    setIsLoading(true);
+    let formData = new FormData();
+
+    formData.append("description", captionInput.current);
+    formData.append("replierId", loggedUser._id);
+    formData.append("challengeId", route.params.challengeId);
+    formData.append("video", {
+      name: "dov-test.mp4",
+      uri: route.params.videoUri,
+      type: "video/mp4",
+    } as any);
+
+    const { res, error } = await fetchAPI(
+      RequestMethod.POST,
+      `${process.env.BASE_API_ENPOINT}/replies/upload`,
+      formData
+    );
+
+    if (res) {
+      navigation.navigate("Home");
+    } else alert(error);
+    setIsLoading(false);
+  }
+
   const onSubmit = () => {
     if (isReply) {
-      // todo chuck fetch here
+      replyChallenge();
     } else {
       // challenge
       publishChallenge();
@@ -116,39 +156,46 @@ export const PublishScreen: React.FC = () => {
       />
       <TouchableHighlightButton
         actionWillNavigate
+        optionInfoText={displaySelectedHashtags()}
         optionText={"Add Hashtags"}
-        onSelect={() => navigation.navigate("AddHashtags")}
+        onSelect={() =>
+          navigation.navigate("AddHashtag", { selectedHashtags: route.params?.hashtags?.length ? route.params?.hashtags : [] })
+        }
         icon={<Fontisto name="hashtag" color={Colors.lightGrey2} size={14} />}
       />
     </View>
   );
 
   const Footer = () => (
-    <View style={{ flex: 1, alignItems: "center", top: 20 }}>
+    <View style={{ flex: 1, alignItems: "center", marginTop: 20 }}>
       <SubmitButton buttonText={"Post"} type="solid" backgroundColor={Colors.blue} onSubmit={onSubmit} />
     </View>
   );
 
   return (
-    <DismissKeyboard>
-      <SafeAreaView style={styles.container}>
-        <Header />
-        {!isReply && (
-          <>
-            <Divider />
-            <Options />
-          </>
-        )}
-        {!isLoading ? (
-          <>
-            <Divider />
-            <Footer />
-          </>
-        ) : (
-          <Loader style={{ marginBottom: 50 }} />
-        )}
-      </SafeAreaView>
-    </DismissKeyboard>
+
+    <SafeAreaView style={styles.container}>
+
+      <Header />
+
+      {!isReply && (
+        <>
+          <Divider />
+          <Options />
+        </>
+      )}
+      {!isLoading ? (
+        <>
+          <Divider />
+          {/* <SubmitButton buttonText={"CHECK"} onSubmit={() => console.log(123123)} type={"solid"} /> */}
+          <Footer />
+        </>
+      ) : (
+        <Loader style={{ marginBottom: 50 }} />
+      )}
+    </SafeAreaView>
+
+
   );
 };
 
@@ -156,6 +203,7 @@ const styles = StyleSheet.create({
   container: {
     height: Dimensions.get("window").height - StatusBar.currentHeight,
     width: Dimensions.get("screen").width,
+    flex: 1
   },
   videoPlayerContainer: {
     borderRadius: 15,

@@ -1,26 +1,27 @@
 import React from "react";
 import { Dimensions, StatusBar, StyleSheet, View } from "react-native";
-import { ChallengesContainer } from "../Challenge/ChallengesContainer";
 import { useRoute } from "@react-navigation/native";
 import { useHeaderHeight } from "@react-navigation/stack";
+import { PostsList } from "../Posts/PostsList";
 
 export const ProfileVideoModal: React.FC = () => {
   const route = useRoute<any>();
   const headerHeight = useHeaderHeight();
-
+  // todo Dov modify postlist to display correct index
   return (
     <View style={styles.modalView}>
-      <ChallengesContainer
+      <PostsList isFeed={false} currentVideoID={route.params.videoURL?.split("/")[3]} />
+      {/* <ChallengesContainer
         currentVideoID={route.params.videoURL?.split("/")[3]}
         getOnlyUserChallenges={true}
         containerStyle={{ height: Dimensions.get("window").height }}
-      />
+      /> */}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   modalView: {
-    height: Dimensions.get("screen").height,
+    height: Dimensions.get("window").height,
   },
 });

@@ -1,6 +1,6 @@
 import { IUser } from "./User";
 
-export interface IChallenge {
+export interface IPost {
   _id: string;
   creationTime: string;
   name: string;
@@ -10,5 +10,6 @@ export interface IChallenge {
   image: string;
   video: string;
   likes: string[];
-  replies: string[]
+  replies: string[];
+  hashtags: string[];
 }

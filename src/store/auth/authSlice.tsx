@@ -8,7 +8,7 @@ export interface AuthState {
   authError: string | null;
 }
 export const initialState: AuthState = {
-  loggedUser: null,
+  loggedUser: undefined,
   authError: null,
 };
 const authSlice = createSlice({
@@ -24,7 +24,7 @@ const authSlice = createSlice({
       state.authError = null;
     },
     signWith: (state, action: PayloadAction<{ user: IUser; accessToken: string; photoUrl: string }>) => {
-      const { payload } = action;      
+      const { payload } = action;
       AsyncStorage.setItem("accessToken", payload.accessToken);
       AsyncStorage.setItem("photoUrl", payload.photoUrl);
       AsyncStorage.setItem("loggedUser", JSON.stringify(payload.user));

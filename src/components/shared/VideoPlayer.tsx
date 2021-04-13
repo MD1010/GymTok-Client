@@ -2,7 +2,7 @@ import { FontAwesome } from "@expo/vector-icons";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { Video } from "expo-av";
 import * as FileSystem from "expo-file-system";
-import React, { memo, useEffect, useRef, useState } from "react";
+import React, { memo, ReactNode, useEffect, useRef, useState } from "react";
 import {
   Platform,
   StyleProp,
@@ -26,6 +26,7 @@ interface VideoProps {
   isMuted?: boolean;
   onVideoTap?: () => any;
   onVideoLoad?: () => any;
+  children?: ReactNode;
 }
 
 export const Player: React.FC<VideoProps> = memo(
@@ -41,13 +42,15 @@ export const Player: React.FC<VideoProps> = memo(
     isMuted,
     onVideoTap,
     onVideoLoad,
+    children,
   }) => {
     const statusRef = useRef<any>();
     const [isPaused, setIsPaused] = useState<boolean>(false);
     const ref = useRef(null);
     const [videoURI, setVideoURI] = useState<string>();
     const navigation = useNavigation();
-
+    const [isLoading, setIsLoading] = useState(false);
+    // const [isVisible, setIsVisible] = useState(false);
     const pauseVideoByTap = () => {
       setIsPaused(true);
       ref.current.pauseAsync();
@@ -75,7 +78,6 @@ export const Player: React.FC<VideoProps> = memo(
         setVideoURI(image.uri);
       } else {
         console.log("downloading image to cache");
-        console.log("blaaaaaaaa", " ", uri);
         const newImage = await FileSystem.downloadAsync(uri, path);
         console.log("cache url = ", newImage.uri);
         setVideoURI(newImage.uri);
@@ -83,11 +85,34 @@ export const Player: React.FC<VideoProps> = memo(
     };
 
     useEffect(() => {
-      Platform.OS === "web" ? setVideoURI(uri) : loadURI();
+      // Platform.OS === "web" ? setVideoURI(uri) : loadURI();
       // if (full) {
       //   ref.current.presentFullscreenPlayer();
       // }
+      // return () => navigation.removeListener("state", null);
     }, []);
+
+    // useFocusEffect(
+    //   React.useCallback(() => {
+    //     navigation.addListener("state", (e) => {
+    //       // console.log(e.data.state.index);
+    //       if (e.data.state.index === 2) {
+    //         setIsVisible(true);
+    //       }
+    //       // if (e.data.state.index === 2) {
+    //       //   // in approve screen -> not done in blur as it screws the animation
+
+    //       // }
+    //     });
+    //     // navigation.addListener("focus", () => {
+
+    //     // });
+
+    //     // return () => {
+    //     //   navigation.removeListener("focus", null);
+    //     // };
+    //   }, [])
+    // );
 
     useEffect(() => {
       if (isPlaying) {
@@ -111,35 +136,43 @@ export const Player: React.FC<VideoProps> = memo(
             : resumeVideoByTap()
         }
       >
-        <View style={[styles.container, containerStyle]}>
-          <Video
-            onLoad={onVideoLoad}
-            ref={ref}
-            style={style || styles.defaultVideoStyle}
-            useNativeControls={!!controlsShown}
-            source={{
-              uri: videoURI /*uri*/,
-              // uri: "http://193.106.55.109:8000/fdfe5570-de14-4e53-a680-cc3c3994210b.mp4",
-              // uri: "http://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4",
-            }}
-            resizeMode={resizeMode}
-            shouldPlay={isPlaying}
-            isLooping
-            isMuted={isMuted}
-            onPlaybackStatusUpdate={(status) => (statusRef.current = status)}
-          />
-          {!controlsShown && !hidePlayButton && (
-            <View style={styles.playButtonContainer}>
-              {isPaused && (
-                <FontAwesome
-                  name="play"
-                  size={playBtnSize ? playBtnSize : 40}
-                  color={Colors.white}
-                />
-              )}
-            </View>
-          )}
-        </View>
+        {
+          <View style={[styles.container, containerStyle]}>
+            {
+              <Video
+                onLoadStart={() => setIsLoading(true)}
+                onLoad={() => {
+                  onVideoLoad && onVideoLoad();
+                  setIsLoading(false);
+                }}
+                ref={ref}
+                style={style || styles.defaultVideoStyle}
+                useNativeControls={!!controlsShown}
+                source={{
+                  uri,
+                }}
+                resizeMode={resizeMode}
+                shouldPlay={isPlaying}
+                isLooping
+                isMuted={isMuted}
+                onPlaybackStatusUpdate={(status) =>
+                  (statusRef.current = status)
+                }
+              />
+            }
+            {!controlsShown && !hidePlayButton && (
+              <View style={styles.playButtonContainer}>
+                {isPaused && (
+                  <FontAwesome
+                    name="play"
+                    size={playBtnSize ? playBtnSize : 40}
+                    color={Colors.white}
+                  />
+                )}
+              </View>
+            )}
+          </View>
+        }
       </TouchableWithoutFeedback>
     );
   }
@@ -147,6 +180,9 @@ export const Player: React.FC<VideoProps> = memo(
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    width: "100%",
+    justifyContent: "center",
+    alignItems: "center",
   },
   playButtonContainer: {
     position: "absolute",

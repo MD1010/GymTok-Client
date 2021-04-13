@@ -1,13 +1,12 @@
-import { Ionicons } from "@expo/vector-icons";
+import { FontAwesome5, Ionicons } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { useFocusEffect, useNavigation } from "@react-navigation/native";
-import React, { useCallback, useEffect, useState } from "react";
-import { BackHandler } from "react-native";
-import { Portal, Provider } from "react-native-paper";
+import { useNavigation } from "@react-navigation/native";
+import React, { useCallback } from "react";
+import { View } from "react-native";
+import { IconButton, Provider } from "react-native-paper";
 import { useSelector } from "react-redux";
 import { authSelector } from "../../store/auth/authSlice";
 import { NotLoggedInScreen } from "../Auth/NotLoggedInScreen";
-import { AddButton } from "../PublishVideo/AddButton";
 import { HomeScreen } from "../Home/HomeScreen";
 import { ProfileContainer as Profile } from "../Profile/ProfileContainer";
 import { Colors, UIConsts } from "../shared/styles/variables";
@@ -15,34 +14,12 @@ import { colors } from "react-native-elements";
 
 interface BottomTabsProps {}
 
+const EmptyTab = () => null;
+
 export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
   const navigation = useNavigation();
-  // const isHomeTabActive = useRef<boolean>(true);
-  const RequiredAuthModal = () => {
-    const navigation = useNavigation();
-    useEffect(() => {
-      // navigation.navigate("NotLoggedIn", { isFullScreen: !isHomeTabActive.current });
-      navigation.navigate("NotLoggedIn");
-      setIsAddButtonClicked(false);
-    }, []);
-    return <AddButton setIsAddButtonClicked={setIsAddButtonClicked} />;
-  };
-
-  useFocusEffect(
-    useCallback(() => {
-      const onBackPress = () => {
-        navigation.navigate("Home");
-        return true;
-      };
-      BackHandler.addEventListener("hardwareBackPress", onBackPress);
-      return () =>
-        BackHandler.removeEventListener("hardwareBackPress", onBackPress);
-    }, [])
-  );
-
   const Tab = createBottomTabNavigator();
   const { loggedUser } = useSelector(authSelector);
-  const [isAddButtonClicked, setIsAddButtonClicked] = useState<boolean>(false);
 
   return (
     <Provider>
@@ -101,20 +78,45 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
           options={{
             tabBarIcon: ({ color, size, focused }) =>
               focused ? (
-                <Ionicons
-                  name="search-sharp"
-                  color={color}
-                  size={size}
-                  style={{ marginRight: 50 }}
-                />
+                <Ionicons name="search-sharp" color={color} size={size} />
               ) : (
-                <Ionicons
-                  name="search-outline"
-                  color={color}
-                  size={size}
-                  style={{ marginRight: 50 }}
-                />
+                <Ionicons name="search-outline" color={color} size={size} />
               ),
+          }}
+        />
+
+        <Tab.Screen
+          name="UploadPost"
+          component={EmptyTab}
+          options={({ navigation }) => {
+            return {
+              tabBarButton: () => (
+                <View
+                  style={{
+                    justifyContent: "center",
+                    alignItems: "center",
+                    flex: 1,
+                    bottom: 20,
+                  }}
+                >
+                  <IconButton
+                    style={{ backgroundColor: Colors.lightPurpule }}
+                    color={Colors.white}
+                    size={40}
+                    icon={() => (
+                      <FontAwesome5
+                        name="plus"
+                        size={20}
+                        color={Colors.white}
+                      />
+                    )}
+                    onPress={() => {
+                      navigation.navigate("Camera");
+                    }}
+                  ></IconButton>
+                </View>
+              ),
+            };
           }}
         />
 
@@ -144,18 +146,12 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
                   name={"notifications-sharp"}
                   color={color}
                   size={size}
-                  style={{
-                    marginLeft: 50,
-                  }}
                 />
               ) : (
                 <Ionicons
                   name={"notifications-outline"}
                   color={color}
                   size={size}
-                  style={{
-                    marginLeft: 50,
-                  }}
                 />
               ),
           }}
@@ -189,13 +185,6 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
           }}
         />
       </Tab.Navigator>
-      <Portal>
-        {!loggedUser && isAddButtonClicked ? (
-          <RequiredAuthModal />
-        ) : (
-          <AddButton setIsAddButtonClicked={setIsAddButtonClicked} />
-        )}
-      </Portal>
     </Provider>
   );
 };
