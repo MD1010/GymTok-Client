@@ -4,7 +4,69 @@ import { GenericComponent } from "./genericComponent";
 import { Button, Image, View, Text } from "react-native";
 import { Colors } from "../shared";
 import { Icon } from "expo";
+import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
+import { NavigationContainer } from "@react-navigation/native";
 
+const Home = () => {
+  return <Text>Home</Text>;
+};
+const Settings = () => {
+  return <Text>Settings</Text>;
+};
+const challenges = [
+  {
+    _id: 1,
+    url: "http://193.106.55.109:8000/cda641c5-b707-4511-bbf0-7801e9e2177f.mp4",
+    numOfLikes: "100K",
+  },
+  {
+    _id: 2,
+    url: "http://193.106.55.109:8000/7b910ff9-7f85-4fb5-a0e3-bc13f05ae732.mp4",
+    numOfLikes: "100K",
+  },
+  {
+    _id: 3,
+    url: "http://193.106.55.109:8000/fdfe5570-de14-4e53-a680-cc3c3994210b.mp4",
+    numOfLikes: "100K",
+  },
+];
+const replies = [
+  {
+    _id: 4,
+    url: "http://193.106.55.109:8000/fdfe5570-de14-4e53-a680-cc3c3994210b.mp4",
+    numOfLikes: "100K",
+  },
+  {
+    _id: 5,
+    url: "http://193.106.55.109:8000/fdfe5570-de14-4e53-a680-cc3c3994210b.mp4",
+    numOfLikes: "100K",
+  },
+  {
+    _id: 6,
+    url: "http://193.106.55.109:8000/fdfe5570-de14-4e53-a680-cc3c3994210b.mp4",
+    numOfLikes: "100K",
+  },
+];
+function ProfileTabs() {
+  const Tabs = createMaterialTopTabNavigator();
+
+  return (
+    <NavigationContainer independent={true}>
+      <Tabs.Navigator>
+        <Tabs.Screen
+          name="Home"
+          component={Home}
+          // children={() => <GenericComponent items={challenges} />}
+        />
+        <Tabs.Screen
+          name="Settings"
+          // children={() => <GenericComponent items={replies} />}
+          component={Settings}
+        />
+      </Tabs.Navigator>
+    </NavigationContainer>
+  );
+}
 interface ProfileProps {
   items: Item[];
 }
@@ -110,5 +172,10 @@ const ProfileHeader: React.FC = () => {
 export const ProfileScreen: React.FC<ProfileProps> = ({ items }) => {
   // return <GenericComponent items={items} />;
 
-  return <ProfileHeader />;
+  return (
+    <>
+      <ProfileHeader />
+      <ProfileTabs />
+    </>
+  );
 };
