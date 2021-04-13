@@ -83,3 +83,13 @@ export const getLatestPosts = (): AppThunk => {
     }
   };
 };
+
+export const updateUserLikePost = (post: IPost, userId: string): AppThunk => {
+  return async (dispatch: AppDispatch, getState: () => RootState) => {
+    if (post.likes.includes(userId)) {
+      dispatch(postsActions.userRemoveLikePost({ post, userId }));
+    } else {
+      dispatch(postsActions.userLikePost({ post, userId }));
+    }
+  };
+};

@@ -6,9 +6,10 @@ import React, { memo, useEffect, useState } from "react";
 import { Dimensions, Text, View, ViewStyle } from "react-native";
 import { Avatar } from "react-native-elements";
 import { TouchableOpacity, TouchableWithoutFeedback } from "react-native-gesture-handler";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { IPost } from "../../interfaces";
 import { authSelector } from "../../store/auth/authSlice";
+import { updateUserLikePost, userLikePost } from "../../store/posts/actions";
 import { fetchAPI, RequestMethod } from "../../utils/fetchAPI";
 import { Colors } from "../shared/styles/variables";
 import { Player } from "../shared/VideoPlayer";
@@ -88,6 +89,7 @@ export const Post: React.FC<PostProps> = memo(({ post, isVideoPlaying, container
   const { video: videoURL, createdBy, likes, replies } = post;
   const { loggedUser } = useSelector(authSelector);
   const navigation = useNavigation();
+  const dispatch = useDispatch();
   const [isUserLikePost, setÌsUserLikePost] = useState<boolean>(false);
   const streaminServerUrl = `${process.env.VIDEO_SERVER_ENDPOINT}/${videoURL}`;
   useEffect(() => {
@@ -104,27 +106,26 @@ export const Post: React.FC<PostProps> = memo(({ post, isVideoPlaying, container
   const onLikeButtonPress = async () => {
     if (loggedUser) {
       console.log("user:" + loggedUser?.fullName + " click on like button.");
+
+      setÌsUserLikePost(!isUserLikePost);
+      dispatch(updateUserLikePost(post, loggedUser._id));
+
+      let requestMethod: RequestMethod;
+      const likesApi = `${process.env.BASE_API_ENPOINT}/users/${loggedUser._id}/challenges/${post._id}/like`;
       if (!isUserLikePost) {
-        const challengesEndpoint = `${process.env.BASE_API_ENPOINT}/users/${loggedUser._id}/challenges/${post._id}/like`;
-        const { res, error } = await fetchAPI(RequestMethod.POST, challengesEndpoint);
-        if (res) {
-          setÌsUserLikePost(true)
-        }
+        requestMethod = RequestMethod.POST;
       } else {
-        console.log("loggedUssser._id", loggedUser._id)
-        console.log("poaaast._id", post._id)
-
-        const challengesEndpoint = `${process.env.BASE_API_ENPOINT}/users/${loggedUser._id}/challenges/${post._id}/like`;
-        const { res, error } = await fetchAPI(RequestMethod.DELETE, challengesEndpoint);
-
-        console.log("res", res)
-        console.log("error", error)
-        if (res) {
-          setÌsUserLikePost(false)
-        }
+        requestMethod = RequestMethod.DELETE;
       }
-      // todo: fetch here
-    } else {
+      const { res, error } = await fetchAPI(requestMethod, likesApi);
+
+      if (error) {
+        setÌsUserLikePost(isUserLikePost);
+        dispatch(updateUserLikePost(post, loggedUser._id));
+      }
+    }
+    // todo: fetch here
+    else {
       navigation.navigate("NotLoggedIn");
       console.log("guest click on like button, need to log-in");
     }

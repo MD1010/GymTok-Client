@@ -17,6 +17,12 @@ export const initialState: PostsState = {
   userPosts: [],
   hasMoreToFetch: true,
 };
+
+interface LikePayload {
+  post: IPost,
+  userId: string;
+}
+
 const postsSlice = createSlice({
   name: "posts",
   initialState,
@@ -40,8 +46,40 @@ const postsSlice = createSlice({
     resetFetchFailedError: (state) => {
       state.error = null;
     },
+    userLikePost: (state, action: PayloadAction<LikePayload>) => {
+      const copiedLatestFetchedPosts = [...state.latestFetchedPosts];
+      const updatedLatestFetchedPost = copiedLatestFetchedPosts.find(post => post._id === action.payload.post._id);
+      if (updatedLatestFetchedPost) {
+        updatedLatestFetchedPost.likes.push(action.payload.userId);
+        state.latestFetchedPosts = copiedLatestFetchedPosts;
+      }
+
+      const copiedUserPosts = [...state.userPosts];
+      const updatedUserPost = copiedUserPosts.find(post => post._id === action.payload.post._id);
+      if (updatedUserPost) {
+        updatedUserPost.likes.push(action.payload.userId);
+        state.userPosts = copiedUserPosts;
+      }
+    },
+    userRemoveLikePost: (state, action: PayloadAction<LikePayload>) => {
+      const copiedLatestFetchedPosts = [...state.latestFetchedPosts];
+      const updatedLatestFetchedPost = copiedLatestFetchedPosts.find(post => post._id === action.payload.post._id);
+      if (updatedLatestFetchedPost) {
+        updatedLatestFetchedPost.likes = updatedLatestFetchedPost.likes.filter(likedUser => likedUser !== action.payload.userId);
+        state.latestFetchedPosts = copiedLatestFetchedPosts;
+      }
+
+      const copiedUserPosts = [...state.userPosts];
+      const updatedUserPost = copiedUserPosts.find(post => post._id === action.payload.post._id);
+      if (updatedUserPost) {
+        updatedUserPost.likes = updatedUserPost.likes.filter(likedUser => likedUser !== action.payload.userId);
+        state.userPosts = copiedUserPosts
+      }
+    }
   },
 });
+
+
 
 export const postsActions = postsSlice.actions;
 export const postsSelector = (state: RootState) => state.posts;
