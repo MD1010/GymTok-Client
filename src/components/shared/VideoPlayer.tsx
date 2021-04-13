@@ -82,13 +82,16 @@ export const Player: React.FC<VideoProps> = memo(
     useFocusEffect(
       React.useCallback(() => {
         navigation.addListener("blur", (e) => {
-          ref.current?.pauseAsync();
+          console.log("vblue");
+          pauseVideoByTap();
+          // ref?.current?.pauseAsync();
         });
-        isPlaying && ref.current?.replayAsync();
+        isPlaying && resumeVideoByTap();
       }, [])
     );
 
     useEffect(() => {
+      console.log("isPlaying", isPlaying);
       if (isPlaying) {
         ref.current.replayAsync();
         setIsPaused(false);

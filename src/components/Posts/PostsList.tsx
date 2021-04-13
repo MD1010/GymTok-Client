@@ -25,8 +25,8 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentVideoI
   const [navigatedOutOfScreen, setNavigatedOutOfScreen] = useState<boolean>(false);
   const { loggedUser } = useSelector(authSelector);
   const scrollEnded = useRef<boolean>(false);
-  const playingVideoIndex = useRef(0);
-  const [currentlyPlaying, setCurrentlyPlaying] = useState(playingVideoIndex.current);
+  // const playingVideoIndex = useRef(0);
+  const [currentlyPlaying, setCurrentlyPlaying] = useState(0);
   const flatListRef = useRef<FlatList>(null);
   const [showFooter, setShowFooter] = useState<boolean>(false);
   const { hasMoreToFetch, error, latestFetchedPosts, userPosts } = useSelector(postsSelector);
@@ -86,7 +86,8 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentVideoI
 
   const onViewRef = useRef(({ viewableItems }) => {
     if (viewableItems[0]?.index === undefined) return;
-    playingVideoIndex.current = viewableItems[0]?.index;
+    // playingVideoIndex.current = viewableItems[0]?.index;
+    console.log("playing", viewableItems[0]?.index);
     scrollEnded.current && setCurrentlyPlaying(viewableItems[0]?.index);
   });
 
@@ -146,21 +147,19 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentVideoI
     <>
       <View style={{ height: viewHeight }}>
         <FlatList
-          initialNumToRender={6}
-          maxToRenderPerBatch={10}
-          windowSize={5}
+          initialNumToRender={3}
+          maxToRenderPerBatch={7}
+          windowSize={7}
           data={posts}
-          snapToInterval={viewHeight}
-          // pagingEnabled
-          bounces={true}
-          alwaysBounceVertical
+          // snapToInterval={currentlyPlaying === posts.length - 1 ? null : viewHeight}
+          pagingEnabled
+          disableIntervalMomentum
           renderItem={renderItem}
           keyExtractor={keyExtractor}
           showsVerticalScrollIndicator={false}
           getItemLayout={itemLayout}
           snapToAlignment={"start"}
           decelerationRate={"fast"}
-          disableIntervalMomentum
           ref={(ref) => {
             flatListRef.current = ref;
           }}
@@ -176,13 +175,6 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentVideoI
           viewabilityConfig={config.current}
           onScrollBeginDrag={beginDarg}
           onScrollEndDrag={endDrag}
-          //onTouchEnd={() => console.log("end")}
-
-          // onMomentumScrollEnd={() => {
-          //   // console.log("momentum end", playingVideoIndex.current);
-          //   // only now set the currently playing take it from variable
-          //   setCurrentlyPlaying(playingVideoIndex.current);
-          // }}
           onEndReached={handleLoadMore}
           onEndReachedThreshold={0.5}
           ListFooterComponent={showFooter ? <Footer /> : null}

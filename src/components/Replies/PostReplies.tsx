@@ -1,4 +1,4 @@
-import { useNavigation } from "@react-navigation/core";
+import { useFocusEffect, useNavigation } from "@react-navigation/core";
 import React, { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { IPost } from "../../interfaces";
@@ -17,6 +17,7 @@ export const PostReplies: React.FC<PostRepliesProps> = ({}) => {
   const [challengeReplies, setChallengeReplies] = useState<any[]>([]);
   const [streaminServerUrl, setStreaminServerUrl] = useState<string>("");
   const [post, setPost] = useState<IPost>();
+  const [shouldReplyPlay, setShouldReplyPlay] = useState(false);
 
   const getChallengeReplies = async () => {
     const challengesEndpoint = `${process.env.BASE_API_ENPOINT}/challenges/${post._id}/replies`;
@@ -32,6 +33,16 @@ export const PostReplies: React.FC<PostRepliesProps> = ({}) => {
         })
       );
   };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      navigation.addListener("blur", (e) => {
+        console.log("vblue");
+        setShouldReplyPlay(false);
+      });
+      setShouldReplyPlay(true);
+    }, [])
+  );
 
   useEffect(() => {
     const unsubscribe = navigation.addListener("state", (e) => {
@@ -52,12 +63,11 @@ export const PostReplies: React.FC<PostRepliesProps> = ({}) => {
       style={{
         flex: 1,
         backgroundColor: Colors.darkBlueOpaque,
-        marginTop: 20,
       }}
     >
       <View style={styles.challengeVideoContainter}>
         <View style={styles.videoContianiter}>
-          <Player style={styles.video} uri={streaminServerUrl} isPlaying resizeMode="cover">
+          <Player style={styles.video} uri={streaminServerUrl} isPlaying={shouldReplyPlay} resizeMode="cover">
             <VideoSkeleton />
           </Player>
         </View>
