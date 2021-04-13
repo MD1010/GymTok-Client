@@ -17,7 +17,7 @@ export const PostReplies: React.FC<PostRepliesProps> = ({}) => {
   const [challengeReplies, setChallengeReplies] = useState<any[]>([]);
   const [streaminServerUrl, setStreaminServerUrl] = useState<string>("");
   const [post, setPost] = useState<IPost>();
-  const [shouldReplyPlay, setShouldReplyPlay] = useState(false);
+  const [isVideoInViewPort, setIsVideoInViewPort] = useState(false);
 
   const getChallengeReplies = async () => {
     const challengesEndpoint = `${process.env.BASE_API_ENPOINT}/challenges/${post._id}/replies`;
@@ -37,18 +37,20 @@ export const PostReplies: React.FC<PostRepliesProps> = ({}) => {
   useFocusEffect(
     React.useCallback(() => {
       navigation.addListener("blur", (e) => {
-        console.log("vblue");
-        setShouldReplyPlay(false);
+        setIsVideoInViewPort(false);
       });
-      setShouldReplyPlay(true);
+      setIsVideoInViewPort(true);
     }, [])
   );
 
   useEffect(() => {
-    const unsubscribe = navigation.addListener("state", (e) => {
+    navigation.addListener("state", (e) => {
       setPost(e.data?.state?.routes[0]?.params["post"]);
     });
-    return unsubscribe;
+    return () => {
+      navigation.removeListener("blur", null);
+      navigation.removeListener("state", null);
+    };
   }, []);
 
   useEffect(() => {
@@ -67,7 +69,7 @@ export const PostReplies: React.FC<PostRepliesProps> = ({}) => {
     >
       <View style={styles.challengeVideoContainter}>
         <View style={styles.videoContianiter}>
-          <Player style={styles.video} uri={streaminServerUrl} isPlaying={shouldReplyPlay} resizeMode="cover">
+          <Player style={styles.video} uri={streaminServerUrl} resizeMode="cover" videoInViewPort={isVideoInViewPort}>
             <VideoSkeleton />
           </Player>
         </View>

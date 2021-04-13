@@ -11,7 +11,7 @@ interface VideoProps {
   uri: string;
   style?: StyleProp<ViewStyle>;
   playBtnSize?: number;
-  isPlaying: boolean;
+  videoInViewPort?: boolean;
   resizeMode: "cover" | "stretch" | "contain";
   controlsShown?: boolean;
   hidePlayButton?: boolean;
@@ -20,13 +20,18 @@ interface VideoProps {
   onVideoTap?: () => any;
   onVideoLoad?: () => any;
   children?: ReactNode;
+  /**
+   * if the video is rendered not in flat list as a seperated screen
+   * default is false
+   */
+  renderedInList?: boolean;
 }
 
 export const Player: React.FC<VideoProps> = memo(
   ({
     uri,
     style,
-    isPlaying,
+    videoInViewPort,
     resizeMode,
     playBtnSize,
     controlsShown,
@@ -35,6 +40,7 @@ export const Player: React.FC<VideoProps> = memo(
     isMuted,
     onVideoTap,
     onVideoLoad,
+    renderedInList = false,
     children,
   }) => {
     const statusRef = useRef<any>();
@@ -46,12 +52,12 @@ export const Player: React.FC<VideoProps> = memo(
     // const [isVisible, setIsVisible] = useState(false);
     const pauseVideoByTap = () => {
       setIsPaused(true);
-      ref.current.pauseAsync();
+      ref.current?.pauseAsync();
     };
 
     const resumeVideoByTap = () => {
       setIsPaused(false);
-      ref.current.playAsync();
+      ref.current?.playAsync();
     };
 
     const loadURI = async () => {
@@ -82,26 +88,23 @@ export const Player: React.FC<VideoProps> = memo(
     useFocusEffect(
       React.useCallback(() => {
         navigation.addListener("blur", (e) => {
-          console.log("vblue");
-          pauseVideoByTap();
-          // ref?.current?.pauseAsync();
+          ref.current?.pauseAsync();
         });
-        isPlaying && resumeVideoByTap();
+        (videoInViewPort || !renderedInList) && ref.current?.playAsync(); // the video is not in flat list
       }, [])
     );
 
     useEffect(() => {
-      console.log("isPlaying", isPlaying);
-      if (isPlaying) {
-        ref.current.replayAsync();
+      if (videoInViewPort) {
+        ref.current?.replayAsync();
         setIsPaused(false);
       } else {
-        ref.current.pauseAsync();
+        ref.current?.pauseAsync();
       }
       return () => {
-        ref.current.pauseAsync();
+        ref.current?.pauseAsync();
       };
-    }, [isPlaying]);
+    }, [videoInViewPort]);
 
     return (
       <TouchableWithoutFeedback
@@ -125,7 +128,7 @@ export const Player: React.FC<VideoProps> = memo(
                   uri,
                 }}
                 resizeMode={resizeMode}
-                shouldPlay={isPlaying}
+                shouldPlay={videoInViewPort === undefined ? true : videoInViewPort}
                 isLooping
                 isMuted={isMuted}
                 onPlaybackStatusUpdate={(status) => (statusRef.current = status)}

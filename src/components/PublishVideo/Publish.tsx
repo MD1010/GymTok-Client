@@ -36,7 +36,6 @@ export const PublishScreen: React.FC = () => {
         <View style={{ flexDirection: "row" }}>
           <Player
             uri={route.params?.videoUri}
-            isPlaying={true}
             isMuted
             resizeMode={"cover"}
             hidePlayButton

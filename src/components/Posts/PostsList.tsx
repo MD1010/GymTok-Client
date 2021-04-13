@@ -138,7 +138,7 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentVideoI
     return (
       <Post
         post={item}
-        isVideoPlaying={index === currentlyPlaying && !navigatedOutOfScreen}
+        isVisible={index === currentlyPlaying && !navigatedOutOfScreen}
         containerStyle={{ height: viewHeight }}
       />
     );
