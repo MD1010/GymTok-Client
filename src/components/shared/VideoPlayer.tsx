@@ -87,9 +87,11 @@ export const Player: React.FC<VideoProps> = memo(
 
     useFocusEffect(
       React.useCallback(() => {
+        console.log("render", renderedInList);
         navigation.addListener("blur", (e) => {
           ref.current?.pauseAsync();
         });
+
         (videoInViewPort || !renderedInList) && ref.current?.playAsync(); // the video is not in flat list
       }, [])
     );
@@ -98,7 +100,7 @@ export const Player: React.FC<VideoProps> = memo(
       if (videoInViewPort) {
         ref.current?.replayAsync();
         setIsPaused(false);
-      } else {
+      } else if (videoInViewPort !== undefined) {
         ref.current?.pauseAsync();
       }
       return () => {
