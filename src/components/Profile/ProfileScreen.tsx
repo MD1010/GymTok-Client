@@ -54,39 +54,44 @@ function ProfileTabs() {
   return (
     <NavigationContainer independent={true}>
       <Tabs.Navigator
+        screenOptions={({ route }) => ({
+          tabBarIcon: ({ focused }) => {
+            let iconName;
+
+            if (route.name === "Challanges") {
+              iconName = "ios-apps";
+            } else if (route.name === "Replies") {
+              iconName = "person-circle";
+            }
+
+            // You can return any component that you like here!
+            return (
+              <Icon
+                name={iconName}
+                size={25}
+                color={focused ? Colors.white : Colors.darkGrey}
+              />
+            );
+          },
+        })}
         tabBarOptions={{
           style: { backgroundColor: Colors.darkBlueOpaque },
-          // activeTintColor: Colors.white,
+          showIcon: true,
+          showLabel: true,
+          activeTintColor: Colors.white,
+          labelStyle: { fontSize: 8 },
+          indicatorStyle: { backgroundColor: Colors.white },
         }}
       >
         <Tabs.Screen
           name="Challanges"
           component={Home}
-          options={{
-            tabBarLabel: ({ focused }) => (
-              <Icon
-                name={"ios-apps"}
-                color={focused ? Colors.white : Colors.weakGrey}
-                size={30}
-              />
-            ),
-          }}
-
           // children={() => <GenericComponent items={challenges} />}
         />
         <Tabs.Screen
           name="Replies"
           // children={() => <GenericComponent items={replies} />}
           component={Settings}
-          options={{
-            tabBarLabel: ({ focused }) => (
-              <Icon
-                name={"person-circle"}
-                color={focused ? Colors.white : Colors.weakGrey}
-                size={30}
-              />
-            ),
-          }}
         />
       </Tabs.Navigator>
     </NavigationContainer>
