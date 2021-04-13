@@ -3,9 +3,10 @@ import { Item } from "./interfaces";
 import { GenericComponent } from "./genericComponent";
 import { Button, Image, View, Text } from "react-native";
 import { Colors } from "../shared";
-import { Icon } from "expo";
+// import { Icon } from "expo";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { NavigationContainer } from "@react-navigation/native";
+import Icon from "react-native-vector-icons/Ionicons";
 
 const Home = () => {
   return <Text>Home</Text>;
@@ -52,16 +53,40 @@ function ProfileTabs() {
 
   return (
     <NavigationContainer independent={true}>
-      <Tabs.Navigator>
+      <Tabs.Navigator
+        tabBarOptions={{
+          style: { backgroundColor: Colors.darkBlueOpaque },
+          // activeTintColor: Colors.white,
+        }}
+      >
         <Tabs.Screen
-          name="Home"
+          name="Challanges"
           component={Home}
+          options={{
+            tabBarLabel: ({ focused }) => (
+              <Icon
+                name={"ios-apps"}
+                color={focused ? Colors.white : Colors.weakGrey}
+                size={30}
+              />
+            ),
+          }}
+
           // children={() => <GenericComponent items={challenges} />}
         />
         <Tabs.Screen
-          name="Settings"
+          name="Replies"
           // children={() => <GenericComponent items={replies} />}
           component={Settings}
+          options={{
+            tabBarLabel: ({ focused }) => (
+              <Icon
+                name={"person-circle"}
+                color={focused ? Colors.white : Colors.weakGrey}
+                size={30}
+              />
+            ),
+          }}
         />
       </Tabs.Navigator>
     </NavigationContainer>
