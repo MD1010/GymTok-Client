@@ -135,7 +135,7 @@ export const Player: React.FC<VideoProps> = memo(
                 style={style || styles.defaultVideoStyle}
                 useNativeControls={!!controlsShown}
                 source={{
-                  uri: 'http://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4',
+                  uri,
                 }}
                 resizeMode={resizeMode}
                 shouldPlay={isPlaying}

@@ -55,7 +55,6 @@ const UIContainer: React.FC<IUIContainer> = ({
   onCommentButtonPress,
   isUserLikeChallenge
 }) => {
-  console.log("isUserLifkesPost", isUserLikeChallenge)
   return (
     <>
       <View style={styles.uiContainer}>
@@ -92,16 +91,10 @@ export const Post: React.FC<PostProps> = memo(({ post, isVideoPlaying, container
   const dispatch = useDispatch();
   const [isUserLikePost, setÌsUserLikePost] = useState<boolean>(false);
   const streaminServerUrl = `${process.env.VIDEO_SERVER_ENDPOINT}/${videoURL}`;
-  useEffect(() => {
-    // console.log("video::::::" + videoURL);
-  }, [videoURL]);
 
   useEffect(() => {
-    console.log("aaaaaaaaaaaaaasaaaaaaaaasassaaasaaa", post.likes.includes(loggedUser._id), post._id)
     setÌsUserLikePost(post.likes.includes(loggedUser._id))
   }, [post])
-
-  // console.log("challenge rendered!!");
 
   const onLikeButtonPress = async () => {
     if (loggedUser) {

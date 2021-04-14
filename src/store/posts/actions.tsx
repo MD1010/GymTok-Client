@@ -45,6 +45,7 @@ export const getUserPosts = (): AppThunk => {
 
 export const getMostRecommended = (): AppThunk => {
   return async (dispatch: AppDispatch, getState: () => RootState) => {
+
     const loggedUser = getState()?.auth?.loggedUser?.username;
     const endpoint = `${process.env.BASE_API_ENPOINT}/users/${loggedUser}/recommendedChallenges`;
 
@@ -65,6 +66,7 @@ export const getMostRecommended = (): AppThunk => {
 export const getLatestPosts = (): AppThunk => {
   return async (dispatch: AppDispatch, getState: () => RootState) => {
     const loggedUser = getState()?.auth?.loggedUser?.username;
+
     const recommendedEndpoint = `${process.env.BASE_API_ENPOINT}/users/${loggedUser}/recommendedChallenges`;
     const randomPostsEndpoint = `${process.env.BASE_API_ENPOINT}/challenges`;
     const endpoint = loggedUser ? recommendedEndpoint : randomPostsEndpoint;

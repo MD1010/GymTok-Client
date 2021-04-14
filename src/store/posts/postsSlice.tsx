@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { ViewStyle } from "react-native";
 import { IPost } from "../../interfaces";
+import { getPostsAfterUserLikePost, getPostsAfterUserRemoveLikeFromPost } from "../../utils/updatePostLikes";
 import { RootState } from "../configureStore";
 
 export const itemsToFetch = 40; // how many posts are fetched on each get
@@ -47,33 +48,33 @@ const postsSlice = createSlice({
       state.error = null;
     },
     userLikePost: (state, action: PayloadAction<LikePayload>) => {
-      const copiedLatestFetchedPosts = [...state.latestFetchedPosts];
-      const updatedLatestFetchedPost = copiedLatestFetchedPosts.find(post => post._id === action.payload.post._id);
-      if (updatedLatestFetchedPost) {
-        updatedLatestFetchedPost.likes.push(action.payload.userId);
-        state.latestFetchedPosts = copiedLatestFetchedPosts;
+      const updatedLatestFetchedPosts = getPostsAfterUserLikePost(state.latestFetchedPosts,
+        action.payload.post._id, action.payload.userId);
+
+      if (updatedLatestFetchedPosts) {
+        state.latestFetchedPosts = updatedLatestFetchedPosts
       }
 
-      const copiedUserPosts = [...state.userPosts];
-      const updatedUserPost = copiedUserPosts.find(post => post._id === action.payload.post._id);
-      if (updatedUserPost) {
-        updatedUserPost.likes.push(action.payload.userId);
-        state.userPosts = copiedUserPosts;
+      const updatedUserPosts = getPostsAfterUserLikePost(state.userPosts,
+        action.payload.post._id, action.payload.userId);
+
+      if (updatedUserPosts) {
+        state.userPosts = updatedUserPosts;
       }
     },
     userRemoveLikePost: (state, action: PayloadAction<LikePayload>) => {
-      const copiedLatestFetchedPosts = [...state.latestFetchedPosts];
-      const updatedLatestFetchedPost = copiedLatestFetchedPosts.find(post => post._id === action.payload.post._id);
-      if (updatedLatestFetchedPost) {
-        updatedLatestFetchedPost.likes = updatedLatestFetchedPost.likes.filter(likedUser => likedUser !== action.payload.userId);
-        state.latestFetchedPosts = copiedLatestFetchedPosts;
+      const updatedLatestFetchedPosts = getPostsAfterUserRemoveLikeFromPost(state.latestFetchedPosts,
+        action.payload.post._id, action.payload.userId);
+
+      if (updatedLatestFetchedPosts) {
+        state.latestFetchedPosts = updatedLatestFetchedPosts
       }
 
-      const copiedUserPosts = [...state.userPosts];
-      const updatedUserPost = copiedUserPosts.find(post => post._id === action.payload.post._id);
-      if (updatedUserPost) {
-        updatedUserPost.likes = updatedUserPost.likes.filter(likedUser => likedUser !== action.payload.userId);
-        state.userPosts = copiedUserPosts
+      const updatedUserPosts = getPostsAfterUserRemoveLikeFromPost(state.userPosts,
+        action.payload.post._id, action.payload.userId);
+
+      if (updatedUserPosts) {
+        state.userPosts = updatedUserPosts;
       }
     }
   },
