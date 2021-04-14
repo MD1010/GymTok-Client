@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { ViewStyle } from "react-native";
 import { IPost } from "../../interfaces";
+import { getPostsAfterUserLikePost, getPostsAfterUserRemoveLikeFromPost } from "../../utils/updatePostLikes";
 import { RootState } from "../configureStore";
 
 export const itemsToFetch = 40; // how many posts are fetched on each get
@@ -17,6 +18,12 @@ export const initialState: PostsState = {
   userPosts: [],
   hasMoreToFetch: true,
 };
+
+interface LikePayload {
+  post: IPost,
+  userId: string;
+}
+
 const postsSlice = createSlice({
   name: "posts",
   initialState,
@@ -40,8 +47,40 @@ const postsSlice = createSlice({
     resetFetchFailedError: (state) => {
       state.error = null;
     },
+    userLikePost: (state, action: PayloadAction<LikePayload>) => {
+      const updatedLatestFetchedPosts = getPostsAfterUserLikePost(state.latestFetchedPosts,
+        action.payload.post._id, action.payload.userId);
+
+      if (updatedLatestFetchedPosts) {
+        state.latestFetchedPosts = updatedLatestFetchedPosts
+      }
+
+      const updatedUserPosts = getPostsAfterUserLikePost(state.userPosts,
+        action.payload.post._id, action.payload.userId);
+
+      if (updatedUserPosts) {
+        state.userPosts = updatedUserPosts;
+      }
+    },
+    userRemoveLikePost: (state, action: PayloadAction<LikePayload>) => {
+      const updatedLatestFetchedPosts = getPostsAfterUserRemoveLikeFromPost(state.latestFetchedPosts,
+        action.payload.post._id, action.payload.userId);
+
+      if (updatedLatestFetchedPosts) {
+        state.latestFetchedPosts = updatedLatestFetchedPosts
+      }
+
+      const updatedUserPosts = getPostsAfterUserRemoveLikeFromPost(state.userPosts,
+        action.payload.post._id, action.payload.userId);
+
+      if (updatedUserPosts) {
+        state.userPosts = updatedUserPosts;
+      }
+    }
   },
 });
+
+
 
 export const postsActions = postsSlice.actions;
 export const postsSelector = (state: RootState) => state.posts;

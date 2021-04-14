@@ -45,8 +45,10 @@ export const getUserPosts = (): AppThunk => {
 
 export const getMostRecommended = (): AppThunk => {
   return async (dispatch: AppDispatch, getState: () => RootState) => {
+
     const loggedUser = getState()?.auth?.loggedUser?.username;
     const endpoint = `${process.env.BASE_API_ENPOINT}/users/${loggedUser}/recommendedChallenges`;
+
     const currentPosts = getState().posts.latestFetchedPosts;
     const { res, error } = await fetchAPI<IPost[]>(RequestMethod.GET, endpoint, null, {
       size: itemsToFetch,
@@ -64,6 +66,7 @@ export const getMostRecommended = (): AppThunk => {
 export const getLatestPosts = (): AppThunk => {
   return async (dispatch: AppDispatch, getState: () => RootState) => {
     const loggedUser = getState()?.auth?.loggedUser?.username;
+
     const recommendedEndpoint = `${process.env.BASE_API_ENPOINT}/users/${loggedUser}/recommendedChallenges`;
     const randomPostsEndpoint = `${process.env.BASE_API_ENPOINT}/challenges`;
     const endpoint = loggedUser ? recommendedEndpoint : randomPostsEndpoint;
@@ -79,6 +82,16 @@ export const getLatestPosts = (): AppThunk => {
       dispatch(postsActions.refreshSuccess(res));
     } else {
       dispatch(postsActions.fetchFailed(error));
+    }
+  };
+};
+
+export const updateUserLikePost = (post: IPost, userId: string): AppThunk => {
+  return async (dispatch: AppDispatch, getState: () => RootState) => {
+    if (post.likes.includes(userId)) {
+      dispatch(postsActions.userRemoveLikePost({ post, userId }));
+    } else {
+      dispatch(postsActions.userLikePost({ post, userId }));
     }
   };
 };
