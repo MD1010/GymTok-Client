@@ -85,8 +85,10 @@ export const Post: React.FC<PostProps> = memo(({ post, isVideoPlaying, container
   const { loggedUser } = useSelector(authSelector);
   const navigation = useNavigation();
   const streaminServerUrl = `${process.env.VIDEO_SERVER_ENDPOINT}/${videoURL}`;
+
   useEffect(() => {
-    // console.log("video::::::" + videoURL);
+    console.log("streaming server url:::::" + streaminServerUrl);
+    console.log("video::::::" + videoURL);
   }, [videoURL]);
 
   // console.log("challenge rendered!!");

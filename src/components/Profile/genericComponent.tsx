@@ -9,21 +9,24 @@ import { Colors } from "../shared/styles/variables";
 import { Item } from "./interfaces";
 import { ChallangeSkeleton } from "../shared/skeletons/ChallangeSkeleton";
 import { render } from "react-dom";
+import Spinner from "react-native-loading-spinner-overlay";
 
 interface Props {
   items: Item[];
   horizontal?: boolean;
   numColumns?: number;
   customStyle?: ViewStyle;
+  pictureHeight?: number;
 }
 
-export const GenericComponent: React.FC<Props> = ({ items, horizontal, customStyle, numColumns }) => {
+export const GenericComponent: React.FC<Props> = ({ items, horizontal, customStyle, numColumns, pictureHeight }) => {
   const [thumbnailItems, setThumbnailItems] = useState<any[]>([]);
   const isMounted = useIsMount();
   const navigation = useNavigation();
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const isHorizontal: boolean = horizontal ? horizontal : false;
   const numOfColumns: number = numColumns ? numColumns : 3;
+  const picHeight: number = pictureHeight ? pictureHeight : styles.theImage.height;
 
   useEffect(() => {
     (async () => {
@@ -55,10 +58,10 @@ export const GenericComponent: React.FC<Props> = ({ items, horizontal, customSty
           }}
         >
           <ImageBackground
-            style={{ ...styles.theImage, width: Dimensions.get("screen").width / numOfColumns }}
+            style={{ ...styles.theImage, height: picHeight, width: Dimensions.get("screen").width / numOfColumns }}
             source={{ uri: item.image }}
           >
-            <View style={{ display: "flex", justifyContent: "flex-end", flexDirection: "column", height: 120 }}>
+            <View style={{ display: "flex", justifyContent: "flex-end", flexDirection: "column", height: picHeight }}>
               <View style={[styles.rowContainer, { marginRight: 10 }]}>
                 <FontAwesome name={"heart"} size={13} color={Colors.lightGrey} />
                 <Text style={styles.amount}>{item.numOfLikes}</Text>
@@ -73,7 +76,15 @@ export const GenericComponent: React.FC<Props> = ({ items, horizontal, customSty
 
   return (
     <SafeAreaView style={{ flex: 1, flexDirection: isHorizontal ? "row" : "column" }}>
-      {isLoading ? (
+      <Spinner visible={isLoading} textLoading={"Loading..."} textStyle={{ color: "#FFF" }} />
+      <FlatList
+        data={thumbnailItems}
+        keyExtractor={(item, index) => index.toString()}
+        horizontal={isHorizontal}
+        numColumns={!isHorizontal ? numOfColumns : 0}
+        renderItem={renderItem}
+      />
+      {/* {isLoading ? (
         <ChallangeSkeleton isHorizontal={isHorizontal} numOfColumns={numOfColumns} />
       ) : (
         <FlatList
@@ -83,7 +94,7 @@ export const GenericComponent: React.FC<Props> = ({ items, horizontal, customSty
           numColumns={!isHorizontal ? numOfColumns : 0}
           renderItem={renderItem}
         />
-      )}
+      )} */}
     </SafeAreaView>
   );
 };
