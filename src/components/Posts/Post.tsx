@@ -9,7 +9,7 @@ import { TouchableOpacity, TouchableWithoutFeedback } from "react-native-gesture
 import { useDispatch, useSelector } from "react-redux";
 import { IPost } from "../../interfaces";
 import { authSelector } from "../../store/auth/authSlice";
-import { updateUserLikePost, userLikePost } from "../../store/posts/actions";
+import { updateUserLikePost } from "../../store/posts/actions";
 import { fetchAPI, RequestMethod } from "../../utils/fetchAPI";
 import { Colors } from "../shared/styles/variables";
 import { Player } from "../shared/VideoPlayer";
@@ -134,27 +134,10 @@ export const Post: React.FC<PostProps> = memo(({ post, isVideoPlaying, container
     }
   };
 
-  const takeReplyVideo = async () => {
-    const { status } = await Camera.requestPermissionsAsync();
-    await ImagePicker.getMediaLibraryPermissionsAsync(true);
-    if (status === "granted") {
-      const replyVideo: any = await ImagePicker.launchCameraAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Videos,
-      });
-      if (!replyVideo.cancelled) {
-        navigation.navigate("Publish", { videoUri: replyVideo.uri, challengeId: post._id, isReply: true });
-      }
-    } else {
-      alert("no access to camera");
-    }
-  };
-
   const onCameraPress = async () => {
     if (loggedUser) {
       console.log("user:" + loggedUser?.fullName + " click on camera button.");
-      // navigation.navigate("NewChallengePreview");
-      await takeReplyVideo();
-      // todo: fetch here
+      navigation.navigate("Camera", { challengeId: post._id, isReply: true });
     } else {
       navigation.navigate("NotLoggedIn");
       console.log("guest click on comment button, need to login");
