@@ -11,7 +11,7 @@ import { Colors } from "../shared/styles/variables";
 import { StopWatchContainer } from "./StopWatch";
 
 type StackParamsList = {
-  params: { videoURL: string, challengeId: string, isReply: boolean };
+  params: { videoURL: string, challengeId?: string, isReply?: boolean };
 };
 
 export const CameraScreen: React.FC = () => {
@@ -105,9 +105,7 @@ export const CameraScreen: React.FC = () => {
       mediaTypes: ImagePicker.MediaTypeOptions.Videos,
     });
     if (!selectedVideo.cancelled) {
-      console.log(selectedVideo.uri);
-      console.log("route.params", route.params);
-      navigation.navigate("Publish", { videoUri: selectedVideo.uri, challengeId: route.params.challengeId, isReply: route.params.isReply });
+      navigation.navigate("Publish", getNavigateParams(selectedVideo));
     }
   };
 
@@ -117,13 +115,23 @@ export const CameraScreen: React.FC = () => {
       console.log("red!!@#!@#!@#!@");
       try {
         let video = await cameraRef.current.recordAsync();
-        console.log(video.uri);
-        navigation.navigate("ApproveVideo", { videoURL: video.uri, challengeId: route.params.challengeId, isReply: route.params.isReply });
+
+        navigation.navigate("ApproveVideo", getNavigateParams(video));
       } catch (e) {
         console.error(e);
       }
     }
   };
+
+  const getNavigateParams = (video: any) => {
+    const navigationParams = { videoUri: video.uri };
+    if (route.params.isReply) {
+      navigationParams['isReply'] = route.params.isReply;
+      navigationParams['challengeId'] = route.params.challengeId;
+    }
+
+    return navigationParams;
+  }
 
   const stopRecord = () => {
     if (cameraRef && cameraRef.current) {
