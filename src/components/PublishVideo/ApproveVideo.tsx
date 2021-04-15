@@ -48,7 +48,12 @@ export const ApproveVideo: React.FC = () => {
   };
 
   const goForward = () => {
-    navigation.navigate("Publish", { videoUri: videoURL, challengeId: route.params.challengeId, isReply: route.params.isReply });
+    const navigationParams = { videoUri: videoURL };
+    if (route.params.isReply) {
+      navigationParams['isReply'] = route.params.isReply;
+      navigationParams['challengeId'] = route.params.challengeId;
+    }
+    navigation.navigate("Publish", navigationParams);
   };
 
   return (
