@@ -106,7 +106,7 @@ export const CameraScreen: React.FC = () => {
     });
     if (!selectedVideo.cancelled) {
       const navigationParams = { videoUri: selectedVideo.uri };
-      if (route.params.isReply) {
+      if (route.params && route.params.isReply) {
         navigationParams['isReply'] = route.params.isReply;
         navigationParams['challengeId'] = route.params.challengeId;
       }
@@ -121,7 +121,7 @@ export const CameraScreen: React.FC = () => {
       try {
         let video = await cameraRef.current.recordAsync();
         const navigationParams = { videoURL: video.uri };
-        if (route.params.isReply) {
+        if (route.params && route.params.isReply) {
           navigationParams['isReply'] = route.params.isReply;
           navigationParams['challengeId'] = route.params.challengeId;
         }

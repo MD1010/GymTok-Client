@@ -49,7 +49,7 @@ export const ApproveVideo: React.FC = () => {
 
   const goForward = () => {
     const navigationParams = { videoUri: videoURL };
-    if (route.params.isReply) {
+    if (route.params && route.params.isReply) {
       navigationParams['isReply'] = route.params.isReply;
       navigationParams['challengeId'] = route.params.challengeId;
     }
