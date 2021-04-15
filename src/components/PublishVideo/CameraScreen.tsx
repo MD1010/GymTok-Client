@@ -105,7 +105,12 @@ export const CameraScreen: React.FC = () => {
       mediaTypes: ImagePicker.MediaTypeOptions.Videos,
     });
     if (!selectedVideo.cancelled) {
-      navigation.navigate("Publish", getNavigateParams(selectedVideo));
+      const navigationParams = { videoUri: selectedVideo.uri };
+      if (route.params.isReply) {
+        navigationParams['isReply'] = route.params.isReply;
+        navigationParams['challengeId'] = route.params.challengeId;
+      }
+      navigation.navigate("Publish", navigationParams);
     }
   };
 
@@ -115,8 +120,12 @@ export const CameraScreen: React.FC = () => {
       console.log("red!!@#!@#!@#!@");
       try {
         let video = await cameraRef.current.recordAsync();
-
-        navigation.navigate("ApproveVideo", getNavigateParams(video));
+        const navigationParams = { videoURL: video.uri };
+        if (route.params.isReply) {
+          navigationParams['isReply'] = route.params.isReply;
+          navigationParams['challengeId'] = route.params.challengeId;
+        }
+        navigation.navigate("ApproveVideo", navigationParams);
       } catch (e) {
         console.error(e);
       }
