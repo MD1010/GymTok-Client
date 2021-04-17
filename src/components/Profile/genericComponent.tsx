@@ -17,7 +17,6 @@ interface Props {
 
 export const GenericComponent: React.FC<Props> = ({ items, horizontal, component }) => {
   const [thumbnailItems, setThumbnailItems] = useState<any[]>([]);
-  const isMounted = useIsMount();
   const navigation = useNavigation();
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const isHorizontal: boolean = horizontal ? horizontal : false;
@@ -31,7 +30,7 @@ export const GenericComponent: React.FC<Props> = ({ items, horizontal, component
         })
       );
       setIsLoading(false);
-      isMounted.current && setThumbnailItems(asyncRes);
+      setThumbnailItems(asyncRes);
     })();
   }, []);
 

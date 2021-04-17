@@ -18,6 +18,7 @@ export const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     marginTop: 15,
+    marginBottom: 10
   },
   amount: {
     color: Colors.white,

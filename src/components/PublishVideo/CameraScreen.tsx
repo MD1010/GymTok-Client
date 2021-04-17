@@ -1,5 +1,5 @@
 import { Feather, Fontisto, Ionicons, MaterialIcons } from "@expo/vector-icons";
-import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import { RouteProp, useFocusEffect, useNavigation, useRoute } from "@react-navigation/native";
 import { StackNavigationOptions } from "@react-navigation/stack";
 import { Camera } from "expo-camera";
 import * as ImagePicker from "expo-image-picker";
@@ -10,8 +10,13 @@ import { PinchGestureHandler, TouchableOpacity } from "react-native-gesture-hand
 import { Colors } from "../shared/styles/variables";
 import { StopWatchContainer } from "./StopWatch";
 
+type StackParamsList = {
+  params: { videoURL: string, challengeId?: string, isReply?: boolean };
+};
+
 export const CameraScreen: React.FC = () => {
   const navigation = useNavigation();
+  const route = useRoute<RouteProp<StackParamsList, "params">>();
   const [type, setType] = useState(Camera.Constants.Type.back);
   const [flash, setFlash] = useState(Camera.Constants.FlashMode.off);
   const [recording, setRecording] = useState<boolean>(false);
@@ -72,7 +77,7 @@ export const CameraScreen: React.FC = () => {
         Platform.OS === "ios"
           ? await Camera.requestPermissionsAsync()
           : (await Permissions.askAsync(Permissions.AUDIO_RECORDING)) &&
-            (await Permissions.askAsync(Permissions.CAMERA));
+          (await Permissions.askAsync(Permissions.CAMERA));
       await ImagePicker.getMediaLibraryPermissionsAsync(true);
       setPermissionGranted(audioRecording.granted);
     })();
@@ -100,8 +105,12 @@ export const CameraScreen: React.FC = () => {
       mediaTypes: ImagePicker.MediaTypeOptions.Videos,
     });
     if (!selectedVideo.cancelled) {
-      console.log(selectedVideo.uri);
-      navigation.navigate("Publish", { videoUri: selectedVideo.uri });
+      const navigationParams = { videoUri: selectedVideo.uri };
+      if (route.params && route.params.isReply) {
+        navigationParams['isReply'] = route.params.isReply;
+        navigationParams['challengeId'] = route.params.challengeId;
+      }
+      navigation.navigate("Publish", navigationParams);
     }
   };
 
@@ -111,14 +120,27 @@ export const CameraScreen: React.FC = () => {
       console.log("red!!@#!@#!@#!@");
       try {
         let video = await cameraRef.current.recordAsync();
-        console.log(video.uri);
-        navigation.navigate("ApproveVideo", { videoURL: video.uri });
+        const navigationParams = { videoURL: video.uri };
+        if (route.params && route.params.isReply) {
+          navigationParams['isReply'] = route.params.isReply;
+          navigationParams['challengeId'] = route.params.challengeId;
+        }
+        navigation.navigate("ApproveVideo", navigationParams);
       } catch (e) {
         console.error(e);
       }
-      // navigation.navigate("Publish", { videoUri: video.uri });
     }
   };
+
+  const getNavigateParams = (video: any) => {
+    const navigationParams = { videoUri: video.uri };
+    if (route.params.isReply) {
+      navigationParams['isReply'] = route.params.isReply;
+      navigationParams['challengeId'] = route.params.challengeId;
+    }
+
+    return navigationParams;
+  }
 
   const stopRecord = () => {
     if (cameraRef && cameraRef.current) {

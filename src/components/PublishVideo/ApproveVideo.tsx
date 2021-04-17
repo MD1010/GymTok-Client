@@ -10,7 +10,7 @@ import { styles } from "../Posts/Posts.style";
 import { RouteProp, useRoute } from "@react-navigation/native";
 
 type StackParamsList = {
-  params: { videoURL: string };
+  params: { videoURL: string, challengeId: string, isReply: boolean };
 };
 
 interface IUIContainer {
@@ -48,7 +48,12 @@ export const ApproveVideo: React.FC = () => {
   };
 
   const goForward = () => {
-    navigation.navigate("Publish", { videoUri: videoURL });
+    const navigationParams = { videoUri: videoURL };
+    if (route.params && route.params.isReply) {
+      navigationParams['isReply'] = route.params.isReply;
+      navigationParams['challengeId'] = route.params.challengeId;
+    }
+    navigation.navigate("Publish", navigationParams);
   };
 
   return (
@@ -57,7 +62,6 @@ export const ApproveVideo: React.FC = () => {
       <View style={styles.infoContainer}>
         <UIContainer goBack={goBack} goForward={goForward} />
       </View>
-      {/* <UIContainer goBack={goBack} goForward={goForward} /> */}
     </View>
   );
 };

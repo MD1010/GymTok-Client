@@ -1,14 +1,16 @@
 import { FontAwesome } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/core";
+import { useNavigation, useRoute } from "@react-navigation/core";
 import { Camera } from "expo-camera";
 import * as ImagePicker from "expo-image-picker";
-import React, { memo, useEffect } from "react";
+import React, { memo, useEffect, useState } from "react";
 import { Dimensions, Text, View, ViewStyle } from "react-native";
 import { Avatar } from "react-native-elements";
 import { TouchableOpacity, TouchableWithoutFeedback } from "react-native-gesture-handler";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { IPost } from "../../interfaces";
 import { authSelector } from "../../store/auth/authSlice";
+import { updateUserLikePost } from "../../store/posts/actions";
+import { fetchAPI, RequestMethod } from "../../utils/fetchAPI";
 import { Colors } from "../shared/styles/variables";
 import { Player } from "../shared/VideoPlayer";
 import { styles } from "./Posts.style";
@@ -23,6 +25,7 @@ interface PostProps {
 interface IUIContainer {
   numberOfLikes: number;
   numberOfComments: number;
+  isUserLikeChallenge: boolean;
   onLikeButtonPress: () => void;
   onCommentButtonPress: () => void;
 }
@@ -50,13 +53,14 @@ const UIContainer: React.FC<IUIContainer> = ({
   numberOfLikes,
   onLikeButtonPress,
   onCommentButtonPress,
+  isUserLikeChallenge
 }) => {
   return (
     <>
       <View style={styles.uiContainer}>
         <View style={[styles.rowContainer, { width: 60, justifyContent: "space-between" }]}>
           <TouchableOpacity onPress={() => onLikeButtonPress()}>
-            <FontAwesome name={"heart"} size={22} color={Colors.lightGrey} />
+            <FontAwesome name={"heart"} size={22} color={isUserLikeChallenge ? Colors.red : Colors.lightGrey} />
           </TouchableOpacity>
 
           <TouchableOpacity onPress={() => onCommentButtonPress()}>
@@ -84,18 +88,37 @@ export const Post: React.FC<PostProps> = memo(({ post, isVideoPlaying, container
   const { video: videoURL, createdBy, likes, replies } = post;
   const { loggedUser } = useSelector(authSelector);
   const navigation = useNavigation();
+  const dispatch = useDispatch();
+  const [isUserLikePost, setÌsUserLikePost] = useState<boolean>(false);
   const streaminServerUrl = `${process.env.VIDEO_SERVER_ENDPOINT}/${videoURL}`;
+
   useEffect(() => {
-    // console.log("video::::::" + videoURL);
-  }, [videoURL]);
+    setÌsUserLikePost(post.likes.includes(loggedUser._id))
+  }, [post])
 
-  // console.log("challenge rendered!!");
-
-  const onLikeButtonPress = () => {
+  const onLikeButtonPress = async () => {
     if (loggedUser) {
       console.log("user:" + loggedUser?.fullName + " click on like button.");
-      // todo: fetch here
-    } else {
+
+      setÌsUserLikePost(!isUserLikePost);
+      dispatch(updateUserLikePost(post, loggedUser._id));
+
+      let requestMethod: RequestMethod;
+      const likesApi = `${process.env.BASE_API_ENPOINT}/users/${loggedUser._id}/challenges/${post._id}/like`;
+      if (!isUserLikePost) {
+        requestMethod = RequestMethod.POST;
+      } else {
+        requestMethod = RequestMethod.DELETE;
+      }
+      const { res, error } = await fetchAPI(requestMethod, likesApi);
+
+      if (error) {
+        setÌsUserLikePost(isUserLikePost);
+        dispatch(updateUserLikePost(post, loggedUser._id));
+      }
+    }
+    // todo: fetch here
+    else {
       navigation.navigate("NotLoggedIn");
       console.log("guest click on like button, need to log-in");
     }
@@ -111,27 +134,10 @@ export const Post: React.FC<PostProps> = memo(({ post, isVideoPlaying, container
     }
   };
 
-  const takeReplyVideo = async () => {
-    const { status } = await Camera.requestPermissionsAsync();
-    await ImagePicker.getMediaLibraryPermissionsAsync(true);
-    if (status === "granted") {
-      const replyVideo: any = await ImagePicker.launchCameraAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Videos,
-      });
-      if (!replyVideo.cancelled) {
-        navigation.navigate("Publish", { videoUri: replyVideo.uri, challengeId: post._id, isReply: true });
-      }
-    } else {
-      alert("no access to camera");
-    }
-  };
-
   const onCameraPress = async () => {
     if (loggedUser) {
       console.log("user:" + loggedUser?.fullName + " click on camera button.");
-      // navigation.navigate("NewChallengePreview");
-      await takeReplyVideo();
-      // todo: fetch here
+      navigation.navigate("Camera", { challengeId: post._id, isReply: true });
     } else {
       navigation.navigate("NotLoggedIn");
       console.log("guest click on comment button, need to login");
@@ -152,6 +158,7 @@ export const Post: React.FC<PostProps> = memo(({ post, isVideoPlaying, container
 
         <UIContainer
           numberOfLikes={likes ? likes.length : 0}
+          isUserLikeChallenge={isUserLikePost}
           numberOfComments={replies ? replies.length : 0}
           onLikeButtonPress={() => onLikeButtonPress()}
           onCommentButtonPress={() => onCommentButtonPress()}
