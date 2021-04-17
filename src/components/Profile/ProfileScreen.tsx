@@ -17,12 +17,12 @@ const Settings = () => {
 const challenges = [
   {
     _id: 1,
-    url: "http://193.106.55.109:8000/cda641c5-b707-4511-bbf0-7801e9e2177f.mp4",
+    url: "http://193.106.55.109:8000/fdfe5570-de14-4e53-a680-cc3c3994210b.mp4",
     numOfLikes: "100K",
   },
   {
     _id: 2,
-    url: "http://193.106.55.109:8000/7b910ff9-7f85-4fb5-a0e3-bc13f05ae732.mp4",
+    url: "http://193.106.55.109:8000/fdfe5570-de14-4e53-a680-cc3c3994210b.mp4",
     numOfLikes: "100K",
   },
   {
@@ -30,8 +30,6 @@ const challenges = [
     url: "http://193.106.55.109:8000/fdfe5570-de14-4e53-a680-cc3c3994210b.mp4",
     numOfLikes: "100K",
   },
-];
-const replies = [
   {
     _id: 4,
     url: "http://193.106.55.109:8000/fdfe5570-de14-4e53-a680-cc3c3994210b.mp4",
@@ -44,6 +42,68 @@ const replies = [
   },
   {
     _id: 6,
+    url: "http://193.106.55.109:8000/fdfe5570-de14-4e53-a680-cc3c3994210b.mp4",
+    numOfLikes: "100K",
+  },
+  {
+    _id: 7,
+    url: "http://193.106.55.109:8000/fdfe5570-de14-4e53-a680-cc3c3994210b.mp4",
+    numOfLikes: "100K",
+  },
+  {
+    _id: 8,
+    url: "http://193.106.55.109:8000/fdfe5570-de14-4e53-a680-cc3c3994210b.mp4",
+    numOfLikes: "100K",
+  },
+  {
+    _id: 9,
+    url: "http://193.106.55.109:8000/fdfe5570-de14-4e53-a680-cc3c3994210b.mp4",
+    numOfLikes: "100K",
+  },
+];
+const replies = [
+  {
+    _id: 1,
+    url: "http://193.106.55.109:8000/fdfe5570-de14-4e53-a680-cc3c3994210b.mp4",
+    numOfLikes: "100K",
+  },
+  {
+    _id: 2,
+    url: "http://193.106.55.109:8000/fdfe5570-de14-4e53-a680-cc3c3994210b.mp4",
+    numOfLikes: "100K",
+  },
+  {
+    _id: 3,
+    url: "http://193.106.55.109:8000/fdfe5570-de14-4e53-a680-cc3c3994210b.mp4",
+    numOfLikes: "100K",
+  },
+  {
+    _id: 4,
+    url: "http://193.106.55.109:8000/fdfe5570-de14-4e53-a680-cc3c3994210b.mp4",
+    numOfLikes: "100K",
+  },
+  {
+    _id: 5,
+    url: "http://193.106.55.109:8000/fdfe5570-de14-4e53-a680-cc3c3994210b.mp4",
+    numOfLikes: "100K",
+  },
+  {
+    _id: 6,
+    url: "http://193.106.55.109:8000/fdfe5570-de14-4e53-a680-cc3c3994210b.mp4",
+    numOfLikes: "100K",
+  },
+  {
+    _id: 7,
+    url: "http://193.106.55.109:8000/fdfe5570-de14-4e53-a680-cc3c3994210b.mp4",
+    numOfLikes: "100K",
+  },
+  {
+    _id: 8,
+    url: "http://193.106.55.109:8000/fdfe5570-de14-4e53-a680-cc3c3994210b.mp4",
+    numOfLikes: "100K",
+  },
+  {
+    _id: 9,
     url: "http://193.106.55.109:8000/fdfe5570-de14-4e53-a680-cc3c3994210b.mp4",
     numOfLikes: "100K",
   },
@@ -85,13 +145,13 @@ function ProfileTabs() {
       >
         <Tabs.Screen
           name="Challanges"
-          component={Home}
-          // children={() => <GenericComponent items={challenges} />}
+          // component={Home}
+          children={() => <GenericComponent items={challenges} />}
         />
         <Tabs.Screen
           name="Replies"
-          // children={() => <GenericComponent items={replies} />}
-          component={Settings}
+          children={() => <GenericComponent items={replies} />}
+          // component={Settings}
         />
       </Tabs.Navigator>
     </NavigationContainer>
@@ -120,6 +180,7 @@ const ProfileHeader: React.FC = () => {
                   color: Colors.white,
                   fontSize: 20,
                   fontWeight: "bold",
+                  // marginLeft: 20,
                 }}
               >
                 20
