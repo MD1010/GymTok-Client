@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Dimensions, StatusBar, StyleSheet, View } from "react-native";
 import { useRoute } from "@react-navigation/native";
 import { useHeaderHeight } from "@react-navigation/stack";
@@ -7,6 +7,7 @@ import { PostsList } from "../Posts/PostsList";
 export const ProfileVideoModal: React.FC = () => {
   const route = useRoute<any>();
   const headerHeight = useHeaderHeight();
+
   // todo Dov modify postlist to display correct index
   return (
     <View style={styles.modalView}>

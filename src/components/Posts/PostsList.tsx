@@ -67,7 +67,7 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentVideoI
     }
   }, [loggedUser]);
 
-  // todo Dov
+  // // todo Dov
   useEffect(() => {
     if (currentVideoID && posts.length > 0) {
       // console.log("video idddddddddddddd: " + currentVideoID);
