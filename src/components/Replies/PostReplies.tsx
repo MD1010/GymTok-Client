@@ -1,4 +1,4 @@
-import { useNavigation } from "@react-navigation/core";
+import { useFocusEffect, useNavigation } from "@react-navigation/core";
 import React, { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { IPost } from "../../interfaces";
@@ -12,11 +12,12 @@ interface PostRepliesProps {
   route: any;
 }
 
-export const PostReplies: React.FC<PostRepliesProps> = ({ }) => {
+export const PostReplies: React.FC<PostRepliesProps> = ({}) => {
   const navigation = useNavigation();
   const [challengeReplies, setChallengeReplies] = useState<any[]>([]);
-  const [streaminServerUrl, setStreaminServerUrl] = useState<string>('');
+  const [streaminServerUrl, setStreaminServerUrl] = useState<string>("");
   const [post, setPost] = useState<IPost>();
+  const [isVideoInViewPort, setIsVideoInViewPort] = useState(false);
 
   const getChallengeReplies = async () => {
     const challengesEndpoint = `${process.env.BASE_API_ENPOINT}/challenges/${post._id}/replies`;
@@ -27,19 +28,30 @@ export const PostReplies: React.FC<PostRepliesProps> = ({ }) => {
         res.map((reply, index) => {
           return {
             _id: index,
-            url: reply.video
+            url: reply.video,
           };
         })
       );
-  }
+  };
 
+  useFocusEffect(
+    React.useCallback(() => {
+      navigation.addListener("blur", (e) => {
+        setIsVideoInViewPort(false);
+      });
+      setIsVideoInViewPort(true);
+    }, [])
+  );
 
   useEffect(() => {
-    const unsubscribe = navigation.addListener("state", (e) => {
-      setPost(e.data?.state?.routes[0]?.params["post"])
-    })
-    return unsubscribe;
-  }, [])
+    navigation.addListener("state", (e) => {
+      setPost(e.data?.state?.routes[0]?.params["post"]);
+    });
+    return () => {
+      navigation.removeListener("blur", null);
+      navigation.removeListener("state", null);
+    };
+  }, []);
 
   useEffect(() => {
     if (post) {
@@ -49,13 +61,15 @@ export const PostReplies: React.FC<PostRepliesProps> = ({ }) => {
   }, [post]);
 
   return (
-    <View style={{
-      flex: 1, backgroundColor: Colors.darkBlueOpaque, marginTop: 20,
-
-    }}>
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: Colors.darkBlueOpaque,
+      }}
+    >
       <View style={styles.challengeVideoContainter}>
         <View style={styles.videoContianiter}>
-          <Player style={styles.video} uri={streaminServerUrl} isPlaying={false} resizeMode="cover">
+          <Player style={styles.video} uri={streaminServerUrl} resizeMode="cover" videoInViewPort={isVideoInViewPort}>
             <VideoSkeleton />
           </Player>
         </View>
@@ -63,31 +77,31 @@ export const PostReplies: React.FC<PostRepliesProps> = ({ }) => {
       <View style={{ flex: 1 }}>
         <ProfileScreen items={challengeReplies} />
       </View>
-    </View >
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   videoContianiter: {
     flex: 1,
-    width: '100%',
+    width: "100%",
     height: "100%",
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     backgroundColor: Colors.darkBlueOpaque,
   },
   challengeVideoContainter: {
     flex: 1,
-    alignItems: 'center',
-    width: '100%',
-    backgroundColor: Colors.darkBlueOpaque
+    alignItems: "center",
+    width: "100%",
+    backgroundColor: Colors.darkBlueOpaque,
   },
   challengeVideoDetails: {
     flex: 1,
     width: "50%",
-    alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    alignItems: "center",
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
   video: {
     flex: 0.9,
@@ -99,5 +113,5 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
-  }
+  },
 });

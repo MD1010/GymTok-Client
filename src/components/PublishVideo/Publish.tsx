@@ -12,7 +12,7 @@ import { fetchAPI, RequestMethod } from "../../utils/fetchAPI";
 import { Player, DismissKeyboard, SubmitButton, Colors, TouchableHighlightButton, Loader } from "../shared";
 
 type StackParamsList = {
-  params: { videoUri: string; taggedPeople: IUser[]; isReply: boolean, hashtags: string[], challengeId: string };
+  params: { videoUri: string; taggedPeople: IUser[]; isReply: boolean; hashtags: string[]; challengeId: string };
 };
 
 export const PublishScreen: React.FC = () => {
@@ -36,7 +36,6 @@ export const PublishScreen: React.FC = () => {
         <View style={{ flexDirection: "row" }}>
           <Player
             uri={route.params?.videoUri}
-            isPlaying={true}
             isMuted
             resizeMode={"cover"}
             hidePlayButton
@@ -57,9 +56,7 @@ export const PublishScreen: React.FC = () => {
             </DismissKeyboard>
           </View>
         </View>
-        {
-          !isReply && <Text style={styles.info}>Your friends will be notified when your challenge is uploaded.</Text>
-        }
+        {!isReply && <Text style={styles.info}>Your friends will be notified when your challenge is uploaded.</Text>}
       </View>
     );
   };
@@ -91,7 +88,7 @@ export const PublishScreen: React.FC = () => {
       type: "video/mp4",
     } as any);
     formData.append("selectedFriends", JSON.stringify(taggedPeople));
-    formData.append("hashtags", JSON.stringify(hashtags))
+    formData.append("hashtags", JSON.stringify(hashtags));
 
     setIsLoading(true);
     const { res, error } = await fetchAPI(
@@ -130,7 +127,7 @@ export const PublishScreen: React.FC = () => {
       navigation.navigate("Home");
     } else alert(error);
     setIsLoading(false);
-  }
+  };
 
   const onSubmit = () => {
     if (isReply) {
@@ -159,7 +156,9 @@ export const PublishScreen: React.FC = () => {
         optionInfoText={displaySelectedHashtags()}
         optionText={"Add Hashtags"}
         onSelect={() =>
-          navigation.navigate("AddHashtag", { selectedHashtags: route.params?.hashtags?.length ? route.params?.hashtags : [] })
+          navigation.navigate("AddHashtag", {
+            selectedHashtags: route.params?.hashtags?.length ? route.params?.hashtags : [],
+          })
         }
         icon={<Fontisto name="hashtag" color={Colors.lightGrey2} size={14} />}
       />
@@ -173,9 +172,7 @@ export const PublishScreen: React.FC = () => {
   );
 
   return (
-
     <SafeAreaView style={styles.container}>
-
       <Header />
 
       {!isReply && (
@@ -194,8 +191,6 @@ export const PublishScreen: React.FC = () => {
         <Loader style={{ marginBottom: 50 }} />
       )}
     </SafeAreaView>
-
-
   );
 };
 
@@ -203,7 +198,7 @@ const styles = StyleSheet.create({
   container: {
     height: Dimensions.get("window").height - StatusBar.currentHeight,
     width: Dimensions.get("screen").width,
-    flex: 1
+    flex: 1,
   },
   videoPlayerContainer: {
     borderRadius: 15,

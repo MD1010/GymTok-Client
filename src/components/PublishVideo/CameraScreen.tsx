@@ -96,7 +96,7 @@ export const CameraScreen: React.FC = () => {
         }
       });
       resetStopwatch();
-      setTimeout(() => setIsCameraEnabled(true), 100);
+      setTimeout(() => setIsCameraEnabled(true), 250);
     }, [])
   );
 

@@ -18,7 +18,7 @@ import { styles } from "./Posts.style";
 
 interface PostProps {
   post: IPost;
-  isVideoPlaying: boolean;
+  isVisible: boolean;
   containerStyle?: ViewStyle;
 }
 
@@ -84,7 +84,7 @@ const UIContainer: React.FC<IUIContainer> = ({
   );
 };
 
-export const Post: React.FC<PostProps> = memo(({ post, isVideoPlaying, containerStyle }) => {
+export const Post: React.FC<PostProps> = memo(({ post, isVisible, containerStyle }) => {
   const { video: videoURL, createdBy, likes, replies } = post;
   const { loggedUser } = useSelector(authSelector);
   const navigation = useNavigation();
@@ -146,7 +146,13 @@ export const Post: React.FC<PostProps> = memo(({ post, isVideoPlaying, container
 
   return (
     <View style={[styles.container, containerStyle]}>
-      <Player style={styles.video} uri={streaminServerUrl} isPlaying={isVideoPlaying} resizeMode="cover" />
+      <Player
+        style={styles.video}
+        uri={streaminServerUrl}
+        videoInViewPort={isVisible}
+        resizeMode="cover"
+        renderedInList
+      />
       <View style={styles.infoContainer}>
         <Heading createdBy={createdBy.username} onCameraPress={() => onCameraPress()} />
 

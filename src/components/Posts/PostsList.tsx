@@ -25,8 +25,8 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentVideoI
   const [navigatedOutOfScreen, setNavigatedOutOfScreen] = useState<boolean>(false);
   const { loggedUser } = useSelector(authSelector);
   const scrollEnded = useRef<boolean>(false);
-  const playingVideoIndex = useRef(0);
-  const [currentlyPlaying, setCurrentlyPlaying] = useState(playingVideoIndex.current);
+  // const playingVideoIndex = useRef(0);
+  const [currentlyPlaying, setCurrentlyPlaying] = useState(0);
   const flatListRef = useRef<FlatList>(null);
   const [showFooter, setShowFooter] = useState<boolean>(false);
   const { hasMoreToFetch, error, latestFetchedPosts, userPosts } = useSelector(postsSelector);
@@ -46,11 +46,9 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentVideoI
     // posts && setShowFooter(false);
   }, [posts]);
 
-
   useEffect(() => {
-    navigation.setParams({ post: posts[currentlyPlaying] })
-
-  }, [currentlyPlaying, posts])
+    navigation.setParams({ post: posts[currentlyPlaying] });
+  }, [currentlyPlaying, posts]);
 
   const onRefresh = React.useCallback(async () => {
     console.log("refreshing!!!!");
@@ -73,7 +71,6 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentVideoI
     }
   }, [loggedUser]);
 
-  // // todo Dov
   useEffect(() => {
     if (currentVideoID && posts.length > 0) {
       let wantedIndex = posts.findIndex((post) => post.video === currentVideoID);
@@ -89,18 +86,21 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentVideoI
       navigation.addListener("focus", () => {
         setNavigatedOutOfScreen(false);
       });
-
-      return () => {
-        navigation.removeListener("blur", null);
-        navigation.removeListener("focus", null);
-      };
     }, [])
   );
 
+  useEffect(() => {
+    return () => {
+      navigation.removeListener("blur", null);
+      navigation.removeListener("focus", null);
+    };
+  }, []);
+
   const onViewRef = useRef(({ viewableItems }) => {
     if (viewableItems[0]?.index === undefined) return;
-    playingVideoIndex.current = viewableItems[0]?.index;
-    // scrollEnded.current && setCurrentlyPlaying(viewableItems[0]?.index);
+    // playingVideoIndex.current = viewableItems[0]?.index;
+    console.log("playing", viewableItems[0]?.index);
+    scrollEnded.current && setCurrentlyPlaying(viewableItems[0]?.index);
   });
 
   const goIndex = (index: number) => {
@@ -150,7 +150,7 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentVideoI
     return (
       <Post
         post={item}
-        isVideoPlaying={index === currentlyPlaying && !navigatedOutOfScreen}
+        isVisible={index === currentlyPlaying && !navigatedOutOfScreen}
         containerStyle={{ height: viewHeight }}
       />
     );
@@ -161,10 +161,12 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentVideoI
         <FlatList
           refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
           initialNumToRender={5}
-          maxToRenderPerBatch={3}
-          windowSize={3}
+          maxToRenderPerBatch={7}
+          windowSize={7}
           data={posts}
+          // snapToInterval={currentlyPlaying === posts.length - 1 ? null : viewHeight}
           pagingEnabled
+          disableIntervalMomentum
           renderItem={renderItem}
           keyExtractor={keyExtractor}
           showsVerticalScrollIndicator={false}
@@ -186,13 +188,6 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentVideoI
           viewabilityConfig={config.current}
           onScrollBeginDrag={beginDarg}
           onScrollEndDrag={endDrag}
-          //onTouchEnd={() => console.log("end")}
-
-          onMomentumScrollEnd={() => {
-            // console.log("momentum end", playingVideoIndex.current);
-            // only now set the currently playing take it from variable
-            setCurrentlyPlaying(playingVideoIndex.current);
-          }}
           onEndReached={handleLoadMore}
           onEndReachedThreshold={0.5}
           ListFooterComponent={showFooter ? <Footer /> : null}
