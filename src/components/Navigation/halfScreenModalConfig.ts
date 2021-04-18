@@ -1,8 +1,13 @@
-import { CardStyleInterpolators, StackNavigationOptions } from "@react-navigation/stack";
+import {
+  CardStyleInterpolators,
+  StackNavigationOptions,
+} from "@react-navigation/stack";
 import { Dimensions } from "react-native";
 import { Colors } from "react-native-paper";
 
-export const getModalConfig = (heightInPercent: number): StackNavigationOptions => {
+export const getModalConfig = (
+  heightInPercent: number
+): StackNavigationOptions => {
   return {
     headerTransparent: true,
     title: "Tag People",

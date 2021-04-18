@@ -23,5 +23,11 @@ export const LoginContainer: React.FC<LoginContainerProps> = () => {
     setLoading(false);
   };
 
-  return <LoginScreen authError={authError} onSubmit={handleSubmitPress} isLoading={isLoading} />;
+  return (
+    <LoginScreen
+      authError={authError}
+      onSubmit={handleSubmitPress}
+      isLoading={isLoading}
+    />
+  );
 };
