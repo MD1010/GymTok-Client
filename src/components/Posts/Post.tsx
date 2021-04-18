@@ -53,7 +53,7 @@ const UIContainer: React.FC<IUIContainer> = ({
   numberOfLikes,
   onLikeButtonPress,
   onCommentButtonPress,
-  isUserLikeChallenge
+  isUserLikeChallenge,
 }) => {
   return (
     <>
@@ -93,8 +93,8 @@ export const Post: React.FC<PostProps> = memo(({ post, isVisible, containerStyle
   const streaminServerUrl = `${process.env.VIDEO_SERVER_ENDPOINT}/${videoURL}`;
 
   useEffect(() => {
-    setÌsUserLikePost(post.likes.includes(loggedUser._id))
-  }, [post])
+    loggedUser && setÌsUserLikePost(post.likes.includes(loggedUser?._id));
+  }, [post, loggedUser]);
 
   const onLikeButtonPress = async () => {
     if (loggedUser) {
