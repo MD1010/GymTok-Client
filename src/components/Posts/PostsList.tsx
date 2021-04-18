@@ -1,7 +1,7 @@
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import isEmpty from "lodash/isEmpty";
 import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Dimensions, FlatList, StatusBar, Text, View, ViewabilityConfig } from "react-native";
+import { Dimensions, FlatList, StatusBar, Text, View, ViewabilityConfig, RefreshControl } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { IPost } from "../../interfaces/Post";
 import { authSelector } from "../../store/auth/authSlice";
@@ -31,13 +31,19 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentVideoI
   const [showFooter, setShowFooter] = useState<boolean>(false);
   const { hasMoreToFetch, error, latestFetchedPosts, userPosts } = useSelector(postsSelector);
   const posts: IPost[] = isFeed ? latestFetchedPosts : userPosts;
+  const [refreshing, setRefreshing] = React.useState<boolean>(false);
 
   useEffect(() => {
     error && alert(JSON.stringify(error));
   }, [error]);
 
   useEffect(() => {
-    posts && setShowFooter(false);
+    if (posts) {
+      setShowFooter(false);
+      setRefreshing(false);
+      console.log("stop refreshing!!!!");
+    }
+    // posts && setShowFooter(false);
   }, [posts]);
 
 
@@ -45,6 +51,12 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentVideoI
     navigation.setParams({ post: posts[currentlyPlaying] })
 
   }, [currentlyPlaying, posts])
+
+  const onRefresh = React.useCallback(async () => {
+    console.log("refreshing!!!!");
+    setRefreshing(true);
+    getPosts();
+  }, [refreshing]);
 
   const getPosts = () => {
     if (loggedUser) {
@@ -61,7 +73,7 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentVideoI
     }
   }, [loggedUser]);
 
-  // todo Dov
+  // // todo Dov
   useEffect(() => {
     if (currentVideoID && posts.length > 0) {
       let wantedIndex = posts.findIndex((post) => post.video === currentVideoID);
@@ -147,6 +159,7 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentVideoI
     <>
       <View style={{ height: viewHeight }}>
         <FlatList
+          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
           initialNumToRender={5}
           maxToRenderPerBatch={3}
           windowSize={3}

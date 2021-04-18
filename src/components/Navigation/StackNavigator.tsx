@@ -6,6 +6,7 @@ import { LoginContainer as LoginScreen } from "../Auth/LoginContainer";
 import { NotLoggedInModal } from "../Auth/NotLoggedInModal";
 import { RegisterContainer as RegisterScreen } from "../Auth/RegisterContainer";
 import { ProfileVideoModal } from "../Profile/ProfileVideoModal";
+import { SearchResults } from "../Explore/SearchResults";
 import { postChallengeScreens } from "../PublishVideo/publishScreens";
 import { PostReplies } from "../Replies/PostReplies";
 import { BottomTabs } from "./BottomTabs";
@@ -67,6 +68,20 @@ export const MainNavigator: React.FC<StackNavigatorProps> = ({ }) => {
             cardStyle: { backgroundColor: "transparent" },
             cardStyleInterpolator: CardStyleInterpolators.forNoAnimation,
             gestureEnabled: false,
+          }}
+        />
+
+        <Stack.Screen
+          name="SearchResults"
+          component={SearchResults}
+          options={{
+            headerShown: false,
+            cardStyle: { backgroundColor: "transparent" },
+            cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS,
+            safeAreaInsets: { top: Dimensions.get("window").width / 2 },
+            gestureResponseDistance: { vertical: Dimensions.get("screen").height },
+            gestureDirection: "vertical",
+            gestureEnabled: true,
           }}
         />
 

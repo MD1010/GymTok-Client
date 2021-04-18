@@ -1,25 +1,31 @@
 import { FontAwesome } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
-import { Dimensions, ImageBackground, SafeAreaView, StyleSheet, Text, View } from "react-native";
+import { Dimensions, ImageBackground, FlatList, SafeAreaView, StyleSheet, Text, View, ViewStyle } from "react-native";
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import { useIsMount } from "../../hooks/useIsMount";
 import { generateThumbnail } from "../../utils/generateThumbnail";
 import { Colors } from "../shared/styles/variables";
 import { Item } from "./interfaces";
 import { ChallangeSkeleton } from "../shared/skeletons/ChallangeSkeleton";
+import { render } from "react-dom";
+import Spinner from "react-native-loading-spinner-overlay";
 
 interface Props {
   items: Item[];
   horizontal?: boolean;
-  component?: React.ReactNode;
+  numColumns?: number;
+  customStyle?: ViewStyle;
+  pictureHeight?: number;
 }
 
-export const GenericComponent: React.FC<Props> = ({ items, horizontal, component }) => {
+export const GenericComponent: React.FC<Props> = ({ items, horizontal, customStyle, numColumns, pictureHeight }) => {
   const [thumbnailItems, setThumbnailItems] = useState<any[]>([]);
   const navigation = useNavigation();
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const isHorizontal: boolean = horizontal ? horizontal : false;
+  const numOfColumns: number = numColumns ? numColumns : 3;
+  const picHeight: number = pictureHeight ? pictureHeight : styles.theImage.height;
 
   useEffect(() => {
     (async () => {
@@ -38,19 +44,23 @@ export const GenericComponent: React.FC<Props> = ({ items, horizontal, component
     navigation.navigate("UsersProfile", { videoURL: videoURL });
   };
 
-  const renderItem = (item, index) => {
+  const renderItem = ({ item }) => {
     return (
-      <View key={index} style={{ margin: 2, width: Dimensions.get("window").width / 3 }}>
+      <View
+        style={{
+          margin: 1,
+        }}
+      >
         <TouchableOpacity
           onPress={() => {
             showVideo(item.url);
           }}
         >
           <ImageBackground
-            style={{ ...styles.theImage, width: Dimensions.get("window").width / 3 /*numColumns*/ }}
+            style={{ ...styles.theImage, height: picHeight, width: Dimensions.get("screen").width / numOfColumns }}
             source={{ uri: item.image }}
           >
-            <View style={{ display: "flex", justifyContent: "flex-end", flexDirection: "column", height: 120 }}>
+            <View style={{ display: "flex", justifyContent: "flex-end", flexDirection: "column", height: picHeight }}>
               <View style={[styles.rowContainer, { marginRight: 10 }]}>
                 <FontAwesome name={"heart"} size={13} color={Colors.lightGrey} />
                 <Text style={styles.amount}>{item.numOfLikes}</Text>
@@ -58,23 +68,33 @@ export const GenericComponent: React.FC<Props> = ({ items, horizontal, component
             </View>
           </ImageBackground>
         </TouchableOpacity>
-        {component}
+        {item.component}
       </View>
     );
   };
 
   return (
-    <ScrollView contentInsetAdjustmentBehavior="automatic" horizontal={isHorizontal}>
-      <SafeAreaView style={{ ...styles.safeArea, flexDirection: isHorizontal ? "row" : "column" }}>
-        {isLoading ? (
-          <ChallangeSkeleton />
-        ) : (
-          thumbnailItems.map((item, index) => {
-            return renderItem(item, index);
-          })
-        )}
-      </SafeAreaView>
-    </ScrollView>
+    <SafeAreaView style={{ flex: 1, flexDirection: isHorizontal ? "row" : "column" }}>
+      <Spinner visible={isLoading} textLoading={"Loading..."} textStyle={{ color: "#FFF" }} />
+      <FlatList
+        data={thumbnailItems}
+        keyExtractor={(item, index) => index.toString()}
+        horizontal={isHorizontal}
+        numColumns={!isHorizontal ? numOfColumns : 0}
+        renderItem={renderItem}
+      />
+      {/* {isLoading ? (
+        <ChallangeSkeleton isHorizontal={isHorizontal} numOfColumns={numOfColumns} />
+      ) : (
+        <FlatList
+          data={thumbnailItems}
+          keyExtractor={(item, index) => index.toString()}
+          horizontal={isHorizontal}
+          numColumns={!isHorizontal ? numOfColumns : 0}
+          renderItem={renderItem}
+        />
+      )} */}
+    </SafeAreaView>
   );
 };
 
@@ -97,10 +117,8 @@ const styles = StyleSheet.create({
   },
   safeArea: {
     flex: 1,
-    // height: 500,
+    width: Dimensions.get("screen").width,
     height: Dimensions.get("screen").height,
-    display: "flex",
-    flexWrap: "wrap",
   },
   amount: {
     color: Colors.white,

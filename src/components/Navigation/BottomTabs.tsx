@@ -8,6 +8,7 @@ import { useSelector } from "react-redux";
 import { authSelector } from "../../store/auth/authSlice";
 import { NotLoggedInScreen } from "../Auth/NotLoggedInScreen";
 import { HomeScreen } from "../Home/HomeScreen";
+import { ExploreScreen } from "../Explore/ExploreScreen";
 import { ProfileContainer as Profile } from "../Profile/ProfileContainer";
 import { Colors, UIConsts } from "../shared/styles/variables";
 
@@ -58,7 +59,7 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
           name="Explore"
           component={
             loggedUser
-              ? () => <HomeScreen />
+              ? () => <ExploreScreen />
               : () => (
                   <NotLoggedInScreen
                     text={"Explore"}
