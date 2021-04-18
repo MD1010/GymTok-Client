@@ -145,7 +145,7 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentVideoI
   };
   return (
     <>
-      {/* <View style={{ height: viewHeight }}>
+      <View style={{ height: viewHeight }}>
         <FlatList
           initialNumToRender={3}
           maxToRenderPerBatch={7}
@@ -185,7 +185,7 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentVideoI
             alignItems: "center",
           }}
         ></FlatList>
-      </View> */}
+      </View>
     </>
   );
 });
