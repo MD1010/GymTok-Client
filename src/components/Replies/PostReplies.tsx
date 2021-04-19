@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { IPost } from "../../interfaces";
 import { fetchAPI, RequestMethod } from "../../utils/fetchAPI";
+import { GenericComponent } from "../Profile/genericComponent";
 import { ProfileScreen } from "../Profile/ProfileScreen";
 import { VideoSkeleton } from "../shared/skeletons/VideoSkeleton";
 import { Colors } from "../shared/styles/variables";
@@ -22,7 +23,6 @@ export const PostReplies: React.FC<PostRepliesProps> = ({}) => {
   const getChallengeReplies = async () => {
     const challengesEndpoint = `${process.env.BASE_API_ENPOINT}/challenges/${post._id}/replies`;
     const { res, error } = await fetchAPI(RequestMethod.GET, challengesEndpoint);
-
     res &&
       setChallengeReplies(
         res.map((reply, index) => {
@@ -75,7 +75,7 @@ export const PostReplies: React.FC<PostRepliesProps> = ({}) => {
         </View>
       </View>
       <View style={{ flex: 1 }}>
-        <ProfileScreen items={challengeReplies} />
+        <GenericComponent items={challengeReplies} />
       </View>
     </View>
   );
