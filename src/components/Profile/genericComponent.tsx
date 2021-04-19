@@ -75,7 +75,7 @@ export const GenericComponent: React.FC<Props> = ({ items, horizontal, customSty
 
   return (
     <SafeAreaView style={{ flex: 1, flexDirection: isHorizontal ? "row" : "column" }}>
-      <Spinner visible={isLoading} textLoading={"Loading..."} textStyle={{ color: "#FFF" }} />
+      {/* <Spinner visible={isLoading} textLoading={"Loading..."} textStyle={{ color: "#FFF" }} /> */}
       <FlatList
         data={thumbnailItems}
         keyExtractor={(item, index) => index.toString()}
