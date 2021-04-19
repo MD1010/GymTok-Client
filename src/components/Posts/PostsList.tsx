@@ -155,8 +155,8 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentVideoI
   };
   return (
     <>
-      <View style={{ height: viewHeight }}>
-        {/* <FlatList
+      <View style={{ height: viewHeight, backgroundColor: Colors.black }}>
+        <FlatList
           refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
           initialNumToRender={5}
           maxToRenderPerBatch={7}
@@ -195,7 +195,7 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentVideoI
             justifyContent: "center",
             alignItems: "center",
           }}
-        ></FlatList> */}
+        ></FlatList>
       </View>
     </>
   );

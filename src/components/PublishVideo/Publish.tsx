@@ -24,36 +24,36 @@ export const PublishScreen: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { loggedUser } = useSelector(authSelector);
   const captionInput = useRef<string>();
-  console.log("render publish", captionInput.current);
+  console.log("video", route.params?.videoUri);
   const Header = () => {
     const handleSetCaption = (text: string) => {
       setCaption(text);
       captionInput.current = text;
-      console.log("current value", captionInput.current);
     };
     const [caption, setCaption] = useState(captionInput.current);
     return (
       <View style={{ padding: 15 }}>
         <View style={{ flexDirection: "row" }}>
           <Player
-            uri={route.params?.videoUri}
+            uri={route.params.videoUri}
             isMuted
             resizeMode={"cover"}
             hidePlayButton
+            style={{ width: 200, height: 200 }}
             containerStyle={styles.videoPlayerContainer}
           />
+          {/* <View style={{ backgroundColor: "red", width: 200 }}></View> */}
+
           <View style={{ flex: 2 }}>
-            <DismissKeyboard>
-              <TextInput
-                multiline
-                blurOnSubmit
-                style={styles.addCaptionInput}
-                placeholder={"Add a caption..."}
-                placeholderTextColor={Colors.weakGrey}
-                value={caption}
-                onChangeText={handleSetCaption}
-              />
-            </DismissKeyboard>
+            <TextInput
+              multiline
+              blurOnSubmit
+              style={styles.addCaptionInput}
+              placeholder={"Add a caption..."}
+              placeholderTextColor={Colors.weakGrey}
+              value={caption}
+              onChangeText={handleSetCaption}
+            />
           </View>
         </View>
         {!isReply && <Text style={styles.info}>Your friends will be notified when your challenge is uploaded.</Text>}
@@ -83,6 +83,7 @@ export const PublishScreen: React.FC = () => {
     formData.append("description", captionInput.current);
     formData.append("userId", loggedUser._id);
     formData.append("video", {
+      name: "upload",
       uri: route.params.videoUri,
       type: "video/mp4",
     } as any);
@@ -110,7 +111,7 @@ export const PublishScreen: React.FC = () => {
     formData.append("replierId", loggedUser._id);
     formData.append("challengeId", route.params.challengeId);
     formData.append("video", {
-      name: "dov-test.mp4",
+      name: "upload",
       uri: route.params.videoUri,
       type: "video/mp4",
     } as any);
@@ -123,7 +124,7 @@ export const PublishScreen: React.FC = () => {
 
     if (res) {
       navigation.navigate("Home");
-    } else alert(error);
+    } else if (error) alert(JSON.stringify(error));
     setIsLoading(false);
   };
 
@@ -167,7 +168,7 @@ export const PublishScreen: React.FC = () => {
   );
 
   const Footer = () => (
-    <View style={{ flex: 1, alignItems: "center", marginTop: 20 }}>
+    <View style={{ flex: 1.5, alignItems: "center", justifyContent: "center" }}>
       <SubmitButton buttonText={"Post"} type="solid" backgroundColor={Colors.blue} onSubmit={onSubmit} />
     </View>
   );
@@ -197,13 +198,14 @@ export const PublishScreen: React.FC = () => {
 
 const styles = StyleSheet.create({
   container: {
-    height: Dimensions.get("window").height - StatusBar.currentHeight,
+    height: Dimensions.get("window").height,
     width: Dimensions.get("screen").width,
     flex: 1,
   },
   videoPlayerContainer: {
     borderRadius: 15,
     height: 200,
+    width: 200,
     overflow: "hidden",
   },
 

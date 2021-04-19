@@ -22,11 +22,11 @@ export const postChallengeScreens: ScreenNavigationMap[] = [
       animationEnabled: false,
     },
   },
-  { 
+  {
     name: "AddHashtag",
     screen: AddHashtagScreen,
     options: {
       title: "Add hashtags",
     },
-   },
+  },
 ];
