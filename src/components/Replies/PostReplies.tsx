@@ -4,6 +4,7 @@ import { StyleSheet, View } from "react-native";
 import { IPost } from "../../interfaces";
 import { fetchAPI, RequestMethod } from "../../utils/fetchAPI";
 import { ProfileScreen } from "../Profile/ProfileScreen";
+import { Loader } from "../shared";
 import { VideoSkeleton } from "../shared/skeletons/VideoSkeleton";
 import { Colors } from "../shared/styles/variables";
 import { Player } from "../shared/VideoPlayer";
@@ -12,11 +13,12 @@ interface PostRepliesProps {
   route: any;
 }
 
-export const PostReplies: React.FC<PostRepliesProps> = ({}) => {
+export const PostReplies: React.FC<PostRepliesProps> = ({ }) => {
   const navigation = useNavigation();
   const [challengeReplies, setChallengeReplies] = useState<any[]>([]);
   const [streaminServerUrl, setStreaminServerUrl] = useState<string>("");
   const [post, setPost] = useState<IPost>();
+  const [isLoadingChallengeVideo, setIsLoadingChallengeVideo] = useState<boolean>(true)
   const [isVideoInViewPort, setIsVideoInViewPort] = useState(false);
 
   const getChallengeReplies = async () => {
@@ -69,8 +71,9 @@ export const PostReplies: React.FC<PostRepliesProps> = ({}) => {
     >
       <View style={styles.challengeVideoContainter}>
         <View style={styles.videoContianiter}>
-          <Player style={styles.video} uri={streaminServerUrl} resizeMode="cover" videoInViewPort={isVideoInViewPort}>
-            <VideoSkeleton />
+          <Player style={styles.video} uri={streaminServerUrl} resizeMode="cover" videoInViewPort={isVideoInViewPort}
+            onVideoLoad={() => setIsLoadingChallengeVideo(false)}>
+            {isLoadingChallengeVideo && <Loader />}
           </Player>
         </View>
       </View>
