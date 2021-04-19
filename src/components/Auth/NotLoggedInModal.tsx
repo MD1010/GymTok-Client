@@ -84,6 +84,8 @@ export const NotLoggedInModal: React.FC = () => {
       const photoUrl = response.picture.data.url;
 
       dispatch(registerIfNeed(username, password, fullName, email, photoUrl));
+
+      navigation.goBack();
     }
   };
 
@@ -98,6 +100,8 @@ export const NotLoggedInModal: React.FC = () => {
       const photoUrl = result.user.photoUrl;
 
       dispatch(registerIfNeed(username, password, fullName, email, photoUrl));
+
+      navigation.goBack();
     }
   };
   // const route = useRoute<RouteProp<StackParamsList, "params">>();
