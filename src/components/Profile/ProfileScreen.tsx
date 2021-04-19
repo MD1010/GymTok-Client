@@ -114,6 +114,7 @@ function ProfileTabs() {
   return (
     <NavigationContainer independent={true}>
       <Tabs.Navigator
+        sceneContainerStyle={{ backgroundColor: Colors.black }}
         screenOptions={({ route }) => ({
           tabBarIcon: ({ focused }) => {
             let iconName;
@@ -125,22 +126,16 @@ function ProfileTabs() {
             }
 
             // You can return any component that you like here!
-            return (
-              <Icon
-                name={iconName}
-                size={25}
-                color={focused ? Colors.white : Colors.darkGrey}
-              />
-            );
+            return <Icon name={iconName} size={25} color={focused ? Colors.white : Colors.darkGrey} />;
           },
         })}
         tabBarOptions={{
-          style: { backgroundColor: Colors.darkBlueOpaque },
+          style: { backgroundColor: Colors.black },
           showIcon: true,
           showLabel: true,
           activeTintColor: Colors.white,
           labelStyle: { fontSize: 8 },
-          indicatorStyle: { backgroundColor: Colors.white },
+          indicatorStyle: { backgroundColor: "transparent" },
         }}
       >
         <Tabs.Screen
@@ -162,7 +157,7 @@ interface ProfileProps {
 }
 const ProfileHeader: React.FC = () => {
   return (
-    <View style={{ paddingTop: 40 }}>
+    <View style={{ paddingTop: 40, paddingLeft: 5 }}>
       <View style={{ flexDirection: "row" }}>
         <View style={{ flex: 1, alignItems: "center" }}>
           <Image
@@ -170,26 +165,27 @@ const ProfileHeader: React.FC = () => {
             style={{ width: 75, height: 75, borderRadius: 37.5 }}
           />
         </View>
-        <View style={{ flex: 3, paddingTop: 15 }}>
-          <View
-            style={{ flexDirection: "row", justifyContent: "space-around" }}
-          >
+        <View
+          style={{
+            flex: 3,
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <View style={{ flexDirection: "row" }}>
             <View style={{ alignItems: "center" }}>
               <Text
                 style={{
                   color: Colors.white,
                   fontSize: 20,
                   fontWeight: "bold",
-                  // marginLeft: 20,
                 }}
               >
                 20
               </Text>
-              <Text style={{ fontSize: 10, color: Colors.lightGrey }}>
-                Challenges
-              </Text>
+              <Text style={{ fontSize: 10, color: Colors.lightGrey }}>Challenges</Text>
             </View>
-            <View style={{ alignItems: "center" }}>
+            <View style={{ alignItems: "center", marginLeft: 45 }}>
               <Text
                 style={{
                   color: Colors.white,
@@ -199,11 +195,9 @@ const ProfileHeader: React.FC = () => {
               >
                 35
               </Text>
-              <Text style={{ fontSize: 10, color: Colors.lightGrey }}>
-                Replies
-              </Text>
+              <Text style={{ fontSize: 10, color: Colors.lightGrey }}>Replies</Text>
             </View>
-            <View style={{ alignItems: "center" }}>
+            <View style={{ alignItems: "center", marginLeft: 45 }}>
               <Text
                 style={{
                   color: Colors.white,
@@ -213,48 +207,15 @@ const ProfileHeader: React.FC = () => {
               >
                 217
               </Text>
-              <Text style={{ fontSize: 10, color: Colors.lightGrey }}>
-                Likes
-              </Text>
+              <Text style={{ fontSize: 10, color: Colors.lightGrey }}>Likes</Text>
             </View>
-          </View>
-          <View style={{ flexDirection: "row", paddingTop: 10 }}>
-            {/* <Button
-              dark
-              style={{
-                flex: 3,
-                marginLeft: 10,
-                justifyContent: "center",
-                height: 30,
-                borderRadius: 10,
-                borderWidth: 1,
-                borderColor: "black",
-              }}
-            >
-              <Text style={{ color: "black" }}>Edit Profile</Text>
-            </Button> */}
           </View>
         </View>
       </View>
-      <View style={{ padding: 10 }}>
-        <Text></Text>
-        <Text style={{ fontWeight: "bold", color: Colors.white }}>
-          Moris Angus
-        </Text>
-        <Text style={{ color: Colors.white }}>
-          Basketball player | Runner | Swimmer{" "}
-        </Text>
+      <View style={{ margin: 10, marginTop: 15 }}>
+        <Text style={{ fontWeight: "bold", color: Colors.white }}>Moris Angus</Text>
+        <Text style={{ color: Colors.white }}>Basketball player | Runner | Swimmer </Text>
         <Text style={{ color: Colors.white }}>www.mysite.com</Text>
-      </View>
-      <View>
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-around",
-            borderTopWidth: 1,
-            borderTopColor: "grey",
-          }}
-        ></View>
       </View>
     </View>
   );
