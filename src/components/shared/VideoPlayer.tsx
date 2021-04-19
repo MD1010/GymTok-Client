@@ -71,11 +71,10 @@ export const Player: React.FC<VideoProps> = memo(
       if (uri.startsWith("file")) {
         return setVideoURI(uri);
       }
-      const path = `${
-        Platform.OS === "ios"
-          ? FileSystem.documentDirectory
-          : FileSystem.cacheDirectory
-      }${Platform.OS === "ios" ? uri.split("/")[3] : shorthash.unique(uri)}`;
+      const path = `${Platform.OS === "ios"
+        ? FileSystem.documentDirectory
+        : FileSystem.cacheDirectory
+        }${Platform.OS === "ios" ? uri.split("/")[3] : shorthash.unique(uri)}`;
       const image = await FileSystem.getInfoAsync(path);
       if (image.exists) {
         console.log("read image from cache");
@@ -123,14 +122,14 @@ export const Player: React.FC<VideoProps> = memo(
           onVideoTap
             ? onVideoTap()
             : statusRef.current?.isPlaying
-            ? pauseVideoByTap()
-            : resumeVideoByTap()
+              ? pauseVideoByTap()
+              : resumeVideoByTap()
         }
       >
         {
           <View style={[styles.container, containerStyle]}>
             {
-              <Video
+              < Video
                 onLoadStart={() => setIsLoading(true)}
                 onLoad={() => {
                   onVideoLoad && onVideoLoad();
@@ -149,7 +148,9 @@ export const Player: React.FC<VideoProps> = memo(
                 onPlaybackStatusUpdate={(status) =>
                   (statusRef.current = status)
                 }
-              />
+              >
+                {!!children && children}
+              </ Video>
             }
             {!controlsShown && !hidePlayButton && (
               <View style={styles.playButtonContainer}>
