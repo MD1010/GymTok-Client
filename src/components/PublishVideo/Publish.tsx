@@ -24,13 +24,14 @@ export const PublishScreen: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { loggedUser } = useSelector(authSelector);
   const captionInput = useRef<string>();
-
+  console.log("render publish", captionInput.current);
   const Header = () => {
     const handleSetCaption = (text: string) => {
       setCaption(text);
       captionInput.current = text;
+      console.log("current value", captionInput.current);
     };
-    const [caption, setCaption] = useState(null);
+    const [caption, setCaption] = useState(captionInput.current);
     return (
       <View style={{ padding: 15 }}>
         <View style={{ flexDirection: "row" }}>
@@ -45,13 +46,12 @@ export const PublishScreen: React.FC = () => {
             <DismissKeyboard>
               <TextInput
                 multiline
+                blurOnSubmit
                 style={styles.addCaptionInput}
                 placeholder={"Add a caption..."}
                 placeholderTextColor={Colors.weakGrey}
                 value={caption}
-                onChangeText={(text) => {
-                  handleSetCaption(text);
-                }}
+                onChangeText={handleSetCaption}
               />
             </DismissKeyboard>
           </View>
@@ -83,7 +83,6 @@ export const PublishScreen: React.FC = () => {
     formData.append("description", captionInput.current);
     formData.append("userId", loggedUser._id);
     formData.append("video", {
-      name: "dov-test.mp4",
       uri: route.params.videoUri,
       type: "video/mp4",
     } as any);
@@ -98,9 +97,8 @@ export const PublishScreen: React.FC = () => {
     );
 
     if (res) {
-      console.log("res = !", res);
       navigation.navigate("Home");
-    } else alert(error);
+    } else if (error) alert(JSON.stringify(error));
     setIsLoading(false);
   };
 
@@ -134,6 +132,9 @@ export const PublishScreen: React.FC = () => {
       replyChallenge();
     } else {
       // challenge
+      if (!loggedUser) {
+        return navigation.navigate("NotLoggedIn");
+      }
       publishChallenge();
     }
   };

@@ -100,8 +100,7 @@ export const NotLoggedInModal: React.FC = () => {
       dispatch(registerIfNeed(username, password, fullName, email, photoUrl));
     }
   };
-  // const route = useRoute<RouteProp<StackParamsList, "params">>();
-  // const isFullScreen = route.params?.isFullScreen;
+
   return (
     <View style={styles.modalContainer}>
       <View style={[styles.modalBody]}>

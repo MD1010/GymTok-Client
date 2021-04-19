@@ -59,13 +59,13 @@ const UIContainer: React.FC<IUIContainer> = ({
     <>
       <View style={styles.uiContainer}>
         <View style={[styles.rowContainer, { width: 60, justifyContent: "space-between" }]}>
-          <TouchableOpacity onPress={() => onLikeButtonPress()}>
+          <TouchableWithoutFeedback onPress={() => onLikeButtonPress()}>
             <FontAwesome name={"heart"} size={22} color={isUserLikeChallenge ? Colors.red : Colors.lightGrey} />
-          </TouchableOpacity>
+          </TouchableWithoutFeedback>
 
-          <TouchableOpacity onPress={() => onCommentButtonPress()}>
+          <TouchableWithoutFeedback onPress={() => onCommentButtonPress()}>
             <FontAwesome name={"comment"} size={22} color={Colors.lightGrey} />
-          </TouchableOpacity>
+          </TouchableWithoutFeedback>
         </View>
 
         <View style={[styles.rowContainer, { justifyContent: "space-between" }]}>

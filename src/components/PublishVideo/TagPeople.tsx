@@ -24,10 +24,6 @@ export const TagPeopleScreen: React.FC<TagPeopleScreenProps> = ({}) => {
     setTaggedPeople(cloneDeep([...taggedPeople, ...route.params?.selectedUsers]));
   }, [route.params?.selectedUsers]);
 
-  useEffect(() => {
-    console.log("tagged People changed!!", taggedPeople);
-  }, [taggedPeople]);
-
   const returnToPublishScreen = () => {
     navigation.navigate("Publish", { taggedPeople });
   };

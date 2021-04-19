@@ -14,7 +14,7 @@ export const LoginContainer: React.FC<LoginContainerProps> = () => {
   const { authError, loggedUser } = useSelector(authSelector);
 
   useEffect(() => {
-    loggedUser && navigation.navigate("Home");
+    loggedUser && navigation.goBack();
   }, [loggedUser]);
 
   const handleSubmitPress = async (username: string, password: string) => {
@@ -23,11 +23,5 @@ export const LoginContainer: React.FC<LoginContainerProps> = () => {
     setLoading(false);
   };
 
-  return (
-    <LoginScreen
-      authError={authError}
-      onSubmit={handleSubmitPress}
-      isLoading={isLoading}
-    />
-  );
+  return <LoginScreen authError={authError} onSubmit={handleSubmitPress} isLoading={isLoading} />;
 };
