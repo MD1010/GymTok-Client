@@ -21,8 +21,6 @@ type StackParamsList = {
   params: { redirectScreen: string };
 };
 
-// todo get the param redirectTo and sent it to login screen
-
 async function loginWithFacebook() {
   try {
     await Facebook.initializeAsync({
