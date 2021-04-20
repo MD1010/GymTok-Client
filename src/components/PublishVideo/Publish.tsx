@@ -134,7 +134,7 @@ export const PublishScreen: React.FC = () => {
     } else {
       // challenge
       if (!loggedUser) {
-        return navigation.navigate("NotLoggedIn");
+        return navigation.navigate("NotLoggedIn", { redirectScreen: "Publish" });
       }
       publishChallenge();
     }
