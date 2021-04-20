@@ -11,7 +11,7 @@ import { Colors } from "../shared/styles/variables";
 import { StopWatchContainer } from "./StopWatch";
 
 type StackParamsList = {
-  params: { videoURL: string, challengeId?: string, isReply?: boolean };
+  params: { videoURL: string; challengeId?: string; isReply?: boolean };
 };
 
 export const CameraScreen: React.FC = () => {
@@ -77,7 +77,7 @@ export const CameraScreen: React.FC = () => {
         Platform.OS === "ios"
           ? await Camera.requestPermissionsAsync()
           : (await Permissions.askAsync(Permissions.AUDIO_RECORDING)) &&
-          (await Permissions.askAsync(Permissions.CAMERA));
+            (await Permissions.askAsync(Permissions.CAMERA));
       await ImagePicker.getMediaLibraryPermissionsAsync(true);
       setPermissionGranted(audioRecording.granted);
     })();
@@ -96,7 +96,7 @@ export const CameraScreen: React.FC = () => {
         }
       });
       resetStopwatch();
-      setTimeout(() => setIsCameraEnabled(true), 250);
+      setTimeout(() => setIsCameraEnabled(true), 300);
     }, [])
   );
 
@@ -107,8 +107,8 @@ export const CameraScreen: React.FC = () => {
     if (!selectedVideo.cancelled) {
       const navigationParams = { videoUri: selectedVideo.uri };
       if (route.params && route.params.isReply) {
-        navigationParams['isReply'] = route.params.isReply;
-        navigationParams['challengeId'] = route.params.challengeId;
+        navigationParams["isReply"] = route.params.isReply;
+        navigationParams["challengeId"] = route.params.challengeId;
       }
       navigation.navigate("Publish", navigationParams);
     }
@@ -122,8 +122,8 @@ export const CameraScreen: React.FC = () => {
         let video = await cameraRef.current.recordAsync();
         const navigationParams = { videoURL: video.uri };
         if (route.params && route.params.isReply) {
-          navigationParams['isReply'] = route.params.isReply;
-          navigationParams['challengeId'] = route.params.challengeId;
+          navigationParams["isReply"] = route.params.isReply;
+          navigationParams["challengeId"] = route.params.challengeId;
         }
         navigation.navigate("ApproveVideo", navigationParams);
       } catch (e) {
@@ -135,12 +135,12 @@ export const CameraScreen: React.FC = () => {
   const getNavigateParams = (video: any) => {
     const navigationParams = { videoUri: video.uri };
     if (route.params.isReply) {
-      navigationParams['isReply'] = route.params.isReply;
-      navigationParams['challengeId'] = route.params.challengeId;
+      navigationParams["isReply"] = route.params.isReply;
+      navigationParams["challengeId"] = route.params.challengeId;
     }
 
     return navigationParams;
-  }
+  };
 
   const stopRecord = () => {
     if (cameraRef && cameraRef.current) {

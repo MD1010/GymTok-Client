@@ -14,9 +14,9 @@ import { config } from "./stackNavigationConfig";
 import { ApproveVideo } from "../PublishVideo/ApproveVideo";
 import { CameraScreen } from "../PublishVideo/CameraScreen";
 
-interface StackNavigatorProps { }
+interface StackNavigatorProps {}
 
-export const MainNavigator: React.FC<StackNavigatorProps> = ({ }) => {
+export const MainNavigator: React.FC<StackNavigatorProps> = ({}) => {
   const Stack = createStackNavigator();
   return (
     <NavigationContainer independent={true}>
@@ -46,9 +46,8 @@ export const MainNavigator: React.FC<StackNavigatorProps> = ({ }) => {
           component={NotLoggedInModal}
           options={{
             headerShown: false,
-            cardStyle: { backgroundColor: "transparent", maxHeight: "95%", top: "5%" },
+            cardStyle: { backgroundColor: "transparent" },
             cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS,
-            safeAreaInsets: { top: Dimensions.get("window").width / 2 },
             gestureResponseDistance: { vertical: Dimensions.get("screen").height },
             gestureDirection: "vertical",
             gestureEnabled: true,

@@ -41,9 +41,7 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentVideoI
     if (posts) {
       setShowFooter(false);
       setRefreshing(false);
-      console.log("stop refreshing!!!!");
     }
-    // posts && setShowFooter(false);
   }, [posts]);
 
   useEffect(() => {
@@ -157,7 +155,7 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentVideoI
   };
   return (
     <>
-      <View style={{ height: viewHeight }}>
+      <View style={{ height: viewHeight, backgroundColor: Colors.black }}>
         <FlatList
           refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
           initialNumToRender={5}

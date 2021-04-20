@@ -12,7 +12,7 @@ function App() {
   }, []);
   return (
     <Provider store={store}>
-      <StatusBar animated /> 
+      <StatusBar animated barStyle={"light-content"} />
       <MainNavigator />
     </Provider> 
   );

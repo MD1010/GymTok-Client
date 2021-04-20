@@ -10,7 +10,7 @@ import { styles } from "../Posts/Posts.style";
 import { RouteProp, useRoute } from "@react-navigation/native";
 
 type StackParamsList = {
-  params: { videoURL: string, challengeId: string, isReply: boolean };
+  params: { videoURL: string; challengeId: string; isReply: boolean };
 };
 
 interface IUIContainer {
@@ -22,7 +22,7 @@ const UIContainer: React.FC<IUIContainer> = ({ goBack, goForward }) => {
   return (
     <>
       <View style={styles.uiContainer}>
-        <View style={[styles.rowContainer, { width: 60, justifyContent: "space-between" }]}>
+        <View style={[styles.rowContainer, { justifyContent: "space-between" }]}>
           <TouchableOpacity onPress={() => goBack()}>
             <Text style={{ color: "#fff", fontSize: 18 }}>Retake</Text>
           </TouchableOpacity>
@@ -30,7 +30,7 @@ const UIContainer: React.FC<IUIContainer> = ({ goBack, goForward }) => {
 
         <View style={[styles.rowContainer, { justifyContent: "space-between" }]}>
           <TouchableOpacity onPress={() => goForward()}>
-            <Text style={{ color: "#fff", fontSize: 18 }}>Use Video</Text>
+            <Text style={{ color: "#fff", fontSize: 16 }}>Use Video</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -43,6 +43,7 @@ export const ApproveVideo: React.FC = () => {
   const route = useRoute<RouteProp<StackParamsList, "params">>();
   const videoURL = route.params.videoURL;
 
+  console.log("in apprive", videoURL);
   const goBack = () => {
     navigation.goBack();
   };
@@ -50,8 +51,8 @@ export const ApproveVideo: React.FC = () => {
   const goForward = () => {
     const navigationParams = { videoUri: videoURL };
     if (route.params && route.params.isReply) {
-      navigationParams['isReply'] = route.params.isReply;
-      navigationParams['challengeId'] = route.params.challengeId;
+      navigationParams["isReply"] = route.params.isReply;
+      navigationParams["challengeId"] = route.params.challengeId;
     }
     navigation.navigate("Publish", navigationParams);
   };
