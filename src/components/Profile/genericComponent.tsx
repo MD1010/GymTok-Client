@@ -38,7 +38,7 @@ export const GenericComponent: React.FC<Props> = ({ items, horizontal, customSty
       setIsLoading(false);
       setThumbnailItems(asyncRes);
     })();
-  }, []);
+  }, [items]);
 
   const showVideo = (videoURL) => {
     navigation.navigate("UsersProfile", { videoURL: videoURL });

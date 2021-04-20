@@ -70,11 +70,12 @@ export const PostReplies: React.FC<PostRepliesProps> = ({ }) => {
       }}
     >
       <View style={styles.challengeVideoContainter}>
+        {isLoadingChallengeVideo && <View style={styles.loader}>
+          <Loader />
+        </View>}
         <View style={styles.videoContianiter}>
           <Player style={styles.video} uri={streaminServerUrl} resizeMode="cover" videoInViewPort={isVideoInViewPort}
-            onVideoLoad={() => setIsLoadingChallengeVideo(false)}>
-            {isLoadingChallengeVideo && <Loader />}
-          </Player>
+            onVideoLoad={() => setIsLoadingChallengeVideo(false)} />
         </View>
       </View>
       <View style={{ flex: 1 }}>
@@ -98,6 +99,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     width: "100%",
     backgroundColor: Colors.darkBlueOpaque,
+  },
+  loader: {
+
   },
   challengeVideoDetails: {
     flex: 1,
