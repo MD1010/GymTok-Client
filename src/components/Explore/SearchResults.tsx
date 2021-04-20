@@ -91,7 +91,7 @@ export const SearchResults: React.FC = () => {
           focusable={true}
           searchIcon={{ size: 24 }}
           onChangeText={(text) => searchFilterFunction(text)}
-          onClear={(text) => searchFilterFunction("")}
+          onClear={() => searchFilterFunction("")}
           placeholder="Type Here..."
           value={search}
         />

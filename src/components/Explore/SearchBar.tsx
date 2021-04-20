@@ -214,7 +214,7 @@ export const CustomSearchBar: React.FC = () => {
           round
           searchIcon={{ size: 24 }}
           onChangeText={(text) => searchFilterFunction(text)}
-          onClear={(text) => searchFilterFunction("")}
+          onClear={() => searchFilterFunction("")}
           placeholder="Type Here..."
           value={search}
         />

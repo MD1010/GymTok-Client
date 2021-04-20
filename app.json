@@ -23,6 +23,7 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
+      "softwareKeyboardLayoutMode": "pan",
       "permissions": ["RECORD_AUDIO", "CAMERA", "CAPTURE_AUDIO_OUTPUT"]
     },
     "web": {

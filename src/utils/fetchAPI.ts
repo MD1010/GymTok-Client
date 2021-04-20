@@ -1,5 +1,6 @@
 import localStorage from "@react-native-community/async-storage";
 import axios, { AxiosError } from "axios";
+import { cos } from "react-native-reanimated";
 
 export enum RequestMethod {
   GET = "GET",
@@ -12,22 +13,6 @@ export const httpClient = axios.create();
 
 httpClient.defaults.timeout = 5000;
 httpClient.defaults.headers.Authorization = `"Bearer" ${localStorage.getItem("aceessToken")}`;
-
-const interceptor = httpClient.interceptors.response.use(
-  (response) => {
-    return response;
-  },
-  async (error: AxiosError) => {
-    let requestConfig = error.config;
-    if (error.response?.data.msg === "Token has expired") {
-      axios.interceptors.response.eject(interceptor);
-      //   await setNewAccessTokenIfExpired();
-      requestConfig.headers = httpClient.defaults.headers;
-      return axios(requestConfig);
-    }
-    return Promise.reject(error);
-  }
-);
 
 export const fetchAPI = async <T = any>(
   method: RequestMethod,

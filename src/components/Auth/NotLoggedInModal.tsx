@@ -1,5 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
+import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import * as Facebook from "expo-facebook";
 import * as Google from "expo-google-app-auth";
 import React from "react";
@@ -18,7 +18,7 @@ import { registerIfNeed } from "../../store/auth/actions";
 import { Colors } from "../shared/styles/variables";
 
 type StackParamsList = {
-  params: { isFullScreen: boolean; redirectedFromHome: string };
+  params: { redirectScreen: string };
 };
 
 async function loginWithFacebook() {
@@ -72,7 +72,8 @@ async function loginWithGoogle() {
 export const NotLoggedInModal: React.FC = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
-
+  const route = useRoute<RouteProp<StackParamsList, "params">>();
+  const redirectScreen = route.params?.redirectScreen;
   const handleFacebookPress = async () => {
     const response = await loginWithFacebook();
 
@@ -104,8 +105,7 @@ export const NotLoggedInModal: React.FC = () => {
       navigation.goBack();
     }
   };
-  // const route = useRoute<RouteProp<StackParamsList, "params">>();
-  // const isFullScreen = route.params?.isFullScreen;
+
   return (
     <View style={styles.modalContainer}>
       <View style={[styles.modalBody]}>
@@ -122,7 +122,7 @@ export const NotLoggedInModal: React.FC = () => {
         <View style={styles.loginOptionContainer}>
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate("Register");
+              navigation.navigate("Register", { redirectScreen });
             }}
           >
             <View style={styles.loginOption}>
@@ -169,7 +169,7 @@ export const NotLoggedInModal: React.FC = () => {
 
         <View style={styles.loginFooter}>
           <Text style={styles.loginFooterText}>Already have and account? </Text>
-          <TouchableWithoutFeedback onPress={() => navigation.navigate("Login")}>
+          <TouchableWithoutFeedback onPress={() => navigation.navigate("Login", { redirectScreen })}>
             <Text style={[styles.loginFooterText, { marginLeft: 5, color: Colors.lightGreen }]}>Log in </Text>
           </TouchableWithoutFeedback>
         </View>
