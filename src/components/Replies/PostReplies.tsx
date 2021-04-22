@@ -1,26 +1,27 @@
 import { useFocusEffect, useNavigation } from "@react-navigation/core";
 import React, { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
+import { useSelector } from "react-redux";
 import { IPost } from "../../interfaces";
+import { repliesSelector } from "../../store/replies/repliesSlice";
 import { fetchAPI, RequestMethod } from "../../utils/fetchAPI";
 import { GenericComponent } from "../Profile/genericComponent";
-import { ProfileScreen } from "../Profile/ProfileScreen";
 import { Loader } from "../shared";
-import { VideoSkeleton } from "../shared/skeletons/VideoSkeleton";
 import { Colors } from "../shared/styles/variables";
 import { Player } from "../shared/VideoPlayer";
 
 interface PostRepliesProps {
-  route: any;
+  navigationParam: any;
 }
 
-export const PostReplies: React.FC<PostRepliesProps> = ({ }) => {
+export const PostReplies: React.FC<PostRepliesProps> = ({ navigationParam }) => {
   const navigation = useNavigation();
   const [challengeReplies, setChallengeReplies] = useState<any[]>([]);
   const [streaminServerUrl, setStreaminServerUrl] = useState<string>("");
   const [post, setPost] = useState<IPost>();
   const [isLoadingChallengeVideo, setIsLoadingChallengeVideo] = useState<boolean>(true)
   const [isVideoInViewPort, setIsVideoInViewPort] = useState(false);
+  const { latestNewReply } = useSelector(repliesSelector);
 
   const getChallengeReplies = async () => {
     const challengesEndpoint = `${process.env.BASE_API_ENPOINT}/challenges/${post._id}/replies`;
@@ -54,6 +55,16 @@ export const PostReplies: React.FC<PostRepliesProps> = ({ }) => {
       navigation.removeListener("state", null);
     };
   }, []);
+
+  useEffect(() => {
+    if (latestNewReply) {
+      setChallengeReplies([...challengeReplies,
+      {
+        _id: challengeReplies.length - 1,
+        url: latestNewReply.video
+      }])
+    }
+  }, [latestNewReply]);
 
   useEffect(() => {
     if (post) {

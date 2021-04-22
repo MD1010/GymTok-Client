@@ -5,9 +5,10 @@ import { Dimensions, StatusBar, StyleSheet, Text, View } from "react-native";
 import { colors, Divider } from "react-native-elements";
 import { TextInput, TouchableOpacity } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { IUser } from "../../interfaces";
 import { authSelector } from "../../store/auth/authSlice";
+import { addReplyToChallenge } from "../../store/replies/actions";
 import { fetchAPI, RequestMethod } from "../../utils/fetchAPI";
 import { Player, DismissKeyboard, SubmitButton, Colors, TouchableHighlightButton, Loader } from "../shared";
 
@@ -18,6 +19,7 @@ type StackParamsList = {
 export const PublishScreen: React.FC = () => {
   const route = useRoute<RouteProp<StackParamsList, "params">>();
   const navigation = useNavigation();
+  const dispatch = useDispatch();
   const isReply = route.params.isReply;
   const taggedPeople = route?.params?.taggedPeople;
   const hashtags = route?.params?.hashtags;
@@ -123,6 +125,7 @@ export const PublishScreen: React.FC = () => {
     );
 
     if (res) {
+      dispatch(addReplyToChallenge(res))
       navigation.navigate("Home");
     } else if (error) alert(JSON.stringify(error));
     setIsLoading(false);
