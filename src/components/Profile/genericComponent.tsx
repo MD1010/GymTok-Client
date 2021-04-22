@@ -20,31 +20,30 @@ interface Props {
 }
 
 export const GenericComponent: React.FC<Props> = ({ items, horizontal, customStyle, numColumns, pictureHeight }) => {
-  const [thumbnailItems, setThumbnailItems] = useState<any[]>([]);
   const navigation = useNavigation();
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const isHorizontal: boolean = horizontal ? horizontal : false;
   const numOfColumns: number = numColumns ? numColumns : 3;
   const picHeight: number = pictureHeight ? pictureHeight : styles.theImage.height;
 
-  useEffect(() => {
-    (async () => {
-      const asyncRes = await Promise.all(
-        items.map(async (item) => {
-          const imageURI = await generateThumbnail(item.url);
-          return Object.assign({ image: imageURI }, { ...item });
-        })
-      );
-      setIsLoading(false);
-      setThumbnailItems(asyncRes);
-    })();
-  }, [items]);
+  // useEffect(() => {
+  //   (async () => {
+  //     const asyncRes = await Promise.all(
+  //       items.map(async (item) => {
+  //         const imageURI = await generateThumbnail(item.url);
+  //         return Object.assign({ image: imageURI }, { ...item });
+  //       })
+  //     );
+  //     setIsLoading(false);
+  //     setThumbnailItems(asyncRes);
+  //   })();
+  // }, [items]);
 
   const showVideo = (videoURL) => {
     navigation.navigate("UsersProfile", { videoURL: videoURL });
   };
 
-  const renderItem = ({ item }) => {
+  const renderItem = (item: Item) => {
     return (
       <View
         style={{
@@ -53,12 +52,12 @@ export const GenericComponent: React.FC<Props> = ({ items, horizontal, customSty
       >
         <TouchableOpacity
           onPress={() => {
-            showVideo(item.url);
+            showVideo(item.video);
           }}
         >
           <ImageBackground
             style={{ ...styles.theImage, height: picHeight, width: Dimensions.get("screen").width / numOfColumns }}
-            source={{ uri: item.image }}
+            source={{ uri: item.gif }}
           >
             <View style={{ display: "flex", justifyContent: "flex-end", flexDirection: "column", height: picHeight }}>
               <View style={[styles.rowContainer, { marginRight: 10 }]}>
@@ -77,11 +76,11 @@ export const GenericComponent: React.FC<Props> = ({ items, horizontal, customSty
     <SafeAreaView style={{ flex: 1, flexDirection: isHorizontal ? "row" : "column" }}>
       {/* <Spinner visible={isLoading} textLoading={"Loading..."} textStyle={{ color: "#FFF" }} /> */}
       <FlatList
-        data={thumbnailItems}
+        data={items}
         keyExtractor={(item, index) => index.toString()}
         horizontal={isHorizontal}
         numColumns={!isHorizontal ? numOfColumns : 0}
-        renderItem={renderItem}
+        renderItem={({ item }) => renderItem(item)}
       />
       {/* {isLoading ? (
         <ChallangeSkeleton isHorizontal={isHorizontal} numOfColumns={numOfColumns} />
