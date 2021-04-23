@@ -3,7 +3,14 @@ import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { Video } from "expo-av";
 import * as FileSystem from "expo-file-system";
 import React, { memo, ReactNode, useEffect, useRef, useState } from "react";
-import { Platform, StyleProp, StyleSheet, TouchableWithoutFeedback, View, ViewStyle } from "react-native";
+import {
+  Platform,
+  StyleProp,
+  StyleSheet,
+  TouchableWithoutFeedback,
+  View,
+  ViewStyle,
+} from "react-native";
 import shorthash from "shorthash";
 import { Colors } from "./styles/variables";
 
@@ -49,22 +56,25 @@ export const Player: React.FC<VideoProps> = memo(
     const navigation = useNavigation();
     const [isLoading, setIsLoading] = useState(false);
     // const [isVisible, setIsVisible] = useState(false);
-    const pauseVideoByTap = () => {
+    const pauseVideoByTap = async () => {
       setIsPaused(true);
-      ref.current?.pauseAsync();
+      await ref.current?.pauseAsync();
     };
 
-    const resumeVideoByTap = () => {
+    const resumeVideoByTap = async () => {
       setIsPaused(false);
-      ref.current?.playAsync();
+      await ref.current?.playAsync();
     };
 
     const loadURI = async () => {
       if (uri.startsWith("file")) {
         return setVideoURI(uri);
       }
-      const path = `${Platform.OS === "ios" ? FileSystem.documentDirectory : FileSystem.cacheDirectory}${Platform.OS === "ios" ? uri.split("/")[3] : shorthash.unique(uri)
-        }`;
+      const path = `${
+        Platform.OS === "ios"
+          ? FileSystem.documentDirectory
+          : FileSystem.cacheDirectory
+      }${Platform.OS === "ios" ? uri.split("/")[3] : shorthash.unique(uri)}`;
       const image = await FileSystem.getInfoAsync(path);
       if (image.exists) {
         console.log("read image from cache");
@@ -86,30 +96,39 @@ export const Player: React.FC<VideoProps> = memo(
     useFocusEffect(
       React.useCallback(() => {
         console.log("render", renderedInList);
-        navigation.addListener("blur", (e) => {
-          ref.current?.pauseAsync();
+        navigation.addListener("blur", async (e) => {
+          await ref.current?.pauseAsync();
         });
 
-        (videoInViewPort || !renderedInList) && ref.current?.playAsync(); // the video is not in flat list
+        (async function () {
+          (videoInViewPort || !renderedInList) &&
+            (await ref.current?.playAsync());
+        })(); // the video is not in flat list
       }, [])
     );
 
     useEffect(() => {
-      if (videoInViewPort) {
-        ref.current?.replayAsync();
-        setIsPaused(false);
-      } else if (videoInViewPort !== undefined) {
-        ref.current?.pauseAsync();
+      async function handleVideo() {
+        if (videoInViewPort) {
+          await ref.current?.replayAsync();
+          setIsPaused(false);
+        } else if (videoInViewPort !== undefined) {
+          await ref.current?.pauseAsync();
+        }
+        return async () => {
+          await ref.current?.pauseAsync();
+        };
       }
-      return () => {
-        ref.current?.pauseAsync();
-      };
     }, [videoInViewPort]);
 
     return (
       <TouchableWithoutFeedback
         onPress={() =>
-          onVideoTap ? onVideoTap() : statusRef.current?.isPlaying ? pauseVideoByTap() : resumeVideoByTap()
+          onVideoTap
+            ? onVideoTap()
+            : statusRef.current?.isPlaying
+            ? pauseVideoByTap()
+            : resumeVideoByTap()
         }
       >
         {
@@ -128,15 +147,25 @@ export const Player: React.FC<VideoProps> = memo(
                   uri,
                 }}
                 resizeMode={resizeMode}
-                shouldPlay={videoInViewPort === undefined ? true : videoInViewPort}
+                shouldPlay={
+                  videoInViewPort === undefined ? true : videoInViewPort
+                }
                 isLooping
                 isMuted={isMuted}
-                onPlaybackStatusUpdate={(status) => (statusRef.current = status)}
+                onPlaybackStatusUpdate={(status) =>
+                  (statusRef.current = status)
+                }
               />
             }
             {!controlsShown && !hidePlayButton && (
               <View style={styles.playButtonContainer}>
-                {isPaused && <FontAwesome name="play" size={playBtnSize ? playBtnSize : 40} color={Colors.white} />}
+                {isPaused && (
+                  <FontAwesome
+                    name="play"
+                    size={playBtnSize ? playBtnSize : 40}
+                    color={Colors.white}
+                  />
+                )}
               </View>
             )}
           </View>
