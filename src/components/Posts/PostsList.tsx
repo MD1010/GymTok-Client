@@ -71,7 +71,10 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentVideoI
 
   useEffect(() => {
     if (currentVideoID && posts.length > 0) {
+      console.log("currentID: " + currentVideoID);
+      console.log("postfdfdfdf: " + posts);
       let wantedIndex = posts.findIndex((post) => post.video === currentVideoID);
+      console.log("wnted index" + wantedIndex);
       goIndex(wantedIndex);
     }
   }, [posts, currentVideoID]);

@@ -14,12 +14,12 @@ interface PostRepliesProps {
   route: any;
 }
 
-export const PostReplies: React.FC<PostRepliesProps> = ({ }) => {
+export const PostReplies: React.FC<PostRepliesProps> = ({}) => {
   const navigation = useNavigation();
   const [challengeReplies, setChallengeReplies] = useState<any[]>([]);
   const [streaminServerUrl, setStreaminServerUrl] = useState<string>("");
   const [post, setPost] = useState<IPost>();
-  const [isLoadingChallengeVideo, setIsLoadingChallengeVideo] = useState<boolean>(true)
+  const [isLoadingChallengeVideo, setIsLoadingChallengeVideo] = useState<boolean>(true);
   const [isVideoInViewPort, setIsVideoInViewPort] = useState(false);
 
   const getChallengeReplies = async () => {
@@ -58,7 +58,7 @@ export const PostReplies: React.FC<PostRepliesProps> = ({ }) => {
   useEffect(() => {
     if (post) {
       getChallengeReplies();
-      setStreaminServerUrl(`${process.env.VIDEO_SERVER_ENDPOINT}/${post.video}`);
+      setStreaminServerUrl(`${process.env.VIDEO_SERVER_ENDPOINT}/video/${post.video}`);
     }
   }, [post]);
 
@@ -70,11 +70,19 @@ export const PostReplies: React.FC<PostRepliesProps> = ({ }) => {
       }}
     >
       <View style={styles.challengeVideoContainter}>
+        {isLoadingChallengeVideo && (
+          <View style={styles.loader}>
+            <Loader />
+          </View>
+        )}
         <View style={styles.videoContianiter}>
-          <Player style={styles.video} uri={streaminServerUrl} resizeMode="cover" videoInViewPort={isVideoInViewPort}
-            onVideoLoad={() => setIsLoadingChallengeVideo(false)}>
-            {isLoadingChallengeVideo && <Loader />}
-          </Player>
+          <Player
+            style={styles.video}
+            uri={streaminServerUrl}
+            resizeMode="cover"
+            videoInViewPort={isVideoInViewPort}
+            onVideoLoad={() => setIsLoadingChallengeVideo(false)}
+          />
         </View>
       </View>
       <View style={{ flex: 1 }}>
@@ -99,6 +107,7 @@ const styles = StyleSheet.create({
     width: "100%",
     backgroundColor: Colors.darkBlueOpaque,
   },
+  loader: {},
   challengeVideoDetails: {
     flex: 1,
     width: "50%",
