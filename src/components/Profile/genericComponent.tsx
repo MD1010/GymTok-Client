@@ -1,15 +1,10 @@
 import { FontAwesome } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-import React, { useEffect, useState } from "react";
-import { Dimensions, ImageBackground, FlatList, SafeAreaView, StyleSheet, Text, View, ViewStyle } from "react-native";
-import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
-import { useIsMount } from "../../hooks/useIsMount";
-import { generateThumbnail } from "../../utils/generateThumbnail";
+import React, { useState } from "react";
+import { Dimensions, FlatList, ImageBackground, SafeAreaView, StyleSheet, Text, View, ViewStyle } from "react-native";
+import { TouchableOpacity } from "react-native-gesture-handler";
 import { Colors } from "../shared/styles/variables";
 import { Item } from "./interfaces";
-import { ChallangeSkeleton } from "../shared/skeletons/ChallangeSkeleton";
-import { render } from "react-dom";
-import Spinner from "react-native-loading-spinner-overlay";
 
 interface Props {
   items: Item[];
