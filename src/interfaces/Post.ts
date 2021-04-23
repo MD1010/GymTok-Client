@@ -9,6 +9,7 @@ export interface IPost {
   estimatedScore: string;
   image: string;
   video: string;
+  gif: string;
   likes: string[];
   replies: string[];
   hashtags: string[];

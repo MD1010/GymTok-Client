@@ -19,7 +19,6 @@ interface VideoProps {
   isMuted?: boolean;
   onVideoTap?: () => any;
   onVideoLoad?: () => any;
-  children?: ReactNode;
   /**
    * if the video is rendered not in flat list as a seperated screen
    * default is false
@@ -64,9 +63,8 @@ export const Player: React.FC<VideoProps> = memo(
       if (uri.startsWith("file")) {
         return setVideoURI(uri);
       }
-      const path = `${Platform.OS === "ios" ? FileSystem.documentDirectory : FileSystem.cacheDirectory}${
-        Platform.OS === "ios" ? uri.split("/")[3] : shorthash.unique(uri)
-      }`;
+      const path = `${Platform.OS === "ios" ? FileSystem.documentDirectory : FileSystem.cacheDirectory}${Platform.OS === "ios" ? uri.split("/")[3] : shorthash.unique(uri)
+        }`;
       const image = await FileSystem.getInfoAsync(path);
       if (image.exists) {
         console.log("read image from cache");
@@ -134,10 +132,7 @@ export const Player: React.FC<VideoProps> = memo(
                 isLooping
                 isMuted={isMuted}
                 onPlaybackStatusUpdate={(status) => (statusRef.current = status)}
-              >
-                {/** screwed up the dev!!!! check your commits before pushing!!!!! */}
-                {/* {!!children && children} */}
-              </Video>
+              />
             }
             {!controlsShown && !hidePlayButton && (
               <View style={styles.playButtonContainer}>

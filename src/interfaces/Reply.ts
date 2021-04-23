@@ -9,4 +9,5 @@ export interface IReply {
   replierId: IUser;
   description: string;
   video: string;
+  gif: string;
 }
