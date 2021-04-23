@@ -12,23 +12,11 @@ import AppLoading from 'expo-app-loading';
 import { preventAutoHide } from "expo-splash-screen";
 import * as Font from 'expo-font';
 import { Asset } from 'expo-asset';
-import { FontAwesome } from '@expo/vector-icons';
+import { Feather, Fontisto , MaterialIcons,Ionicons,FontAwesome ,FontAwesome5} from '@expo/vector-icons';
 import { getMorePosts, getMostRecommended, getUserPosts } from "./store/posts/actions";
 import { authSelector } from "./store/auth/authSlice";
 
-// const { loggedUser } = useSelector(authSelector);
-
-// function getPosts(){
-//   if (loggedUser) {
-//     store.dispatch(getMostRecommended());
-//   } else {
-//     // loggedUser is null -> didnt log in yet
-//     store.dispatch(getMorePosts());
-//   }
-// }
-
 function cacheImages(images) {
-  console.log(images.length)
   return images.map(image => {
     if (typeof image === 'string') {
       return Image.prefetch(image);
@@ -46,6 +34,24 @@ function cacheFonts(fonts) {
 function App() {
   const [appIsReady, setAppIsReady] = useState(false);
 
+  const getPosts = async () => {
+    let loggedUser = store.getState().auth.loggedUser//= useSelector(authSelector);
+    console.log(loggedUser);
+    if (loggedUser) {
+      await store.dispatch(getMostRecommended()) ;
+    } else {
+      // loggedUser is null -> didnt log in yet
+      await store.dispatch(getMorePosts());
+    }
+  };
+  // useEffect(() => {
+  //   // check if user was loaded - undefinded means the store has not been updated yet.
+  //   if (loggedUser !== undefined) {
+  //     getPosts();
+  //   }
+  // }, [loggedUser]);
+
+
   if (!appIsReady) {
     return (
       <AppLoading
@@ -55,41 +61,30 @@ function App() {
       />
     ); }
 
-  // useEffect(() => {
-  //   async function prepare(){
-  //     try {
-  //       await SplashScreen.preventAutoHideAsync();
-  //       await store.dispatch(loadLoggedUser());
-  //       // await new Promise(resolve => setTimeout(resolve, 2000));
-  //     } catch (error) {
-  //       console.warn(error);
-  //     } finally{
-  //       setAppIsReady(true)
-  //     }
-  //   } 
-
-  //   prepare()
-  // }, []);
 
 async function prepare(){
-  console.log('dispatch logged user')
   await store.dispatch(loadLoggedUser())
-  await store.dispatch(getMorePosts());
+  console.log('Assest');
   const imageAssets = cacheImages([
     require('../assets/avatar/01.jpg'),
     require('../assets/avatar/02.jpg'),
-    require('../assets/icons/checked.png'),
-    require('../assets/icons/checked.png'),
-    require('../assets/icons/checked.png'),
-    require('../assets/icons/checked.png'),
-    require('../assets/icons/checked.png'),
+    require('../assets/avatar/user.png'),
+    require('../assets/icons/profile.png'),
     require('../assets/icons/comment.png'),
-    require('../assets/icons/like.png')
+    require('../assets/icons/like.png'),
+    require('../assets/icons/facebook.png'),
+    require('../assets/icons/google.png'),
+    require('../assets/loader.gif')
   ]);
-
-  const fontAssets = cacheFonts([FontAwesome.font]);
-
-  await Promise.all([...imageAssets, ...fontAssets]);
+  const FontAwesomefontAssets = cacheFonts([FontAwesome.font]);
+  const FontAwesome5fontAssets = cacheFonts([FontAwesome.font]);
+  const IoniconsfontAssets = cacheFonts([Ionicons.font]);
+  const FeatherfontAssets = cacheFonts([Feather.font]);
+  const FontistofontAssets = cacheFonts([Fontisto.font]);
+  const MaterialIconsfontAssets = cacheFonts([MaterialIcons.font]);
+  // Feather, Fontisto , MaterialIcons
+  await Promise.all([...imageAssets,...FontAwesomefontAssets,...FontAwesome5fontAssets ,...IoniconsfontAssets,...FeatherfontAssets,...MaterialIconsfontAssets,...FontistofontAssets,getPosts()]);
+  console.log('finished all render');
 }
 
   return (
