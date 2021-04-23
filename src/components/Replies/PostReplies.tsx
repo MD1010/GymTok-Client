@@ -33,12 +33,14 @@ export const PostReplies: React.FC<PostRepliesProps> = ({ }) => {
       RequestMethod.GET,
       challengesEndpoint
     );
+
     res &&
       setChallengeReplies(
         res.map((reply, index) => {
           return {
             _id: index,
-            url: reply.video,
+            url: `${process.env.VIDEO_SERVER_ENDPOINT}/video/${reply.video}`,
+            gif: `${process.env.VIDEO_SERVER_ENDPOINT}/gif/${reply.gif}`
           };
         })
       );
@@ -58,7 +60,8 @@ export const PostReplies: React.FC<PostRepliesProps> = ({ }) => {
       setChallengeReplies([...challengeReplies,
       {
         _id: challengeReplies.length - 1,
-        url: route.params?.newReply.video
+        url: `${process.env.VIDEO_SERVER_ENDPOINT}/video/${route.params?.newReply.video}`,
+        gif: `${process.env.VIDEO_SERVER_ENDPOINT}/gif/${route.params.newReply.gif}`
       }])
     }
   }, [route.params?.newReply]);
