@@ -26,19 +26,6 @@ export const GenericComponent: React.FC<Props> = ({ items, horizontal, customSty
   const numOfColumns: number = numColumns ? numColumns : 3;
   const picHeight: number = pictureHeight ? pictureHeight : styles.theImage.height;
 
-  // useEffect(() => {
-  //   (async () => {
-  //     const asyncRes = await Promise.all(
-  //       items.map(async (item) => {
-  //         const imageURI = await generateThumbnail(item.url);
-  //         return Object.assign({ image: imageURI }, { ...item });
-  //       })
-  //     );
-  //     setIsLoading(false);
-  //     setThumbnailItems(asyncRes);
-  //   })();
-  // }, [items]);
-
   const showVideo = (videoURL) => {
     navigation.navigate("UsersProfile", { videoURL: videoURL });
   };
