@@ -112,7 +112,7 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentVideoI
   const endDrag = useCallback(() => {
     scrollEnded.current = true;
   }, []);
-  const keyExtractor = useCallback((challenge, i) => challenge._id, []);
+  const keyExtractor = useCallback((challenge, i) => i.toString(), []);
   const viewHeight = useMemo(
     () => (isFeed ? Dimensions.get("window").height - UIConsts.bottomNavbarHeight : Dimensions.get("window").height),
     [isFeed]

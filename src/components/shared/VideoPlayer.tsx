@@ -81,6 +81,7 @@ export const Player: React.FC<VideoProps> = memo(
     };
 
     useEffect(() => {
+      // videoInViewPort && loadURI();
       return () => navigation.removeListener("blur", null);
     }, []);
 

@@ -1,12 +1,11 @@
 import { FontAwesome } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/core";
 import React, { memo, useContext, useEffect } from "react";
-import { Text, View } from "react-native";
+import { Text, View, StyleSheet, Dimensions } from "react-native";
 import { Avatar } from "react-native-elements";
 import { TouchableOpacity, TouchableWithoutFeedback } from "react-native-gesture-handler";
 import { Colors } from "../shared/styles/variables";
 import { Player } from "../shared/VideoPlayer";
-import { styles } from "../Posts/Posts.style";
 import { RouteProp, useRoute } from "@react-navigation/native";
 
 type StackParamsList = {
@@ -66,3 +65,38 @@ export const ApproveVideo: React.FC = () => {
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    width: "100%",
+    height: Dimensions.get("screen").height,
+    flex: 1,
+  },
+  video: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    bottom: 0,
+    right: 0,
+  },
+  rowContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  uiContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: 15,
+    marginBottom: 10,
+    backgroundColor: "red",
+  },
+
+  infoContainer: {
+    position: "absolute",
+    width: "100%",
+    bottom: 0,
+    paddingLeft: 10,
+    paddingRight: 10,
+    paddingBottom: 15,
+  },
+});
