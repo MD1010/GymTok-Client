@@ -66,14 +66,14 @@ const LikesComments: React.FC<IUIContainer> = ({
   return (
     <View style={styles.likeCommentsContainer}>
       <TouchableWithoutFeedback onPress={() => onLikeButtonPress()}>
-        <View style={styles.rowContainer}>
+        <View style={[styles.rowContainer, { alignItems: "center" }]}>
           <FontAwesome name={"heart"} size={22} color={isUserLikeChallenge ? Colors.red : Colors.lightGrey} />
           <Text style={styles.amount}>{numberOfLikes}</Text>
         </View>
       </TouchableWithoutFeedback>
 
       <TouchableWithoutFeedback onPress={() => onCommentButtonPress()}>
-        <View style={[styles.rowContainer, { marginLeft: 15 }]}>
+        <View style={[styles.rowContainer, { marginLeft: 15, alignItems: "center" }]}>
           <FontAwesome name={"comment"} size={22} color={Colors.lightGrey} />
           <Text style={styles.amount}>{numberOfComments}</Text>
         </View>
