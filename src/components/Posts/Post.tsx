@@ -90,7 +90,7 @@ export const Post: React.FC<PostProps> = memo(({ post, isVisible, containerStyle
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const [isUserLikePost, setÌsUserLikePost] = useState<boolean>(false);
-  const streaminServerUrl = `${process.env.VIDEO_SERVER_ENDPOINT}/${videoURL}`;
+  const streaminServerUrl = `${process.env.VIDEO_SERVER_ENDPOINT}/video/${videoURL}`;
 
   useEffect(() => {
     loggedUser && setÌsUserLikePost(post.likes.includes(loggedUser?._id));
