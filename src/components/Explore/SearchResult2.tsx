@@ -4,11 +4,11 @@ import * as Animatable from "react-native-animatable";
 import { Ionicons } from "@expo/vector-icons";
 
 interface Props {
-  filteredDataSource: any[];
+  dataSource: any[];
   handleSelectItem: (text: string) => void;
 }
 
-export const SearchResults: React.FC<Props> = ({ filteredDataSource, handleSelectItem }) => {
+export const SearchResults: React.FC<Props> = ({ dataSource, handleSelectItem }) => {
   const ItemView = ({ item }) => {
     return (
       // Flat List Item
@@ -18,7 +18,7 @@ export const SearchResults: React.FC<Props> = ({ filteredDataSource, handleSelec
             <Ionicons name="search-outline" color={"black"} size={25} />
           </View>
           <View>
-            <Text>{item.title.toUpperCase()}</Text>
+            <Text>{item.hashtag.toUpperCase()}</Text>
           </View>
         </Text>
       </View>
@@ -50,12 +50,12 @@ export const SearchResults: React.FC<Props> = ({ filteredDataSource, handleSelec
   const getItem = (item) => {
     // Function for click on an item
     // alert("Id : " + item.id + " Title : " + item.title);
-    handleSelectItem(item.title);
+    handleSelectItem(item);
   };
   return (
     <Animatable.View animation="fadeInUpBig" duration={500} style={styles.tagFriends}>
       <FlatList
-        data={filteredDataSource}
+        data={dataSource}
         keyExtractor={(item, index) => index.toString()}
         ItemSeparatorComponent={ItemSeparatorView}
         renderItem={ItemView}
