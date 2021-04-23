@@ -1,10 +1,10 @@
-import { Action, configureStore } from "@reduxjs/toolkit";
+import { Action, configureStore, getDefaultMiddleware } from "@reduxjs/toolkit";
 import { ThunkAction } from "redux-thunk";
-import { loadLoggedUser } from "./auth/actions";
 import rootReducer from "./rootReducer";
 
 export const store = configureStore({
   reducer: rootReducer,
+  middleware: [...getDefaultMiddleware({ immutableCheck: false, serializableCheck: false })],
 });
 
 store.subscribe(() => {});
