@@ -119,7 +119,7 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentVideoI
   );
   const config = useRef<ViewabilityConfig>({
     itemVisiblePercentThreshold: 90,
-    minimumViewTime: 150,
+    minimumViewTime: 350,
   });
 
   const itemLayout = useCallback(
@@ -161,9 +161,9 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentVideoI
       <View style={{ height: viewHeight, backgroundColor: Colors.black }}>
         <FlatList
           refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-          initialNumToRender={5}
-          maxToRenderPerBatch={7}
-          windowSize={7}
+          initialNumToRender={3}
+          maxToRenderPerBatch={5}
+          windowSize={3}
           data={posts}
           // snapToInterval={currentlyPlaying === posts.length - 1 ? null : viewHeight}
           pagingEnabled

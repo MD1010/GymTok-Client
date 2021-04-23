@@ -47,7 +47,7 @@ export const Player: React.FC<VideoProps> = memo(
     const ref = useRef(null);
     const [videoURI, setVideoURI] = useState<string>();
     const navigation = useNavigation();
-    const [isLoading, setIsLoading] = useState(false);
+    // const [isLoading, setIsLoading] = useState(false);
     // const [isVisible, setIsVisible] = useState(false);
     const pauseVideoByTap = async () => {
       setIsPaused(true);
@@ -70,7 +70,6 @@ export const Player: React.FC<VideoProps> = memo(
       if (image.exists) {
         console.log("read image from cache");
         console.log("uri exists is  " + image.uri);
-
         setVideoURI(image.uri);
       } else {
         console.log("downloading image to cache");
@@ -81,7 +80,6 @@ export const Player: React.FC<VideoProps> = memo(
     };
 
     useEffect(() => {
-      // videoInViewPort && loadURI();
       return () => navigation.removeListener("blur", null);
     }, []);
 
@@ -93,6 +91,8 @@ export const Player: React.FC<VideoProps> = memo(
         });
 
         (async function () {
+          await loadURI();
+
           (videoInViewPort || !renderedInList) && (await ref.current?.playAsync());
         })(); // the video is not in flat list
       }, [])
@@ -122,16 +122,17 @@ export const Player: React.FC<VideoProps> = memo(
           <View style={[styles.container, containerStyle]}>
             {
               <Video
-                onLoadStart={() => setIsLoading(true)}
-                onLoad={() => {
+                onLoadStart={() => console.log("start loading", uri)}
+                onLoad={(status) => {
+                  console.log("loaded ? ? ", status.isLoaded);
+
                   onVideoLoad && onVideoLoad();
-                  setIsLoading(false);
                 }}
                 ref={ref}
                 style={style || styles.defaultVideoStyle}
                 useNativeControls={!!controlsShown}
                 source={{
-                  uri,
+                  uri: videoURI,
                 }}
                 resizeMode={resizeMode}
                 shouldPlay={videoInViewPort === undefined ? true : videoInViewPort}

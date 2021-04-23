@@ -156,7 +156,7 @@ export const Post: React.FC<PostProps> = memo(({ post, isVisible, containerStyle
 
         <Text style={styles.info}>{post.description}</Text>
 
-        <View style={[styles.rowContainer, { marginTop: 10 }]}>
+        <View style={[styles.rowContainer, { marginVertical: 10 }]}>
           <TagsContainer hashtags={post.hashtags} />
           <LikesComments
             numberOfLikes={likes ? likes.length : 0}
