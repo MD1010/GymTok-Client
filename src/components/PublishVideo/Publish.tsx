@@ -26,7 +26,7 @@ export const PublishScreen: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { loggedUser } = useSelector(authSelector);
   const captionInput = useRef<string>();
-  console.log("video", route.params?.videoUri);
+
   const Header = () => {
     const handleSetCaption = (text: string) => {
       setCaption(text);
@@ -125,8 +125,7 @@ export const PublishScreen: React.FC = () => {
     );
 
     if (res) {
-      dispatch(addReplyToChallenge(res))
-      navigation.navigate("Home");
+      navigation.navigate("Home", { screen: "PostReplies", params: { newReply: res } });
     } else if (error) alert(JSON.stringify(error));
     setIsLoading(false);
   };
