@@ -14,7 +14,7 @@ interface PostRepliesProps {
   route: any;
 }
 
-export const PostReplies: React.FC<PostRepliesProps> = ({}) => {
+export const PostReplies: React.FC<PostRepliesProps> = ({ }) => {
   const navigation = useNavigation();
   const [challengeReplies, setChallengeReplies] = useState<any[]>([]);
   const [streaminServerUrl, setStreaminServerUrl] = useState<string>("");
@@ -65,7 +65,7 @@ export const PostReplies: React.FC<PostRepliesProps> = ({}) => {
     if (post) {
       getChallengeReplies();
       setStreaminServerUrl(
-        `${process.env.VIDEO_SERVER_ENDPOINT}/${post.video}`
+        `${process.env.VIDEO_SERVER_ENDPOINT}/${post.videoURI}`
       );
     }
   }, [post]);
