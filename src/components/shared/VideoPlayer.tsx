@@ -3,14 +3,7 @@ import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { Video } from "expo-av";
 import * as FileSystem from "expo-file-system";
 import React, { memo, ReactNode, useEffect, useRef, useState } from "react";
-import {
-  Platform,
-  StyleProp,
-  StyleSheet,
-  TouchableWithoutFeedback,
-  View,
-  ViewStyle,
-} from "react-native";
+import { Platform, StyleProp, StyleSheet, TouchableWithoutFeedback, View, ViewStyle } from "react-native";
 import shorthash from "shorthash";
 import { Colors } from "./styles/variables";
 
@@ -54,7 +47,7 @@ export const Player: React.FC<VideoProps> = memo(
     const ref = useRef(null);
     const [videoURI, setVideoURI] = useState<string>();
     const navigation = useNavigation();
-    const [isLoading, setIsLoading] = useState(false);
+    // const [isLoading, setIsLoading] = useState(false);
     // const [isVisible, setIsVisible] = useState(false);
     const pauseVideoByTap = async () => {
       setIsPaused(true);
@@ -70,16 +63,13 @@ export const Player: React.FC<VideoProps> = memo(
       if (uri.startsWith("file")) {
         return setVideoURI(uri);
       }
-      const path = `${
-        Platform.OS === "ios"
-          ? FileSystem.documentDirectory
-          : FileSystem.cacheDirectory
-      }${Platform.OS === "ios" ? uri.split("/")[3] : shorthash.unique(uri)}`;
+      const path = `${Platform.OS === "ios" ? FileSystem.documentDirectory : FileSystem.cacheDirectory}${
+        Platform.OS === "ios" ? uri.split("/")[3] : shorthash.unique(uri)
+      }`;
       const image = await FileSystem.getInfoAsync(path);
       if (image.exists) {
         console.log("read image from cache");
         console.log("uri exists is  " + image.uri);
-
         setVideoURI(image.uri);
       } else {
         console.log("downloading image to cache");
@@ -101,14 +91,15 @@ export const Player: React.FC<VideoProps> = memo(
         });
 
         (async function () {
-          (videoInViewPort || !renderedInList) &&
-            (await ref.current?.playAsync());
+          await loadURI();
+
+          (videoInViewPort || !renderedInList) && (await ref.current?.playAsync());
         })(); // the video is not in flat list
       }, [])
     );
 
     useEffect(() => {
-      async function handleVideo() {
+      (async function () {
         if (videoInViewPort) {
           await ref.current?.replayAsync();
           setIsPaused(false);
@@ -118,54 +109,41 @@ export const Player: React.FC<VideoProps> = memo(
         return async () => {
           await ref.current?.pauseAsync();
         };
-      }
+      })();
     }, [videoInViewPort]);
 
     return (
       <TouchableWithoutFeedback
         onPress={() =>
-          onVideoTap
-            ? onVideoTap()
-            : statusRef.current?.isPlaying
-            ? pauseVideoByTap()
-            : resumeVideoByTap()
+          onVideoTap ? onVideoTap() : statusRef.current?.isPlaying ? pauseVideoByTap() : resumeVideoByTap()
         }
       >
         {
           <View style={[styles.container, containerStyle]}>
             {
               <Video
-                onLoadStart={() => setIsLoading(true)}
-                onLoad={() => {
+                onLoadStart={() => console.log("start loading", uri)}
+                onLoad={(status) => {
+                  console.log("loaded ? ? ", status.isLoaded);
+
                   onVideoLoad && onVideoLoad();
-                  setIsLoading(false);
                 }}
                 ref={ref}
                 style={style || styles.defaultVideoStyle}
                 useNativeControls={!!controlsShown}
                 source={{
-                  uri,
+                  uri: videoURI,
                 }}
                 resizeMode={resizeMode}
-                shouldPlay={
-                  videoInViewPort === undefined ? true : videoInViewPort
-                }
+                shouldPlay={videoInViewPort === undefined ? true : videoInViewPort}
                 isLooping
                 isMuted={isMuted}
-                onPlaybackStatusUpdate={(status) =>
-                  (statusRef.current = status)
-                }
+                onPlaybackStatusUpdate={(status) => (statusRef.current = status)}
               />
             }
             {!controlsShown && !hidePlayButton && (
               <View style={styles.playButtonContainer}>
-                {isPaused && (
-                  <FontAwesome
-                    name="play"
-                    size={playBtnSize ? playBtnSize : 40}
-                    color={Colors.white}
-                  />
-                )}
+                {isPaused && <FontAwesome name="play" size={playBtnSize ? playBtnSize : 40} color={Colors.white} />}
               </View>
             )}
           </View>

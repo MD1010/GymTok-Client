@@ -1,13 +1,11 @@
 import { FontAwesome } from "@expo/vector-icons";
-import { useNavigation, useRoute } from "@react-navigation/core";
-import { Camera } from "expo-camera";
-import * as ImagePicker from "expo-image-picker";
+import { useNavigation } from "@react-navigation/core";
 import React, { memo, useEffect, useState } from "react";
-import { Dimensions, Text, View, ViewStyle } from "react-native";
+import { Text, View, ViewStyle } from "react-native";
 import { Avatar } from "react-native-elements";
 import { TouchableOpacity, TouchableWithoutFeedback } from "react-native-gesture-handler";
 import { useDispatch, useSelector } from "react-redux";
-import { IPost } from "../../interfaces";
+import { IPost } from "../../interfaces/Post";
 import { authSelector } from "../../store/auth/authSlice";
 import { updateUserLikePost } from "../../store/posts/actions";
 import { fetchAPI, RequestMethod } from "../../utils/fetchAPI";
@@ -48,7 +46,17 @@ const Heading = ({ createdBy, onCameraPress }) => {
   );
 };
 
-const UIContainer: React.FC<IUIContainer> = ({
+const TagsContainer: React.FC<{ hashtags: string[] }> = ({ hashtags }) => (
+  <View style={[styles.rowContainer, { flex: 2, flexWrap: "wrap" }]}>
+    {hashtags?.map((tag, i) => (
+      <Text key={i} style={styles.hashtag}>
+        #{tag}
+      </Text>
+    ))}
+  </View>
+);
+
+const LikesComments: React.FC<IUIContainer> = ({
   numberOfComments,
   numberOfLikes,
   onLikeButtonPress,
@@ -56,31 +64,21 @@ const UIContainer: React.FC<IUIContainer> = ({
   isUserLikeChallenge,
 }) => {
   return (
-    <>
-      <View style={styles.uiContainer}>
-        <View style={[styles.rowContainer, { width: 60, justifyContent: "space-between" }]}>
-          <TouchableWithoutFeedback onPress={() => onLikeButtonPress()}>
-            <FontAwesome name={"heart"} size={22} color={isUserLikeChallenge ? Colors.red : Colors.lightGrey} />
-          </TouchableWithoutFeedback>
-
-          <TouchableWithoutFeedback onPress={() => onCommentButtonPress()}>
-            <FontAwesome name={"comment"} size={22} color={Colors.lightGrey} />
-          </TouchableWithoutFeedback>
+    <View style={styles.likeCommentsContainer}>
+      <TouchableWithoutFeedback onPress={() => onLikeButtonPress()}>
+        <View style={[styles.rowContainer, { alignItems: "center" }]}>
+          <FontAwesome name={"heart"} size={22} color={isUserLikeChallenge ? Colors.red : Colors.lightGrey} />
+          <Text style={styles.amount}>{numberOfLikes}</Text>
         </View>
+      </TouchableWithoutFeedback>
 
-        <View style={[styles.rowContainer, { justifyContent: "space-between" }]}>
-          <View style={[styles.rowContainer, { marginRight: 10 }]}>
-            <FontAwesome name={"heart"} size={13} color={Colors.lightGrey} />
-
-            <Text style={styles.amount}>{numberOfLikes}</Text>
-          </View>
-          <View style={styles.rowContainer}>
-            <FontAwesome name={"comment"} size={13} color={Colors.lightGrey} />
-            <Text style={styles.amount}>{numberOfComments}</Text>
-          </View>
+      <TouchableWithoutFeedback onPress={() => onCommentButtonPress()}>
+        <View style={[styles.rowContainer, { marginLeft: 15, alignItems: "center" }]}>
+          <FontAwesome name={"comment"} size={22} color={Colors.lightGrey} />
+          <Text style={styles.amount}>{numberOfComments}</Text>
         </View>
-      </View>
-    </>
+      </TouchableWithoutFeedback>
+    </View>
   );
 };
 
@@ -156,19 +154,18 @@ export const Post: React.FC<PostProps> = memo(({ post, isVisible, containerStyle
       <View style={styles.infoContainer}>
         <Heading createdBy={createdBy.username} onCameraPress={() => onCameraPress()} />
 
-        <View style={styles.rowContainer}>
-          {/** was commented as it caused compilation errors, please check  */}
-          {/* {post?.hashtags.map(tag => <Text key={tag} style={styles.hashtag}>#{tag}</Text>)} */}
-          <Text style={styles.info}>{post.description}</Text>
-        </View>
+        <Text style={styles.info}>{post.description}</Text>
 
-        <UIContainer
-          numberOfLikes={likes ? likes.length : 0}
-          isUserLikeChallenge={isUserLikePost}
-          numberOfComments={replies ? replies.length : 0}
-          onLikeButtonPress={() => onLikeButtonPress()}
-          onCommentButtonPress={() => onCommentButtonPress()}
-        />
+        <View style={[styles.rowContainer, { marginVertical: 10 }]}>
+          <TagsContainer hashtags={post.hashtags} />
+          <LikesComments
+            numberOfLikes={likes ? likes.length : 0}
+            isUserLikeChallenge={isUserLikePost}
+            numberOfComments={replies ? replies.length : 0}
+            onLikeButtonPress={() => onLikeButtonPress()}
+            onCommentButtonPress={() => onCommentButtonPress()}
+          />
+        </View>
       </View>
     </View>
   );
