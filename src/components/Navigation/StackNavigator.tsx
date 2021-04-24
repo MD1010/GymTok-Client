@@ -13,9 +13,9 @@ import { config } from "./stackNavigationConfig";
 import { ApproveVideo } from "../PublishVideo/ApproveVideo";
 import { CameraScreen } from "../PublishVideo/CameraScreen";
 
-interface StackNavigatorProps {}
+interface StackNavigatorProps { }
 
-export const MainNavigator: React.FC<StackNavigatorProps> = ({}) => {
+export const MainNavigator: React.FC<StackNavigatorProps> = ({ }) => {
   const Stack = createStackNavigator();
   return (
     <NavigationContainer independent={true}>
@@ -52,8 +52,8 @@ export const MainNavigator: React.FC<StackNavigatorProps> = ({}) => {
             gestureEnabled: true,
           }}
         />
-        {/* <Stack.Screen name="Replies" component={PostReplies} options={{
-          title: "Replies"
+        {/* <Stack.Screen name="PostReplies" component={PostReplies} options={{
+          headerShown: false,
         }} /> */}
 
         <Stack.Screen

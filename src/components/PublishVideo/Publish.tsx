@@ -5,9 +5,10 @@ import { Dimensions, StyleSheet, Text, View } from "react-native";
 import { colors, Divider } from "react-native-elements";
 import { TextInput } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { IUser } from "../../interfaces";
 import { authSelector } from "../../store/auth/authSlice";
+import { addReplyToChallenge } from "../../store/replies/actions";
 import { fetchAPI, RequestMethod } from "../../utils/fetchAPI";
 import {
   Colors,
@@ -30,13 +31,14 @@ type StackParamsList = {
 export const PublishScreen: React.FC = () => {
   const route = useRoute<RouteProp<StackParamsList, "params">>();
   const navigation = useNavigation();
+  const dispatch = useDispatch();
   const isReply = route.params.isReply;
   const taggedPeople = route?.params?.taggedPeople;
   const hashtags = route?.params?.hashtags;
   const [isLoading, setIsLoading] = useState(false);
   const { loggedUser } = useSelector(authSelector);
   const captionInput = useRef<string>();
-  console.log("video", route.params?.videoUri);
+
   const Header = () => {
     const handleSetCaption = (text: string) => {
       setCaption(text);
@@ -143,7 +145,7 @@ export const PublishScreen: React.FC = () => {
 
     if (res) {
       setIsLoading(false);
-      navigation.navigate("Home");
+      navigation.navigate("Home", { screen: "PostReplies", params: { newReply: res } });
     } else if (error) {
       setIsLoading(false);
       alert(JSON.stringify(error));
@@ -173,11 +175,11 @@ export const PublishScreen: React.FC = () => {
         onSelect={() =>
           route.params?.taggedPeople?.length
             ? navigation.navigate("TagPeople", {
-                selectedUsers: route.params?.taggedPeople,
-              })
+              selectedUsers: route.params?.taggedPeople,
+            })
             : navigation.navigate("SearchUser", {
-                excludedUsersToSearch: route.params?.taggedPeople,
-              })
+              excludedUsersToSearch: route.params?.taggedPeople,
+            })
         }
         icon={<Fontisto name="at" color={Colors.lightGrey2} size={14} />}
       />

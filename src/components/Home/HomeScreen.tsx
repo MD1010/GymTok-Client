@@ -22,7 +22,7 @@ export const HomeScreen: React.FC = () => {
   return (
     <Tab.Navigator tabBar={Null}>
       <Tab.Screen name="Home" component={PostListComponent} />
-      <Tab.Screen name="Replies" component={PostRepliesComponent} />
+      <Tab.Screen name="PostReplies" component={PostRepliesComponent} />
     </Tab.Navigator>
   );
 };
