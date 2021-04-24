@@ -54,12 +54,12 @@ export const Player: React.FC<VideoProps> = memo(
     // const [isLoading, setIsLoading] = useState(false);
     // const [isVisible, setIsVisible] = useState(false);
     const pauseVideoByTap = async () => {
-      !isPaused && setIsPaused(true);
+      !isBlurred && setIsPaused(true);
       await ref.current?.pauseAsync();
     };
 
     const resumeVideoByTap = async () => {
-      isPaused && setIsPaused(false);
+      !isBlurred && setIsPaused(false);
       await ref.current?.playAsync();
     };
 
