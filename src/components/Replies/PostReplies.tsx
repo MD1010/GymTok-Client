@@ -39,8 +39,8 @@ export const PostReplies: React.FC<PostRepliesProps> = ({ }) => {
         res.map((reply, index) => {
           return {
             _id: index,
-            url: `${process.env.VIDEO_SERVER_ENDPOINT}/video/${reply.video}`,
-            gif: `${process.env.VIDEO_SERVER_ENDPOINT}/gif/${reply.gif}`
+            url: reply.video,
+            gif: reply.gif
           };
         })
       );
@@ -59,9 +59,9 @@ export const PostReplies: React.FC<PostRepliesProps> = ({ }) => {
     if (route.params?.newReply) {
       setChallengeReplies([...challengeReplies,
       {
-        _id: challengeReplies.length - 1,
-        url: `${process.env.VIDEO_SERVER_ENDPOINT}/video/${route.params?.newReply.video}`,
-        gif: `${process.env.VIDEO_SERVER_ENDPOINT}/gif/${route.params.newReply.gif}`
+        _id: challengeReplies.length,
+        url: route.params.newReply.video,
+        gif: route.params.newReply.gif
       }])
     }
   }, [route.params?.newReply]);
