@@ -137,7 +137,7 @@ export const Post: React.FC<PostProps> = memo(({ post, isVisible, containerStyle
   const onCameraPress = async () => {
     if (loggedUser) {
       console.log("user:" + loggedUser?.fullName + " click on camera button.");
-      navigation.navigate("Camera", { challengeId: post._id, isReply: true });
+      navigation.navigate("Camera", { postId: post._id, isReply: true });
     } else {
       navigation.navigate("NotLoggedIn");
       console.log("guest click on comment button, need to login");

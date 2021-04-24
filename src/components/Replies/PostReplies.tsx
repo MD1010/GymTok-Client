@@ -13,7 +13,7 @@ interface PostRepliesProps {
 }
 
 type StackParamsList = {
-  params: { newReply: IReply };
+  params: { newReply: IPost };
 };
 export const PostReplies: React.FC<PostRepliesProps> = ({ }) => {
   const navigation = useNavigation();
