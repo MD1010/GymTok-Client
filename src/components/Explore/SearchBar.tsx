@@ -4,11 +4,11 @@ import React, { useState, useEffect, useRef } from "react";
 // import all the components we are going to use
 import { SafeAreaView, Text, StyleSheet, View, FlatList, Dimensions, ScrollView } from "react-native";
 import { SearchBar } from "react-native-elements";
-import { SearchResults } from "./SearchResult2";
+import { SearchResults } from "./SearchResult";
 import Spinner from "react-native-loading-spinner-overlay";
 import { GenericComponent } from "../Profile/genericComponent";
 import { Item } from "../Profile/interfaces";
-import { UIConsts } from "../shared";
+import { Colors, UIConsts } from "../shared";
 
 const ITEMS = [
   {
@@ -31,35 +31,35 @@ const challenges: Item[] = [
     video: "cf6bec6b-fd03-492f-a8ec-ae3c132e9063.mp4",
     gif: "662de7eb-7ec8-41a9-b58d-b657b6fec985.gif",
     numOfLikes: "100K",
-    component: <Text>fdfdff</Text>,
+    component: <Text style={{ color: Colors.white }}>fdfdff</Text>,
   },
   {
     _id: 2,
     video: "cf6bec6b-fd03-492f-a8ec-ae3c132e9063.mp4",
     gif: "662de7eb-7ec8-41a9-b58d-b657b6fec985.gif",
     numOfLikes: "100K",
-    component: <Text>fdfdff</Text>,
+    component: <Text style={{ color: Colors.white }}>fdfdff</Text>,
   },
   {
     _id: 3,
     video: "cf6bec6b-fd03-492f-a8ec-ae3c132e9063.mp4",
     gif: "662de7eb-7ec8-41a9-b58d-b657b6fec985.gif",
     numOfLikes: "100K",
-    component: <Text>Flying #tennis{"\n"} #tennisgirl</Text>,
+    component: <Text style={{ color: Colors.white }}>Flying #tennis{"\n"} #tennisgirl</Text>,
   },
   {
     _id: 4,
     video: "cf6bec6b-fd03-492f-a8ec-ae3c132e9063.mp4",
     gif: "662de7eb-7ec8-41a9-b58d-b657b6fec985.gif",
     numOfLikes: "100K",
-    component: <Text>fdfdff</Text>,
+    component: <Text style={{ color: Colors.white }}>fdfdff</Text>,
   },
   {
     _id: 5,
     video: "cf6bec6b-fd03-492f-a8ec-ae3c132e9063.mp4",
     gif: "662de7eb-7ec8-41a9-b58d-b657b6fec985.gif",
     numOfLikes: "100K",
-    component: <Text>fdfdff</Text>,
+    component: <Text style={{ color: Colors.white }}>fdfdff</Text>,
   },
   {
     _id: 6,
@@ -179,22 +179,10 @@ export const CustomSearchBar: React.FC = () => {
         )}
         {relvantItems !== undefined && (
           <View style={{ flex: 1 }}>
-            <Text style={{ fontSize: 20, margin: 5 }}>Videos</Text>
-            <GenericComponent
-              items={relvantItems}
-              numColumns={2}
-              pictureHeight={200}
-              //customStyle={{ height: Dimensions.get("screen").height - UIConsts.bottomNavbarHeight }}
-            />
+            <Text style={{ fontSize: 20, margin: 5, color: Colors.white }}>Videos</Text>
+            <GenericComponent items={relvantItems} numColumns={2} pictureHeight={200} />
           </View>
         )}
-
-        {/* <FlatList
-          data={filteredDataSource}
-          keyExtractor={(item, index) => index.toString()}
-          ItemSeparatorComponent={ItemSeparatorView}
-          renderItem={ItemView}
-        /> */}
       </View>
     </SafeAreaView>
   );
@@ -202,7 +190,7 @@ export const CustomSearchBar: React.FC = () => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "white",
+    backgroundColor: Colors.black,
     flex: 1,
     flexDirection: "column",
   },
