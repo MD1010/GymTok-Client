@@ -7,6 +7,7 @@ import { Colors } from "../shared";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { NavigationContainer } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/Ionicons";
+import { MainNavigator } from "../Navigation/StackNavigator";
 
 const Home = () => {
   return <Text>Home</Text>;
@@ -17,7 +18,7 @@ const Settings = () => {
 const challenges = [
   {
     _id: 1,
-    video: "cda641c5-b707-4511-bbf0-7801e9e2177f.mp4",
+    video: "cf6bec6b-fd03-492f-a8ec-ae3c132e9063.mp4",
     gif: "662de7eb-7ec8-41a9-b58d-b657b6fec985.gif",
     numOfLikes: "100K",
     component: <Text>fdfdff</Text>,

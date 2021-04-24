@@ -29,7 +29,8 @@ export const GenericComponent: React.FC<Props> = ({ items, horizontal, customSty
   const streaminServerVideosUrl = `${process.env.VIDEO_SERVER_ENDPOINT}/video`;
 
   const showVideo = (videoURL) => {
-    navigation.navigate("UsersProfile", { videoURL: `${streaminServerVideosUrl}/${videoURL}` });
+    // navigation.navigate("MainNavigator", "UsersProfile", { videoURL: `${streaminServerVideosUrl}/${videoURL}` });
+    //navigation.dangerouslyGetParent().navigate("UsersProfile", { videoURL: `${streaminServerVideosUrl}/${videoURL}` });
   };
 
   const renderItem = (item: Item) => {
