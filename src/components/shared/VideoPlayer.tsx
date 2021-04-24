@@ -3,8 +3,9 @@ import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { Video } from "expo-av";
 import * as FileSystem from "expo-file-system";
 import React, { memo, ReactNode, useEffect, useRef, useState } from "react";
-import { Platform, StyleProp, StyleSheet, TouchableWithoutFeedback, View, ViewStyle } from "react-native";
+import { Dimensions, Platform, StyleProp, StyleSheet, TouchableWithoutFeedback, View, ViewStyle } from "react-native";
 import shorthash from "shorthash";
+import { loadVideo } from "../../utils/cache";
 import { Colors } from "./styles/variables";
 
 interface VideoProps {
@@ -47,37 +48,42 @@ export const Player: React.FC<VideoProps> = memo(
     const ref = useRef(null);
     const [videoURI, setVideoURI] = useState<string>();
     const navigation = useNavigation();
+    // const [isBlurred, setIsBlurred] = useState(false);
+    // let isBlurred = false;
+    const isBlurred = useRef<boolean>(false);
     // const [isLoading, setIsLoading] = useState(false);
     // const [isVisible, setIsVisible] = useState(false);
     const pauseVideoByTap = async () => {
-      setIsPaused(true);
+      !isPaused && setIsPaused(true);
       await ref.current?.pauseAsync();
     };
 
     const resumeVideoByTap = async () => {
-      setIsPaused(false);
+      isPaused && setIsPaused(false);
       await ref.current?.playAsync();
     };
 
-    const loadURI = async () => {
-      if (uri.startsWith("file")) {
-        return setVideoURI(uri);
-      }
-      const path = `${Platform.OS === "ios" ? FileSystem.documentDirectory : FileSystem.cacheDirectory}${
-        Platform.OS === "ios" ? uri.split("/")[3] : shorthash.unique(uri)
-      }`;
-      const image = await FileSystem.getInfoAsync(path);
-      if (image.exists) {
-        console.log("read image from cache");
-        console.log("uri exists is  " + image.uri);
-        setVideoURI(image.uri);
-      } else {
-        console.log("downloading image to cache");
-        const newImage = await FileSystem.downloadAsync(uri, path);
-        console.log("cache url = ", newImage.uri);
-        setVideoURI(newImage.uri);
-      }
-    };
+    // const loadURI = async () => {
+    //   console.log("WRD", uri);
+
+    //   if (uri.startsWith("file")) {
+    //     return setVideoURI(uri);
+    //   }
+    //   const path = `${Platform.OS === "ios" ? FileSystem.documentDirectory : FileSystem.cacheDirectory}${
+    //     Platform.OS === "ios" ? uri.split("/")[3] : shorthash.unique(uri)
+    //   }`;
+    //   const image = await FileSystem.getInfoAsync(path);
+    //   if (image.exists) {
+    //     console.log("read image from cache");
+    //     console.log("uri exists is  " + image.uri);
+    //     setVideoURI(image.uri);
+    //   } else {
+    //     console.log("downloading image to cache");
+    //     const newImage = await FileSystem.downloadAsync(uri, path);
+    //     console.log("cache url = ", newImage.uri);
+    //     setVideoURI(newImage.uri);
+    //   }
+    // };
 
     useEffect(() => {
       return () => navigation.removeListener("blur", null);
@@ -88,21 +94,19 @@ export const Player: React.FC<VideoProps> = memo(
         console.log("render", renderedInList);
         navigation.addListener("blur", async (e) => {
           await ref.current?.pauseAsync();
+          isBlurred.current = true;
+          console.log("blured");
         });
-
-        (async function () {
-          await loadURI();
-
-          (videoInViewPort || !renderedInList) && (await ref.current?.playAsync());
-        })(); // the video is not in flat list
       }, [])
     );
 
     useEffect(() => {
       (async function () {
         if (videoInViewPort) {
-          await ref.current?.replayAsync();
-          setIsPaused(false);
+          console.log("blured?", isBlurred.current);
+          isBlurred.current ? await ref.current?.playAsync() : await ref.current?.replayAsync();
+          isBlurred.current = false;
+          isPaused && setIsPaused(false);
         } else if (videoInViewPort !== undefined) {
           await ref.current?.pauseAsync();
         }
@@ -123,16 +127,15 @@ export const Player: React.FC<VideoProps> = memo(
             {
               <Video
                 onLoadStart={() => console.log("start loading", uri)}
+                onReadyForDisplay={() => console.log("ready!")}
                 onLoad={(status) => {
-                  console.log("loaded ? ? ", status.isLoaded);
-
                   onVideoLoad && onVideoLoad();
                 }}
                 ref={ref}
                 style={style || styles.defaultVideoStyle}
                 useNativeControls={!!controlsShown}
                 source={{
-                  uri: videoURI,
+                  uri,
                 }}
                 resizeMode={resizeMode}
                 shouldPlay={videoInViewPort === undefined ? true : videoInViewPort}

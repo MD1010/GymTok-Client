@@ -19,18 +19,12 @@ export const PostReplies: React.FC<PostRepliesProps> = ({}) => {
   const [challengeReplies, setChallengeReplies] = useState<any[]>([]);
   const [streaminServerUrl, setStreaminServerUrl] = useState<string>("");
   const [post, setPost] = useState<IPost>();
-  const [
-    isLoadingChallengeVideo,
-    setIsLoadingChallengeVideo,
-  ] = useState<boolean>(true);
+  const [isLoadingChallengeVideo, setIsLoadingChallengeVideo] = useState<boolean>(true);
   const [isVideoInViewPort, setIsVideoInViewPort] = useState(false);
 
   const getChallengeReplies = async () => {
     const challengesEndpoint = `${process.env.BASE_API_ENPOINT}/challenges/${post._id}/replies`;
-    const { res, error } = await fetchAPI(
-      RequestMethod.GET,
-      challengesEndpoint
-    );
+    const { res, error } = await fetchAPI(RequestMethod.GET, challengesEndpoint);
     res &&
       setChallengeReplies(
         res.map((reply, index) => {
@@ -64,9 +58,7 @@ export const PostReplies: React.FC<PostRepliesProps> = ({}) => {
   useEffect(() => {
     if (post) {
       getChallengeReplies();
-      setStreaminServerUrl(
-        `${process.env.VIDEO_SERVER_ENDPOINT}/${post.video}`
-      );
+      setStreaminServerUrl(`${process.env.VIDEO_SERVER_ENDPOINT}/${post.video}`);
     }
   }, [post]);
 

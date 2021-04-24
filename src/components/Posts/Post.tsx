@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { IPost } from "../../interfaces/Post";
 import { authSelector } from "../../store/auth/authSlice";
 import { updateUserLikePost } from "../../store/posts/actions";
+import { STREAMING_SERVER_VIDEO_ENDPOINT } from "../../utils/consts";
 import { fetchAPI, RequestMethod } from "../../utils/fetchAPI";
 import { Colors } from "../shared/styles/variables";
 import { Player } from "../shared/VideoPlayer";
@@ -83,12 +84,13 @@ const LikesComments: React.FC<IUIContainer> = ({
 };
 
 export const Post: React.FC<PostProps> = memo(({ post, isVisible, containerStyle }) => {
-  const { video: videoURL, createdBy, likes, replies } = post;
+  const { video: videoId, createdBy, likes, replies } = post;
   const { loggedUser } = useSelector(authSelector);
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const [isUserLikePost, setÌsUserLikePost] = useState<boolean>(false);
-  const streaminServerUrl = `${process.env.VIDEO_SERVER_ENDPOINT}/video/${videoURL}`;
+  // const streaminServerUrl = `${process.env.VIDEO_SERVER_ENDPOINT}/video/${videoURL}`;
+  const videoURL = `${STREAMING_SERVER_VIDEO_ENDPOINT}/${videoId}`;
 
   useEffect(() => {
     loggedUser && setÌsUserLikePost(post.likes.includes(loggedUser?._id));
@@ -144,13 +146,7 @@ export const Post: React.FC<PostProps> = memo(({ post, isVisible, containerStyle
 
   return (
     <View style={[styles.container, containerStyle]}>
-      <Player
-        style={styles.video}
-        uri={streaminServerUrl}
-        videoInViewPort={isVisible}
-        resizeMode="cover"
-        renderedInList
-      />
+      <Player style={styles.video} uri={videoURL} videoInViewPort={isVisible} resizeMode="cover" renderedInList />
       <View style={styles.infoContainer}>
         <Heading createdBy={createdBy.username} onCameraPress={() => onCameraPress()} />
 

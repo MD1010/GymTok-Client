@@ -2,6 +2,7 @@ import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import isEmpty from "lodash/isEmpty";
 import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Dimensions, FlatList, StatusBar, Text, View, ViewabilityConfig, RefreshControl } from "react-native";
+import { Button } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
 import { IPost } from "../../interfaces/Post";
 import { authSelector } from "../../store/auth/authSlice";
@@ -10,6 +11,7 @@ import { postsSelector } from "../../store/posts/postsSlice";
 import { Loader } from "../shared";
 import { Colors, UIConsts } from "../shared/styles/variables";
 import { Post } from "./Post";
+import * as FileSystem from "expo-file-system";
 
 interface PostsListProps {
   /**
@@ -119,7 +121,7 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentVideoI
   );
   const config = useRef<ViewabilityConfig>({
     itemVisiblePercentThreshold: 90,
-    minimumViewTime: 350,
+    // minimumViewTime: 150,
   });
 
   const itemLayout = useCallback(
@@ -161,9 +163,11 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentVideoI
       <View style={{ height: viewHeight, backgroundColor: Colors.black }}>
         <FlatList
           refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-          initialNumToRender={3}
-          maxToRenderPerBatch={5}
-          windowSize={3}
+          initialNumToRender={5}
+          maxToRenderPerBatch={7}
+          windowSize={7}
+          // removeClippedSubviews
+          updateCellsBatchingPeriod={5}
           data={posts}
           // snapToInterval={currentlyPlaying === posts.length - 1 ? null : viewHeight}
           pagingEnabled
@@ -200,6 +204,17 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentVideoI
           }}
         ></FlatList>
       </View>
+      <Button
+        color={"red"}
+        style={{ position: "absolute", top: 0, left: 200 }}
+        onPress={async () => {
+          for (const file of await FileSystem.readDirectoryAsync(FileSystem.cacheDirectory)) {
+            FileSystem.deleteAsync(FileSystem.cacheDirectory + file);
+          }
+        }}
+      >
+        Clear Cache
+      </Button>
     </>
   );
 });
