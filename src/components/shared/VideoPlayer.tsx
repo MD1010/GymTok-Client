@@ -48,18 +48,14 @@ export const Player: React.FC<VideoProps> = memo(
     const ref = useRef(null);
     const [videoURI, setVideoURI] = useState<string>();
     const navigation = useNavigation();
-    // const [isBlurred, setIsBlurred] = useState(false);
-    // let isBlurred = false;
     const isBlurred = useRef<boolean>(false);
-    // const [isLoading, setIsLoading] = useState(false);
-    // const [isVisible, setIsVisible] = useState(false);
     const pauseVideoByTap = async () => {
-      !isBlurred && setIsPaused(true);
+      setIsPaused(true);
       await ref.current?.pauseAsync();
     };
 
     const resumeVideoByTap = async () => {
-      !isBlurred && setIsPaused(false);
+      setIsPaused(false);
       await ref.current?.playAsync();
     };
 
@@ -95,7 +91,6 @@ export const Player: React.FC<VideoProps> = memo(
         navigation.addListener("blur", async (e) => {
           await ref.current?.pauseAsync();
           isBlurred.current = true;
-          console.log("blured");
         });
       }, [])
     );
@@ -103,7 +98,6 @@ export const Player: React.FC<VideoProps> = memo(
     useEffect(() => {
       (async function () {
         if (videoInViewPort) {
-          console.log("blured?", isBlurred.current);
           isBlurred.current ? await ref.current?.playAsync() : await ref.current?.replayAsync();
           isBlurred.current = false;
           isPaused && setIsPaused(false);

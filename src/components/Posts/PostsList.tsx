@@ -204,17 +204,6 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentVideoI
           }}
         ></FlatList>
       </View>
-      <Button
-        color={"red"}
-        style={{ position: "absolute", top: 0, left: 200 }}
-        onPress={async () => {
-          for (const file of await FileSystem.readDirectoryAsync(FileSystem.cacheDirectory)) {
-            FileSystem.deleteAsync(FileSystem.cacheDirectory + file);
-          }
-        }}
-      >
-        Clear Cache
-      </Button>
     </>
   );
 });
