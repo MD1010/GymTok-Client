@@ -45,7 +45,6 @@ export const getUserPosts = (): AppThunk => {
 
 export const getMostRecommended = (): AppThunk => {
   return async (dispatch: AppDispatch, getState: () => RootState) => {
-
     const loggedUser = getState()?.auth?.loggedUser?.username;
     const endpoint = `${process.env.BASE_API_ENPOINT}/users/${loggedUser}/recommendedChallenges`;
 
@@ -71,7 +70,7 @@ export const getLatestPosts = (): AppThunk => {
     const randomPostsEndpoint = `${process.env.BASE_API_ENPOINT}/challenges`;
     const endpoint = loggedUser ? recommendedEndpoint : randomPostsEndpoint;
     const currentPosts = getState().posts.latestFetchedPosts;
-    console.log("endpointttttttttttrt " + endpoint);
+    console.log("enddsdsdsdttttrt " + endpoint);
     const { res, error } = await fetchAPI<IPost[]>(RequestMethod.GET, endpoint, null, {
       size: itemsToFetch,
       page: Math.floor(currentPosts.length / itemsToFetch),
