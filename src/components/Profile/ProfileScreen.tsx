@@ -1,96 +1,15 @@
-import React, { useEffect, useState } from "react";
-import { Item } from "./interfaces";
-import { GenericComponent } from "./genericComponent";
-import { Button, Image, View, Text } from "react-native";
-import { Colors } from "../shared";
 // import { Icon } from "expo";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { NavigationContainer } from "@react-navigation/native";
+import React, { useEffect, useState } from "react";
+import { Image, Text, View } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 import { useSelector } from "react-redux";
 import { authSelector } from "../../store/auth/authSlice";
 import { fetchAPI, RequestMethod } from "../../utils/fetchAPI";
+import { Colors } from "../shared";
+import { GenericComponent } from "./genericComponent";
 
-const Home = () => {
-  return <Text>Home</Text>;
-};
-const Settings = () => {
-  return <Text>Settings</Text>;
-};
-const challenges = [
-  {
-    _id: 1,
-    video: "cda641c5-b707-4511-bbf0-7801e9e2177f.mp4",
-    gif: "662de7eb-7ec8-41a9-b58d-b657b6fec985.gif",
-    numOfLikes: "100K",
-    component: <Text>fdfdff</Text>,
-  },
-  {
-    _id: 2,
-    video: "cda641c5-b707-4511-bbf0-7801e9e2177f.mp4",
-    gif: "662de7eb-7ec8-41a9-b58d-b657b6fec985.gif",
-    numOfLikes: "100K",
-    component: <Text>fdfdff</Text>,
-  },
-  {
-    _id: 3,
-    video: "cda641c5-b707-4511-bbf0-7801e9e2177f.mp4",
-    gif: "662de7eb-7ec8-41a9-b58d-b657b6fec985.gif",
-    numOfLikes: "100K",
-    component: <Text>Flying #tennis{"\n"} #tennisgirl</Text>,
-  },
-  {
-    _id: 4,
-    video: "cda641c5-b707-4511-bbf0-7801e9e2177f.mp4",
-    gif: "662de7eb-7ec8-41a9-b58d-b657b6fec985.gif",
-    numOfLikes: "100K",
-    component: <Text>fdfdff</Text>,
-  },
-  {
-    _id: 5,
-    video: "cda641c5-b707-4511-bbf0-7801e9e2177f.mp4",
-    gif: "662de7eb-7ec8-41a9-b58d-b657b6fec985.gif",
-    numOfLikes: "100K",
-    component: <Text>fdfdff</Text>,
-  },
-];
-const replies = [
-  {
-    _id: 1,
-    video: "cda641c5-b707-4511-bbf0-7801e9e2177f.mp4",
-    gif: "662de7eb-7ec8-41a9-b58d-b657b6fec985.gif",
-    numOfLikes: "100K",
-    component: <Text>fdfdff</Text>,
-  },
-  {
-    _id: 2,
-    video: "cda641c5-b707-4511-bbf0-7801e9e2177f.mp4",
-    gif: "662de7eb-7ec8-41a9-b58d-b657b6fec985.gif",
-    numOfLikes: "100K",
-    component: <Text>fdfdff</Text>,
-  },
-  {
-    _id: 3,
-    video: "cda641c5-b707-4511-bbf0-7801e9e2177f.mp4",
-    gif: "662de7eb-7ec8-41a9-b58d-b657b6fec985.gif",
-    numOfLikes: "100K",
-    component: <Text>Flying #tennis{"\n"} #tennisgirl</Text>,
-  },
-  {
-    _id: 4,
-    video: "cda641c5-b707-4511-bbf0-7801e9e2177f.mp4",
-    gif: "662de7eb-7ec8-41a9-b58d-b657b6fec985.gif",
-    numOfLikes: "100K",
-    component: <Text>fdfdff</Text>,
-  },
-  {
-    _id: 5,
-    video: "cda641c5-b707-4511-bbf0-7801e9e2177f.mp4",
-    gif: "662de7eb-7ec8-41a9-b58d-b657b6fec985.gif",
-    numOfLikes: "100K",
-    component: <Text>fdfdff</Text>,
-  },
-];
 function ProfileTabs() {
   const Tabs = createMaterialTopTabNavigator();
   const [challenges, setChallenges] = useState([]);
@@ -99,7 +18,7 @@ function ProfileTabs() {
 
   const getEnteties = async (postType: String) => {
     const entetieEndpoint = `${process.env.BASE_API_ENPOINT}/users/${loggedUser._id}/${postType}`;
-    console.log(entetieEndpoint);
+
     const { res, error } = await fetchAPI(RequestMethod.GET, entetieEndpoint);
 
     const setEntetie = postType == "challenges" ? setChallenges : setReplies;
