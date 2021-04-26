@@ -70,7 +70,6 @@ export const getLatestPosts = (): AppThunk => {
     const randomPostsEndpoint = `${process.env.BASE_API_ENPOINT}/posts`;
     const endpoint = loggedUser ? recommendedEndpoint : randomPostsEndpoint;
     const currentPosts = getState().posts.latestFetchedPosts;
-    console.log("enddsdsdsdttttrt " + endpoint);
     const { res, error } = await fetchAPI<IPost[]>(RequestMethod.GET, endpoint, null, {
       size: itemsToFetch,
       page: Math.floor(currentPosts.length / itemsToFetch),
