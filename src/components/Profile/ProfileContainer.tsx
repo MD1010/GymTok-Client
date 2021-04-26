@@ -2,7 +2,15 @@ import React, { useEffect, useState } from "react";
 import { IPost } from "../../interfaces/Post";
 import { fetchAPI, RequestMethod } from "../../utils/fetchAPI";
 import { ProfileScreen } from "./ProfileScreen";
-import { SafeAreaView, Text, StyleSheet, View, FlatList, Dimensions, ScrollView } from "react-native";
+import {
+  SafeAreaView,
+  Text,
+  StyleSheet,
+  View,
+  FlatList,
+  Dimensions,
+  ScrollView,
+} from "react-native";
 
 interface ProfileContainerProps {}
 
@@ -163,5 +171,5 @@ export const ProfileContainer: React.FC<ProfileContainerProps> = ({}) => {
   //   useEffect(() => {
   //     fetchChallenges();
   //   }, []);
-  return <ProfileScreen items={challenges} />;
+  return <ProfileScreen />;
 };

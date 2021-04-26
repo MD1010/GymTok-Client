@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Item } from "./interfaces";
 import { GenericComponent } from "./genericComponent";
 import { Button, Image, View, Text } from "react-native";
@@ -7,6 +7,9 @@ import { Colors } from "../shared";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { NavigationContainer } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/Ionicons";
+import { useSelector } from "react-redux";
+import { authSelector } from "../../store/auth/authSlice";
+import { fetchAPI, RequestMethod } from "../../utils/fetchAPI";
 
 const Home = () => {
   return <Text>Home</Text>;
@@ -90,7 +93,31 @@ const replies = [
 ];
 function ProfileTabs() {
   const Tabs = createMaterialTopTabNavigator();
+  const [challenges, setChallenges] = useState([]);
+  const [replies, setReplies] = useState([]);
+  const { loggedUser } = useSelector(authSelector);
 
+  const getEnteties = async (postType: String) => {
+    const entetieEndpoint = `${process.env.BASE_API_ENPOINT}/users/${loggedUser._id}/${postType}`;
+    console.log(entetieEndpoint);
+    const { res, error } = await fetchAPI(RequestMethod.GET, entetieEndpoint);
+
+    const setEntetie = postType == "challenges" ? setChallenges : setReplies;
+    res &&
+      setEntetie(
+        res.map((entetie, index) => {
+          return {
+            _id: index,
+            url: entetie.video,
+            gif: entetie.gif,
+          };
+        })
+      );
+  };
+  useEffect(() => {
+    getEnteties("challenges");
+    getEnteties("replies");
+  }, []);
   return (
     <NavigationContainer independent={true}>
       <Tabs.Navigator
@@ -106,7 +133,13 @@ function ProfileTabs() {
             }
 
             // You can return any component that you like here!
-            return <Icon name={iconName} size={25} color={focused ? Colors.white : Colors.darkGrey} />;
+            return (
+              <Icon
+                name={iconName}
+                size={25}
+                color={focused ? Colors.white : Colors.darkGrey}
+              />
+            );
           },
         })}
         tabBarOptions={{
@@ -132,9 +165,9 @@ function ProfileTabs() {
     </NavigationContainer>
   );
 }
-interface ProfileProps {
-  items: Item[];
-}
+// interface ProfileProps {
+//   items: Item[];
+// }
 const ProfileHeader: React.FC = () => {
   return (
     <View style={{ paddingTop: 40, paddingLeft: 5 }}>
@@ -163,7 +196,9 @@ const ProfileHeader: React.FC = () => {
               >
                 20
               </Text>
-              <Text style={{ fontSize: 10, color: Colors.lightGrey }}>Challenges</Text>
+              <Text style={{ fontSize: 10, color: Colors.lightGrey }}>
+                Challenges
+              </Text>
             </View>
             <View style={{ alignItems: "center", marginLeft: 45 }}>
               <Text
@@ -175,7 +210,9 @@ const ProfileHeader: React.FC = () => {
               >
                 35
               </Text>
-              <Text style={{ fontSize: 10, color: Colors.lightGrey }}>Replies</Text>
+              <Text style={{ fontSize: 10, color: Colors.lightGrey }}>
+                Replies
+              </Text>
             </View>
             <View style={{ alignItems: "center", marginLeft: 45 }}>
               <Text
@@ -187,21 +224,27 @@ const ProfileHeader: React.FC = () => {
               >
                 217
               </Text>
-              <Text style={{ fontSize: 10, color: Colors.lightGrey }}>Likes</Text>
+              <Text style={{ fontSize: 10, color: Colors.lightGrey }}>
+                Likes
+              </Text>
             </View>
           </View>
         </View>
       </View>
       <View style={{ margin: 10, marginTop: 15 }}>
-        <Text style={{ fontWeight: "bold", color: Colors.white }}>Moris Angus</Text>
-        <Text style={{ color: Colors.white }}>Basketball player | Runner | Swimmer </Text>
+        <Text style={{ fontWeight: "bold", color: Colors.white }}>
+          Moris Angus
+        </Text>
+        <Text style={{ color: Colors.white }}>
+          Basketball player | Runner | Swimmer{" "}
+        </Text>
         <Text style={{ color: Colors.white }}>www.mysite.com</Text>
       </View>
     </View>
   );
 };
 
-export const ProfileScreen: React.FC<ProfileProps> = ({ items }) => {
+export const ProfileScreen: React.FC = () => {
   // return <GenericComponent items={items} />;
 
   return (
