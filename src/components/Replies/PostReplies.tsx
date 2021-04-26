@@ -13,7 +13,7 @@ interface PostRepliesProps {
 }
 
 type StackParamsList = {
-  params: { newReply: IReply };
+  params: { newReply: IPost };
 };
 export const PostReplies: React.FC<PostRepliesProps> = ({ }) => {
   const navigation = useNavigation();
@@ -28,7 +28,7 @@ export const PostReplies: React.FC<PostRepliesProps> = ({ }) => {
   const [isVideoInViewPort, setIsVideoInViewPort] = useState(false);
 
   const getChallengeReplies = async () => {
-    const challengesEndpoint = `${process.env.BASE_API_ENPOINT}/challenges/${post._id}/replies`;
+    const challengesEndpoint = `${process.env.BASE_API_ENPOINT}/posts/${post._id}/replies`;
     const { res, error } = await fetchAPI(
       RequestMethod.GET,
       challengesEndpoint

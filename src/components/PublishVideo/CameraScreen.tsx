@@ -19,7 +19,7 @@ import { Colors } from "../shared/styles/variables";
 import { StopWatchContainer } from "./StopWatch";
 
 type StackParamsList = {
-  params: { videoURL: string; challengeId?: string; isReply?: boolean };
+  params: { videoURL: string; postId?: string; isReply?: boolean };
 };
 
 export const CameraScreen: React.FC = () => {
@@ -92,7 +92,7 @@ export const CameraScreen: React.FC = () => {
         Platform.OS === "ios"
           ? await Camera.requestPermissionsAsync()
           : (await Permissions.askAsync(Permissions.AUDIO_RECORDING)) &&
-            (await Permissions.askAsync(Permissions.CAMERA));
+          (await Permissions.askAsync(Permissions.CAMERA));
       await ImagePicker.getMediaLibraryPermissionsAsync(true);
       setPermissionGranted(audioRecording.granted);
     })();
@@ -123,7 +123,7 @@ export const CameraScreen: React.FC = () => {
       const navigationParams = { videoUri: selectedVideo.uri };
       if (route.params && route.params.isReply) {
         navigationParams["isReply"] = route.params.isReply;
-        navigationParams["challengeId"] = route.params.challengeId;
+        navigationParams["challengeId"] = route.params.postId;
       }
       navigation.navigate("Publish", navigationParams);
     }
@@ -138,23 +138,13 @@ export const CameraScreen: React.FC = () => {
         const navigationParams = { videoURL: video.uri };
         if (route.params && route.params.isReply) {
           navigationParams["isReply"] = route.params.isReply;
-          navigationParams["challengeId"] = route.params.challengeId;
+          navigationParams["postId"] = route.params.postId;
         }
         navigation.navigate("ApproveVideo", navigationParams);
       } catch (e) {
         console.error(e);
       }
     }
-  };
-
-  const getNavigateParams = (video: any) => {
-    const navigationParams = { videoUri: video.uri };
-    if (route.params.isReply) {
-      navigationParams["isReply"] = route.params.isReply;
-      navigationParams["challengeId"] = route.params.challengeId;
-    }
-
-    return navigationParams;
   };
 
   const stopRecord = () => {
