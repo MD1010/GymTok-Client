@@ -8,7 +8,6 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch, useSelector } from "react-redux";
 import { IUser } from "../../interfaces";
 import { authSelector } from "../../store/auth/authSlice";
-import { addReplyToChallenge } from "../../store/replies/actions";
 import { fetchAPI, RequestMethod } from "../../utils/fetchAPI";
 import {
   Colors,
@@ -24,14 +23,13 @@ type StackParamsList = {
     taggedPeople: IUser[];
     isReply: boolean;
     hashtags: string[];
-    challengeId: string;
+    postId: string;
   };
 };
 
 export const PublishScreen: React.FC = () => {
   const route = useRoute<RouteProp<StackParamsList, "params">>();
   const navigation = useNavigation();
-  const dispatch = useDispatch();
   const isReply = route.params.isReply;
   const taggedPeople = route?.params?.taggedPeople;
   const hashtags = route?.params?.hashtags;
@@ -99,19 +97,19 @@ export const PublishScreen: React.FC = () => {
     let formData = new FormData();
 
     formData.append("description", captionInput.current);
-    formData.append("userId", loggedUser._id);
+    formData.append("createdBy", loggedUser._id);
     formData.append("video", {
       name: "upload",
       uri: route.params.videoUri,
       type: "video/mp4",
     } as any);
-    formData.append("selectedFriends", JSON.stringify(taggedPeople));
+    formData.append("taggedUsers", JSON.stringify(taggedPeople.map(user => user._id)));
     formData.append("hashtags", JSON.stringify(hashtags));
 
     setIsLoading(true);
     const { res, error } = await fetchAPI(
       RequestMethod.POST,
-      `${process.env.BASE_API_ENPOINT}/challenges/upload`,
+      `${process.env.BASE_API_ENPOINT}/posts/upload`,
       formData
     );
 
@@ -127,10 +125,8 @@ export const PublishScreen: React.FC = () => {
   const replyChallenge = async () => {
     setIsLoading(true);
     let formData = new FormData();
-
     formData.append("description", captionInput.current);
-    formData.append("replierId", loggedUser._id);
-    formData.append("challengeId", route.params.challengeId);
+    formData.append("createdBy", loggedUser._id);
     formData.append("video", {
       name: "upload",
       uri: route.params.videoUri,
@@ -139,7 +135,7 @@ export const PublishScreen: React.FC = () => {
 
     const { res, error } = await fetchAPI(
       RequestMethod.POST,
-      `${process.env.BASE_API_ENPOINT}/replies/upload`,
+      `${process.env.BASE_API_ENPOINT}/posts/${route.params.postId}/reply/upload`,
       formData
     );
 

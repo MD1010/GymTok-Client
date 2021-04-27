@@ -2,7 +2,7 @@ import { useFocusEffect, useNavigation } from "@react-navigation/core";
 import { RouteProp, useRoute } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
-import { IPost, IReply } from "../../interfaces";
+import { IPost } from "../../interfaces";
 import { fetchAPI, RequestMethod } from "../../utils/fetchAPI";
 import { GenericComponent } from "../Profile/genericComponent";
 import { Loader } from "../shared";
@@ -13,7 +13,7 @@ interface PostRepliesProps {
 }
 
 type StackParamsList = {
-  params: { newReply: IReply };
+  params: { newReply: IPost };
 };
 export const PostReplies: React.FC<PostRepliesProps> = ({ }) => {
   const navigation = useNavigation();
@@ -28,7 +28,7 @@ export const PostReplies: React.FC<PostRepliesProps> = ({ }) => {
   const [isVideoInViewPort, setIsVideoInViewPort] = useState(false);
 
   const getChallengeReplies = async () => {
-    const challengesEndpoint = `${process.env.BASE_API_ENPOINT}/challenges/${post._id}/replies`;
+    const challengesEndpoint = `${process.env.BASE_API_ENPOINT}/posts/${post._id}/replies`;
     const { res, error } = await fetchAPI(
       RequestMethod.GET,
       challengesEndpoint
@@ -80,7 +80,7 @@ export const PostReplies: React.FC<PostRepliesProps> = ({ }) => {
     if (post) {
       getChallengeReplies();
       setStreaminServerUrl(
-        `${process.env.VIDEO_SERVER_ENDPOINT}/${post.video}`
+        `${process.env.VIDEO_SERVER_ENDPOINT}/${post.videoURI}`
       );
     }
   }, [post]);
