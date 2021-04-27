@@ -6,7 +6,7 @@ import { itemsToFetch, postsActions } from "./postsSlice";
 
 export const getMorePosts = (): AppThunk => {
   return async (dispatch: AppDispatch, getState: () => RootState) => {
-    const endpoint = `${process.env.BASE_API_ENPOINT}/challenges`;
+    const endpoint = `${process.env.BASE_API_ENPOINT}/posts`;
     const currentPosts = getState()?.posts?.latestFetchedPosts;
 
     const { res, error } = await fetchAPI<IPost[]>(
@@ -31,7 +31,7 @@ export const getUserPosts = (): AppThunk => {
   return async (dispatch: AppDispatch, getState: () => RootState) => {
     // todo https://www.goodday.work/t/RRaDG3
     // todo send param to this func if you want replies or real posts and send the relevant query params
-    const endpoint = `${process.env.BASE_API_ENPOINT}/challenges`;
+    const endpoint = `${process.env.BASE_API_ENPOINT}/posts`;
     const loggedUser = getState()?.auth?.loggedUser._id;
 
     const { res, error } = await fetchAPI<IPost[]>(
@@ -58,8 +58,7 @@ export const getUserPosts = (): AppThunk => {
 export const getMostRecommended = (): AppThunk => {
   return async (dispatch: AppDispatch, getState: () => RootState) => {
     const loggedUser = getState()?.auth?.loggedUser?.username;
-
-    const endpoint = `${process.env.BASE_API_ENPOINT}/users/${loggedUser}/recommendedChallenges`;
+    const endpoint = `${process.env.BASE_API_ENPOINT}/users/${loggedUser}/recommendedPosts`;
     console.log(endpoint);
     const currentPosts = getState().posts.latestFetchedPosts;
     const { res, error } = await fetchAPI<IPost[]>(
@@ -84,8 +83,8 @@ export const getLatestPosts = (): AppThunk => {
   return async (dispatch: AppDispatch, getState: () => RootState) => {
     const loggedUser = getState()?.auth?.loggedUser?.username;
 
-    const recommendedEndpoint = `${process.env.BASE_API_ENPOINT}/users/${loggedUser}/recommendedChallenges`;
-    const randomPostsEndpoint = `${process.env.BASE_API_ENPOINT}/challenges`;
+    const recommendedEndpoint = `${process.env.BASE_API_ENPOINT}/users/${loggedUser}/recommendedPosts`;
+    const randomPostsEndpoint = `${process.env.BASE_API_ENPOINT}/posts`;
     const endpoint = loggedUser ? recommendedEndpoint : randomPostsEndpoint;
     const currentPosts = getState().posts.latestFetchedPosts;
     const { res, error } = await fetchAPI<IPost[]>(
