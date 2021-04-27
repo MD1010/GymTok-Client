@@ -18,6 +18,7 @@ function ProfileTabs() {
 
   const getEnteties = async (postType: String) => {
     const entetieEndpoint = `${process.env.BASE_API_ENPOINT}/users/${loggedUser._id}/${postType}`;
+    console.log(entetieEndpoint);
 
     const { res, error } = await fetchAPI(RequestMethod.GET, entetieEndpoint);
 
