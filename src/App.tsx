@@ -33,11 +33,11 @@ function cacheFonts(fonts) {
 
 
 function App() {
+  const loggedUser = store.getState().auth.loggedUser;
+
   const [appIsReady, setAppIsReady] = useState(false);
 
   const getPosts = async () => {
-    let loggedUser = store.getState().auth.loggedUser//= useSelector(authSelector);
-    console.log(loggedUser);
     if (loggedUser) {
       await store.dispatch(getMostRecommended()) ;
     } else {
@@ -45,12 +45,14 @@ function App() {
       await store.dispatch(getMorePosts());
     }
   };
-  // useEffect(() => {
-  //   // check if user was loaded - undefinded means the store has not been updated yet.
-  //   if (loggedUser !== undefined) {
-  //     getPosts();
-  //   }
-  // }, [loggedUser]);
+
+  useEffect(() => {
+    // check if user was loaded - undefinded means the store has not been updated yet.
+    if (loggedUser !== undefined) {
+      console.log("call getPosts again")
+      getPosts();
+    }
+  }, [loggedUser]);
 
 
   if (!appIsReady) {
