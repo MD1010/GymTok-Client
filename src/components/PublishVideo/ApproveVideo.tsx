@@ -10,7 +10,7 @@ import { styles } from "../Posts/Posts.style";
 import { RouteProp, useRoute } from "@react-navigation/native";
 
 type StackParamsList = {
-  params: { videoURL: string; challengeId: string; isReply: boolean };
+  params: { videoURL: string; postId: string; isReply: boolean };
 };
 
 interface IUIContainer {
@@ -43,7 +43,6 @@ export const ApproveVideo: React.FC = () => {
   const route = useRoute<RouteProp<StackParamsList, "params">>();
   const videoURL = route.params.videoURL;
 
-  console.log("in apprive", videoURL);
   const goBack = () => {
     navigation.goBack();
   };
@@ -52,7 +51,7 @@ export const ApproveVideo: React.FC = () => {
     const navigationParams = { videoUri: videoURL };
     if (route.params && route.params.isReply) {
       navigationParams["isReply"] = route.params.isReply;
-      navigationParams["challengeId"] = route.params.challengeId;
+      navigationParams["postId"] = route.params.postId;
     }
     navigation.navigate("Publish", navigationParams);
   };

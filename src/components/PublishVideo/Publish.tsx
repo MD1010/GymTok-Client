@@ -1,18 +1,30 @@
-import { Ionicons, Fontisto } from "@expo/vector-icons";
+import { Fontisto } from "@expo/vector-icons";
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import React, { useRef, useState } from "react";
-import { Dimensions, StatusBar, StyleSheet, Text, View } from "react-native";
+import { Dimensions, StyleSheet, Text, View } from "react-native";
 import { colors, Divider } from "react-native-elements";
-import { TextInput, TouchableOpacity } from "react-native-gesture-handler";
+import { TextInput } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { IUser } from "../../interfaces";
 import { authSelector } from "../../store/auth/authSlice";
 import { fetchAPI, RequestMethod } from "../../utils/fetchAPI";
-import { Player, DismissKeyboard, SubmitButton, Colors, TouchableHighlightButton, Loader } from "../shared";
+import {
+  Colors,
+  Loader,
+  Player,
+  SubmitButton,
+  TouchableHighlightButton,
+} from "../shared";
 
 type StackParamsList = {
-  params: { videoUri: string; taggedPeople: IUser[]; isReply: boolean; hashtags: string[]; challengeId: string };
+  params: {
+    videoUri: string;
+    taggedPeople: IUser[];
+    isReply: boolean;
+    hashtags: string[];
+    postId: string;
+  };
 };
 
 export const PublishScreen: React.FC = () => {
@@ -24,7 +36,7 @@ export const PublishScreen: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { loggedUser } = useSelector(authSelector);
   const captionInput = useRef<string>();
-  console.log("video", route.params?.videoUri);
+
   const Header = () => {
     const handleSetCaption = (text: string) => {
       setCaption(text);
@@ -56,7 +68,11 @@ export const PublishScreen: React.FC = () => {
             />
           </View>
         </View>
-        {!isReply && <Text style={styles.info}>Your friends will be notified when your challenge is uploaded.</Text>}
+        {!isReply && (
+          <Text style={styles.info}>
+            Your friends will be notified when your challenge is uploaded.
+          </Text>
+        )}
       </View>
     );
   };
@@ -81,35 +97,36 @@ export const PublishScreen: React.FC = () => {
     let formData = new FormData();
 
     formData.append("description", captionInput.current);
-    formData.append("userId", loggedUser._id);
+    formData.append("createdBy", loggedUser._id);
     formData.append("video", {
       name: "upload",
       uri: route.params.videoUri,
       type: "video/mp4",
     } as any);
-    formData.append("selectedFriends", JSON.stringify(taggedPeople));
+    formData.append("taggedUsers", JSON.stringify(taggedPeople.map(user => user._id)));
     formData.append("hashtags", JSON.stringify(hashtags));
 
     setIsLoading(true);
     const { res, error } = await fetchAPI(
       RequestMethod.POST,
-      `${process.env.BASE_API_ENPOINT}/challenges/upload`,
+      `${process.env.BASE_API_ENPOINT}/posts/upload`,
       formData
     );
 
     if (res) {
+      setIsLoading(false);
       navigation.navigate("Home");
-    } else if (error) alert(JSON.stringify(error));
-    setIsLoading(false);
+    } else if (error) {
+      setIsLoading(false);
+      alert(JSON.stringify(error));
+    }
   };
 
   const replyChallenge = async () => {
     setIsLoading(true);
     let formData = new FormData();
-
     formData.append("description", captionInput.current);
-    formData.append("replierId", loggedUser._id);
-    formData.append("challengeId", route.params.challengeId);
+    formData.append("createdBy", loggedUser._id);
     formData.append("video", {
       name: "upload",
       uri: route.params.videoUri,
@@ -118,14 +135,17 @@ export const PublishScreen: React.FC = () => {
 
     const { res, error } = await fetchAPI(
       RequestMethod.POST,
-      `${process.env.BASE_API_ENPOINT}/replies/upload`,
+      `${process.env.BASE_API_ENPOINT}/posts/${route.params.postId}/reply/upload`,
       formData
     );
 
     if (res) {
-      navigation.navigate("Home");
-    } else if (error) alert(JSON.stringify(error));
-    setIsLoading(false);
+      setIsLoading(false);
+      navigation.navigate("Home", { screen: "PostReplies", params: { newReply: res } });
+    } else if (error) {
+      setIsLoading(false);
+      alert(JSON.stringify(error));
+    }
   };
 
   const onSubmit = () => {
@@ -134,7 +154,9 @@ export const PublishScreen: React.FC = () => {
     } else {
       // challenge
       if (!loggedUser) {
-        return navigation.navigate("NotLoggedIn", { redirectScreen: "Publish" });
+        return navigation.navigate("NotLoggedIn", {
+          redirectScreen: "Publish",
+        });
       }
       publishChallenge();
     }
@@ -148,8 +170,12 @@ export const PublishScreen: React.FC = () => {
         optionText={"Tag People"}
         onSelect={() =>
           route.params?.taggedPeople?.length
-            ? navigation.navigate("TagPeople", { selectedUsers: route.params?.taggedPeople })
-            : navigation.navigate("SearchUser", { excludedUsersToSearch: route.params?.taggedPeople })
+            ? navigation.navigate("TagPeople", {
+              selectedUsers: route.params?.taggedPeople,
+            })
+            : navigation.navigate("SearchUser", {
+              excludedUsersToSearch: route.params?.taggedPeople,
+            })
         }
         icon={<Fontisto name="at" color={Colors.lightGrey2} size={14} />}
       />
@@ -159,7 +185,9 @@ export const PublishScreen: React.FC = () => {
         optionText={"Add Hashtags"}
         onSelect={() =>
           navigation.navigate("AddHashtag", {
-            selectedHashtags: route.params?.hashtags?.length ? route.params?.hashtags : [],
+            selectedHashtags: route.params?.hashtags?.length
+              ? route.params?.hashtags
+              : [],
           })
         }
         icon={<Fontisto name="hashtag" color={Colors.lightGrey2} size={14} />}
@@ -169,7 +197,12 @@ export const PublishScreen: React.FC = () => {
 
   const Footer = () => (
     <View style={{ flex: 1.5, alignItems: "center", justifyContent: "center" }}>
-      <SubmitButton buttonText={"Post"} type="solid" backgroundColor={Colors.blue} onSubmit={onSubmit} />
+      <SubmitButton
+        buttonText={"Post"}
+        type="solid"
+        backgroundColor={Colors.blue}
+        onSubmit={onSubmit}
+      />
     </View>
   );
 

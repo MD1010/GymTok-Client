@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from "react";
 import { Animated, Text, View, StyleSheet, Button, Dimensions, FlatList } from "react-native";
 import * as Animatable from "react-native-animatable";
 import { Ionicons } from "@expo/vector-icons";
+import { Colors } from "../shared";
 
 interface Props {
   filteredDataSource: any[];
@@ -15,22 +16,13 @@ export const SearchResults: React.FC<Props> = ({ filteredDataSource, handleSelec
       <View style={styles.itemStyle}>
         <Text onPress={() => getItem(item)}>
           <View style={{ marginRight: 5 }}>
-            <Ionicons name="search-outline" color={"black"} size={25} />
+            <Ionicons name="search-outline" color={"white"} size={25} />
           </View>
           <View>
-            <Text>{item.title.toUpperCase()}</Text>
+            <Text style={{ color: Colors.white }}>{item.title.toUpperCase()}</Text>
           </View>
         </Text>
       </View>
-
-      // <Text style={styles.itemStyle} onPress={() => getItem(item)}>
-      //   {/* <Ionicons name="search-outline" color={"black"} size={15} />
-      //   <Text>{item.title.toUpperCase()}</Text> */}
-      //   <View style={{}}>
-      //     <Ionicons name="search-outline" color={"black"} size={25} />
-      //   </View>
-      //   <Text>{item.title.toUpperCase()}</Text>
-      // </Text>
     );
   };
 
@@ -49,7 +41,6 @@ export const SearchResults: React.FC<Props> = ({ filteredDataSource, handleSelec
 
   const getItem = (item) => {
     // Function for click on an item
-    // alert("Id : " + item.id + " Title : " + item.title);
     handleSelectItem(item.title);
   };
   return (
@@ -66,7 +57,7 @@ export const SearchResults: React.FC<Props> = ({ filteredDataSource, handleSelec
 
 const styles = StyleSheet.create({
   tagFriends: {
-    backgroundColor: "#F0F0F0",
+    backgroundColor: Colors.black,
     width: Dimensions.get("screen").width,
     height: Dimensions.get("screen").height,
   },
