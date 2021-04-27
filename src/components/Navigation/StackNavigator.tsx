@@ -13,12 +13,14 @@ import { BottomTabs } from "./BottomTabs";
 import { config } from "./stackNavigationConfig";
 import { ApproveVideo } from "../PublishVideo/ApproveVideo";
 import { CameraScreen } from "../PublishVideo/CameraScreen";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
 interface StackNavigatorProps {}
 
 export const MainNavigator: React.FC<StackNavigatorProps> = ({}) => {
   const Stack = createStackNavigator();
   return (
+    <SafeAreaProvider>
     <NavigationContainer independent={true}>
       <Stack.Navigator screenOptions={config}>
         <Stack.Screen
@@ -101,5 +103,6 @@ export const MainNavigator: React.FC<StackNavigatorProps> = ({}) => {
         ))}
       </Stack.Navigator>
     </NavigationContainer>
+    </SafeAreaProvider>
   );
 };

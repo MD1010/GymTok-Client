@@ -27,6 +27,7 @@ function cacheImages(images) {
 }
 
 function cacheFonts(fonts) {
+  fonts.map(font => console.log(font));
   return fonts.map(font => Font.loadAsync(font));
 }
 
@@ -76,14 +77,22 @@ async function prepare(){
     require('../assets/icons/google.png'),
     require('../assets/loader.gif')
   ]);
+
   const FontAwesomefontAssets = cacheFonts([FontAwesome.font]);
-  const FontAwesome5fontAssets = cacheFonts([FontAwesome.font]);
+  const FontAwesome5fontAssets = cacheFonts([FontAwesome5.font]);
   const IoniconsfontAssets = cacheFonts([Ionicons.font]);
   const FeatherfontAssets = cacheFonts([Feather.font]);
   const FontistofontAssets = cacheFonts([Fontisto.font]);
   const MaterialIconsfontAssets = cacheFonts([MaterialIcons.font]);
-  // Feather, Fontisto , MaterialIcons
-  await Promise.all([...imageAssets,...FontAwesomefontAssets,...FontAwesome5fontAssets ,...IoniconsfontAssets,...FeatherfontAssets,...MaterialIconsfontAssets,...FontistofontAssets,getPosts()]);
+  await Promise.all([...imageAssets,
+                    ...FontAwesomefontAssets,
+                    ...FontAwesome5fontAssets ,
+                    ...IoniconsfontAssets,
+                    ...FeatherfontAssets,
+                    ...MaterialIconsfontAssets,
+                    ...FontistofontAssets, 
+                    getPosts()
+                  ]);
   console.log('finished all render');
 }
 
