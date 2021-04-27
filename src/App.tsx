@@ -1,20 +1,15 @@
 import * as Expo from "expo";
 import React, { useCallback, useEffect, useState } from "react";
-// import { StyleSheet, Text, View } from 'react-native';
-import { Entypo } from '@expo/vector-icons';
 import { StatusBar, Text,View,Image } from "react-native";
 import { Provider, useDispatch,useSelector } from "react-redux";
 import { MainNavigator } from "./components/Navigation/StackNavigator";
 import { loadLoggedUser } from "./store/auth/actions";
 import { store } from "./store/configureStore";
-import * as SplashScreen from 'expo-splash-screen';
 import AppLoading from 'expo-app-loading';
-import { preventAutoHide } from "expo-splash-screen";
 import * as Font from 'expo-font';
 import { Asset } from 'expo-asset';
 import { Feather, Fontisto , MaterialIcons,Ionicons,FontAwesome ,FontAwesome5} from '@expo/vector-icons';
 import { getMorePosts, getMostRecommended, getUserPosts } from "./store/posts/actions";
-import { authSelector } from "./store/auth/authSlice";
 
 function cacheImages(images) {
   return images.map(image => {
@@ -30,7 +25,6 @@ function cacheFonts(fonts) {
   fonts.map(font => console.log(font));
   return fonts.map(font => Font.loadAsync(font));
 }
-
 
 function App() {
   const loggedUser = store.getState().auth.loggedUser;
@@ -49,7 +43,6 @@ function App() {
   useEffect(() => {
     // check if user was loaded - undefinded means the store has not been updated yet.
     if (loggedUser !== undefined) {
-      console.log("call getPosts again")
       getPosts();
     }
   }, [loggedUser]);
@@ -67,7 +60,6 @@ function App() {
 
 async function prepare(){
   await store.dispatch(loadLoggedUser())
-  console.log('Assest');
   const imageAssets = cacheImages([
     require('../assets/avatar/01.jpg'),
     require('../assets/avatar/02.jpg'),
@@ -95,7 +87,6 @@ async function prepare(){
                     ...FontistofontAssets, 
                     getPosts()
                   ]);
-  console.log('finished all render');
 }
 
   return (
@@ -108,27 +99,4 @@ async function prepare(){
 }
 
 export default Expo.registerRootComponent(App);
-
-//CODE OF MASTER
-// import * as Expo from "expo";
-// import React, { useEffect } from "react";
-// import { StatusBar } from "react-native";
-// import { Provider, useDispatch } from "react-redux";
-// import { MainNavigator } from "./components/Navigation/StackNavigator";
-// import { loadLoggedUser } from "./store/auth/actions";
-// import { store } from "./store/configureStore";
-
-// function App() {
-//   useEffect(() => {
-//     store.dispatch(loadLoggedUser());
-//   }, []);
-//   return (
-//     <Provider store={store}>
-//       <StatusBar animated barStyle={"light-content"} />
-//       <MainNavigator />
-//     </Provider>
-//   );
-// }
-
-// export default Expo.registerRootComponent(App);
 
