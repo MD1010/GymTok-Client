@@ -4,7 +4,7 @@ import { IPost } from "../../interfaces";
 import { getPostsAfterUserLikePost, getPostsAfterUserRemoveLikeFromPost } from "../../utils/updatePostLikes";
 import { RootState } from "../configureStore";
 
-export const itemsToFetch = 40; // how many posts are fetched on each get
+export const itemsToFetch = 10; // how many posts are fetched on each get
 
 export interface PostsState {
   error: string | null;
@@ -20,7 +20,7 @@ export const initialState: PostsState = {
 };
 
 interface LikePayload {
-  post: IPost,
+  post: IPost;
   userId: string;
 }
 
@@ -50,39 +50,49 @@ const postsSlice = createSlice({
       state.error = null;
     },
     userLikePost: (state, action: PayloadAction<LikePayload>) => {
-      const updatedLatestFetchedPosts = getPostsAfterUserLikePost(state.latestFetchedPosts,
-        action.payload.post._id, action.payload.userId);
+      const updatedLatestFetchedPosts = getPostsAfterUserLikePost(
+        state.latestFetchedPosts,
+        action.payload.post._id,
+        action.payload.userId
+      );
 
       if (updatedLatestFetchedPosts) {
-        state.latestFetchedPosts = updatedLatestFetchedPosts
+        state.latestFetchedPosts = updatedLatestFetchedPosts;
       }
 
-      const updatedUserPosts = getPostsAfterUserLikePost(state.userPosts,
-        action.payload.post._id, action.payload.userId);
+      const updatedUserPosts = getPostsAfterUserLikePost(
+        state.userPosts,
+        action.payload.post._id,
+        action.payload.userId
+      );
 
       if (updatedUserPosts) {
         state.userPosts = updatedUserPosts;
       }
     },
     userRemoveLikePost: (state, action: PayloadAction<LikePayload>) => {
-      const updatedLatestFetchedPosts = getPostsAfterUserRemoveLikeFromPost(state.latestFetchedPosts,
-        action.payload.post._id, action.payload.userId);
+      const updatedLatestFetchedPosts = getPostsAfterUserRemoveLikeFromPost(
+        state.latestFetchedPosts,
+        action.payload.post._id,
+        action.payload.userId
+      );
 
       if (updatedLatestFetchedPosts) {
-        state.latestFetchedPosts = updatedLatestFetchedPosts
+        state.latestFetchedPosts = updatedLatestFetchedPosts;
       }
 
-      const updatedUserPosts = getPostsAfterUserRemoveLikeFromPost(state.userPosts,
-        action.payload.post._id, action.payload.userId);
+      const updatedUserPosts = getPostsAfterUserRemoveLikeFromPost(
+        state.userPosts,
+        action.payload.post._id,
+        action.payload.userId
+      );
 
       if (updatedUserPosts) {
         state.userPosts = updatedUserPosts;
       }
-    }
+    },
   },
 });
-
-
 
 export const postsActions = postsSlice.actions;
 export const postsSelector = (state: RootState) => state.posts;

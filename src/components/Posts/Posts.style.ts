@@ -14,11 +14,13 @@ export const styles = StyleSheet.create({
     bottom: 0,
     right: 0,
   },
-  uiContainer: {
+  likeCommentsContainer: {
     flexDirection: "row",
-    justifyContent: "space-between",
-    marginTop: 15,
-    marginBottom: 10
+    justifyContent: "flex-end",
+    flex: 1,
+    alignItems: "flex-end",
+    marginRight: 5,
+    // marginBottom: 10,
   },
   amount: {
     color: Colors.white,
@@ -28,7 +30,6 @@ export const styles = StyleSheet.create({
   },
   rowContainer: {
     flexDirection: "row",
-    alignItems: "center",
   },
 
   infoContainer: {
@@ -56,16 +57,10 @@ export const styles = StyleSheet.create({
     color: Colors.white,
   },
   hashtag: {
-    marginTop: 7,
     color: Colors.white,
-  },
-  challengeScore: {
-    color: Colors.white,
-    alignSelf: "flex-end",
-    fontWeight: "bold",
     marginRight: 5,
-    fontSize: 20,
   },
+
   tag: {
     color: Colors.white,
     fontWeight: "bold",

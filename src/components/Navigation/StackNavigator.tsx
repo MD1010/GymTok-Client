@@ -14,80 +14,80 @@ import { ApproveVideo } from "../PublishVideo/ApproveVideo";
 import { CameraScreen } from "../PublishVideo/CameraScreen";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
-interface StackNavigatorProps { }
+interface StackNavigatorProps {}
 
-export const MainNavigator: React.FC<StackNavigatorProps> = ({ }) => {
+export const MainNavigator: React.FC<StackNavigatorProps> = ({}) => {
   const Stack = createStackNavigator();
   return (
     <SafeAreaProvider>
-    <NavigationContainer independent={true}>
-      <Stack.Navigator screenOptions={config}>
-        <Stack.Screen
-          name="tabs"
-          component={BottomTabs}
-          options={{
-            headerShown: false,
-          }}
-        />
-        <Stack.Screen name="Register" component={RegisterScreen} options={{ title: "Sign up" }} />
-        <Stack.Screen name="Login" component={LoginScreen} options={{ title: "Log in" }} />
-        <Stack.Screen
-          name="Camera"
-          component={CameraScreen}
-          options={{
-            animationEnabled: true,
-            cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS,
-            headerTransparent: true,
-            gestureEnabled: false,
-          }}
-        />
+      <NavigationContainer independent={true}>
+        <Stack.Navigator screenOptions={config}>
+          <Stack.Screen
+            name="tabs"
+            component={BottomTabs}
+            options={{
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen name="Register" component={RegisterScreen} options={{ title: "Sign up" }} />
+          <Stack.Screen name="Login" component={LoginScreen} options={{ title: "Log in" }} />
+          <Stack.Screen
+            name="Camera"
+            component={CameraScreen}
+            options={{
+              animationEnabled: true,
+              cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS,
+              headerTransparent: true,
+              gestureEnabled: false,
+            }}
+          />
 
-        <Stack.Screen
-          name="NotLoggedIn"
-          component={NotLoggedInModal}
-          options={{
-            headerShown: false,
-            cardStyle: { backgroundColor: "transparent" },
-            cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS,
-            gestureResponseDistance: { vertical: Dimensions.get("screen").height },
-            gestureDirection: "vertical",
-            gestureEnabled: true,
-          }}
-        />
-        {/* <Stack.Screen name="PostReplies" component={PostReplies} options={{
+          <Stack.Screen
+            name="NotLoggedIn"
+            component={NotLoggedInModal}
+            options={{
+              headerShown: false,
+              cardStyle: { backgroundColor: "transparent" },
+              cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS,
+              gestureResponseDistance: { vertical: Dimensions.get("screen").height },
+              gestureDirection: "vertical",
+              gestureEnabled: true,
+            }}
+          />
+          {/* <Stack.Screen name="PostReplies" component={PostReplies} options={{
           headerShown: false,
         }} /> */}
 
-        <Stack.Screen
-          name="UsersProfile"
-          component={ProfileVideoModal}
-          options={{
-            headerShown: true,
-            headerTitle: "",
-            headerTransparent: true,
-            cardStyle: { backgroundColor: "transparent" },
-            cardStyleInterpolator: CardStyleInterpolators.forNoAnimation,
-            gestureEnabled: false,
-          }}
-        />
+          <Stack.Screen
+            name="UsersProfile"
+            component={ProfileVideoModal}
+            options={{
+              headerShown: true,
+              headerTitle: "",
+              headerTransparent: true,
+              cardStyle: { backgroundColor: "transparent" },
+              cardStyleInterpolator: CardStyleInterpolators.forNoAnimation,
+              gestureEnabled: false,
+            }}
+          />
 
-        <Stack.Screen
-          name="ApproveVideo"
-          component={ApproveVideo}
-          options={{
-            headerShown: true,
-            headerTitle: "",
-            headerTransparent: true,
-            cardStyle: { backgroundColor: "transparent" },
-            cardStyleInterpolator: CardStyleInterpolators.forNoAnimation,
-            gestureEnabled: false,
-          }}
-        />
-        {postChallengeScreens.map(({ name, options, screen }) => (
-          <Stack.Screen key={name} name={name} component={screen} options={{ gestureEnabled: false, ...options }} />
-        ))}
-      </Stack.Navigator>
-    </NavigationContainer>
+          <Stack.Screen
+            name="ApproveVideo"
+            component={ApproveVideo}
+            options={{
+              headerShown: true,
+              headerTitle: "",
+              headerTransparent: true,
+              cardStyle: { backgroundColor: "transparent" },
+              cardStyleInterpolator: CardStyleInterpolators.forNoAnimation,
+              gestureEnabled: false,
+            }}
+          />
+          {postChallengeScreens.map(({ name, options, screen }) => (
+            <Stack.Screen key={name} name={name} component={screen} options={{ gestureEnabled: false, ...options }} />
+          ))}
+        </Stack.Navigator>
+      </NavigationContainer>
     </SafeAreaProvider>
   );
 };
