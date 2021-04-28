@@ -83,12 +83,12 @@ const LikesComments: React.FC<IUIContainer> = ({
 };
 
 export const Post: React.FC<PostProps> = memo(({ post, isVisible, containerStyle }) => {
-  const { video: videoURL, createdBy, likes, replies } = post;
+  const { videoURI, createdBy, likes, replies } = post;
   const { loggedUser } = useSelector(authSelector);
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const [isUserLikePost, setÌsUserLikePost] = useState<boolean>(false);
-  const streaminServerUrl = `${process.env.VIDEO_SERVER_ENDPOINT}/video/${videoURL}`;
+  const streaminServerUrl = `${process.env.VIDEO_SERVER_ENDPOINT}/video/${videoURI}`;
 
   useEffect(() => {
     loggedUser && setÌsUserLikePost(post.likes.includes(loggedUser?._id));
@@ -102,7 +102,7 @@ export const Post: React.FC<PostProps> = memo(({ post, isVisible, containerStyle
       dispatch(updateUserLikePost(post, loggedUser._id));
 
       let requestMethod: RequestMethod;
-      const likesApi = `${process.env.BASE_API_ENPOINT}/users/${loggedUser._id}/challenges/${post._id}/like`;
+      const likesApi = `${process.env.BASE_API_ENPOINT}/users/${loggedUser._id}/posts/${post._id}/like`;
       if (!isUserLikePost) {
         requestMethod = RequestMethod.POST;
       } else {
@@ -135,7 +135,7 @@ export const Post: React.FC<PostProps> = memo(({ post, isVisible, containerStyle
   const onCameraPress = async () => {
     if (loggedUser) {
       console.log("user:" + loggedUser?.fullName + " click on camera button.");
-      navigation.navigate("Camera", { challengeId: post._id, isReply: true });
+      navigation.navigate("Camera", { postId: post._id, isReply: true });
     } else {
       navigation.navigate("NotLoggedIn");
       console.log("guest click on comment button, need to login");
