@@ -1,7 +1,7 @@
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import isEmpty from "lodash/isEmpty";
 import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Dimensions, FlatList, StatusBar, Text, View, ViewabilityConfig, RefreshControl } from "react-native";
+import { Dimensions, FlatList, Text, View, ViewabilityConfig, RefreshControl } from "react-native";
 import { Button } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
 import { IPost } from "../../interfaces/Post";
@@ -11,7 +11,6 @@ import { postsSelector } from "../../store/posts/postsSlice";
 import { Loader } from "../shared";
 import { Colors, UIConsts } from "../shared/styles/variables";
 import { Post } from "./Post";
-import * as FileSystem from "expo-file-system";
 
 interface PostsListProps {
   /**
@@ -99,11 +98,10 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentVideoI
     };
   }, []);
 
-  const onViewRef = useRef(({ viewableItems }) => {
+  const onViewRef = useRef(({ viewableItems, changed }) => {
     if (viewableItems[0]?.index === undefined) return;
-    // playingVideoIndex.current = viewableItems[0]?.index;
     console.log("playing", viewableItems[0]?.index);
-    scrollEnded.current && setCurrentlyPlaying(viewableItems[0]?.index);
+    changed[0].isViewable && setCurrentlyPlaying(viewableItems[0]?.index);
   });
 
   const goIndex = (index: number) => {
@@ -158,23 +156,37 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentVideoI
       />
     );
   };
+
+  // const panResponder = PanResponder.create({
+  //   onStartShouldSetPanResponderCapture: (evt, gestureState) => {
+  //     return true;
+  //   },
+  //   onStartShouldSetPanResponder: () => false,
+  // });
   return (
     <>
-      <View style={{ height: viewHeight, backgroundColor: Colors.black }}>
+      <View
+        // {...panResponder.panHandlers}
+        style={{ height: viewHeight, backgroundColor: Colors.black }}
+        // onStartShouldSetResponder={() => true}
+        // onStartShouldSetResponderCapture={() => true}
+        // onMoveShouldSetResponder={() => true}
+        // onMoveShouldSetResponderCapture={() => true}
+        // onResponderRelease={() => console.log(123123123)}
+      >
         <FlatList
           refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
           initialNumToRender={5}
-          maxToRenderPerBatch={7}
-          windowSize={7}
+          maxToRenderPerBatch={3}
+          windowSize={5}
           // removeClippedSubviews
-          updateCellsBatchingPeriod={5}
+          // updateCellsBatchingPeriod={5}
           data={posts}
           // snapToInterval={currentlyPlaying === posts.length - 1 ? null : viewHeight}
           pagingEnabled
           disableIntervalMomentum
           renderItem={renderItem}
           keyExtractor={keyExtractor}
-          showsVerticalScrollIndicator={false}
           getItemLayout={itemLayout}
           snapToAlignment={"start"}
           decelerationRate={"fast"}
@@ -191,8 +203,6 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentVideoI
           }}
           onViewableItemsChanged={onViewRef.current}
           viewabilityConfig={config.current}
-          onScrollBeginDrag={beginDarg}
-          onScrollEndDrag={endDrag}
           onEndReached={handleLoadMore}
           onEndReachedThreshold={0.5}
           ListFooterComponent={showFooter ? <Footer /> : null}
