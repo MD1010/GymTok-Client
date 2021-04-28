@@ -3,8 +3,6 @@ import { IPost } from "../../interfaces";
 import { PostsList } from "../Posts/PostsList";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { PostReplies } from "../Replies/PostReplies";
-import { useFocusEffect, useNavigation } from "@react-navigation/core";
-import { Colors } from "../shared";
 
 const Tab = createMaterialTopTabNavigator();
 // const Stack = createStackNavigator();

@@ -9,30 +9,23 @@ import { Loader } from "../shared";
 import { Colors } from "../shared/styles/variables";
 import { Player } from "../shared/VideoPlayer";
 
-interface PostRepliesProps {
-}
+interface PostRepliesProps {}
 
 type StackParamsList = {
   params: { newReply: IPost };
 };
-export const PostReplies: React.FC<PostRepliesProps> = ({ }) => {
+export const PostReplies: React.FC<PostRepliesProps> = ({}) => {
   const navigation = useNavigation();
   const route = useRoute<RouteProp<StackParamsList, "params">>();
   const [challengeReplies, setChallengeReplies] = useState<any[]>([]);
   const [streaminServerUrl, setStreaminServerUrl] = useState<string>("");
   const [post, setPost] = useState<IPost>();
-  const [
-    isLoadingChallengeVideo,
-    setIsLoadingChallengeVideo,
-  ] = useState<boolean>(true);
+  const [isLoadingChallengeVideo, setIsLoadingChallengeVideo] = useState<boolean>(true);
   const [isVideoInViewPort, setIsVideoInViewPort] = useState(false);
 
   const getChallengeReplies = async () => {
     const challengesEndpoint = `${process.env.BASE_API_ENPOINT}/posts/${post._id}/replies`;
-    const { res, error } = await fetchAPI(
-      RequestMethod.GET,
-      challengesEndpoint
-    );
+    const { res, error } = await fetchAPI(RequestMethod.GET, challengesEndpoint);
 
     res &&
       setChallengeReplies(
@@ -40,7 +33,7 @@ export const PostReplies: React.FC<PostRepliesProps> = ({ }) => {
           return {
             _id: index,
             url: reply.video,
-            gif: reply.gif
+            gif: reply.gif,
           };
         })
       );
@@ -57,12 +50,14 @@ export const PostReplies: React.FC<PostRepliesProps> = ({ }) => {
 
   useEffect(() => {
     if (route.params?.newReply) {
-      setChallengeReplies([...challengeReplies,
-      {
-        _id: challengeReplies.length,
-        url: route.params.newReply.video,
-        gif: route.params.newReply.gif
-      }])
+      setChallengeReplies([
+        ...challengeReplies,
+        {
+          _id: challengeReplies.length,
+          url: route.params.newReply.videoURI,
+          gif: route.params.newReply.gif,
+        },
+      ]);
     }
   }, [route.params?.newReply]);
 
@@ -79,9 +74,7 @@ export const PostReplies: React.FC<PostRepliesProps> = ({ }) => {
   useEffect(() => {
     if (post) {
       getChallengeReplies();
-      setStreaminServerUrl(
-        `${process.env.VIDEO_SERVER_ENDPOINT}/${post.videoURI}`
-      );
+      setStreaminServerUrl(`${process.env.VIDEO_SERVER_ENDPOINT}/${post.videoURI}`);
     }
   }, [post]);
 
