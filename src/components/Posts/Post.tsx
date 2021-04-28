@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { IPost } from "../../interfaces/Post";
 import { authSelector } from "../../store/auth/authSlice";
 import { updateUserLikePost } from "../../store/posts/actions";
+import { STREAMING_SERVER_VIDEO_ENDPOINT } from "../../utils/consts";
 import { fetchAPI, RequestMethod } from "../../utils/fetchAPI";
 import { Colors } from "../shared/styles/variables";
 import { Player } from "../shared/VideoPlayer";
