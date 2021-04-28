@@ -55,7 +55,6 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentVideoI
   }, [refreshing]);
 
   const getPosts = () => {
-    console.log('isFeed: ' + isFeed)
     if (loggedUser) {
       isFeed ? dispatch(getMostRecommended()) : dispatch(getUserPosts());
     } else {
