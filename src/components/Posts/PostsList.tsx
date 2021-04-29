@@ -75,7 +75,9 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentVideoI
       console.log("postfdfdfdf: " + posts);
       let wantedIndex = posts.findIndex((post) => post._id === currentVideoID);
       console.log("wnted index" + wantedIndex);
-      goIndex(wantedIndex);
+      if(wantedIndex != -1)
+        goIndex(wantedIndex);
+        
     }
   }, [posts, currentVideoID]);
 
