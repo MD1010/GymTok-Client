@@ -23,8 +23,10 @@ function ProfileTabs() {
   const { loggedUser } = useSelector(authSelector);
 
   const getEnteties = async (postType: String) => {
-    const entetieEndpoint = `${process.env.BASE_API_ENPOINT}/users/${loggedUser._id}/${postType}`;
-
+    //192.168.1.152:8080/posts/?uid=6004a03343b8e925a48d270b&isReply=false
+    const isReply = postType == "challenges" ? false : true;
+    const entetieEndpoint = `${process.env.BASE_API_ENPOINT}/posts/?uid=${loggedUser._id}&isReply=${isReply}`;
+    console.log("entetie", entetieEndpoint);
     const { res, error } = await fetchAPI(RequestMethod.GET, entetieEndpoint);
 
     const setEntetie = postType == "challenges" ? setChallenges : setReplies;
