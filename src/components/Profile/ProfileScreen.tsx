@@ -5,11 +5,17 @@ import React, { useEffect, useState } from "react";
 import { Image, Text, View } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 import { useSelector } from "react-redux";
+import { IUser } from "../../interfaces";
 import { authSelector } from "../../store/auth/authSlice";
 import { fetchAPI, RequestMethod } from "../../utils/fetchAPI";
 import { Colors } from "../shared";
 import { GenericComponent } from "./genericComponent";
 
+interface IProfileDetails {
+  numOfChallenges: number;
+  numOfReplies: number;
+  numOfLikes: number;
+}
 function ProfileTabs() {
   const Tabs = createMaterialTopTabNavigator();
   const [challenges, setChallenges] = useState([]);
@@ -18,11 +24,11 @@ function ProfileTabs() {
 
   const getEnteties = async (postType: String) => {
     const entetieEndpoint = `${process.env.BASE_API_ENPOINT}/users/${loggedUser._id}/${postType}`;
-    console.log(entetieEndpoint);
 
     const { res, error } = await fetchAPI(RequestMethod.GET, entetieEndpoint);
 
     const setEntetie = postType == "challenges" ? setChallenges : setReplies;
+    console.log("res", res);
     res &&
       setEntetie(
         res.map((entetie, index) => {
@@ -85,19 +91,13 @@ function ProfileTabs() {
     </NavigationContainer>
   );
 }
-// interface ProfileProps {
-//   items: Item[];
-// }
-interface IprofileDetails {
-  numOfchallenges: number;
-  numOflikes: number;
-  numOfreplies: number;
-}
-const ProfileHeader: React.FC<IprofileDetails> = ({
-  numOfchallenges,
-  numOfreplies,
-  numOflikes,
+
+const ProfileHeader: React.FC<IProfileDetails> = ({
+  numOfChallenges,
+  numOfReplies,
+  numOfLikes,
 }) => {
+  const { authError, loggedUser } = useSelector(authSelector);
   return (
     <View style={{ paddingTop: 40, paddingLeft: 5 }}>
       <View style={{ flexDirection: "row" }}>
@@ -123,7 +123,7 @@ const ProfileHeader: React.FC<IprofileDetails> = ({
                   fontWeight: "bold",
                 }}
               >
-                {numOfchallenges}
+                {numOfChallenges}
               </Text>
               <Text style={{ fontSize: 10, color: Colors.lightGrey }}>
                 Challenges
@@ -137,7 +137,7 @@ const ProfileHeader: React.FC<IprofileDetails> = ({
                   fontWeight: "bold",
                 }}
               >
-                {numOfreplies}
+                {numOfReplies}
               </Text>
               <Text style={{ fontSize: 10, color: Colors.lightGrey }}>
                 Replies
@@ -151,7 +151,7 @@ const ProfileHeader: React.FC<IprofileDetails> = ({
                   fontWeight: "bold",
                 }}
               >
-                {numOflikes}
+                {numOfLikes}
               </Text>
               <Text style={{ fontSize: 10, color: Colors.lightGrey }}>
                 Likes
@@ -162,7 +162,7 @@ const ProfileHeader: React.FC<IprofileDetails> = ({
       </View>
       <View style={{ margin: 10, marginTop: 15 }}>
         <Text style={{ fontWeight: "bold", color: Colors.white }}>
-          Moris Angus
+          {loggedUser.fullName}
         </Text>
         <Text style={{ color: Colors.white }}>
           Basketball player | Runner | Swimmer{" "}
@@ -172,28 +172,33 @@ const ProfileHeader: React.FC<IprofileDetails> = ({
     </View>
   );
 };
-interface IprofileProps {
-  userId: string;
-}
 
-export const ProfileScreen: React.FC<IprofileProps> = ({ userId }) => {
+export const ProfileScreen: React.FC<IUser> = () => {
+  const { loggedUser } = useSelector(authSelector);
+
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   // return <GenericComponent items={items} />;
-  const [profileDetails, setProfileDetails] = useState<IprofileDetails>();
+  const [profileDetails, setProfileDetails] = useState<IProfileDetails>();
   useEffect(() => {
+    setIsLoading(true);
     async function getProfileDetails() {
-      const profileDetailsEndpoint = `${process.env.BASE_API_ENPOINT}/users/profileDetails?userId=${userId}`;
+      const profileDetailsEndpoint = `${process.env.BASE_API_ENPOINT}/users/profileDetails?userId=${loggedUser._id}`;
       console.log(profileDetailsEndpoint);
 
       const { res, error } = await fetchAPI(
         RequestMethod.GET,
         profileDetailsEndpoint
       );
+
       res && setProfileDetails(res);
+      res && setIsLoading(false);
     }
     getProfileDetails();
   }, []);
 
-  return (
+  return isLoading ? (
+    <Text>loading...</Text>
+  ) : (
     <>
       <ProfileHeader {...profileDetails} />
       <ProfileTabs />
