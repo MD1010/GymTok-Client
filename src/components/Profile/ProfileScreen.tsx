@@ -1,16 +1,16 @@
 // import { Icon } from "expo";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { NavigationContainer } from "@react-navigation/native";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Image, Text, View } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 import { useSelector } from "react-redux";
-import { IUser } from "../../interfaces";
+import { IPost, IUser } from "../../interfaces";
 import { authSelector } from "../../store/auth/authSlice";
 import { fetchAPI, RequestMethod } from "../../utils/fetchAPI";
 import { Colors } from "../shared";
 import { GenericComponent } from "./genericComponent";
-
+const itemsToFetch = 9;
 interface IProfileDetails {
   numOfChallenges: number;
   numOfReplies: number;
@@ -19,11 +19,63 @@ interface IProfileDetails {
 function ProfileTabs() {
   const Tabs = createMaterialTopTabNavigator();
   const [challenges, setChallenges] = useState([]);
+  // const [
+  //   hasMoreChallengesToFetch,
+  //   setHasMoreChallengesToFetch,
+  // ] = useState<boolean>(true);
+  // const [hasMoreRepliesToFetch, setHasMoreRepliesToFetch] = useState<boolean>(
+  //   true
+  // );
+
+  const [hasMoreChallenges, setHasMoreChallenges] = useState(true);
+  const [hasMoreReplies, setHasMoreReplies] = useState(true);
+
   const [replies, setReplies] = useState([]);
   const { loggedUser } = useSelector(authSelector);
+  const getMorePosts = async (isReply: boolean) => {
+    const entity = isReply ? challenges : replies;
+    const setEntity = isReply ? setReplies : setChallenges;
+
+    // todo https://www.goodday.work/t/RRaDG3
+    // todo send param to this func if you want replies or real posts and send the relevant query params
+    const endpoint = `${process.env.BASE_API_ENPOINT}/posts`;
+    // const loggedUser = getState()?.auth?.loggedUser._id;
+
+    const { res, error } = await fetchAPI<IPost[]>(
+      RequestMethod.GET,
+      endpoint,
+      null,
+      {
+        size: itemsToFetch,
+        page: Math.floor(entity.length / itemsToFetch),
+        // createdBy: loggedUser._id,
+        uid: loggedUser._id,
+        isReply,
+      }
+    );
+    if (res.length < itemsToFetch) {
+      isReply ? setHasMoreReplies(false) : setHasMoreChallenges(false);
+    }
+
+    const newPosts =
+      res &&
+      res.map((entity, index) => {
+        return {
+          _id: index,
+          url: entity.videoURI,
+          gif: entity.gif,
+        };
+      });
+    setEntity([...entity, newPosts]);
+
+    // if (res) {
+
+    // } else {
+
+    // }
+  };
 
   const getEnteties = async (postType: String) => {
-    //192.168.1.152:8080/posts/?uid=6004a03343b8e925a48d270b&isReply=false
     const isReply = postType == "challenges" ? false : true;
     const entetieEndpoint = `${process.env.BASE_API_ENPOINT}/posts/?uid=${loggedUser._id}&isReply=${isReply}`;
     const { res, error } = await fetchAPI(RequestMethod.GET, entetieEndpoint);
@@ -40,10 +92,10 @@ function ProfileTabs() {
         })
       );
   };
-  useEffect(() => {
-    getEnteties("challenges");
-    getEnteties("replies");
-  }, []);
+  // useEffect(() => {
+  //   getEnteties("challenges");
+  //   getEnteties("replies");
+  // }, []);
   return (
     <Tabs.Navigator
       sceneContainerStyle={{ backgroundColor: Colors.black }}
@@ -79,11 +131,23 @@ function ProfileTabs() {
       <Tabs.Screen
         name="Challanges"
         // component={Home}
-        children={() => <GenericComponent items={challenges} />}
+        children={() => (
+          <GenericComponent
+            items={challenges}
+            loadMoreCallback={() => getMorePosts(false)}
+            hasMoreToFetch={hasMoreChallenges}
+          />
+        )}
       />
       <Tabs.Screen
         name="Replies"
-        children={() => <GenericComponent items={replies} />}
+        children={() => (
+          <GenericComponent
+            items={replies}
+            loadMoreCallback={() => getMorePosts(true)}
+            hasMoreToFetch={hasMoreReplies}
+          />
+        )}
         // component={Settings}
       />
     </Tabs.Navigator>
