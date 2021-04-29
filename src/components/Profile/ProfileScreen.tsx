@@ -26,11 +26,9 @@ function ProfileTabs() {
     //192.168.1.152:8080/posts/?uid=6004a03343b8e925a48d270b&isReply=false
     const isReply = postType == "challenges" ? false : true;
     const entetieEndpoint = `${process.env.BASE_API_ENPOINT}/posts/?uid=${loggedUser._id}&isReply=${isReply}`;
-    console.log("entetie", entetieEndpoint);
     const { res, error } = await fetchAPI(RequestMethod.GET, entetieEndpoint);
-
     const setEntetie = postType == "challenges" ? setChallenges : setReplies;
-    console.log("res", res);
+
     res &&
       setEntetie(
         res.map((entetie, index) => {
@@ -47,48 +45,48 @@ function ProfileTabs() {
     getEnteties("replies");
   }, []);
   return (
-      <Tabs.Navigator
-        sceneContainerStyle={{ backgroundColor: Colors.black }}
-        screenOptions={({ route }) => ({
-          tabBarIcon: ({ focused }) => {
-            let iconName;
+    <Tabs.Navigator
+      sceneContainerStyle={{ backgroundColor: Colors.black }}
+      screenOptions={({ route }) => ({
+        tabBarIcon: ({ focused }) => {
+          let iconName;
 
-            if (route.name === "Challanges") {
-              iconName = "ios-apps";
-            } else if (route.name === "Replies") {
-              iconName = "person-circle";
-            }
+          if (route.name === "Challanges") {
+            iconName = "ios-apps";
+          } else if (route.name === "Replies") {
+            iconName = "person-circle";
+          }
 
-            // You can return any component that you like here!
-            return (
-              <Icon
-                name={iconName}
-                size={25}
-                color={focused ? Colors.white : Colors.darkGrey}
-              />
-            );
-          },
-        })}
-        tabBarOptions={{
-          style: { backgroundColor: Colors.black },
-          showIcon: true,
-          showLabel: true,
-          activeTintColor: Colors.white,
-          labelStyle: { fontSize: 8 },
-          indicatorStyle: { backgroundColor: "transparent" },
-        }}
-      >
-        <Tabs.Screen
-          name="Challanges"
-          // component={Home}
-          children={() => <GenericComponent items={challenges} />}
-        />
-        <Tabs.Screen
-          name="Replies"
-          children={() => <GenericComponent items={replies} />}
-          // component={Settings}
-        />
-      </Tabs.Navigator>
+          // You can return any component that you like here!
+          return (
+            <Icon
+              name={iconName}
+              size={25}
+              color={focused ? Colors.white : Colors.darkGrey}
+            />
+          );
+        },
+      })}
+      tabBarOptions={{
+        style: { backgroundColor: Colors.black },
+        showIcon: true,
+        showLabel: true,
+        activeTintColor: Colors.white,
+        labelStyle: { fontSize: 8 },
+        indicatorStyle: { backgroundColor: "transparent" },
+      }}
+    >
+      <Tabs.Screen
+        name="Challanges"
+        // component={Home}
+        children={() => <GenericComponent items={challenges} />}
+      />
+      <Tabs.Screen
+        name="Replies"
+        children={() => <GenericComponent items={replies} />}
+        // component={Settings}
+      />
+    </Tabs.Navigator>
   );
 }
 
@@ -173,7 +171,7 @@ const ProfileHeader: React.FC<IProfileDetails> = ({
   );
 };
 
-export const ProfileScreen: React.FC<IUser> = () => {
+export const ProfileScreen: React.FC = () => {
   const { loggedUser } = useSelector(authSelector);
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -183,7 +181,6 @@ export const ProfileScreen: React.FC<IUser> = () => {
     setIsLoading(true);
     async function getProfileDetails() {
       const profileDetailsEndpoint = `${process.env.BASE_API_ENPOINT}/users/profileDetails?userId=${loggedUser._id}`;
-      console.log(profileDetailsEndpoint);
 
       const { res, error } = await fetchAPI(
         RequestMethod.GET,
