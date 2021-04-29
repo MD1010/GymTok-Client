@@ -12,6 +12,10 @@ import {
   ViewStyle,
 } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import {
+  STREAMING_SERVER_GIF_ENDPOINT,
+  STREAMING_SERVER_VIDEO_ENDPOINT,
+} from "../../utils/consts";
 import { Colors } from "../shared/styles/variables";
 import { Item } from "./interfaces";
 
@@ -37,12 +41,10 @@ export const GenericComponent: React.FC<Props> = ({
   const picHeight: number = pictureHeight
     ? pictureHeight
     : styles.theImage.height;
-  const streaminServerGifsUrl = `${process.env.VIDEO_SERVER_ENDPOINT}/gif`;
-  const streaminServerVideosUrl = `${process.env.VIDEO_SERVER_ENDPOINT}/video`;
 
   const showVideo = (videoURL) => {
     navigation.navigate("UsersProfile", {
-      videoURL: `${streaminServerVideosUrl}/${videoURL}`,
+      videoURL: `${STREAMING_SERVER_VIDEO_ENDPOINT}/${videoURL}`,
     });
   };
 
@@ -64,7 +66,7 @@ export const GenericComponent: React.FC<Props> = ({
               height: picHeight,
               width: Dimensions.get("screen").width / numOfColumns,
             }}
-            source={{ uri: `${streaminServerGifsUrl}/${item.gif}` }}
+            source={{ uri: `${STREAMING_SERVER_GIF_ENDPOINT}/${item.gif}` }}
           >
             <View
               style={{

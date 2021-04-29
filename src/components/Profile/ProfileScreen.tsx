@@ -47,7 +47,6 @@ function ProfileTabs() {
     getEnteties("replies");
   }, []);
   return (
-    <NavigationContainer independent={true}>
       <Tabs.Navigator
         sceneContainerStyle={{ backgroundColor: Colors.black }}
         screenOptions={({ route }) => ({
@@ -90,7 +89,6 @@ function ProfileTabs() {
           // component={Settings}
         />
       </Tabs.Navigator>
-    </NavigationContainer>
   );
 }
 

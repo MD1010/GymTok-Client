@@ -9,7 +9,7 @@ import { authSelector } from "../../store/auth/authSlice";
 import { NotLoggedInScreen } from "../Auth/NotLoggedInScreen";
 import { HomeScreen } from "../Home/HomeScreen";
 import { ExploreScreen } from "../Explore/ExploreScreen";
-import { ProfileScreen as Profile } from "../Profile/ProfileScreen";
+import { ProfileContainer as Profile } from "../Profile/ProfileContainer";
 import { Colors, UIConsts } from "../shared/styles/variables";
 import { colors } from "react-native-elements";
 
@@ -159,23 +159,7 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
         ></Tab.Screen>
         <Tab.Screen
           name="Me"
-          component={
-            loggedUser
-              ? () => <Profile userId={loggedUser._id} />
-              : () => (
-                  <NotLoggedInScreen
-                    text={"Profile"}
-                    description={"Sign up for an account"}
-                    icon={() => (
-                      <Ionicons
-                        name="md-person-outline"
-                        color={Colors.white}
-                        size={56}
-                      />
-                    )}
-                  />
-                )
-          }
+          component={Profile}
           options={{
             tabBarIcon: ({ color, size, focused }) =>
               focused ? (
