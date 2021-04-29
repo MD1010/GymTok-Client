@@ -1,6 +1,6 @@
 import { FontAwesome } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Dimensions,
   FlatList,
@@ -12,15 +12,20 @@ import {
   ViewStyle,
 } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import { IPost } from "../../interfaces";
 import {
   STREAMING_SERVER_GIF_ENDPOINT,
   STREAMING_SERVER_VIDEO_ENDPOINT,
 } from "../../utils/consts";
+import { fetchAPI, RequestMethod } from "../../utils/fetchAPI";
+import { Loader } from "../shared";
 import { Colors } from "../shared/styles/variables";
 import { Item } from "./interfaces";
 
 interface Props {
   items: Item[];
+  loadMoreCallback: () => void;
+  hasMoreToFetch: boolean;
   horizontal?: boolean;
   numColumns?: number;
   customStyle?: ViewStyle;
@@ -29,6 +34,8 @@ interface Props {
 
 export const GenericComponent: React.FC<Props> = ({
   items,
+  loadMoreCallback,
+  hasMoreToFetch,
   horizontal,
   customStyle,
   numColumns,
@@ -36,18 +43,47 @@ export const GenericComponent: React.FC<Props> = ({
 }) => {
   const navigation = useNavigation();
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [showFooter, setShowFooter] = useState<boolean>(false);
+
   const isHorizontal: boolean = horizontal ? horizontal : false;
   const numOfColumns: number = numColumns ? numColumns : 3;
+
   const picHeight: number = pictureHeight
     ? pictureHeight
     : styles.theImage.height;
 
+  const Footer = () => {
+    if (items.length) {
+      if (hasMoreToFetch) {
+        return <Loader style={{ height: 100, width: 100 }} />;
+      } else {
+        return (
+          <Text style={{ color: Colors.lightGrey2, fontSize: 15 }}>
+            You have reached the end
+          </Text>
+        );
+      }
+    }
+    return null;
+  };
   const showVideo = (videoURL) => {
     navigation.navigate("UsersProfile", {
       videoURL: `${STREAMING_SERVER_VIDEO_ENDPOINT}/${videoURL}`,
     });
   };
-
+  useEffect(() => {
+    if (items) {
+      setShowFooter(false);
+      // setRefreshing(false);
+    }
+  }, [items]);
+  useEffect(() => {
+    handleLoadMore();
+  }, []);
+  const handleLoadMore = () => {
+    items.length && setShowFooter(true);
+    hasMoreToFetch && loadMoreCallback();
+  };
   const renderItem = (item: Item) => {
     return (
       <View
@@ -103,6 +139,8 @@ export const GenericComponent: React.FC<Props> = ({
         horizontal={isHorizontal}
         numColumns={!isHorizontal ? numOfColumns : 0}
         renderItem={({ item }) => renderItem(item)}
+        ListFooterComponent={showFooter ? <Footer /> : null}
+        onEndReached={handleLoadMore}
       />
       {/* {isLoading ? (
         <ChallangeSkeleton isHorizontal={isHorizontal} numOfColumns={numOfColumns} />
