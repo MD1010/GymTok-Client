@@ -9,7 +9,7 @@ import { authSelector } from "../../store/auth/authSlice";
 import { NotLoggedInScreen } from "../Auth/NotLoggedInScreen";
 import { HomeScreen } from "../Home/HomeScreen";
 import { ExploreScreen } from "../Explore/ExploreScreen";
-import { ProfileContainer as Profile } from "../Profile/ProfileContainer";
+import { ProfileScreen as Profile } from "../Profile/ProfileScreen";
 import { Colors, UIConsts } from "../shared/styles/variables";
 import { colors } from "react-native-elements";
 
@@ -66,7 +66,13 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
                   <NotLoggedInScreen
                     text={"Explore"}
                     description={"Discover Challenges By Categories"}
-                    icon={() => <Ionicons name="search-outline" color={Colors.white} size={56} />}
+                    icon={() => (
+                      <Ionicons
+                        name="search-outline"
+                        color={Colors.white}
+                        size={56}
+                      />
+                    )}
                   />
                 )
           }
@@ -98,7 +104,13 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
                     style={{ backgroundColor: Colors.lightPurpule }}
                     color={Colors.white}
                     size={40}
-                    icon={() => <FontAwesome5 name="plus" size={20} color={Colors.white} />}
+                    icon={() => (
+                      <FontAwesome5
+                        name="plus"
+                        size={20}
+                        color={Colors.white}
+                      />
+                    )}
                     onPress={() => {
                       navigation.navigate("Camera");
                     }}
@@ -118,16 +130,30 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
                   <NotLoggedInScreen
                     text={"Notifications"}
                     description={"See your activity and new challenges here"}
-                    icon={() => <Ionicons name="notifications-sharp" color={Colors.white} size={56} />}
+                    icon={() => (
+                      <Ionicons
+                        name="notifications-sharp"
+                        color={Colors.white}
+                        size={56}
+                      />
+                    )}
                   />
                 )
           }
           options={{
             tabBarIcon: ({ color, size, focused }) =>
               focused ? (
-                <Ionicons name={"notifications-sharp"} color={color} size={size} />
+                <Ionicons
+                  name={"notifications-sharp"}
+                  color={color}
+                  size={size}
+                />
               ) : (
-                <Ionicons name={"notifications-outline"} color={color} size={size} />
+                <Ionicons
+                  name={"notifications-outline"}
+                  color={color}
+                  size={size}
+                />
               ),
           }}
         ></Tab.Screen>
@@ -135,12 +161,18 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
           name="Me"
           component={
             loggedUser
-              ? () => <Profile />
+              ? () => <Profile userId={loggedUser._id} />
               : () => (
                   <NotLoggedInScreen
                     text={"Profile"}
                     description={"Sign up for an account"}
-                    icon={() => <Ionicons name="md-person-outline" color={Colors.white} size={56} />}
+                    icon={() => (
+                      <Ionicons
+                        name="md-person-outline"
+                        color={Colors.white}
+                        size={56}
+                      />
+                    )}
                   />
                 )
           }

@@ -88,7 +88,16 @@ function ProfileTabs() {
 // interface ProfileProps {
 //   items: Item[];
 // }
-const ProfileHeader: React.FC = () => {
+interface IprofileDetails {
+  numOfchallenges: number;
+  numOflikes: number;
+  numOfreplies: number;
+}
+const ProfileHeader: React.FC<IprofileDetails> = ({
+  numOfchallenges,
+  numOfreplies,
+  numOflikes,
+}) => {
   return (
     <View style={{ paddingTop: 40, paddingLeft: 5 }}>
       <View style={{ flexDirection: "row" }}>
@@ -114,7 +123,7 @@ const ProfileHeader: React.FC = () => {
                   fontWeight: "bold",
                 }}
               >
-                20
+                {numOfchallenges}
               </Text>
               <Text style={{ fontSize: 10, color: Colors.lightGrey }}>
                 Challenges
@@ -128,7 +137,7 @@ const ProfileHeader: React.FC = () => {
                   fontWeight: "bold",
                 }}
               >
-                35
+                {numOfreplies}
               </Text>
               <Text style={{ fontSize: 10, color: Colors.lightGrey }}>
                 Replies
@@ -142,7 +151,7 @@ const ProfileHeader: React.FC = () => {
                   fontWeight: "bold",
                 }}
               >
-                217
+                {numOflikes}
               </Text>
               <Text style={{ fontSize: 10, color: Colors.lightGrey }}>
                 Likes
@@ -163,13 +172,30 @@ const ProfileHeader: React.FC = () => {
     </View>
   );
 };
+interface IprofileProps {
+  userId: string;
+}
 
-export const ProfileScreen: React.FC = () => {
+export const ProfileScreen: React.FC<IprofileProps> = ({ userId }) => {
   // return <GenericComponent items={items} />;
+  const [profileDetails, setProfileDetails] = useState<IprofileDetails>();
+  useEffect(() => {
+    async function getProfileDetails() {
+      const profileDetailsEndpoint = `${process.env.BASE_API_ENPOINT}/users/profileDetails?userId=${userId}`;
+      console.log(profileDetailsEndpoint);
+
+      const { res, error } = await fetchAPI(
+        RequestMethod.GET,
+        profileDetailsEndpoint
+      );
+      res && setProfileDetails(res);
+    }
+    getProfileDetails();
+  }, []);
 
   return (
     <>
-      <ProfileHeader />
+      <ProfileHeader {...profileDetails} />
       <ProfileTabs />
     </>
   );
