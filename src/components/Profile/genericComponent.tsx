@@ -3,6 +3,7 @@ import { useNavigation } from "@react-navigation/native";
 import React, { useState } from "react";
 import { Dimensions, FlatList, ImageBackground, SafeAreaView, StyleSheet, Text, View, ViewStyle } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import { STREAMING_SERVER_GIF_ENDPOINT, STREAMING_SERVER_VIDEO_ENDPOINT } from "../../utils/consts";
 import { Colors } from "../shared/styles/variables";
 import { Item } from "./interfaces";
 
@@ -20,11 +21,9 @@ export const GenericComponent: React.FC<Props> = ({ items, horizontal, customSty
   const isHorizontal: boolean = horizontal ? horizontal : false;
   const numOfColumns: number = numColumns ? numColumns : 3;
   const picHeight: number = pictureHeight ? pictureHeight : styles.theImage.height;
-  const streaminServerGifsUrl = `${process.env.VIDEO_SERVER_ENDPOINT}/gif`;
-  const streaminServerVideosUrl = `${process.env.VIDEO_SERVER_ENDPOINT}/video`;
 
   const showVideo = (videoURL) => {
-    navigation.navigate("UsersProfile", { videoURL: `${streaminServerVideosUrl}/${videoURL}` });
+    navigation.navigate("UsersProfile", { videoURL: `${STREAMING_SERVER_VIDEO_ENDPOINT}/${videoURL}` });
   };
 
   const renderItem = (item: Item) => {
@@ -41,7 +40,7 @@ export const GenericComponent: React.FC<Props> = ({ items, horizontal, customSty
         >
           <ImageBackground
             style={{ ...styles.theImage, height: picHeight, width: Dimensions.get("screen").width / numOfColumns }}
-            source={{ uri: `${streaminServerGifsUrl}/${item.gif}` }}
+            source={{ uri: `${STREAMING_SERVER_GIF_ENDPOINT}/${item.gif}` }}
           >
             <View style={{ display: "flex", justifyContent: "flex-end", flexDirection: "column", height: picHeight }}>
               <View style={[styles.rowContainer, { marginRight: 10 }]}>
