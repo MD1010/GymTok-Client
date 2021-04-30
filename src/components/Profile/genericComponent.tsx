@@ -94,7 +94,6 @@ export const GenericComponent: React.FC<Props> = ({ items, horizontal, customSty
 
   return (
     <SafeAreaView style={{ flex: 1, flexDirection: isHorizontal ? "row" : "column" }}>
-      {/* <Spinner visible={isLoading} textLoading={"Loading..."} textStyle={{ color: "#FFF" }} /> */}
       <FlatList
         data={items}
         keyExtractor={(item, index) => index.toString()}
@@ -102,17 +101,6 @@ export const GenericComponent: React.FC<Props> = ({ items, horizontal, customSty
         numColumns={!isHorizontal ? numOfColumns : 0}
         renderItem={({ item }) => renderItem(item)}
       />
-      {/* {isLoading ? (
-        <ChallangeSkeleton isHorizontal={isHorizontal} numOfColumns={numOfColumns} />
-      ) : (
-        <FlatList
-          data={thumbnailItems}
-          keyExtractor={(item, index) => index.toString()}
-          horizontal={isHorizontal}
-          numColumns={!isHorizontal ? numOfColumns : 0}
-          renderItem={renderItem}
-        />
-      )} */}
     </SafeAreaView>
   );
 };
