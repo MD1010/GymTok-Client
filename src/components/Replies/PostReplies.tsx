@@ -37,7 +37,7 @@ export const PostReplies: React.FC<PostRepliesProps> = ({ }) => {
             _id: index,
             url: reply.video,
             gif: reply.gif,
-            numOfLikes: reply.likes.length
+            numOfLikes: (reply.likes || []).length
           };
         })
       );
