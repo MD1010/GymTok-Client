@@ -56,10 +56,10 @@ export const GenericComponent: React.FC<Props> = ({ items, horizontal, customSty
             <View style={{ display: "flex", justifyContent: "flex-end", flexDirection: "column", height: picHeight }}>
               <View style={[styles.rowContainer, { marginRight: 10 }]}>
                 <Text style={{ color: Colors.white, fontWeight: "bold", fontSize: 12, margin: 3 }}>
-                  {item.publishDate.toString().split("T")[0]}
+                  {item?.publishDate?.toString().split("T")[0]}
                 </Text>
-                {/* <FontAwesome name={"heart"} size={13} color={Colors.lightGrey} />
-                <Text style={styles.amount}>{item.likes.length}</Text> */}
+                <FontAwesome name={"heart"} size={13} color={Colors.lightGrey} />
+                <Text style={styles.amount}>{item.likes?.length}</Text>
               </View>
             </View>
           </ImageBackground>
@@ -81,13 +81,13 @@ export const GenericComponent: React.FC<Props> = ({ items, horizontal, customSty
               rounded
             />
             <Text style={{ color: Colors.darkGrey, alignSelf: "center", marginLeft: 5 }}>
-              {item.createdBy.username}
+              {item?.createdBy?.username}
             </Text>
           </View>
 
           <View style={{ flexDirection: "row", alignSelf: "center" }}>
             <FontAwesome style={{ alignSelf: "center" }} name={"heart-o"} size={13} color={Colors.darkGrey} />
-            <Text style={{ ...styles.amount, color: Colors.darkGrey }}>{item.likes.length}</Text>
+            <Text style={{ ...styles.amount, color: Colors.darkGrey }}>{item.likes?.length}</Text>
           </View>
         </View>
       </View>
