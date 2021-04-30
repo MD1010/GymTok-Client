@@ -6,7 +6,6 @@ import { IPost } from "../../interfaces";
 import { fetchAPI, RequestMethod } from "../../utils/fetchAPI";
 import { GenericComponent } from "../Profile/genericComponent";
 import { Loader } from "../shared";
-import { PostsSkeleton } from "../shared/skeletons/PostsSkeleton";
 import { Colors } from "../shared/styles/variables";
 import { Player } from "../shared/VideoPlayer";
 
@@ -38,6 +37,7 @@ export const PostReplies: React.FC<PostRepliesProps> = ({ }) => {
             _id: index,
             url: reply.video,
             gif: reply.gif,
+            numOfLikes: reply.likes.length
           };
         })
       );
@@ -59,9 +59,11 @@ export const PostReplies: React.FC<PostRepliesProps> = ({ }) => {
       setChallengeReplies([
         ...challengeReplies,
         {
+
           _id: challengeReplies.length,
           url: route.params.newReply.videoURI,
           gif: route.params.newReply.gif,
+          numOfLikes: 0
         },
       ]);
     }
