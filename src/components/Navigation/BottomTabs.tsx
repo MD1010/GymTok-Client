@@ -103,8 +103,7 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
                     size={40}
                     icon={() => <FontAwesome5 name="plus" size={20} color={Colors.white} />}
                     onPress={() => {
-                      loggedUser?
-                      navigation.navigate("Camera") : navigation.navigate("NotLoggedIn")
+                      navigation.navigate("Camera")
                     }}
                   ></IconButton>
                 </View>
