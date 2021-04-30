@@ -16,8 +16,8 @@ interface Props {
   customStyle?: ViewStyle;
   gifStyle?: ViewStyle;
   pictureHeight?: number;
-  renderFooter?: (item: IPost) => void;
-  isShowDate?: boolean;
+  renderFooter?: (item: IPost) => JSX.Element;
+  renderBottomVideo?: (item: IPost) => JSX.Element;
 }
 
 export const GenericComponent: React.FC<Props> = ({
@@ -28,14 +28,12 @@ export const GenericComponent: React.FC<Props> = ({
   numColumns,
   pictureHeight,
   renderFooter,
-  isShowDate,
+  renderBottomVideo,
 }) => {
   const navigation = useNavigation();
-  const [isLoading, setIsLoading] = useState<boolean>(true);
   const isHorizontal: boolean = horizontal ? horizontal : false;
   const numOfColumns: number = numColumns ? numColumns : 3;
   const picHeight: number = pictureHeight ? pictureHeight : styles.theImage.height;
-  const showDate: boolean = isShowDate ? isShowDate : true;
 
   const showVideo = (postID) => {
     console.log("show post id::::::::::::: " + postID);
@@ -47,7 +45,6 @@ export const GenericComponent: React.FC<Props> = ({
       <View
         style={{
           ...customStyle,
-          margin: 5,
           width: Dimensions.get("screen").width / numOfColumns - 10,
         }}
       >
@@ -66,12 +63,26 @@ export const GenericComponent: React.FC<Props> = ({
             imageStyle={{ borderRadius: 3 }}
             source={{ uri: `${STREAMING_SERVER_GIF_ENDPOINT}/${item.gif}` }}
           >
-            {showDate && (
-              <View style={{ display: "flex", justifyContent: "flex-end", flexDirection: "column", height: picHeight }}>
-                <View style={[styles.rowContainer, { marginRight: 10 }]}>
-                  <Text style={{ color: Colors.white, fontWeight: "bold", fontSize: 12, margin: 3 }}>
-                    {item.publishDate.toString().split("T")[0]}
-                  </Text>
+            {renderBottomVideo ? (
+              renderBottomVideo(item)
+            ) : (
+              <View
+                style={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  marginLeft: 3,
+                  flexDirection: "column",
+                  height: picHeight,
+                }}
+              >
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                  }}
+                >
+                  <FontAwesome name={"heart"} size={13} color={Colors.lightGrey} />
+                  <Text style={styles.amount}>{item.likes.length}</Text>
                 </View>
               </View>
             )}

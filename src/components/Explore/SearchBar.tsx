@@ -103,6 +103,18 @@ export const CustomSearchBar: React.FC = () => {
     );
   };
 
+  const renderBottomVideo = (item: IPost, picHeight: number) => {
+    return (
+      <View style={{ display: "flex", justifyContent: "flex-end", flexDirection: "column", height: picHeight }}>
+        <View style={{ flexDirection: "row", alignItems: "center", marginRight: 10 }}>
+          <Text style={{ color: Colors.white, fontWeight: "bold", fontSize: 12, margin: 3 }}>
+            {item.publishDate.toString().split("T")[0]}
+          </Text>
+        </View>
+      </View>
+    );
+  };
+
   return (
     <SafeAreaView style={{ flex: 1, height: Dimensions.get("screen").height, width: Dimensions.get("screen").width }}>
       <View style={styles.container}>
@@ -134,8 +146,9 @@ export const CustomSearchBar: React.FC = () => {
               items={relvantItems}
               numColumns={2}
               pictureHeight={300}
-              isShowDate={true}
               renderFooter={(item: IPost) => renderFooter(item)}
+              renderBottomVideo={(item: IPost) => renderBottomVideo(item, 300)}
+              customStyle={{ margin: 5 }}
             />
           </View>
         )}
