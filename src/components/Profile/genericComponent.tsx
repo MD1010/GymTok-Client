@@ -14,26 +14,39 @@ interface Props {
   horizontal?: boolean;
   numColumns?: number;
   customStyle?: ViewStyle;
+  gifStyle?: ViewStyle;
   pictureHeight?: number;
+  renderFooter?: (item: IPost) => void;
+  isShowDate?: boolean;
 }
 
-export const GenericComponent: React.FC<Props> = ({ items, horizontal, customStyle, numColumns, pictureHeight }) => {
+export const GenericComponent: React.FC<Props> = ({
+  items,
+  horizontal,
+  customStyle,
+  gifStyle,
+  numColumns,
+  pictureHeight,
+  renderFooter,
+  isShowDate,
+}) => {
   const navigation = useNavigation();
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const isHorizontal: boolean = horizontal ? horizontal : false;
   const numOfColumns: number = numColumns ? numColumns : 3;
   const picHeight: number = pictureHeight ? pictureHeight : styles.theImage.height;
+  const showDate: boolean = isShowDate ? isShowDate : true;
 
   const showVideo = (postID) => {
     console.log("show post id::::::::::::: " + postID);
     navigation.navigate("UsersProfile", { postID: postID });
-    // navigation.navigate("UsersProfile", { videoURL: `${STREAMING_SERVER_VIDEO_ENDPOINT}/${videoURL}` });
   };
 
   const renderItem = (item: IPost) => {
     return (
       <View
         style={{
+          ...customStyle,
           margin: 5,
           width: Dimensions.get("screen").width / numOfColumns - 10,
         }}
@@ -45,6 +58,7 @@ export const GenericComponent: React.FC<Props> = ({ items, horizontal, customSty
         >
           <ImageBackground
             style={{
+              ...gifStyle,
               ...styles.theImage,
               height: picHeight,
               width: Dimensions.get("screen").width / numOfColumns - 10,
@@ -52,43 +66,18 @@ export const GenericComponent: React.FC<Props> = ({ items, horizontal, customSty
             imageStyle={{ borderRadius: 3 }}
             source={{ uri: `${STREAMING_SERVER_GIF_ENDPOINT}/${item.gif}` }}
           >
-            <View style={{ display: "flex", justifyContent: "flex-end", flexDirection: "column", height: picHeight }}>
-              <View style={[styles.rowContainer, { marginRight: 10 }]}>
-                <Text style={{ color: Colors.white, fontWeight: "bold", fontSize: 12, margin: 3 }}>
-                  {item.publishDate.toString().split("T")[0]}
-                </Text>
-                {/* <FontAwesome name={"heart"} size={13} color={Colors.lightGrey} />
-                <Text style={styles.amount}>{item.likes.length}</Text> */}
+            {showDate && (
+              <View style={{ display: "flex", justifyContent: "flex-end", flexDirection: "column", height: picHeight }}>
+                <View style={[styles.rowContainer, { marginRight: 10 }]}>
+                  <Text style={{ color: Colors.white, fontWeight: "bold", fontSize: 12, margin: 3 }}>
+                    {item.publishDate.toString().split("T")[0]}
+                  </Text>
+                </View>
               </View>
-            </View>
+            )}
           </ImageBackground>
         </TouchableOpacity>
-        <Text style={{ color: Colors.white, marginTop: 3, margin: 5, fontWeight: "bold" }}>{item.description}</Text>
-        <View
-          style={{
-            justifyContent: "space-between",
-            flexDirection: "row",
-            width: Dimensions.get("screen").width / numOfColumns - 10,
-            marginTop: 10,
-          }}
-        >
-          <View style={{ flexDirection: "row", margin: 5 }}>
-            <Avatar
-              source={
-                item.createdBy?.image ? { uri: item.createdBy.image } : require("../../../assets/avatar/user.png")
-              }
-              rounded
-            />
-            <Text style={{ color: Colors.darkGrey, alignSelf: "center", marginLeft: 5 }}>
-              {item.createdBy.username}
-            </Text>
-          </View>
-
-          <View style={{ flexDirection: "row", alignSelf: "center" }}>
-            <FontAwesome style={{ alignSelf: "center" }} name={"heart-o"} size={13} color={Colors.darkGrey} />
-            <Text style={{ ...styles.amount, color: Colors.darkGrey }}>{item.likes.length}</Text>
-          </View>
-        </View>
+        {renderFooter(item)}
       </View>
     );
   };
