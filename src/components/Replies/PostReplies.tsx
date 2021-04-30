@@ -6,26 +6,30 @@ import { IPost } from "../../interfaces";
 import { fetchAPI, RequestMethod } from "../../utils/fetchAPI";
 import { GenericComponent } from "../Profile/genericComponent";
 import { Loader } from "../shared";
+import { PostsSkeleton } from "../shared/skeletons/PostsSkeleton";
 import { Colors } from "../shared/styles/variables";
 import { Player } from "../shared/VideoPlayer";
 
-interface PostRepliesProps {}
+interface PostRepliesProps { }
 
 type StackParamsList = {
   params: { newReply: IPost };
 };
-export const PostReplies: React.FC<PostRepliesProps> = ({}) => {
+export const PostReplies: React.FC<PostRepliesProps> = ({ }) => {
   const navigation = useNavigation();
   const route = useRoute<RouteProp<StackParamsList, "params">>();
   const [challengeReplies, setChallengeReplies] = useState<any[]>([]);
   const [streaminServerUrl, setStreaminServerUrl] = useState<string>("");
   const [post, setPost] = useState<IPost>();
   const [isLoadingChallengeVideo, setIsLoadingChallengeVideo] = useState<boolean>(true);
+  const [isLoadingReplies, setIsLoadingReplies] = useState<boolean>(true);
   const [isVideoInViewPort, setIsVideoInViewPort] = useState(false);
 
   const getChallengeReplies = async () => {
+    setIsLoadingReplies(true);
+    setChallengeReplies([]);
     const challengesEndpoint = `${process.env.BASE_API_ENPOINT}/posts/${post._id}/replies`;
-    const { res, error } = await fetchAPI(RequestMethod.GET, challengesEndpoint);
+    const { res } = await fetchAPI(RequestMethod.GET, challengesEndpoint);
 
     res &&
       setChallengeReplies(
@@ -37,6 +41,8 @@ export const PostReplies: React.FC<PostRepliesProps> = ({}) => {
           };
         })
       );
+
+    setIsLoadingReplies(false);
   };
 
   useFocusEffect(
@@ -102,6 +108,7 @@ export const PostReplies: React.FC<PostRepliesProps> = ({}) => {
         </View>
       </View>
       <View style={{ flex: 1 }}>
+        {isLoadingReplies && <PostsSkeleton numOfColumns={3} isHorizontal={false} />}
         <GenericComponent items={challengeReplies} />
       </View>
     </View>
