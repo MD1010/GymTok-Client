@@ -45,7 +45,7 @@ export const GenericComponent: React.FC<Props> = ({
       <View
         style={{
           ...customStyle,
-          margin: 3,
+          margin: 1,
           width: Dimensions.get("screen").width / numOfColumns,
         }}
       >
