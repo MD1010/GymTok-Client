@@ -31,6 +31,8 @@ const postsSlice = createSlice({
     fetchMoreSuccess: (state, action: PayloadAction<IPost[]>) => {
       if (action.payload.length < itemsToFetch) state.hasMoreToFetch = false;
       state.latestFetchedPosts = [...state.latestFetchedPosts, ...action.payload];
+      // state.latestFetchedPosts.sort((a,b) => new Date(a.publishDate) - new Date(b.publishDate) );
+      // state.latestFetchedPosts = [...action.payload,...state.latestFetchedPosts];
       state.error = null;
     },
     userPostsFetchSuccess: (state, action: PayloadAction<IPost[]>) => {

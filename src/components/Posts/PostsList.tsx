@@ -6,7 +6,7 @@ import { Button } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
 import { IPost } from "../../interfaces/Post";
 import { authSelector } from "../../store/auth/authSlice";
-import { getMorePosts, getMostRecommended, getUserPosts } from "../../store/posts/actions";
+import { getLatestPosts, getMorePosts, getMostRecommended, getUserPosts } from "../../store/posts/actions";
 import { postsSelector } from "../../store/posts/postsSlice";
 import { Loader } from "../shared";
 import { Colors, UIConsts } from "../shared/styles/variables";
@@ -14,7 +14,7 @@ import { Post } from "./Post";
 
 interface PostsListProps {
   /**
-   *  in home page isFeed is true, else it is false
+userPosts   *  in home page isFeed is true, else it is false
    */
   isFeed?: boolean;
   currentVideoID?: string;
@@ -52,7 +52,8 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentVideoI
   const onRefresh = React.useCallback(async () => {
     console.log("refreshing!!!!");
     setRefreshing(true);
-    getPosts();
+    dispatch(getLatestPosts())
+    setRefreshing(false);
   }, [refreshing]);
 
   const getPosts = () => {

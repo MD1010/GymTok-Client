@@ -8,7 +8,7 @@ export const getMorePosts = (): AppThunk => {
   return async (dispatch: AppDispatch, getState: () => RootState) => {
     const endpoint = `${process.env.BASE_API_ENPOINT}/posts`;
     const currentPosts = getState()?.posts?.latestFetchedPosts;
-
+    
     const { res, error } = await fetchAPI<IPost[]>(RequestMethod.GET, endpoint, null, {
       size: itemsToFetch,
       page: Math.floor(currentPosts.length / itemsToFetch),
