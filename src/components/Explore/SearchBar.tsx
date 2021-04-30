@@ -64,7 +64,7 @@ export const CustomSearchBar: React.FC = () => {
   const renderFooter = (item: IPost) => {
     return (
       <View>
-        <Text style={{ color: Colors.white, marginTop: 3, margin: 5, fontWeight: "bold" }}>{item.description}</Text>
+        <Text style={{ color: Colors.white, marginTop: 3, margin: 5, fontWeight: "bold" }}>{item?.description}</Text>
         <View
           style={{
             justifyContent: "space-between",
@@ -76,12 +76,12 @@ export const CustomSearchBar: React.FC = () => {
           <View style={{ flexDirection: "row", margin: 5 }}>
             <Avatar
               source={
-                item.createdBy?.image ? { uri: item.createdBy.image } : require("../../../assets/avatar/user.png")
+                item?.createdBy?.image ? { uri: item?.createdBy?.image } : require("../../../assets/avatar/user.png")
               }
               rounded
             />
             <Text style={{ color: Colors.darkGrey, alignSelf: "center", marginLeft: 5 }}>
-              {item.createdBy.username}
+              {item?.createdBy?.username}
             </Text>
           </View>
 
@@ -95,7 +95,7 @@ export const CustomSearchBar: React.FC = () => {
                 color: Colors.darkGrey,
               }}
             >
-              {item.likes.length}
+              {item?.likes?.length}
             </Text>
           </View>
         </View>
