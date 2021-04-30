@@ -85,7 +85,6 @@ export const Player: React.FC<VideoProps> = memo(
 
     useFocusEffect(
       React.useCallback(() => {
-        console.log("render", renderedInList);
         navigation.addListener("blur", async (e) => {
           await ref.current?.pauseAsync();
           isBlurred.current = true;

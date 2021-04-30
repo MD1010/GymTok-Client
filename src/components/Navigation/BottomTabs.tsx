@@ -17,13 +17,10 @@ interface BottomTabsProps {}
 
 const EmptyTab = () => null;
 
-
-
 export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
   const navigation = useNavigation();
   const Tab = createBottomTabNavigator();
   const { loggedUser } = useSelector(authSelector);
-
 
   return (
     <Provider>
