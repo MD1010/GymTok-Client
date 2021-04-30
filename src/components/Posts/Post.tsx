@@ -5,6 +5,7 @@ import { Text, View, ViewStyle } from "react-native";
 import { Avatar } from "react-native-elements";
 import { TouchableOpacity, TouchableWithoutFeedback } from "react-native-gesture-handler";
 import { useDispatch, useSelector } from "react-redux";
+import { IHashtag } from "../../interfaces/Hashtag";
 import { IPost } from "../../interfaces/Post";
 import { authSelector } from "../../store/auth/authSlice";
 import { updateUserLikePost } from "../../store/posts/actions";
@@ -48,11 +49,11 @@ const Heading = ({ createdBy, onCameraPress }) => {
   );
 };
 
-const TagsContainer: React.FC<{ hashtags: string[] }> = ({ hashtags }) => (
+const TagsContainer: React.FC<{ hashtags: IHashtag[] }> = ({ hashtags }) => (
   <View style={[styles.rowContainer, { flex: 2, flexWrap: "wrap" }]}>
     {hashtags?.map((tag, i) => (
       <Text key={i} style={styles.hashtag}>
-        #{tag}
+        #{tag.hashtag}
       </Text>
     ))}
   </View>
