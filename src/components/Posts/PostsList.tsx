@@ -18,9 +18,11 @@ userPosts   *  in home page isFeed is true, else it is false
    */
   isFeed?: boolean;
   currentPostID?: string;
+  currentPosts?: IPost[];
+  isLoadMore?: boolean;
 }
 
-export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentPostID }) => {
+export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentPostID, currentPosts, isLoadMore }) => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const [navigatedOutOfScreen, setNavigatedOutOfScreen] = useState<boolean>(false);
@@ -31,14 +33,16 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentPostID
   const flatListRef = useRef<FlatList>(null);
   const [showFooter, setShowFooter] = useState<boolean>(false);
   const { hasMoreToFetch, error, latestFetchedPosts, userPosts } = useSelector(postsSelector);
-  const posts: IPost[] = isFeed ? latestFetchedPosts : userPosts;
+  const posts: IPost[] = currentPosts ? currentPosts : isFeed ? latestFetchedPosts : userPosts;
   const [refreshing, setRefreshing] = React.useState<boolean>(false);
+  const loadMore: boolean = isLoadMore !== undefined ? isLoadMore : true;
 
   useEffect(() => {
     error && alert(JSON.stringify(error));
   }, [error]);
 
   useEffect(() => {
+    console.log("fdfdfdfdfdfdfdfdfdf" + loadMore);
     if (posts) {
       setShowFooter(false);
       setRefreshing(false);
@@ -75,7 +79,7 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentPostID
     if (currentPostID && posts.length > 0) {
       console.log("currentID: " + currentPostID);
       let wantedIndex = posts.findIndex((post) => post._id === currentPostID);
-      console.log(posts[wantedIndex]);
+      // console.log(posts[wantedIndex]);
       console.log("wnted index" + wantedIndex);
       if (wantedIndex != -1) goIndex(wantedIndex);
     }
@@ -204,7 +208,7 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentPostID
           }}
           onViewableItemsChanged={onViewRef.current}
           viewabilityConfig={config.current}
-          onEndReached={handleLoadMore}
+          onEndReached={loadMore ? handleLoadMore : null}
           onEndReachedThreshold={0.5}
           ListFooterComponent={showFooter ? <Footer /> : null}
           ListFooterComponentStyle={{

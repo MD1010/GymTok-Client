@@ -16,7 +16,12 @@ export const ProfileVideoModal: React.FC = () => {
   // todo Dov modify postlist to display correct index
   return (
     <View style={styles.modalView}>
-      <PostsList isFeed={false} currentPostID={route.params.postID} />
+      <PostsList
+        isFeed={false}
+        currentPostID={route.params.postID}
+        currentPosts={route.params.posts}
+        isLoadMore={false}
+      />
       {/* <ChallengesContainer
         currentVideoID={route.params.videoURL?.split("/")[3]}
         getOnlyUserChallenges={true}
