@@ -55,7 +55,9 @@ export const GenericComponent: React.FC<Props> = ({ items, horizontal, customSty
           >
             <View style={{ display: "flex", justifyContent: "flex-end", flexDirection: "column", height: picHeight }}>
               <View style={[styles.rowContainer, { marginRight: 10 }]}>
-                <Text style={{ color: Colors.white }}>{item.publishDate.toString().split("T")[0]}</Text>
+                <Text style={{ color: Colors.white, fontWeight: "bold", fontSize: 12, margin: 3 }}>
+                  {item.publishDate.toString().split("T")[0]}
+                </Text>
                 {/* <FontAwesome name={"heart"} size={13} color={Colors.lightGrey} />
                 <Text style={styles.amount}>{item.likes.length}</Text> */}
               </View>
