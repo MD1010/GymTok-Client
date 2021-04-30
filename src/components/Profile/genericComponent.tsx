@@ -8,7 +8,6 @@ import { STREAMING_SERVER_GIF_ENDPOINT, STREAMING_SERVER_VIDEO_ENDPOINT } from "
 import { Colors } from "../shared/styles/variables";
 import { Item } from "./interfaces";
 import { Avatar } from "react-native-elements";
-import Moment from "moment";
 
 interface Props {
   items: IPost[];
