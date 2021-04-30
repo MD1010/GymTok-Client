@@ -9,14 +9,14 @@ export const ProfileVideoModal: React.FC = () => {
   const headerHeight = useHeaderHeight();
 
   useEffect(() => {
-    if (route.params.videoURL) {
-      console.log("video dov 123: " + route.params.videoURL);
+    if (route.params.postID) {
+      console.log("video dov 123: " + route.params.postID);
     }
   }, [route.params]);
   // todo Dov modify postlist to display correct index
   return (
     <View style={styles.modalView}>
-      <PostsList isFeed={false} currentVideoID={route.params.videoURL?.split("/")[4]} />
+      <PostsList isFeed={false} currentPostID={route.params.postID} />
       {/* <ChallengesContainer
         currentVideoID={route.params.videoURL?.split("/")[3]}
         getOnlyUserChallenges={true}

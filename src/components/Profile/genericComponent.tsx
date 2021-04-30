@@ -22,8 +22,10 @@ export const GenericComponent: React.FC<Props> = ({ items, horizontal, customSty
   const numOfColumns: number = numColumns ? numColumns : 3;
   const picHeight: number = pictureHeight ? pictureHeight : styles.theImage.height;
 
-  const showVideo = (videoURL) => {
-    navigation.navigate("UsersProfile", { videoURL: `${STREAMING_SERVER_VIDEO_ENDPOINT}/${videoURL}` });
+  const showVideo = (postID) => {
+    console.log("show post id::::::::::::: " + postID);
+    navigation.navigate("UsersProfile", { postID: postID });
+    // navigation.navigate("UsersProfile", { videoURL: `${STREAMING_SERVER_VIDEO_ENDPOINT}/${videoURL}` });
   };
 
   const renderItem = (item: Item) => {
@@ -35,7 +37,7 @@ export const GenericComponent: React.FC<Props> = ({ items, horizontal, customSty
       >
         <TouchableOpacity
           onPress={() => {
-            showVideo(item.video);
+            showVideo(item._id);
           }}
         >
           <ImageBackground

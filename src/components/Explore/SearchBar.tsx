@@ -12,8 +12,6 @@ import debounce from "lodash/debounce";
 import { fetchAPI, RequestMethod } from "../../utils/fetchAPI";
 import { Colors, UIConsts } from "../shared";
 
-
-
 export const CustomSearchBar: React.FC = () => {
   const [search, setSearch] = useState("");
   const [masterDataSource, setMasterDataSource] = useState([]);
@@ -23,22 +21,21 @@ export const CustomSearchBar: React.FC = () => {
   const [relvantItems, setRelavantItems] = useState<Item[] | undefined>(undefined);
   const route = useRoute<any>();
 
-
   useEffect(() => {
     if (route.params?.searchText) {
-      console.log('innnn');
-      
+      console.log("innnn");
+
       setSearch(route.params?.searchText);
     }
   }, [route.params]);
 
   const fetchHashtags = useCallback(
-    debounce(async (searchTerm: string) => {
+    debounce(async (searchTerm?: string) => {
       const { res } = await fetchAPI(RequestMethod.GET, `${process.env.BASE_API_ENPOINT}/hashtags`, null, {
         searchTerm,
       });
       res && setMasterDataSource(res);
-      
+
       setIsLoading(false);
     }, 400),
     []
@@ -52,10 +49,10 @@ export const CustomSearchBar: React.FC = () => {
 
   const handleSubmit = async (hashtagId: string) => {
     setIsLoading(true);
-    const { res } = await fetchAPI(RequestMethod.GET, `${process.env.BASE_API_ENPOINT}/challenges/hashtag/${hashtagId}`);
+    const { res } = await fetchAPI(RequestMethod.GET, `${process.env.BASE_API_ENPOINT}/posts/hashtag/${hashtagId}`);
     setIsLoading(false);
 
-    res.map(challenge => {
+    res.map((challenge) => {
       challenge.component = <Text style={{ color: Colors.white }}>{challenge.description}</Text>;
     });
 
@@ -70,8 +67,8 @@ export const CustomSearchBar: React.FC = () => {
         <SearchBar
           style={{ height: 40 }}
           onFocus={() => {
-            fetchHashtags('');
-            setIsModalVisible(true)
+            fetchHashtags();
+            setIsModalVisible(true);
           }}
           onSubmitEditing={(event) => handleSubmit(event.nativeEvent.text)}
           round
@@ -84,9 +81,7 @@ export const CustomSearchBar: React.FC = () => {
           value={search}
         />
 
-        {isModalVisible && (
-          <SearchResults dataSource={masterDataSource} handleSelectItem={handleSelectItem} />
-        )}
+        {isModalVisible && <SearchResults dataSource={masterDataSource} handleSelectItem={handleSelectItem} />}
         {relvantItems !== undefined && (
           <View style={{ flex: 1 }}>
             <Text style={{ fontSize: 20, margin: 5, color: Colors.white }}>Videos</Text>

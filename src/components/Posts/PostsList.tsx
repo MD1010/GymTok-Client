@@ -17,10 +17,10 @@ interface PostsListProps {
 userPosts   *  in home page isFeed is true, else it is false
    */
   isFeed?: boolean;
-  currentVideoID?: string;
+  currentPostID?: string;
 }
 
-export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentVideoID }) => {
+export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentPostID }) => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const [navigatedOutOfScreen, setNavigatedOutOfScreen] = useState<boolean>(false);
@@ -52,7 +52,7 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentVideoI
   const onRefresh = React.useCallback(async () => {
     console.log("refreshing!!!!");
     setRefreshing(true);
-    dispatch(getLatestPosts())
+    dispatch(getLatestPosts());
     setRefreshing(false);
   }, [refreshing]);
 
@@ -72,16 +72,14 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentVideoI
   }, [loggedUser]);
 
   useEffect(() => {
-    if (currentVideoID && posts.length > 0) {
-      console.log("currentID: " + currentVideoID);
-      console.log("postfdfdfdf: " + posts);
-      let wantedIndex = posts.findIndex((post) => post._id === currentVideoID);
+    if (currentPostID && posts.length > 0) {
+      console.log("currentID: " + currentPostID);
+      let wantedIndex = posts.findIndex((post) => post._id === currentPostID);
+      console.log(posts[wantedIndex]);
       console.log("wnted index" + wantedIndex);
-      if(wantedIndex != -1)
-        goIndex(wantedIndex);
-        
+      if (wantedIndex != -1) goIndex(wantedIndex);
     }
-  }, [posts, currentVideoID]);
+  }, [posts, currentPostID]);
 
   useFocusEffect(
     React.useCallback(() => {
