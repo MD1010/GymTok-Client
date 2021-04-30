@@ -23,8 +23,8 @@ import { Colors } from "../shared/styles/variables";
 import { Item } from "./interfaces";
 
 interface Props {
-  items: Item[];
-  loadMoreCallback: () => void;
+  items: IPost[];
+  loadMoreCallback: () => any;
   hasMoreToFetch: boolean;
   horizontal?: boolean;
   numColumns?: number;
@@ -77,14 +77,32 @@ export const GenericComponent: React.FC<Props> = ({
       // setRefreshing(false);
     }
   }, [items]);
+  // useEffect(() => {
+  //   console.log(123123123, loadMoreCallback);
+
+  //   console.log(items.length);
+  //   async function loadMore() {
+  //     loadMoreCallback && (await loadMoreCallback());
+  //   }
+  //   loadMore();
+  // }, []);
   useEffect(() => {
-    handleLoadMore();
+    console.log(123123123, loadMoreCallback);
+    console.log(items.length);
+    // async function loadMore() {
+    //   loadMoreCallback && (await loadMoreCallback());
+    // }
+    loadMoreCallback && loadMoreCallback();
   }, []);
+  console.log("render!@#!@#!@#!@..");
   const handleLoadMore = () => {
+    console.log(
+      `itemsLenght: ${items.length},hasMoreToFetch: ${hasMoreToFetch}`
+    );
     items.length && setShowFooter(true);
     hasMoreToFetch && loadMoreCallback();
   };
-  const renderItem = (item: Item) => {
+  const renderItem = (item: IPost) => {
     return (
       <View
         style={{
@@ -93,7 +111,7 @@ export const GenericComponent: React.FC<Props> = ({
       >
         <TouchableOpacity
           onPress={() => {
-            showVideo(item.video);
+            showVideo(item.videoURI);
           }}
         >
           <ImageBackground
@@ -118,15 +136,16 @@ export const GenericComponent: React.FC<Props> = ({
                   size={13}
                   color={Colors.lightGrey}
                 />
-                <Text style={styles.amount}>{item.numOfLikes}</Text>
+                {/* <Text style={styles.amount}>{item.likes}</Text> */}
               </View>
             </View>
           </ImageBackground>
         </TouchableOpacity>
-        {item.component}
+        {/* {item.component} */}
       </View>
     );
   };
+  const d = () => console.log(123123);
 
   return (
     <SafeAreaView
@@ -139,6 +158,7 @@ export const GenericComponent: React.FC<Props> = ({
         horizontal={isHorizontal}
         numColumns={!isHorizontal ? numOfColumns : 0}
         renderItem={({ item }) => renderItem(item)}
+        onEndReachedThreshold={0}
         ListFooterComponent={showFooter ? <Footer /> : null}
         onEndReached={handleLoadMore}
       />
