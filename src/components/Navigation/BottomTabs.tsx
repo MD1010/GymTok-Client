@@ -17,10 +17,13 @@ interface BottomTabsProps {}
 
 const EmptyTab = () => null;
 
+
+
 export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
   const navigation = useNavigation();
   const Tab = createBottomTabNavigator();
   const { loggedUser } = useSelector(authSelector);
+
 
   return (
     <Provider>
@@ -133,17 +136,7 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
         ></Tab.Screen>
         <Tab.Screen
           name="Me"
-          component={
-            loggedUser
-              ? () => <Profile />
-              : () => (
-                  <NotLoggedInScreen
-                    text={"Profile"}
-                    description={"Sign up for an account"}
-                    icon={() => <Ionicons name="md-person-outline" color={Colors.white} size={56} />}
-                  />
-                )
-          }
+          component={Profile}
           options={{
             tabBarIcon: ({ color, size, focused }) =>
               focused ? (
