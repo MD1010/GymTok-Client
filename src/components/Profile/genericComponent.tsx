@@ -77,7 +77,7 @@ export const GenericComponent: React.FC<Props> = ({
             )}
           </ImageBackground>
         </TouchableOpacity>
-        {renderFooter(item)}
+        {renderFooter && renderFooter(item)}
       </View>
     );
   };
