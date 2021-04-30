@@ -108,7 +108,8 @@ export const PostReplies: React.FC<PostRepliesProps> = ({ }) => {
         </View>
       </View>
       <View style={{ flex: 1 }}>
-        {isLoadingReplies && <PostsSkeleton numOfColumns={3} isHorizontal={false} />}
+        {isLoadingReplies &&
+          <Loader />}
         <GenericComponent items={challengeReplies} />
       </View>
     </View>
