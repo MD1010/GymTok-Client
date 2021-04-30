@@ -86,8 +86,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     marginTop: 15,
-    marginBottom: 10,
-    backgroundColor: "red",
+    marginBottom: 10
   },
 
   infoContainer: {
