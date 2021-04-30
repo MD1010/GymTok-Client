@@ -82,7 +82,7 @@ export const GenericComponent: React.FC<Props> = ({
                   }}
                 >
                   <FontAwesome name={"heart"} size={13} color={Colors.lightGrey} />
-                  <Text style={styles.amount}>{item.likes.length}</Text>
+                  <Text style={styles.amount}>{item?.likes?.length}</Text>
                 </View>
               </View>
             )}
