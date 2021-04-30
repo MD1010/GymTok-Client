@@ -70,7 +70,7 @@ export const GenericComponent: React.FC<Props> = ({
               <View style={{ display: "flex", justifyContent: "flex-end", flexDirection: "column", height: picHeight }}>
                 <View style={[styles.rowContainer, { marginRight: 10 }]}>
                   <Text style={{ color: Colors.white, fontWeight: "bold", fontSize: 12, margin: 3 }}>
-                    {item.publishDate.toString().split("T")[0]}
+                    {item?.publishDate?.toString().split("T")[0]}
                   </Text>
                 </View>
               </View>
