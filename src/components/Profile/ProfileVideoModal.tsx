@@ -4,7 +4,7 @@ import { useRoute } from "@react-navigation/native";
 import { useHeaderHeight } from "@react-navigation/stack";
 import { PostsList } from "../Posts/PostsList";
 
-export const ProfileVideoModal: React.FC = () => {
+export const PostsVideoDisplay: React.FC = () => {
   const route = useRoute<any>();
   const headerHeight = useHeaderHeight();
 
@@ -18,9 +18,9 @@ export const ProfileVideoModal: React.FC = () => {
     <View style={styles.modalView}>
       <PostsList
         isFeed={false}
-        currentPostID={route.params.postID}
         currentPosts={route.params.posts}
         isLoadMore={false}
+        initialPostIndex={route.params.initialIndex}
       />
       {/* <ChallengesContainer
         currentVideoID={route.params.videoURL?.split("/")[3]}

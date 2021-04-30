@@ -1,13 +1,11 @@
 import { FontAwesome } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-import React, { useState } from "react";
+import React from "react";
 import { Dimensions, FlatList, ImageBackground, SafeAreaView, StyleSheet, Text, View, ViewStyle } from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import Ripple from "react-native-material-ripple";
 import { IPost } from "../../interfaces";
-import { STREAMING_SERVER_GIF_ENDPOINT, STREAMING_SERVER_VIDEO_ENDPOINT } from "../../utils/consts";
+import { STREAMING_SERVER_GIF_ENDPOINT } from "../../utils/consts";
 import { Colors } from "../shared/styles/variables";
-import { Item } from "./interfaces";
-import { Avatar } from "react-native-elements";
 
 interface Props {
   items: IPost[];
@@ -18,6 +16,7 @@ interface Props {
   pictureHeight?: number;
   renderFooter?: (item: IPost) => JSX.Element;
   renderBottomVideo?: (item: IPost) => JSX.Element;
+  pageHeader?: () => JSX.Element;
 }
 
 export const GenericComponent: React.FC<Props> = ({
@@ -25,10 +24,11 @@ export const GenericComponent: React.FC<Props> = ({
   horizontal,
   customStyle,
   gifStyle,
-  numColumns,
-  pictureHeight,
   renderFooter,
   renderBottomVideo,
+  numColumns,
+  pictureHeight,
+  pageHeader,
 }) => {
   const navigation = useNavigation();
   const isHorizontal: boolean = horizontal ? horizontal : false;
@@ -36,30 +36,29 @@ export const GenericComponent: React.FC<Props> = ({
   const picHeight: number = pictureHeight ? pictureHeight : styles.theImage.height;
 
   const showVideo = (postID) => {
-    console.log("show post id::::::::::::: " + postID);
-    navigation.navigate("UsersProfile", { postID: postID, posts: items });
+    const initialIndex = items.findIndex((post) => post._id === postID);
+    navigation.navigate("VideoDisplay", { posts: items, initialIndex });
   };
 
   const renderItem = (item: IPost) => {
     return (
       <View
         style={{
+          width: Dimensions.get("window").width / numOfColumns,
           ...customStyle,
-          margin: 1,
-          width: Dimensions.get("screen").width / numOfColumns,
         }}
       >
-        <TouchableOpacity
+        <Ripple
           onPress={() => {
             showVideo(item._id);
           }}
         >
           <ImageBackground
             style={{
-              ...gifStyle,
               ...styles.theImage,
               height: picHeight,
-              width: Dimensions.get("screen").width / numOfColumns,
+              // width: Dimensions.get("window").width / numOfColumns,
+              ...gifStyle,
             }}
             imageStyle={{ borderRadius: 3 }}
             source={{ uri: `${STREAMING_SERVER_GIF_ENDPOINT}/${item.gif}` }}
@@ -88,7 +87,8 @@ export const GenericComponent: React.FC<Props> = ({
               </View>
             )}
           </ImageBackground>
-        </TouchableOpacity>
+        </Ripple>
+
         {renderFooter && renderFooter(item)}
       </View>
     );
@@ -97,6 +97,7 @@ export const GenericComponent: React.FC<Props> = ({
   return (
     <SafeAreaView style={{ flex: 1, flexDirection: isHorizontal ? "row" : "column" }}>
       <FlatList
+        ListHeaderComponent={pageHeader}
         data={items}
         keyExtractor={(item, index) => index.toString()}
         horizontal={isHorizontal}
