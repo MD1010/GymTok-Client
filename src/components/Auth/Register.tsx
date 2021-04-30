@@ -23,9 +23,9 @@ interface RegisterProps {
   isLoading: boolean;
 }
 
-const emailRegex = new RegExp('[a-zA-Z0-9_\\.\\+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-\\.]+');
+const emailRegex = new RegExp("[a-zA-Z0-9_\\.\\+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-\\.]+");
 
-export const RegisterScreen: React.FC<RegisterProps> = ({ onSubmit, isLoading }) => {
+export const RegisterScreen: React.FC<RegisterProps> = ({ onSubmit, isLoading, error }) => {
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -37,6 +37,10 @@ export const RegisterScreen: React.FC<RegisterProps> = ({ onSubmit, isLoading })
   const checkIfFieldsAreNotEmpty = () => {
     return email.length && password.length && fullName.length && username.length && confirmPassword.length;
   };
+
+  useEffect(() => {
+    error && setErrorText(error);
+  }, [error]);
 
   const checkIfPasswordsMatch = () => {
     return !password.localeCompare(confirmPassword);
@@ -77,7 +81,7 @@ export const RegisterScreen: React.FC<RegisterProps> = ({ onSubmit, isLoading })
       setErrorText("name has to include only characters");
       return false;
     }
-    
+
     if (!emailRegex.test(email)) {
       setErrorText("Invalid email");
       return false;
@@ -93,7 +97,7 @@ export const RegisterScreen: React.FC<RegisterProps> = ({ onSubmit, isLoading })
   return (
     <View style={styles.container}>
       <View style={styles.form}>
-      <View style={styles.inputRow}>
+        <View style={styles.inputRow}>
           <TextInput
             value={email}
             style={styles.inputStyle}
@@ -104,7 +108,7 @@ export const RegisterScreen: React.FC<RegisterProps> = ({ onSubmit, isLoading })
             returnKeyType="next"
             blurOnSubmit={true}
           />
-          {username.length ? (
+          {email.length ? (
             <TouchableWithoutFeedback onPress={() => setEmail("")}>
               <FontAwesome name="times-circle" size={16} color={"white"} />
             </TouchableWithoutFeedback>
@@ -201,7 +205,10 @@ export const RegisterScreen: React.FC<RegisterProps> = ({ onSubmit, isLoading })
           style={styles.buttonStyle}
           disabled={!checkIfFieldsAreNotEmpty()}
           onPress={() => {
-            if (validateForm()) onSubmit(username, fullName, password, email);
+            if (validateForm()) {
+              setErrorText(null);
+              onSubmit(username, fullName, password, email);
+            }
           }}
         >
           <View style={{ flexDirection: "row", justifyContent: "center", height: 40 }}>
