@@ -177,7 +177,7 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentPostID
       >
         <FlatList
           refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-          initialNumToRender={5}
+          initialNumToRender={currentPostID ? 1 : 5}
           maxToRenderPerBatch={3}
           windowSize={5}
           // removeClippedSubviews
