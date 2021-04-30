@@ -37,7 +37,7 @@ export const GenericComponent: React.FC<Props> = ({
 
   const showVideo = (postID) => {
     console.log("show post id::::::::::::: " + postID);
-    navigation.navigate("UsersProfile", { postID: postID });
+    navigation.navigate("UsersProfile", { postID: postID, posts: items });
   };
 
   const renderItem = (item: IPost) => {
