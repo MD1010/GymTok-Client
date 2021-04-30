@@ -87,7 +87,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     marginTop: 15,
     marginBottom: 10,
-    backgroundColor: "red",
   },
 
   infoContainer: {

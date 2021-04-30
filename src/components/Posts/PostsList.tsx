@@ -76,9 +76,7 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentVideoI
       console.log("postfdfdfdf: " + posts);
       let wantedIndex = posts.findIndex((post) => post._id === currentVideoID);
       console.log("wnted index" + wantedIndex);
-      if(wantedIndex != -1)
-        goIndex(wantedIndex);
-        
+      if (wantedIndex != -1) goIndex(wantedIndex);
     }
   }, [posts, currentVideoID]);
 
@@ -179,7 +177,7 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentVideoI
         <FlatList
           refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
           initialNumToRender={5}
-          maxToRenderPerBatch={3}
+          maxToRenderPerBatch={5}
           windowSize={5}
           // removeClippedSubviews
           // updateCellsBatchingPeriod={5}
@@ -206,7 +204,7 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentVideoI
           onViewableItemsChanged={onViewRef.current}
           viewabilityConfig={config.current}
           onEndReached={handleLoadMore}
-          onEndReachedThreshold={0.5}
+          onEndReachedThreshold={3}
           ListFooterComponent={showFooter ? <Footer /> : null}
           ListFooterComponentStyle={{
             height: 80,

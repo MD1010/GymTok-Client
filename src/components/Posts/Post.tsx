@@ -1,6 +1,7 @@
 import { FontAwesome } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/core";
-import React, { memo, useEffect, useState } from "react";
+import { Video } from "expo-av";
+import React, { memo, useEffect, useRef, useState } from "react";
 import { Text, View, ViewStyle } from "react-native";
 import { Avatar } from "react-native-elements";
 import { TouchableOpacity, TouchableWithoutFeedback } from "react-native-gesture-handler";
@@ -143,7 +144,7 @@ export const Post: React.FC<PostProps> = memo(({ post, isVisible, containerStyle
       console.log("guest click on comment button, need to login");
     }
   };
-
+  const ref = useRef();
   return (
     <View style={[styles.container, containerStyle]}>
       <Player
@@ -153,6 +154,7 @@ export const Post: React.FC<PostProps> = memo(({ post, isVisible, containerStyle
         resizeMode="cover"
         renderedInList
       />
+
       <View style={styles.infoContainer}>
         <Heading createdBy={createdBy} onCameraPress={() => onCameraPress()} />
 

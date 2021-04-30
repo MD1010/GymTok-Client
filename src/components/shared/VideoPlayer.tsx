@@ -4,6 +4,7 @@ import { Video } from "expo-av";
 import * as FileSystem from "expo-file-system";
 import React, { memo, ReactNode, useEffect, useRef, useState } from "react";
 import { Dimensions, Platform, StyleProp, StyleSheet, TouchableWithoutFeedback, View, ViewStyle } from "react-native";
+import { useDispatch } from "react-redux";
 import shorthash from "shorthash";
 import { loadVideo } from "../../utils/cache";
 import { Colors } from "./styles/variables";
@@ -44,6 +45,8 @@ export const Player: React.FC<VideoProps> = memo(
     children,
   }) => {
     const statusRef = useRef<any>();
+    const dispatch = useDispatch();
+
     const [isPaused, setIsPaused] = useState<boolean>(false);
     const ref = useRef(null);
     const [videoURI, setVideoURI] = useState<string>();
@@ -85,7 +88,6 @@ export const Player: React.FC<VideoProps> = memo(
 
     useFocusEffect(
       React.useCallback(() => {
-        console.log("render", renderedInList);
         navigation.addListener("blur", async (e) => {
           await ref.current?.pauseAsync();
           isBlurred.current = true;
@@ -118,6 +120,12 @@ export const Player: React.FC<VideoProps> = memo(
           <View style={[styles.container, containerStyle]}>
             {
               <Video
+                usePoster
+                posterSource={{
+                  uri: "https://i.pinimg.com/originals/66/c2/6c/66c26c8d2e3745a9a6d131ec478d2319.jpg",
+                  height: Dimensions.get("window").height,
+                }}
+                posterStyle={{ height: Dimensions.get("window").height }}
                 onLoadStart={() => console.log("start loading", uri)}
                 onReadyForDisplay={() => console.log("ready!")}
                 onLoad={(status) => {
@@ -127,7 +135,7 @@ export const Player: React.FC<VideoProps> = memo(
                 style={style || styles.defaultVideoStyle}
                 useNativeControls={!!controlsShown}
                 source={{
-                  uri,
+                  uri: "http://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4",
                 }}
                 resizeMode={resizeMode}
                 shouldPlay={videoInViewPort === undefined ? true : videoInViewPort}
