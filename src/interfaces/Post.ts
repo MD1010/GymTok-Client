@@ -1,3 +1,4 @@
+import { IHashtag } from "./Hashtag";
 import { IUser } from "./User";
 
 export interface IPost {
@@ -11,5 +12,5 @@ export interface IPost {
   replies: string[];
   likes: string[];
   isReply: boolean;
-  hashtags: string[];
+  hashtags: IHashtag[];
 }
