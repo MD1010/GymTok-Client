@@ -1,19 +1,13 @@
-import React, { useState } from "react";
+import React from "react";
 import { Item } from "./interfaces";
 import { GenericComponent } from "./genericComponent";
-import { Button, Image, View, Text } from "react-native";
+import { Image, View, Text } from "react-native";
 import { Colors } from "../shared";
 // import { Icon } from "expo";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-import { NavigationContainer } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/Ionicons";
+import { IUser } from "../../interfaces";
 
-const Home = () => {
-  return <Text>Home</Text>;
-};
-const Settings = () => {
-  return <Text>Settings</Text>;
-};
 const challenges = [
   {
     _id: 1,
@@ -132,14 +126,22 @@ function ProfileTabs() {
 }
 interface ProfileProps {
   items: Item[];
+  user: IUser;
 }
-const ProfileHeader: React.FC = () => {
+
+interface ProfileHeaderProps {
+  user: IUser;
+}
+
+const ProfileHeader: React.FC<ProfileHeaderProps> = ({user}) => {
+
+
   return (
     <View style={{ paddingTop: 40, paddingLeft: 5 }}>
       <View style={{ flexDirection: "row" }}>
         <View style={{ flex: 1, alignItems: "center" }}>
           <Image
-            source={require("../../../assets/avatar/01.jpg")}
+            source={user.image ? {uri: user.image} : require('../../../assets/avatar/user.png')}
             style={{ width: 75, height: 75, borderRadius: 37.5 }}
           />
         </View>
@@ -191,7 +193,7 @@ const ProfileHeader: React.FC = () => {
         </View>
       </View>
       <View style={{ margin: 10, marginTop: 15 }}>
-        <Text style={{ fontWeight: "bold", color: Colors.white }}>Moris Angus</Text>
+        <Text style={{ fontWeight: "bold", color: Colors.white }}>{user.fullName}</Text>
         <Text style={{ color: Colors.white }}>Basketball player | Runner | Swimmer </Text>
         <Text style={{ color: Colors.white }}>www.mysite.com</Text>
       </View>
@@ -199,12 +201,12 @@ const ProfileHeader: React.FC = () => {
   );
 };
 
-export const ProfileScreen: React.FC<ProfileProps> = ({ items }) => {
+export const ProfileScreen: React.FC<ProfileProps> = ({ items, user}) => {
   // return <GenericComponent items={items} />;
 
   return (
     <>
-      <ProfileHeader />
+      <ProfileHeader user={user}/>
       <ProfileTabs />
     </>
   );
