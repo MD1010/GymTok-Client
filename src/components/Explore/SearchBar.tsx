@@ -11,6 +11,7 @@ import { Item } from "../Profile/interfaces";
 import debounce from "lodash/debounce";
 import { fetchAPI, RequestMethod } from "../../utils/fetchAPI";
 import { Colors, UIConsts } from "../shared";
+import { IPost } from "../../interfaces";
 
 export const CustomSearchBar: React.FC = () => {
   const [search, setSearch] = useState("");
@@ -18,7 +19,7 @@ export const CustomSearchBar: React.FC = () => {
   const navigation = useNavigation();
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [relvantItems, setRelavantItems] = useState<Item[] | undefined>(undefined);
+  const [relvantItems, setRelavantItems] = useState<IPost[] | undefined>(undefined);
   const route = useRoute<any>();
 
   useEffect(() => {
@@ -50,11 +51,12 @@ export const CustomSearchBar: React.FC = () => {
   const handleSubmit = async (hashtagId: string) => {
     setIsLoading(true);
     const { res } = await fetchAPI(RequestMethod.GET, `${process.env.BASE_API_ENPOINT}/posts/hashtag/${hashtagId}`);
+
     setIsLoading(false);
 
-    res.map((challenge) => {
-      challenge.component = <Text style={{ color: Colors.white }}>{challenge.description}</Text>;
-    });
+    // res.map((challenge) => {
+    //   challenge.component = <Text style={{ color: Colors.white }}>{challenge.description}</Text>;
+    // });
 
     setRelavantItems(res);
   };
@@ -85,7 +87,7 @@ export const CustomSearchBar: React.FC = () => {
         {relvantItems !== undefined && (
           <View style={{ flex: 1 }}>
             <Text style={{ fontSize: 20, margin: 5, color: Colors.white }}>Videos</Text>
-            <GenericComponent items={relvantItems} numColumns={2} pictureHeight={200} />
+            <GenericComponent items={relvantItems} numColumns={2} pictureHeight={300} />
           </View>
         )}
       </View>
