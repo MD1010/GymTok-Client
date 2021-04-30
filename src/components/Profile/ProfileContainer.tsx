@@ -172,7 +172,7 @@ export const ProfileContainer: React.FC<ProfileContainerProps> = ({}) => {
   //     fetchChallenges();
   //   }, []);
   return loggedUser 
-        ? <ProfileScreen items={challenges} /> :
+        ? <ProfileScreen items={challenges} user={loggedUser}/> :
           <NotLoggedInScreen
               text={"Profile"}
               description={"Sign up for an account"}
