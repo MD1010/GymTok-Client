@@ -67,6 +67,7 @@ export const CustomSearchBar: React.FC = () => {
         <Spinner visible={isLoading} textLoading={"Loading..."} textStyle={{ color: "#FFF" }} />
 
         <SearchBar
+          containerStyle={{ backgroundColor: Colors.black }}
           style={{ height: 40 }}
           onFocus={() => {
             fetchHashtags();
