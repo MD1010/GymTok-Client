@@ -31,14 +31,16 @@ interface IUIContainer {
 }
 
 const Heading = ({ createdBy, onCameraPress }) => {
-  
   return (
     <View style={[styles.rowContainer, { marginVertical: 20, justifyContent: "space-between" }]}>
       <View style={{ flexDirection: "row", alignItems: "center" }}>
         <TouchableWithoutFeedback onPress={() => console.log("avatar clicked!")}>
-          <Avatar source={createdBy?.image ? {uri: createdBy.image} : require('../../../assets/avatar/user.png')} rounded></Avatar>
+          <Avatar
+            source={createdBy?.image ? { uri: createdBy?.image } : require("../../../assets/avatar/user.png")}
+            rounded
+          ></Avatar>
         </TouchableWithoutFeedback>
-        <Text style={styles.creator}>@{createdBy.username}</Text>
+        <Text style={styles.creator}>@{createdBy?.username}</Text>
       </View>
       <View>
         <TouchableOpacity onPress={() => onCameraPress()}>

@@ -9,12 +9,12 @@ import { Loader } from "../shared";
 import { Colors } from "../shared/styles/variables";
 import { Player } from "../shared/VideoPlayer";
 
-interface PostRepliesProps { }
+interface PostRepliesProps {}
 
 type StackParamsList = {
   params: { newReply: IPost };
 };
-export const PostReplies: React.FC<PostRepliesProps> = ({ }) => {
+export const PostReplies: React.FC<PostRepliesProps> = ({}) => {
   const navigation = useNavigation();
   const route = useRoute<RouteProp<StackParamsList, "params">>();
   const [challengeReplies, setChallengeReplies] = useState<any[]>([]);
@@ -30,17 +30,7 @@ export const PostReplies: React.FC<PostRepliesProps> = ({ }) => {
     const challengesEndpoint = `${process.env.BASE_API_ENPOINT}/posts/${post._id}/replies`;
     const { res } = await fetchAPI(RequestMethod.GET, challengesEndpoint);
 
-    res &&
-      setChallengeReplies(
-        res.map((reply, index) => {
-          return {
-            _id: index,
-            url: reply.video,
-            gif: reply.gif,
-            numOfLikes: reply.likes.length
-          };
-        })
-      );
+    res && setChallengeReplies(res);
 
     setIsLoadingReplies(false);
   };
@@ -59,11 +49,10 @@ export const PostReplies: React.FC<PostRepliesProps> = ({ }) => {
       setChallengeReplies([
         ...challengeReplies,
         {
-
           _id: challengeReplies.length,
           url: route.params.newReply.videoURI,
           gif: route.params.newReply.gif,
-          numOfLikes: 0
+          numOfLikes: 0,
         },
       ]);
     }
@@ -110,8 +99,7 @@ export const PostReplies: React.FC<PostRepliesProps> = ({ }) => {
         </View>
       </View>
       <View style={{ flex: 1 }}>
-        {isLoadingReplies &&
-          <Loader />}
+        {isLoadingReplies && <Loader />}
         <GenericComponent items={challengeReplies} />
       </View>
     </View>
