@@ -148,7 +148,8 @@ export const CustomSearchBar: React.FC = () => {
               pictureHeight={300}
               renderFooter={(item: IPost) => renderFooter(item)}
               renderBottomVideo={(item: IPost) => renderBottomVideo(item, 300)}
-              customStyle={{ margin: 5 }}
+              gifStyle={{ width: Dimensions.get("screen").width / 2 - 10 }}
+              customStyle={{ margin: 5, width: Dimensions.get("screen").width / 2 - 10 }}
             />
           </View>
         )}

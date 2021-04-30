@@ -45,7 +45,8 @@ export const GenericComponent: React.FC<Props> = ({
       <View
         style={{
           ...customStyle,
-          width: Dimensions.get("screen").width / numOfColumns - 10,
+          margin: 3,
+          width: Dimensions.get("screen").width / numOfColumns,
         }}
       >
         <TouchableOpacity
@@ -58,7 +59,7 @@ export const GenericComponent: React.FC<Props> = ({
               ...gifStyle,
               ...styles.theImage,
               height: picHeight,
-              width: Dimensions.get("screen").width / numOfColumns - 10,
+              width: Dimensions.get("screen").width / numOfColumns,
             }}
             imageStyle={{ borderRadius: 3 }}
             source={{ uri: `${STREAMING_SERVER_GIF_ENDPOINT}/${item.gif}` }}
@@ -119,7 +120,7 @@ const styles = StyleSheet.create({
   },
 
   theImage: {
-    margin: 2,
+    margin: 3,
     height: 120,
     resizeMode: "cover",
   },
