@@ -18,29 +18,13 @@ interface IProfileDetails {
 }
 function ProfileTabs() {
   const Tabs = createMaterialTopTabNavigator();
-  const [challenges, setChallenges] = useState([]);
-  // const [
-  //   hasMoreChallengesToFetch,
-  //   setHasMoreChallengesToFetch,
-  // ] = useState<boolean>(true);
-  // const [hasMoreRepliesToFetch, setHasMoreRepliesToFetch] = useState<boolean>(
-  //   true
-  // );
 
+  const [challenges, setChallenges] = useState([]);
+  const [replies, setReplies] = useState([]);
   const [hasMoreChallenges, setHasMoreChallenges] = useState(true);
   const [hasMoreReplies, setHasMoreReplies] = useState(true);
 
-  const [replies, setReplies] = useState([]);
   const { loggedUser } = useSelector(authSelector);
-
-  // useEffect(() => {
-  //   console.log("challegnes till now:", challenges.length);
-  //   entity = challenges;
-  // }, [challenges]);
-  // useEffect(() => {
-  //   entity = replies;
-  //   console.log("r eplies till now:", challenges.length);
-  // }, [replies]);
 
   const getMoreChallenges = async () => {
     const endpoint = `${process.env.BASE_API_ENPOINT}/posts`;
@@ -78,77 +62,6 @@ function ProfileTabs() {
     }
     setReplies([...replies, ...res]);
   };
-  // const getMorePosts = async (isReply: boolean) => {
-  //   // entity = isReply ? challenges : replies;
-  //   const setEntity = isReply ? setReplies : setChallenges;
-
-  //   // todo https://www.goodday.work/t/RRaDG3
-  //   // todo send param to this func if you want replies or real posts and send the relevant query params
-  //   const endpoint = `${process.env.BASE_API_ENPOINT}/posts`;
-  //   // const loggedUser = getState()?.auth?.loggedUser._id;
-  //   console.log(`size: ${itemsToFetch} entityLenght: ${entity.length} `);
-  //   const { res, error } = await fetchAPI<IPost[]>(
-  //     RequestMethod.GET,
-  //     endpoint,
-  //     null,
-  //     {
-  //       size: itemsToFetch,
-  //       page: Math.floor(entity.length / itemsToFetch),
-  //       // createdBy: loggedUser._id,
-  //       uid: loggedUser._id,
-  //       isReply,
-  //     }
-  //   );
-  //   if (res.length < itemsToFetch) {
-  //     isReply ? setHasMoreReplies(false) : setHasMoreChallenges(false);
-  //   }
-  //   // console.log(res);
-  //   // const newPosts =
-  //   //   res &&
-  //   //   res.map((entity, index) => {
-  //   //     return {
-  //   //       _id: index,
-  //   //       url: entity.videoURI,
-  //   //       gif: entity.gif,
-  //   //     };
-  //   //   });
-  //   // res &&
-
-  //   console.log(`new Challenges: ${res.length}`);
-
-  //   setEntity([...entity, ...res]);
-  //   // if (res) {
-
-  //   // } else {
-
-  //   // }
-  // };
-
-  // const getEnteties = async (postType: String) => {
-  //   const isReply = postType == "challenges" ? false : true;
-  //   const entetieEndpoint = `${process.env.BASE_API_ENPOINT}/posts/?uid=${loggedUser._id}&isReply=${isReply}`;
-  //   const { res, error } = await fetchAPI(RequestMethod.GET, entetieEndpoint);
-  //   const setEntetie = postType == "challenges" ? setChallenges : setReplies;
-
-  //   res &&
-  //     setEntetie(
-  //       res.map((entetie, index) => {
-  //         return {
-  //           _id: index,
-  //           url: entetie.video,
-  //           gif: entetie.gif,
-  //         };
-  //       })
-  //     );
-  // };
-  // useEffect(() => {
-  //   getEnteties("challenges");
-  //   getEnteties("replies");
-  // }, []);
-  // const getMoreChallenges = useCallback(() => getMorePosts(false), []);
-  // const getMoreChallenges = () => getMorePosts(false);
-
-  // const getMoreReplies = () => getMorePosts(true);
 
   return (
     <Tabs.Navigator
@@ -162,8 +75,6 @@ function ProfileTabs() {
           } else if (route.name === "Replies") {
             iconName = "person-circle";
           }
-
-          // You can return any component that you like here!
           return (
             <Icon
               name={iconName}
@@ -184,7 +95,6 @@ function ProfileTabs() {
     >
       <Tabs.Screen
         name="Challanges"
-        // component={Home}
         children={() => (
           <GenericComponent
             items={challenges}
@@ -202,7 +112,6 @@ function ProfileTabs() {
             hasMoreToFetch={hasMoreReplies}
           />
         )}
-        // component={Settings}
       />
     </Tabs.Navigator>
   );
@@ -291,10 +200,9 @@ const ProfileHeader: React.FC<IProfileDetails> = ({
 
 export const ProfileScreen: React.FC = () => {
   const { loggedUser } = useSelector(authSelector);
-
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  // return <GenericComponent items={items} />;
   const [profileDetails, setProfileDetails] = useState<IProfileDetails>();
+
   useEffect(() => {
     setIsLoading(true);
     async function getProfileDetails() {

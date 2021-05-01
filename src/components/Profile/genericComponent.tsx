@@ -17,10 +17,8 @@ import {
   STREAMING_SERVER_GIF_ENDPOINT,
   STREAMING_SERVER_VIDEO_ENDPOINT,
 } from "../../utils/consts";
-import { fetchAPI, RequestMethod } from "../../utils/fetchAPI";
 import { Loader } from "../shared";
 import { Colors } from "../shared/styles/variables";
-import { Item } from "./interfaces";
 
 interface Props {
   items: IPost[];
@@ -74,31 +72,14 @@ export const GenericComponent: React.FC<Props> = ({
   useEffect(() => {
     if (items) {
       setShowFooter(false);
-      // setRefreshing(false);
     }
   }, [items]);
-  // useEffect(() => {
-  //   console.log(123123123, loadMoreCallback);
 
-  //   console.log(items.length);
-  //   async function loadMore() {
-  //     loadMoreCallback && (await loadMoreCallback());
-  //   }
-  //   loadMore();
-  // }, []);
   useEffect(() => {
-    console.log(123123123, loadMoreCallback);
-    console.log(items.length);
-    // async function loadMore() {
-    //   loadMoreCallback && (await loadMoreCallback());
-    // }
     loadMoreCallback && loadMoreCallback();
   }, []);
-  console.log("render!@#!@#!@#!@..");
+
   const handleLoadMore = () => {
-    console.log(
-      `itemsLenght: ${items.length},hasMoreToFetch: ${hasMoreToFetch}`
-    );
     items.length && setShowFooter(true);
     hasMoreToFetch && loadMoreCallback();
   };
@@ -162,17 +143,6 @@ export const GenericComponent: React.FC<Props> = ({
         ListFooterComponent={showFooter ? <Footer /> : null}
         onEndReached={handleLoadMore}
       />
-      {/* {isLoading ? (
-        <ChallangeSkeleton isHorizontal={isHorizontal} numOfColumns={numOfColumns} />
-      ) : (
-        <FlatList
-          data={thumbnailItems}
-          keyExtractor={(item, index) => index.toString()}
-          horizontal={isHorizontal}
-          numColumns={!isHorizontal ? numOfColumns : 0}
-          renderItem={renderItem}
-        />
-      )} */}
     </SafeAreaView>
   );
 };
