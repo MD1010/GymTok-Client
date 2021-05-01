@@ -20,7 +20,6 @@ import {
 import { Loader } from "../shared";
 import Ripple from "react-native-material-ripple";
 import { Colors } from "../shared/styles/variables";
-import { styles } from "../Posts/Posts.style";
 
 interface Props {
   items: IPost[];
