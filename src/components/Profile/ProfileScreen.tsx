@@ -121,16 +121,34 @@ function ProfileTabs(user: IUser) {
 interface IProfileHeaderProps {
   details: IProfileDetails;
   user: IUser;
+  isLoading: boolean;
 }
 
 const ProfileHeader: React.FC<IProfileHeaderProps> = (
   props: IProfileHeaderProps
 ) => {
-  const { numOfChallenges, numOfReplies, numOfLikes } = props.details;
+  // const { numOfChallenges, numOfReplies, numOfLikes } = props.details;
+  // let numOfChallenges, numOfReplies, numOfLikes;
+  const [numOfChallenges, setNumOfChallenges] = useState<string | number>("-");
+  const [numOfReplies, setNumOfReplies] = useState<string | number>("-");
+  const [numOfLikes, setNumOfLikes] = useState<string | number>("-");
+
   const user = props.user;
+  const isLoading = props.isLoading;
   const { authError, loggedUser } = useSelector(authSelector);
+  useEffect(() => {
+    if (!isLoading) {
+      setNumOfChallenges(props.details.numOfChallenges);
+      setNumOfReplies(props.details.numOfLikes);
+      setNumOfLikes(props.details.numOfReplies);
+
+      console.log(`numOFchallenges: ${numOfChallenges}`);
+    }
+  }, [isLoading]);
   return (
-    <View style={{ paddingTop: 40, paddingLeft: 5 }}>
+    <View
+      style={{ paddingTop: 40, paddingLeft: 5, backgroundColor: Colors.black }}
+    >
       <View style={{ flexDirection: "row" }}>
         <View style={{ flex: 1, alignItems: "center" }}>
           <Image
@@ -155,7 +173,7 @@ const ProfileHeader: React.FC<IProfileHeaderProps> = (
                   fontWeight: "bold",
                 }}
               >
-                {numOfChallenges}
+                {isLoading ? "-" : numOfChallenges}
               </Text>
               <Text style={{ fontSize: 10, color: Colors.lightGrey }}>
                 Challenges
@@ -169,7 +187,7 @@ const ProfileHeader: React.FC<IProfileHeaderProps> = (
                   fontWeight: "bold",
                 }}
               >
-                {numOfReplies}
+                {isLoading ? "-" : numOfReplies}
               </Text>
               <Text style={{ fontSize: 10, color: Colors.lightGrey }}>
                 Replies
@@ -183,7 +201,7 @@ const ProfileHeader: React.FC<IProfileHeaderProps> = (
                   fontWeight: "bold",
                 }}
               >
-                {numOfLikes}
+                {isLoading ? "-" : numOfLikes}
               </Text>
               <Text style={{ fontSize: 10, color: Colors.lightGrey }}>
                 Likes
@@ -237,22 +255,27 @@ export const ProfileScreen: React.FC<IUser> = (user?: IUser) => {
         RequestMethod.GET,
         profileDetailsEndpoint
       );
-      console.log(
-        `routeparams: ${route.params.user.fullName} currentUser: ${currentUser.fullName} response: ${res}`
-      );
+      // console.log(
+      //   `routeparams: ${route.params.user.fullName} currentUser: ${currentUser.fullName} response: ${res}`
+      // );
       res && setProfileDetails(res);
       res && setIsLoading(false);
     }
     getProfileDetails();
   }, []);
 
-  return isLoading ? (
-    <View style={{ marginTop: 200 }}>
-      <Text style={{ color: Colors.white }}>loading...</Text>
-    </View>
-  ) : (
+  // isLoading ? (
+  //   <View style={{ marginTop: 200 }}>
+  //     <Text style={{ color: Colors.white }}>loading...</Text>
+  //   </View>
+  // ) :
+  return (
     <>
-      <ProfileHeader details={profileDetails} user={currentUser} />
+      <ProfileHeader
+        details={profileDetails}
+        user={currentUser}
+        isLoading={isLoading}
+      />
       <ProfileTabs {...currentUser} />
     </>
   );
