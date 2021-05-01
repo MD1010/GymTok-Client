@@ -1,13 +1,16 @@
 import { useFocusEffect, useNavigation } from "@react-navigation/core";
 import { RouteProp, useRoute } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, Image, Text } from "react-native";
+import { ScrollView } from "react-native-gesture-handler";
 import { IPost } from "../../interfaces";
+import { STREAMING_SERVER_GIF_ENDPOINT } from "../../utils/consts";
 import { fetchAPI, RequestMethod } from "../../utils/fetchAPI";
 import { GenericComponent } from "../Profile/genericComponent";
 import { Loader } from "../shared";
 import { Colors } from "../shared/styles/variables";
 import { Player } from "../shared/VideoPlayer";
+import Ripple from "react-native-material-ripple";
 
 interface PostRepliesProps {}
 
@@ -18,9 +21,9 @@ export const PostReplies: React.FC<PostRepliesProps> = ({}) => {
   const navigation = useNavigation();
   const route = useRoute<RouteProp<StackParamsList, "params">>();
   const [challengeReplies, setChallengeReplies] = useState<any[]>([]);
-  const [streaminServerUrl, setStreaminServerUrl] = useState<string>("");
+  const [videoGif, setVideoGif] = useState<string>(null);
   const [post, setPost] = useState<IPost>();
-  const [isLoadingChallengeVideo, setIsLoadingChallengeVideo] = useState<boolean>(true);
+  // const [isLoadingChallengeVideo, setIsLoadingChallengeVideo] = useState<boolean>(true);
   const [isLoadingReplies, setIsLoadingReplies] = useState<boolean>(true);
   const [isVideoInViewPort, setIsVideoInViewPort] = useState(false);
 
@@ -35,14 +38,14 @@ export const PostReplies: React.FC<PostRepliesProps> = ({}) => {
     setIsLoadingReplies(false);
   };
 
-  useFocusEffect(
-    React.useCallback(() => {
-      navigation.addListener("blur", (e) => {
-        setIsVideoInViewPort(false);
-      });
-      setIsVideoInViewPort(true);
-    }, [])
-  );
+  // useFocusEffect(
+  //   React.useCallback(() => {
+  //     navigation.addListener("blur", (e) => {
+  //       setIsVideoInViewPort(false);
+  //     });
+  //     setIsVideoInViewPort(true);
+  //   }, [])
+  // );
 
   useEffect(() => {
     if (route.params?.newReply) {
@@ -71,73 +74,67 @@ export const PostReplies: React.FC<PostRepliesProps> = ({}) => {
   useEffect(() => {
     if (post) {
       getChallengeReplies();
-      setStreaminServerUrl(`${process.env.VIDEO_SERVER_ENDPOINT}/${post.videoURI}`);
+      setVideoGif(`${STREAMING_SERVER_GIF_ENDPOINT}/${post.gif}`);
     }
   }, [post]);
+
+  const showOriginalVideo = () => {
+    navigation.navigate("VideoDisplay", { posts: [post] });
+  };
+
+  const RepliesHeader = () =>
+    videoGif && (
+      <Ripple
+        style={{ margin: 10, marginLeft: 2 }}
+        onPress={() => {
+          showOriginalVideo();
+        }}
+      >
+        <Image
+          source={{
+            uri: videoGif,
+          }}
+          style={{ height: 220, width: 160, borderRadius: 5 }}
+        />
+        <Text
+          style={{
+            backgroundColor: Colors.lightPurpule,
+            position: "absolute",
+            left: 10,
+            top: 10,
+            padding: 4,
+            borderRadius: 3,
+          }}
+        >
+          Original
+        </Text>
+      </Ripple>
+    );
 
   return (
     <View
       style={{
         flex: 1,
-        backgroundColor: Colors.darkBlueOpaque,
+        backgroundColor: Colors.black,
+        // padding: 5,
+        // justifyContent: "center",
+        // alignItems: "center",
       }}
     >
-      <View style={styles.challengeVideoContainter}>
-        {isLoadingChallengeVideo && (
-          <View style={styles.loader}>
-            <Loader />
-          </View>
-        )}
-        <View style={styles.videoContianiter}>
-          <Player
+      {/* <View style={styles.originalVideoContainer}>
+        <Player
             style={styles.video}
             uri={streaminServerUrl}
             resizeMode="cover"
             videoInViewPort={isVideoInViewPort}
             onVideoLoad={() => setIsLoadingChallengeVideo(false)}
           />
-        </View>
-      </View>
-      <View style={{ flex: 1 }}>
-        {isLoadingReplies && <Loader />}
-        <GenericComponent items={challengeReplies} />
-      </View>
+      </View> */}
+
+      <GenericComponent items={challengeReplies} pageHeader={RepliesHeader} />
+      {isLoadingReplies && <Loader />}
     </View>
   );
 };
 
-const styles = StyleSheet.create({
-  videoContianiter: {
-    flex: 1,
-    width: "100%",
-    height: "100%",
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: Colors.darkBlueOpaque,
-  },
-  challengeVideoContainter: {
-    flex: 1,
-    alignItems: "center",
-    width: "100%",
-    backgroundColor: Colors.darkBlueOpaque,
-  },
-  loader: {},
-  challengeVideoDetails: {
-    flex: 1,
-    width: "50%",
-    alignItems: "center",
-    flexDirection: "row",
-    justifyContent: "space-between",
-  },
-  video: {
-    flex: 0.9,
-    width: "90%",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-  },
-});
+const styles = StyleSheet.create({});

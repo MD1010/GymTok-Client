@@ -42,7 +42,6 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentPosts,
   }, [error]);
 
   useEffect(() => {
-    console.log("fdfdfdfdfdfdfdfdfdf" + loadMore);
     if (posts) {
       setShowFooter(false);
       setRefreshing(false);

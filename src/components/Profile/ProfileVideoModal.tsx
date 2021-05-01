@@ -18,9 +18,9 @@ export const PostsVideoDisplay: React.FC = () => {
     <View style={styles.modalView}>
       <PostsList
         isFeed={false}
-        currentPosts={route.params.posts}
+        currentPosts={route.params?.posts}
         isLoadMore={false}
-        initialPostIndex={route.params.initialIndex}
+        initialPostIndex={route.params?.initialIndex}
       />
       {/* <ChallengesContainer
         currentVideoID={route.params.videoURL?.split("/")[3]}

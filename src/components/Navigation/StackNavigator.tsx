@@ -66,7 +66,7 @@ export const MainNavigator: React.FC<StackNavigatorProps> = ({}) => {
               headerTitle: "",
               headerTransparent: true,
               cardStyle: { backgroundColor: "transparent" },
-              cardStyleInterpolator: CardStyleInterpolators.forNoAnimation,
+              cardStyleInterpolator: CardStyleInterpolators.forScaleFromCenterAndroid,
               gestureEnabled: false,
             }}
           />

@@ -5,6 +5,7 @@ import { Dimensions, FlatList, ImageBackground, SafeAreaView, StyleSheet, Text, 
 import Ripple from "react-native-material-ripple";
 import { IPost } from "../../interfaces";
 import { STREAMING_SERVER_GIF_ENDPOINT } from "../../utils/consts";
+import { Loader } from "../shared";
 import { Colors } from "../shared/styles/variables";
 
 interface Props {
