@@ -108,6 +108,7 @@ export const Post: React.FC<PostProps> = memo(({ post, isVisible, containerStyle
 
       let requestMethod: RequestMethod;
       const likesApi = `${process.env.BASE_API_ENPOINT}/users/${loggedUser._id}/posts/${post._id}/like`;
+
       if (!isUserLikePost) {
         requestMethod = RequestMethod.POST;
       } else {

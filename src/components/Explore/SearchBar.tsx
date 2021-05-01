@@ -22,13 +22,18 @@ export const CustomSearchBar: React.FC = () => {
   const [relvantItems, setRelavantItems] = useState<IPost[] | undefined>(undefined);
   const route = useRoute<any>();
 
-  useEffect(() => {
-    if (route.params?.searchText) {
-      console.log("innnn");
+  // useEffect(() => {
+  //   if (route.params?.searchText) {
+  //     console.log("innnn");
+  //     console.log("search text dovvvv", route.params?.searchText);
 
-      setSearch(route.params?.searchText);
-    }
-  }, [route.params]);
+  //     setSearch(route.params?.searchText);
+  //   }
+  // }, [route.params]);
+
+  useEffect(() => {
+    console.log("search text dovvvv", search);
+  }, [search]);
 
   const fetchHashtags = useCallback(
     debounce(async (searchTerm?: string) => {
@@ -44,6 +49,7 @@ export const CustomSearchBar: React.FC = () => {
 
   const handleSelectItem = (hashtag) => {
     setSearch(hashtag.hashtag);
+
     setIsModalVisible(false);
     handleSubmit(hashtag._id);
   };
@@ -131,6 +137,8 @@ export const CustomSearchBar: React.FC = () => {
           round
           searchIcon={{ size: 24 }}
           onChangeText={(text) => {
+            console.log("on change text ", text);
+
             setSearch(text);
             fetchHashtags(text);
           }}
