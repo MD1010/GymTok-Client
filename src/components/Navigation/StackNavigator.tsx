@@ -1,5 +1,8 @@
 import { NavigationContainer } from "@react-navigation/native";
-import { CardStyleInterpolators, createStackNavigator } from "@react-navigation/stack";
+import {
+  CardStyleInterpolators,
+  createStackNavigator,
+} from "@react-navigation/stack";
 import React from "react";
 import { Dimensions } from "react-native";
 import { LoginContainer as LoginScreen } from "../Auth/LoginContainer";
@@ -13,6 +16,7 @@ import { config } from "./stackNavigationConfig";
 import { ApproveVideo } from "../PublishVideo/ApproveVideo";
 import { CameraScreen } from "../PublishVideo/CameraScreen";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import { ProfileScreen } from "../Profile/ProfileScreen";
 
 interface StackNavigatorProps {}
 
@@ -29,8 +33,16 @@ export const MainNavigator: React.FC<StackNavigatorProps> = ({}) => {
               headerShown: false,
             }}
           />
-          <Stack.Screen name="Register" component={RegisterScreen} options={{ title: "Sign up" }} />
-          <Stack.Screen name="Login" component={LoginScreen} options={{ title: "Log in" }} />
+          <Stack.Screen
+            name="Register"
+            component={RegisterScreen}
+            options={{ title: "Sign up" }}
+          />
+          <Stack.Screen
+            name="Login"
+            component={LoginScreen}
+            options={{ title: "Log in" }}
+          />
           <Stack.Screen
             name="Camera"
             component={CameraScreen}
@@ -49,7 +61,9 @@ export const MainNavigator: React.FC<StackNavigatorProps> = ({}) => {
               headerShown: false,
               cardStyle: { backgroundColor: "transparent" },
               cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS,
-              gestureResponseDistance: { vertical: Dimensions.get("screen").height },
+              gestureResponseDistance: {
+                vertical: Dimensions.get("screen").height,
+              },
               gestureDirection: "vertical",
               gestureEnabled: true,
             }}
@@ -61,6 +75,18 @@ export const MainNavigator: React.FC<StackNavigatorProps> = ({}) => {
           <Stack.Screen
             name="VideoDisplay"
             component={PostsVideoDisplay}
+            options={{
+              headerShown: true,
+              headerTitle: "",
+              headerTransparent: true,
+              cardStyle: { backgroundColor: "transparent" },
+              cardStyleInterpolator: CardStyleInterpolators.forNoAnimation,
+              gestureEnabled: false,
+            }}
+          />
+          <Stack.Screen
+            name="ProfileDisplay"
+            component={ProfileScreen}
             options={{
               headerShown: true,
               headerTitle: "",
@@ -84,7 +110,12 @@ export const MainNavigator: React.FC<StackNavigatorProps> = ({}) => {
             }}
           />
           {postChallengeScreens.map(({ name, options, screen }) => (
-            <Stack.Screen key={name} name={name} component={screen} options={{ gestureEnabled: false, ...options }} />
+            <Stack.Screen
+              key={name}
+              name={name}
+              component={screen}
+              options={{ gestureEnabled: false, ...options }}
+            />
           ))}
         </Stack.Navigator>
       </NavigationContainer>
