@@ -5,7 +5,7 @@ import { Dimensions } from "react-native";
 import { LoginContainer as LoginScreen } from "../Auth/LoginContainer";
 import { NotLoggedInModal } from "../Auth/NotLoggedInModal";
 import { RegisterContainer as RegisterScreen } from "../Auth/RegisterContainer";
-import { ProfileVideoModal } from "../Profile/ProfileVideoModal";
+import { PostsVideoDisplay } from "../Profile/ProfileVideoModal";
 import { postChallengeScreens } from "../PublishVideo/publishScreens";
 import { PostReplies } from "../Replies/PostReplies";
 import { BottomTabs } from "./BottomTabs";
@@ -59,8 +59,8 @@ export const MainNavigator: React.FC<StackNavigatorProps> = ({}) => {
         }} /> */}
 
           <Stack.Screen
-            name="UsersProfile"
-            component={ProfileVideoModal}
+            name="VideoDisplay"
+            component={PostsVideoDisplay}
             options={{
               headerShown: true,
               headerTitle: "",

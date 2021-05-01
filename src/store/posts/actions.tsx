@@ -46,7 +46,7 @@ export const getUserPosts = (): AppThunk => {
         createdBy: loggedUser,
       }
     );
-
+    console.log("fdfdfd");
     if (res) {
       dispatch(postsActions.userPostsFetchSuccess(res));
     } else {

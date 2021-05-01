@@ -1,12 +1,12 @@
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import isEmpty from "lodash/isEmpty";
 import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Dimensions, FlatList, Text, View, ViewabilityConfig, RefreshControl } from "react-native";
+import { Dimensions, FlatList, Text, View, ViewabilityConfig, RefreshControl, InteractionManager } from "react-native";
 import { Button } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
 import { IPost } from "../../interfaces/Post";
 import { authSelector } from "../../store/auth/authSlice";
-import { getMorePosts, getMostRecommended, getUserPosts } from "../../store/posts/actions";
+import { getLatestPosts, getMorePosts, getMostRecommended, getUserPosts } from "../../store/posts/actions";
 import { postsSelector } from "../../store/posts/postsSlice";
 import { Loader } from "../shared";
 import { Colors, UIConsts } from "../shared/styles/variables";
@@ -14,13 +14,15 @@ import { Post } from "./Post";
 
 interface PostsListProps {
   /**
-   *  in home page isFeed is true, else it is false
+userPosts   *  in home page isFeed is true, else it is false
    */
   isFeed?: boolean;
-  currentVideoID?: string;
+  currentPosts?: IPost[];
+  isLoadMore?: boolean;
+  initialPostIndex?: number;
 }
 
-export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentVideoID }) => {
+export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentPosts, isLoadMore, initialPostIndex }) => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const [navigatedOutOfScreen, setNavigatedOutOfScreen] = useState<boolean>(false);
@@ -31,14 +33,16 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentVideoI
   const flatListRef = useRef<FlatList>(null);
   const [showFooter, setShowFooter] = useState<boolean>(false);
   const { hasMoreToFetch, error, latestFetchedPosts, userPosts } = useSelector(postsSelector);
-  const posts: IPost[] = isFeed ? latestFetchedPosts : userPosts;
+  const posts: IPost[] = currentPosts ? currentPosts : isFeed ? latestFetchedPosts : userPosts;
   const [refreshing, setRefreshing] = React.useState<boolean>(false);
+  const loadMore: boolean = isLoadMore !== undefined ? isLoadMore : true;
 
   useEffect(() => {
     error && alert(JSON.stringify(error));
   }, [error]);
 
   useEffect(() => {
+    console.log("fdfdfdfdfdfdfdfdfdf" + loadMore);
     if (posts) {
       setShowFooter(false);
       setRefreshing(false);
@@ -52,7 +56,8 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentVideoI
   const onRefresh = React.useCallback(async () => {
     console.log("refreshing!!!!");
     setRefreshing(true);
-    getPosts();
+    dispatch(getLatestPosts());
+    setRefreshing(false);
   }, [refreshing]);
 
   const getPosts = () => {
@@ -70,17 +75,15 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentVideoI
     }
   }, [loggedUser]);
 
-  useEffect(() => {
-    if (currentVideoID && posts.length > 0) {
-      console.log("currentID: " + currentVideoID);
-      console.log("postfdfdfdf: " + posts);
-      let wantedIndex = posts.findIndex((post) => post._id === currentVideoID);
-      console.log("wnted index" + wantedIndex);
-      if(wantedIndex != -1)
-        goIndex(wantedIndex);
-        
-    }
-  }, [posts, currentVideoID]);
+  // useEffect(() => {
+  //   if (currentPostID && posts.length > 0) {
+  //     console.log("currentID: " + currentPostID);
+  //     setPostIndex(posts.findIndex((post) => post._id === currentPostID));
+  //     // console.log(posts[wantedIndex]);
+  //     console.log("wnted index" + wantedIndex);
+  //     // if (wantedIndex != -1) goIndex(wantedIndex);
+  //   }
+  // }, [posts, currentPostID]);
 
   useFocusEffect(
     React.useCallback(() => {
@@ -166,7 +169,7 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentVideoI
   //   onStartShouldSetPanResponder: () => false,
   // });
   return (
-    <>
+    <View>
       <View
         // {...panResponder.panHandlers}
         style={{ height: viewHeight, backgroundColor: Colors.black }}
@@ -181,6 +184,7 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentVideoI
           initialNumToRender={5}
           maxToRenderPerBatch={3}
           windowSize={5}
+          initialScrollIndex={initialPostIndex}
           // removeClippedSubviews
           // updateCellsBatchingPeriod={5}
           data={posts}
@@ -205,7 +209,7 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentVideoI
           }}
           onViewableItemsChanged={onViewRef.current}
           viewabilityConfig={config.current}
-          onEndReached={handleLoadMore}
+          onEndReached={loadMore ? handleLoadMore : null}
           onEndReachedThreshold={0.5}
           ListFooterComponent={showFooter ? <Footer /> : null}
           ListFooterComponentStyle={{
@@ -216,6 +220,6 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentVideoI
           }}
         ></FlatList>
       </View>
-    </>
+    </View>
   );
 });

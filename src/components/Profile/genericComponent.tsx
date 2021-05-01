@@ -18,7 +18,9 @@ import {
   STREAMING_SERVER_VIDEO_ENDPOINT,
 } from "../../utils/consts";
 import { Loader } from "../shared";
+import Ripple from "react-native-material-ripple";
 import { Colors } from "../shared/styles/variables";
+import { styles } from "../Posts/Posts.style";
 
 interface Props {
   items: IPost[];
@@ -27,7 +29,11 @@ interface Props {
   horizontal?: boolean;
   numColumns?: number;
   customStyle?: ViewStyle;
+  gifStyle?: ViewStyle;
   pictureHeight?: number;
+  renderFooter?: (item: IPost) => JSX.Element;
+  renderBottomVideo?: (item: IPost) => JSX.Element;
+  pageHeader?: () => JSX.Element;
 }
 
 export const GenericComponent: React.FC<Props> = ({
@@ -38,6 +44,10 @@ export const GenericComponent: React.FC<Props> = ({
   customStyle,
   numColumns,
   pictureHeight,
+  pageHeader,
+  renderBottomVideo,
+  renderFooter,
+  gifStyle,
 }) => {
   const navigation = useNavigation();
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -64,10 +74,14 @@ export const GenericComponent: React.FC<Props> = ({
     }
     return null;
   };
-  const showVideo = (videoURL) => {
-    navigation.navigate("UsersProfile", {
-      videoURL: `${STREAMING_SERVER_VIDEO_ENDPOINT}/${videoURL}`,
-    });
+  // const showVideo = (videoURL) => {
+  //   navigation.navigate("UsersProfile", {
+  //     videoURL: `${STREAMING_SERVER_VIDEO_ENDPOINT}/${videoURL}`,
+  //   });
+  // };
+  const showVideo = (postID) => {
+    const initialIndex = items.findIndex((post) => post._id === postID);
+    navigation.navigate("VideoDisplay", { posts: items, initialIndex });
   };
   useEffect(() => {
     if (items) {
@@ -87,42 +101,56 @@ export const GenericComponent: React.FC<Props> = ({
     return (
       <View
         style={{
-          margin: 1,
+          width: Dimensions.get("window").width / numOfColumns,
+          ...customStyle,
         }}
       >
-        <TouchableOpacity
+        <Ripple
           onPress={() => {
-            showVideo(item.videoURI);
+            showVideo(item._id);
           }}
         >
           <ImageBackground
             style={{
               ...styles.theImage,
               height: picHeight,
-              width: Dimensions.get("screen").width / numOfColumns,
+              // width: Dimensions.get("window").width / numOfColumns,
+              ...gifStyle,
             }}
+            imageStyle={{ borderRadius: 3 }}
             source={{ uri: `${STREAMING_SERVER_GIF_ENDPOINT}/${item.gif}` }}
           >
-            <View
-              style={{
-                display: "flex",
-                justifyContent: "flex-end",
-                flexDirection: "column",
-                height: picHeight,
-              }}
-            >
-              <View style={[styles.rowContainer, { marginRight: 10 }]}>
-                <FontAwesome
-                  name={"heart"}
-                  size={13}
-                  color={Colors.lightGrey}
-                />
-                {/* <Text style={styles.amount}>{item.likes}</Text> */}
+            {renderBottomVideo ? (
+              renderBottomVideo(item)
+            ) : (
+              <View
+                style={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  marginLeft: 3,
+                  flexDirection: "column",
+                  height: picHeight,
+                }}
+              >
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                  }}
+                >
+                  <FontAwesome
+                    name={"heart"}
+                    size={13}
+                    color={Colors.lightGrey}
+                  />
+                  <Text style={styles.amount}>{item?.likes?.length}</Text>
+                </View>
               </View>
-            </View>
+            )}
           </ImageBackground>
-        </TouchableOpacity>
-        {/* {item.component} */}
+        </Ripple>
+
+        {renderFooter && renderFooter(item)}
       </View>
     );
   };
@@ -132,8 +160,8 @@ export const GenericComponent: React.FC<Props> = ({
     <SafeAreaView
       style={{ flex: 1, flexDirection: isHorizontal ? "row" : "column" }}
     >
-      {/* <Spinner visible={isLoading} textLoading={"Loading..."} textStyle={{ color: "#FFF" }} /> */}
       <FlatList
+        ListHeaderComponent={pageHeader}
         data={items}
         keyExtractor={(item, index) => index.toString()}
         horizontal={isHorizontal}
@@ -160,7 +188,7 @@ const styles = StyleSheet.create({
   },
 
   theImage: {
-    margin: 2,
+    margin: 3,
     height: 120,
     resizeMode: "cover",
   },

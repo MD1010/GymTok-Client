@@ -21,22 +21,18 @@ export const PostReplies: React.FC<PostRepliesProps> = ({}) => {
   const [streaminServerUrl, setStreaminServerUrl] = useState<string>("");
   const [post, setPost] = useState<IPost>();
   const [isLoadingChallengeVideo, setIsLoadingChallengeVideo] = useState<boolean>(true);
+  const [isLoadingReplies, setIsLoadingReplies] = useState<boolean>(true);
   const [isVideoInViewPort, setIsVideoInViewPort] = useState(false);
 
   const getChallengeReplies = async () => {
+    setIsLoadingReplies(true);
+    setChallengeReplies([]);
     const challengesEndpoint = `${process.env.BASE_API_ENPOINT}/posts/${post._id}/replies`;
-    const { res, error } = await fetchAPI(RequestMethod.GET, challengesEndpoint);
+    const { res } = await fetchAPI(RequestMethod.GET, challengesEndpoint);
 
-    res &&
-      setChallengeReplies(
-        res.map((reply, index) => {
-          return {
-            _id: index,
-            url: reply.video,
-            gif: reply.gif,
-          };
-        })
-      );
+    res && setChallengeReplies(res);
+
+    setIsLoadingReplies(false);
   };
 
   useFocusEffect(
@@ -56,6 +52,7 @@ export const PostReplies: React.FC<PostRepliesProps> = ({}) => {
           _id: challengeReplies.length,
           url: route.params.newReply.videoURI,
           gif: route.params.newReply.gif,
+          numOfLikes: 0,
         },
       ]);
     }
@@ -102,6 +99,7 @@ export const PostReplies: React.FC<PostRepliesProps> = ({}) => {
         </View>
       </View>
       <View style={{ flex: 1 }}>
+        {isLoadingReplies && <Loader />}
         <GenericComponent items={challengeReplies} />
       </View>
     </View>

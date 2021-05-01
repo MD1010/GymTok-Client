@@ -5,6 +5,7 @@ import { Text, View, ViewStyle } from "react-native";
 import { Avatar } from "react-native-elements";
 import { TouchableOpacity, TouchableWithoutFeedback } from "react-native-gesture-handler";
 import { useDispatch, useSelector } from "react-redux";
+import { IHashtag } from "../../interfaces/Hashtag";
 import { IPost } from "../../interfaces/Post";
 import { authSelector } from "../../store/auth/authSlice";
 import { updateUserLikePost } from "../../store/posts/actions";
@@ -34,9 +35,12 @@ const Heading = ({ createdBy, onCameraPress }) => {
     <View style={[styles.rowContainer, { marginVertical: 20, justifyContent: "space-between" }]}>
       <View style={{ flexDirection: "row", alignItems: "center" }}>
         <TouchableWithoutFeedback onPress={() => console.log("avatar clicked!")}>
-          <Avatar source={require("../../../assets/avatar/01.jpg")} rounded></Avatar>
+          <Avatar
+            source={createdBy?.image ? { uri: createdBy?.image } : require("../../../assets/avatar/user.png")}
+            rounded
+          ></Avatar>
         </TouchableWithoutFeedback>
-        <Text style={styles.creator}>@{createdBy}</Text>
+        <Text style={styles.creator}>@{createdBy?.username}</Text>
       </View>
       <View>
         <TouchableOpacity onPress={() => onCameraPress()}>
@@ -47,11 +51,11 @@ const Heading = ({ createdBy, onCameraPress }) => {
   );
 };
 
-const TagsContainer: React.FC<{ hashtags: string[] }> = ({ hashtags }) => (
+const TagsContainer: React.FC<{ hashtags: IHashtag[] }> = ({ hashtags }) => (
   <View style={[styles.rowContainer, { flex: 2, flexWrap: "wrap" }]}>
     {hashtags?.map((tag, i) => (
       <Text key={i} style={styles.hashtag}>
-        #{tag}
+        #{tag.hashtag}
       </Text>
     ))}
   </View>
@@ -153,7 +157,7 @@ export const Post: React.FC<PostProps> = memo(({ post, isVisible, containerStyle
         renderedInList
       />
       <View style={styles.infoContainer}>
-        <Heading createdBy={createdBy.username} onCameraPress={() => onCameraPress()} />
+        <Heading createdBy={createdBy} onCameraPress={() => onCameraPress()} />
 
         <Text style={styles.info}>{post.description}</Text>
 

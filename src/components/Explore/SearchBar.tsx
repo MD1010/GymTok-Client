@@ -1,162 +1,119 @@
 import { useNavigation, useRoute } from "@react-navigation/native";
-import React, { useState, useEffect, useRef } from "react";
-
+import React, { useState, useEffect, useRef, useCallback } from "react";
+import { FontAwesome } from "@expo/vector-icons";
 // import all the components we are going to use
 import { SafeAreaView, Text, StyleSheet, View, FlatList, Dimensions, ScrollView } from "react-native";
-import { SearchBar } from "react-native-elements";
+import { Avatar, SearchBar } from "react-native-elements";
 import { SearchResults } from "./SearchResult";
 import Spinner from "react-native-loading-spinner-overlay";
 import { GenericComponent } from "../Profile/genericComponent";
 import { Item } from "../Profile/interfaces";
+import debounce from "lodash/debounce";
+import { fetchAPI, RequestMethod } from "../../utils/fetchAPI";
 import { Colors, UIConsts } from "../shared";
-
-const ITEMS = [
-  {
-    id: 1,
-    title: "fgfgfg",
-  },
-  {
-    id: 2,
-    title: "fgfgfg",
-  },
-  {
-    id: 3,
-    title: "fgfgfg",
-  },
-];
-
-const challenges: Item[] = [
-  {
-    _id: 1,
-    video: "cf6bec6b-fd03-492f-a8ec-ae3c132e9063.mp4",
-    gif: "662de7eb-7ec8-41a9-b58d-b657b6fec985.gif",
-    numOfLikes: "100K",
-    component: <Text style={{ color: Colors.white }}>fdfdff</Text>,
-  },
-  {
-    _id: 2,
-    video: "cf6bec6b-fd03-492f-a8ec-ae3c132e9063.mp4",
-    gif: "662de7eb-7ec8-41a9-b58d-b657b6fec985.gif",
-    numOfLikes: "100K",
-    component: <Text style={{ color: Colors.white }}>fdfdff</Text>,
-  },
-  {
-    _id: 3,
-    video: "cf6bec6b-fd03-492f-a8ec-ae3c132e9063.mp4",
-    gif: "662de7eb-7ec8-41a9-b58d-b657b6fec985.gif",
-    numOfLikes: "100K",
-    component: <Text style={{ color: Colors.white }}>Flying #tennis{"\n"} #tennisgirl</Text>,
-  },
-  {
-    _id: 4,
-    video: "cf6bec6b-fd03-492f-a8ec-ae3c132e9063.mp4",
-    gif: "662de7eb-7ec8-41a9-b58d-b657b6fec985.gif",
-    numOfLikes: "100K",
-    component: <Text style={{ color: Colors.white }}>fdfdff</Text>,
-  },
-  {
-    _id: 5,
-    video: "cf6bec6b-fd03-492f-a8ec-ae3c132e9063.mp4",
-    gif: "662de7eb-7ec8-41a9-b58d-b657b6fec985.gif",
-    numOfLikes: "100K",
-    component: <Text style={{ color: Colors.white }}>fdfdff</Text>,
-  },
-  {
-    _id: 6,
-    video: "cf6bec6b-fd03-492f-a8ec-ae3c132e9063.mp4",
-    gif: "662de7eb-7ec8-41a9-b58d-b657b6fec985.gif",
-    numOfLikes: "100K",
-  },
-  {
-    _id: 7,
-    video: "cf6bec6b-fd03-492f-a8ec-ae3c132e9063.mp4",
-    gif: "662de7eb-7ec8-41a9-b58d-b657b6fec985.gif",
-    numOfLikes: "100K",
-  },
-  {
-    _id: 8,
-    video: "cf6bec6b-fd03-492f-a8ec-ae3c132e9063.mp4",
-    gif: "662de7eb-7ec8-41a9-b58d-b657b6fec985.gif",
-    numOfLikes: "100K",
-  },
-  {
-    _id: 9,
-    video: "cf6bec6b-fd03-492f-a8ec-ae3c132e9063.mp4",
-    gif: "662de7eb-7ec8-41a9-b58d-b657b6fec985.gif",
-    numOfLikes: "100K",
-  },
-  {
-    _id: 10,
-    video: "cf6bec6b-fd03-492f-a8ec-ae3c132e9063.mp4",
-    gif: "662de7eb-7ec8-41a9-b58d-b657b6fec985.gif",
-    numOfLikes: "300K",
-  },
-  {
-    _id: 11,
-    video: "cf6bec6b-fd03-492f-a8ec-ae3c132e9063.mp4",
-    gif: "662de7eb-7ec8-41a9-b58d-b657b6fec985.gif",
-    numOfLikes: "100K",
-  },
-];
+import { IPost } from "../../interfaces";
 
 export const CustomSearchBar: React.FC = () => {
   const [search, setSearch] = useState("");
-  const [filteredDataSource, setFilteredDataSource] = useState([]);
   const [masterDataSource, setMasterDataSource] = useState([]);
   const navigation = useNavigation();
-  const route = useRoute<any>();
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [relvantItems, setRelavantItems] = useState<Item[] | undefined>(undefined);
-
-  useEffect(() => {
-    setFilteredDataSource(ITEMS);
-    setMasterDataSource(ITEMS);
-  }, []);
+  const [relvantItems, setRelavantItems] = useState<IPost[] | undefined>(undefined);
+  const route = useRoute<any>();
 
   useEffect(() => {
     if (route.params?.searchText) {
+      console.log("innnn");
+
       setSearch(route.params?.searchText);
     }
   }, [route.params]);
 
-  const searchFilterFunction = (text) => {
-    // Check if searched text is not blank
-    if (text) {
-      // Inserted text is not blank
-      // Filter the masterDataSource
-      // Update FilteredDataSource
-      const newData = masterDataSource.filter(function (item) {
-        const itemData = item.title ? item.title.toUpperCase() : "".toUpperCase();
-        const textData = text.toUpperCase();
-        return itemData.indexOf(textData) > -1;
+  const fetchHashtags = useCallback(
+    debounce(async (searchTerm?: string) => {
+      const { res } = await fetchAPI(RequestMethod.GET, `${process.env.BASE_API_ENPOINT}/hashtags`, null, {
+        searchTerm,
       });
-      setFilteredDataSource(newData);
-      setSearch(text);
-    } else {
-      // Inserted text is blank
-      // Update FilteredDataSource with masterDataSource
-      setFilteredDataSource(masterDataSource);
-      setSearch(text);
-    }
-  };
+      res && setMasterDataSource(res);
 
-  const handleSelectItem = (title) => {
-    setSearch(title);
+      setIsLoading(false);
+    }, 400),
+    []
+  );
+
+  const handleSelectItem = (hashtag) => {
+    setSearch(hashtag.hashtag);
     setIsModalVisible(false);
-    handleSubmit(title);
+    handleSubmit(hashtag._id);
   };
 
-  const handleSubmit = async (title: string) => {
+  const handleSubmit = async (hashtagId: string) => {
     setIsLoading(true);
-    // need to be fetch
-    await delay(5000);
-    console.log("finish delay!!!!!!!!!!!");
+    const { res } = await fetchAPI(RequestMethod.GET, `${process.env.BASE_API_ENPOINT}/posts/hashtag/${hashtagId}`);
+
     setIsLoading(false);
-    setRelavantItems(challenges);
+
+    // res.map((challenge) => {
+    //   challenge.component = <Text style={{ color: Colors.white }}>{challenge.description}</Text>;
+    // });
+
+    setRelavantItems(res);
   };
 
-  const delay = (ms) => new Promise((res) => setTimeout(res, ms));
+  const renderFooter = (item: IPost) => {
+    return (
+      <View>
+        <Text style={{ color: Colors.white, marginTop: 3, margin: 5, fontWeight: "bold" }}>{item?.description}</Text>
+        <View
+          style={{
+            justifyContent: "space-between",
+            flexDirection: "row",
+            width: Dimensions.get("screen").width / 2 - 10,
+            marginTop: 10,
+          }}
+        >
+          <View style={{ flexDirection: "row", margin: 5 }}>
+            <Avatar
+              source={
+                item?.createdBy?.image ? { uri: item?.createdBy?.image } : require("../../../assets/avatar/user.png")
+              }
+              rounded
+            />
+            <Text style={{ color: Colors.darkGrey, alignSelf: "center", marginLeft: 5 }}>
+              {item?.createdBy?.username}
+            </Text>
+          </View>
+
+          <View style={{ flexDirection: "row", alignSelf: "center" }}>
+            <FontAwesome style={{ alignSelf: "center" }} name={"heart-o"} size={13} color={Colors.darkGrey} />
+            <Text
+              style={{
+                fontSize: 13,
+                fontWeight: "bold",
+                marginLeft: 5,
+                color: Colors.darkGrey,
+              }}
+            >
+              {item?.likes?.length}
+            </Text>
+          </View>
+        </View>
+      </View>
+    );
+  };
+
+  const renderBottomVideo = (item: IPost, picHeight: number) => {
+    return (
+      <View style={{ display: "flex", justifyContent: "flex-end", flexDirection: "column", height: picHeight }}>
+        <View style={{ flexDirection: "row", alignItems: "center", marginRight: 10 }}>
+          <Text style={{ color: Colors.white, fontWeight: "bold", fontSize: 12, margin: 3 }}>
+            {item.publishDate.toString().split("T")[0]}
+          </Text>
+        </View>
+      </View>
+    );
+  };
 
   return (
     <SafeAreaView style={{ flex: 1, height: Dimensions.get("screen").height, width: Dimensions.get("screen").width }}>
@@ -164,23 +121,36 @@ export const CustomSearchBar: React.FC = () => {
         <Spinner visible={isLoading} textLoading={"Loading..."} textStyle={{ color: "#FFF" }} />
 
         <SearchBar
+          containerStyle={{ backgroundColor: Colors.black }}
           style={{ height: 40 }}
-          onFocus={() => setIsModalVisible(true)}
+          onFocus={() => {
+            fetchHashtags();
+            setIsModalVisible(true);
+          }}
           onSubmitEditing={(event) => handleSubmit(event.nativeEvent.text)}
           round
           searchIcon={{ size: 24 }}
-          onChangeText={(text) => searchFilterFunction(text)}
-          onClear={() => searchFilterFunction("")}
+          onChangeText={(text) => {
+            setSearch(text);
+            fetchHashtags(text);
+          }}
           placeholder="Type Here..."
           value={search}
         />
-        {isModalVisible && (
-          <SearchResults filteredDataSource={filteredDataSource} handleSelectItem={handleSelectItem} />
-        )}
+
+        {isModalVisible && <SearchResults dataSource={masterDataSource} handleSelectItem={handleSelectItem} />}
         {relvantItems !== undefined && (
           <View style={{ flex: 1 }}>
             <Text style={{ fontSize: 20, margin: 5, color: Colors.white }}>Videos</Text>
-            <GenericComponent items={relvantItems} numColumns={2} pictureHeight={200} />
+            <GenericComponent
+              items={relvantItems}
+              numColumns={2}
+              pictureHeight={300}
+              renderFooter={(item: IPost) => renderFooter(item)}
+              renderBottomVideo={(item: IPost) => renderBottomVideo(item, 300)}
+              gifStyle={{ width: Dimensions.get("screen").width / 2 - 10 }}
+              customStyle={{ margin: 5, width: Dimensions.get("screen").width / 2 - 10 }}
+            />
           </View>
         )}
       </View>

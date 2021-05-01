@@ -128,7 +128,8 @@ const ProfileHeader: React.FC<IProfileDetails> = ({
       <View style={{ flexDirection: "row" }}>
         <View style={{ flex: 1, alignItems: "center" }}>
           <Image
-            source={require("../../../assets/avatar/01.jpg")}
+            // source={user.image ? {uri: user.image} : require('../../../assets/avatar/user.png')}
+            source={require("../../../assets/avatar/user.png")}
             style={{ width: 75, height: 75, borderRadius: 37.5 }}
           />
         </View>
