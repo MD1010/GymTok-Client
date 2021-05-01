@@ -12,6 +12,7 @@ import debounce from "lodash/debounce";
 import { fetchAPI, RequestMethod } from "../../utils/fetchAPI";
 import { Colors, UIConsts } from "../shared";
 import { IPost } from "../../interfaces";
+import { formatDate } from "../../utils/date";
 
 export const CustomSearchBar: React.FC = () => {
   const [search, setSearch] = useState("");
@@ -70,10 +71,10 @@ export const CustomSearchBar: React.FC = () => {
             justifyContent: "space-between",
             flexDirection: "row",
             width: Dimensions.get("screen").width / 2 - 10,
-            marginTop: 10,
+            marginTop: 5,
           }}
         >
-          <View style={{ flexDirection: "row", margin: 5 }}>
+          <View style={{ flexDirection: "row", paddingHorizontal: 5, marginBottom: 10 }}>
             <Avatar
               source={
                 item?.createdBy?.image ? { uri: item?.createdBy?.image } : require("../../../assets/avatar/user.png")
@@ -108,7 +109,7 @@ export const CustomSearchBar: React.FC = () => {
       <View style={{ display: "flex", justifyContent: "flex-end", flexDirection: "column", height: picHeight }}>
         <View style={{ flexDirection: "row", alignItems: "center", marginRight: 10 }}>
           <Text style={{ color: Colors.white, fontWeight: "bold", fontSize: 12, margin: 3 }}>
-            {item.publishDate.toString().split("T")[0]}
+            {formatDate(item?.publishDate)}
           </Text>
         </View>
       </View>
@@ -141,15 +142,15 @@ export const CustomSearchBar: React.FC = () => {
         {isModalVisible && <SearchResults dataSource={masterDataSource} handleSelectItem={handleSelectItem} />}
         {relvantItems !== undefined && (
           <View style={{ flex: 1 }}>
-            <Text style={{ fontSize: 20, margin: 5, color: Colors.white }}>Videos</Text>
+            <Text style={{ fontSize: 20, padding: 10, color: Colors.white }}>Videos</Text>
             <GenericComponent
               items={relvantItems}
               numColumns={2}
               pictureHeight={300}
               renderFooter={(item: IPost) => renderFooter(item)}
               renderBottomVideo={(item: IPost) => renderBottomVideo(item, 300)}
-              gifStyle={{ width: Dimensions.get("screen").width / 2 - 10 }}
-              customStyle={{ margin: 5, width: Dimensions.get("screen").width / 2 - 10 }}
+              gifStyle={{ margin: 5 }}
+              containerStyle={{ paddingBottom: 30 }}
             />
           </View>
         )}

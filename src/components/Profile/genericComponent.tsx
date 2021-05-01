@@ -14,6 +14,7 @@ interface Props {
   numColumns?: number;
   customStyle?: ViewStyle;
   gifStyle?: ViewStyle;
+  containerStyle?: ViewStyle;
   pictureHeight?: number;
   renderFooter?: (item: IPost) => JSX.Element;
   renderBottomVideo?: (item: IPost) => JSX.Element;
@@ -30,6 +31,7 @@ export const GenericComponent: React.FC<Props> = ({
   numColumns,
   pictureHeight,
   pageHeader,
+  containerStyle,
 }) => {
   const navigation = useNavigation();
   const isHorizontal: boolean = horizontal ? horizontal : false;
@@ -58,7 +60,6 @@ export const GenericComponent: React.FC<Props> = ({
             style={{
               ...styles.theImage,
               height: picHeight,
-              // width: Dimensions.get("window").width / numOfColumns,
               ...gifStyle,
             }}
             imageStyle={{ borderRadius: 3 }}
@@ -96,7 +97,9 @@ export const GenericComponent: React.FC<Props> = ({
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, flexDirection: isHorizontal ? "row" : "column" }}>
+    <SafeAreaView
+      style={[{ flex: 1, flexDirection: isHorizontal ? "row" : "column", marginHorizontal: 5 }, containerStyle]}
+    >
       <FlatList
         ListHeaderComponent={pageHeader}
         data={items}
@@ -122,7 +125,7 @@ const styles = StyleSheet.create({
   },
 
   theImage: {
-    margin: 3,
+    margin: 2,
     height: 120,
     resizeMode: "cover",
   },

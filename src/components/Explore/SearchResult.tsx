@@ -15,10 +15,8 @@ export const SearchResults: React.FC<Props> = ({ dataSource, handleSelectItem })
       // Flat List Item
       <View style={styles.itemStyle}>
         <Text onPress={() => getItem(item)}>
-          <View style={{ marginRight: 5 }}>
-            <Ionicons name="search-outline" color={"white"} size={25} />
-          </View>
-          <View>
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <Ionicons name="search-outline" color={"white"} size={20} style={{ marginRight: 5 }} />
             <Text style={{ color: Colors.white }}>{item.hashtag.toUpperCase()}</Text>
           </View>
         </Text>

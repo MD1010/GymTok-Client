@@ -11,6 +11,7 @@ import { Loader } from "../shared";
 import { Colors } from "../shared/styles/variables";
 import { Player } from "../shared/VideoPlayer";
 import Ripple from "react-native-material-ripple";
+import { formatDate } from "../../utils/date";
 
 interface PostRepliesProps {}
 
@@ -78,14 +79,18 @@ export const PostReplies: React.FC<PostRepliesProps> = ({}) => {
     }
   }, [post]);
 
+  useEffect(() => {
+    post && console.log(post?.publishDate?.toString());
+  }, [post]);
+
   const showOriginalVideo = () => {
     navigation.navigate("VideoDisplay", { posts: [post] });
   };
 
-  const RepliesHeader = () =>
+  const OriginalVideoPreview = () =>
     videoGif && (
       <Ripple
-        style={{ margin: 10, marginLeft: 2 }}
+        style={{ flex: 1 }}
         onPress={() => {
           showOriginalVideo();
         }}
@@ -94,47 +99,62 @@ export const PostReplies: React.FC<PostRepliesProps> = ({}) => {
           source={{
             uri: videoGif,
           }}
-          style={{ height: 220, width: 160, borderRadius: 5 }}
+          style={{ height: 200, borderRadius: 5 }}
         />
-        <Text
-          style={{
-            backgroundColor: Colors.lightPurpule,
-            position: "absolute",
-            left: 10,
-            top: 10,
-            padding: 4,
-            borderRadius: 3,
-          }}
-        >
-          Original
-        </Text>
+        <Text style={styles.originalLabel}>Original</Text>
       </Ripple>
     );
 
+  const Header = () =>
+    challengeReplies ? (
+      <View style={styles.headerStyle}>
+        <OriginalVideoPreview />
+        <View style={styles.infoContainer}>
+          <Text style={[styles.text, { fontSize: 18, marginBottom: 15 }]}>{post?.createdBy?.username}</Text>
+          <Text style={{ fontWeight: "bold", fontSize: 13, marginBottom: 5, color: Colors.lightGrey2 }}>
+            Posted By {post?.createdBy?.username}
+          </Text>
+          <Text style={[styles.text, { fontSize: 13, marginBottom: 20, color: Colors.lightGrey2 }]}>
+            {formatDate(post?.publishDate)}
+          </Text>
+          <Text style={styles.text}>{post?.replies?.length} replies</Text>
+        </View>
+      </View>
+    ) : null;
   return (
-    <View
-      style={{
-        flex: 1,
-        backgroundColor: Colors.black,
-        // padding: 5,
-        // justifyContent: "center",
-        // alignItems: "center",
-      }}
-    >
-      {/* <View style={styles.originalVideoContainer}>
-        <Player
-            style={styles.video}
-            uri={streaminServerUrl}
-            resizeMode="cover"
-            videoInViewPort={isVideoInViewPort}
-            onVideoLoad={() => setIsLoadingChallengeVideo(false)}
-          />
-      </View> */}
+    <View style={{ flex: 1, backgroundColor: Colors.black }}>
+      <GenericComponent items={challengeReplies} pageHeader={Header} />
 
-      <GenericComponent items={challengeReplies} pageHeader={RepliesHeader} />
       {isLoadingReplies && <Loader />}
     </View>
   );
 };
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  text: {
+    color: Colors.white,
+    fontWeight: "bold",
+  },
+  headerStyle: {
+    flexDirection: "row",
+    // padding: 10,
+    marginLeft: 2,
+    marginVertical: 10,
+  },
+  infoContainer: {
+    padding: 15,
+    paddingTop: 0,
+    flex: 1.5,
+  },
+  originalLabel: {
+    backgroundColor: Colors.lightPurpule,
+    position: "absolute",
+    left: 10,
+    top: 10,
+    padding: 3,
+    borderRadius: 3,
+    color: Colors.white,
+    fontSize: 13,
+    overflow: "hidden",
+  },
+});
