@@ -5,7 +5,6 @@ import { Dimensions } from "react-native";
 import { LoginContainer as LoginScreen } from "../Auth/LoginContainer";
 import { NotLoggedInModal } from "../Auth/NotLoggedInModal";
 import { RegisterContainer as RegisterScreen } from "../Auth/RegisterContainer";
-import { PostsVideoDisplay } from "../Profile/ProfileVideoModal";
 import { postChallengeScreens } from "../PublishVideo/publishScreens";
 import { PostReplies } from "../Replies/PostReplies";
 import { BottomTabs } from "./BottomTabs";
@@ -13,6 +12,7 @@ import { config } from "./stackNavigationConfig";
 import { ApproveVideo } from "../PublishVideo/ApproveVideo";
 import { CameraScreen } from "../PublishVideo/CameraScreen";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import { PostsVideoDisplay } from "../shared/PostsVideoDisplay";
 
 interface StackNavigatorProps {}
 
