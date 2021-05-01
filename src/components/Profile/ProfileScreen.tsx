@@ -16,7 +16,7 @@ interface IProfileDetails {
   numOfReplies: number;
   numOfLikes: number;
 }
-function ProfileTabs() {
+function ProfileTabs(user: IUser) {
   const Tabs = createMaterialTopTabNavigator();
 
   const [challenges, setChallenges] = useState([]);
@@ -24,7 +24,7 @@ function ProfileTabs() {
   const [hasMoreChallenges, setHasMoreChallenges] = useState(true);
   const [hasMoreReplies, setHasMoreReplies] = useState(true);
 
-  const { loggedUser } = useSelector(authSelector);
+  // const { loggedUser } = useSelector(authSelector);
 
   const getMoreChallenges = async () => {
     const endpoint = `${process.env.BASE_API_ENPOINT}/posts`;
@@ -35,7 +35,7 @@ function ProfileTabs() {
       {
         size: itemsToFetch,
         page: Math.floor(challenges.length / itemsToFetch),
-        uid: loggedUser._id,
+        uid: user._id,
         isReply: false,
       }
     );
@@ -53,7 +53,7 @@ function ProfileTabs() {
       {
         size: itemsToFetch,
         page: Math.floor(replies.length / itemsToFetch),
-        uid: loggedUser._id,
+        uid: user._id,
         isReply: true,
       }
     );
@@ -116,12 +116,16 @@ function ProfileTabs() {
     </Tabs.Navigator>
   );
 }
+interface IProfileHeaderProps {
+  details: IProfileDetails;
+  user: IUser;
+}
 
-const ProfileHeader: React.FC<IProfileDetails> = ({
-  numOfChallenges,
-  numOfReplies,
-  numOfLikes,
-}) => {
+const ProfileHeader: React.FC<IProfileHeaderProps> = (
+  props: IProfileHeaderProps
+) => {
+  const { numOfChallenges, numOfReplies, numOfLikes } = props.details;
+  const user = props.user;
   const { authError, loggedUser } = useSelector(authSelector);
   return (
     <View style={{ paddingTop: 40, paddingLeft: 5 }}>
@@ -199,15 +203,15 @@ const ProfileHeader: React.FC<IProfileDetails> = ({
   );
 };
 
-export const ProfileScreen: React.FC = () => {
-  const { loggedUser } = useSelector(authSelector);
+export const ProfileScreen: React.FC<IUser> = (user: IUser) => {
+  // const { loggedUser } = useSelector(authSelector);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [profileDetails, setProfileDetails] = useState<IProfileDetails>();
 
   useEffect(() => {
     setIsLoading(true);
     async function getProfileDetails() {
-      const profileDetailsEndpoint = `${process.env.BASE_API_ENPOINT}/users/profileDetails?userId=${loggedUser._id}`;
+      const profileDetailsEndpoint = `${process.env.BASE_API_ENPOINT}/users/profileDetails?userId=${user._id}`;
 
       const { res, error } = await fetchAPI(
         RequestMethod.GET,
@@ -224,8 +228,8 @@ export const ProfileScreen: React.FC = () => {
     <Text>loading...</Text>
   ) : (
     <>
-      <ProfileHeader {...profileDetails} />
-      <ProfileTabs />
+      <ProfileHeader details={profileDetails} user={user} />
+      <ProfileTabs {...user} />
     </>
   );
 };

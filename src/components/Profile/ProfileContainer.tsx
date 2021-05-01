@@ -16,13 +16,14 @@ import { authSelector } from "../../store/auth/authSlice";
 import { Colors } from "react-native-paper";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { NotLoggedInScreen } from "../Auth/NotLoggedInScreen";
+import { log } from "react-native-reanimated";
 
 interface ProfileContainerProps {}
 
 export const ProfileContainer: React.FC<ProfileContainerProps> = ({}) => {
   const { loggedUser } = useSelector(authSelector);
   return loggedUser ? (
-    <ProfileScreen />
+    <ProfileScreen {...loggedUser} />
   ) : (
     <NotLoggedInScreen
       text={"Profile"}
