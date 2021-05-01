@@ -11,14 +11,10 @@ import {
   View,
   ViewStyle,
 } from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
-import { IPost } from "../../interfaces";
-import {
-  STREAMING_SERVER_GIF_ENDPOINT,
-  STREAMING_SERVER_VIDEO_ENDPOINT,
-} from "../../utils/consts";
-import { Loader } from "../shared";
 import Ripple from "react-native-material-ripple";
+import { IPost } from "../../interfaces";
+import { STREAMING_SERVER_GIF_ENDPOINT } from "../../utils/consts";
+import { Loader } from "../shared";
 import { Colors } from "../shared/styles/variables";
 
 interface Props {

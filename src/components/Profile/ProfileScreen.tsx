@@ -1,10 +1,7 @@
-// import { Icon } from "expo";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-import { NavigationContainer, useRoute } from "@react-navigation/native";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import { useRoute } from "@react-navigation/native";
+import React, { useEffect, useState } from "react";
 import { Image, Text, View } from "react-native";
-import { white } from "react-native-paper/lib/typescript/styles/colors";
-import { color } from "react-native-reanimated";
 import Icon from "react-native-vector-icons/Ionicons";
 import { useSelector } from "react-redux";
 import { IPost, IUser } from "../../interfaces";
@@ -25,8 +22,6 @@ function ProfileTabs(user: IUser) {
   const [replies, setReplies] = useState([]);
   const [hasMoreChallenges, setHasMoreChallenges] = useState(true);
   const [hasMoreReplies, setHasMoreReplies] = useState(true);
-
-  // const { loggedUser } = useSelector(authSelector);
 
   const getMoreChallenges = async () => {
     const endpoint = `${process.env.BASE_API_ENPOINT}/posts`;
@@ -127,22 +122,17 @@ interface IProfileHeaderProps {
 const ProfileHeader: React.FC<IProfileHeaderProps> = (
   props: IProfileHeaderProps
 ) => {
-  // const { numOfChallenges, numOfReplies, numOfLikes } = props.details;
-  // let numOfChallenges, numOfReplies, numOfLikes;
   const [numOfChallenges, setNumOfChallenges] = useState<string | number>("-");
   const [numOfReplies, setNumOfReplies] = useState<string | number>("-");
   const [numOfLikes, setNumOfLikes] = useState<string | number>("-");
 
   const user = props.user;
   const isLoading = props.isLoading;
-  const { authError, loggedUser } = useSelector(authSelector);
   useEffect(() => {
     if (!isLoading) {
       setNumOfChallenges(props.details.numOfChallenges);
       setNumOfReplies(props.details.numOfLikes);
       setNumOfLikes(props.details.numOfReplies);
-
-      console.log(`numOFchallenges: ${numOfChallenges}`);
     }
   }, [isLoading]);
   return (
@@ -224,25 +214,8 @@ const ProfileHeader: React.FC<IProfileHeaderProps> = (
 };
 
 export const ProfileScreen: React.FC<IUser> = (user?: IUser) => {
-  // const { loggedUser } = useSelector(authSelector);
   const route = useRoute<any>();
   let currentUser = route.params ? route.params.user : user;
-  // const [currentUser, setCurrentUser] = useState<IUser>();
-  // setCurrentUser(route.params ? route.params.user : user);
-
-  // if (user != undefined) {
-  //   console.log("passed user to profile");
-  //   console.log(user);
-  //   currentUser = user;
-  // } else {
-  //   if (route.params) {
-  //     console.log("passed params to profile");
-
-  //     currentUser = route.params.user;
-  //   }
-  // }
-  //  currentUser = user ? user : route.params.user;
-
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [profileDetails, setProfileDetails] = useState<IProfileDetails>();
 
@@ -255,20 +228,13 @@ export const ProfileScreen: React.FC<IUser> = (user?: IUser) => {
         RequestMethod.GET,
         profileDetailsEndpoint
       );
-      // console.log(
-      //   `routeparams: ${route.params.user.fullName} currentUser: ${currentUser.fullName} response: ${res}`
-      // );
+
       res && setProfileDetails(res);
       res && setIsLoading(false);
     }
     getProfileDetails();
   }, []);
 
-  // isLoading ? (
-  //   <View style={{ marginTop: 200 }}>
-  //     <Text style={{ color: Colors.white }}>loading...</Text>
-  //   </View>
-  // ) :
   return (
     <>
       <ProfileHeader
