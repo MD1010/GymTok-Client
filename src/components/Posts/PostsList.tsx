@@ -76,6 +76,20 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentPosts,
   }, [loggedUser]);
 
   // useEffect(() => {
+  //   if (currentPosts !== undefined) {
+  //     for (let i = 0; i < posts.length; i++) {
+  //       for (let j = 0; j < latestFetchedPosts.length; j++) {
+  //         if (posts[i]._id === latestFetchedPosts[j]._id) {
+  //           console.log("fount liked post!!!!");
+  //           console.log(latestFetchedPosts[j]);
+  //           posts[i] = latestFetchedPosts[j];
+  //         }
+  //       }
+  //     }
+  //   }
+  // }, [currentPosts, latestFetchedPosts]);
+
+  // useEffect(() => {
   //   if (currentPostID && posts.length > 0) {
   //     console.log("currentID: " + currentPostID);
   //     setPostIndex(posts.findIndex((post) => post._id === currentPostID));

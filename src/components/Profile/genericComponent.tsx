@@ -1,9 +1,11 @@
 import { FontAwesome } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Dimensions, FlatList, ImageBackground, SafeAreaView, StyleSheet, Text, View, ViewStyle } from "react-native";
 import Ripple from "react-native-material-ripple";
+import { useSelector } from "react-redux";
 import { IPost } from "../../interfaces";
+import { postsSelector } from "../../store/posts/postsSlice";
 import { STREAMING_SERVER_GIF_ENDPOINT } from "../../utils/consts";
 import { Colors } from "../shared/styles/variables";
 
@@ -34,6 +36,24 @@ export const GenericComponent: React.FC<Props> = ({
   const isHorizontal: boolean = horizontal ? horizontal : false;
   const numOfColumns: number = numColumns ? numColumns : 3;
   const picHeight: number = pictureHeight ? pictureHeight : styles.theImage.height;
+  const { hasMoreToFetch, error, latestFetchedPosts, userPosts } = useSelector(postsSelector);
+  const [currentItems, setCurrentItems] = useState<any>();
+
+  useEffect(() => {
+    let tempArr = [...items];
+    for (let i = 0; i < tempArr.length; i++) {
+      for (let j = 0; j < latestFetchedPosts.length; j++) {
+        if (tempArr[i]._id === latestFetchedPosts[j]._id) {
+          console.log("fount liked post!!!!");
+          console.log(tempArr[i].likes.length);
+          console.log(latestFetchedPosts[j].likes.length);
+          tempArr[i] = { ...latestFetchedPosts[j] };
+          console.log(tempArr[i].likes.length);
+        }
+      }
+    }
+    setCurrentItems(tempArr);
+  }, [items, latestFetchedPosts]);
 
   const showVideo = (postID) => {
     const initialIndex = items.findIndex((post) => post._id === postID);
@@ -98,7 +118,7 @@ export const GenericComponent: React.FC<Props> = ({
     <SafeAreaView style={{ flex: 1, flexDirection: isHorizontal ? "row" : "column" }}>
       <FlatList
         ListHeaderComponent={pageHeader}
-        data={items}
+        data={/*items*/ currentItems}
         keyExtractor={(item, index) => index.toString()}
         horizontal={isHorizontal}
         numColumns={!isHorizontal ? numOfColumns : 0}
