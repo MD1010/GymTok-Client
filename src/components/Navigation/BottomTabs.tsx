@@ -12,6 +12,7 @@ import { ExploreScreen } from "../Explore/ExploreScreen";
 import { ProfileContainer as Profile } from "../Profile/ProfileContainer";
 import { Colors, UIConsts } from "../shared/styles/variables";
 import { colors } from "react-native-elements";
+import { ExploreContainer } from "../Explore/ExploreContainer";
 
 interface BottomTabsProps {}
 
@@ -59,17 +60,7 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
         />
         <Tab.Screen
           name="Explore"
-          component={
-            loggedUser
-              ? () => <ExploreScreen />
-              : () => (
-                  <NotLoggedInScreen
-                    text={"Explore"}
-                    description={"Discover Challenges By Categories"}
-                    icon={() => <Ionicons name="search-outline" color={Colors.white} size={56} />}
-                  />
-                )
-          }
+          component={ExploreContainer}
           options={{
             tabBarIcon: ({ color, size, focused }) =>
               focused ? (
