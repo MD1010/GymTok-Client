@@ -199,12 +199,14 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentPosts,
       >
         <FlatList
           refreshControl={
-            <RefreshControl
-              tintColor="red"
-              colors={["#9Bd35A", "#689F38"]}
-              refreshing={refreshing}
-              onRefresh={onRefresh}
-            />
+            isFeed && (
+              <RefreshControl
+                tintColor="red"
+                colors={["#9Bd35A", "#689F38"]}
+                refreshing={refreshing}
+                onRefresh={onRefresh}
+              />
+            )
           }
           initialNumToRender={5}
           maxToRenderPerBatch={3}
