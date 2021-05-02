@@ -110,34 +110,33 @@ export const GenericComponent: React.FC<Props> = ({
             imageStyle={{ borderRadius: 3 }}
             source={{ uri: `${STREAMING_SERVER_GIF_ENDPOINT}/${item.gif}` }}
           >
-            {
-              renderBottomVideo ? renderBottomVideo(item) : null
-              // (
-              // <View
-              //   style={{
-              //     display: "flex",
-              //     justifyContent: "flex-end",
-              //     marginLeft: 3,
-              //     flexDirection: "column",
-              //     height: picHeight,
-              //   }}
-              // >
-              //   <View
-              //     style={{
-              //       flexDirection: "row",
-              //       alignItems: "center",
-              //     }}
-              //   >
-              //     <FontAwesome
-              //       name={"heart"}
-              //       size={13}
-              //       color={Colors.lightGrey}
-              //     />
-              //     <Text style={styles.amount}>{item?.likes?.length}</Text>
-              //   </View>
-              // </View>
-              // )
-            }
+            {renderBottomVideo ? (
+              renderBottomVideo(item)
+            ) : (
+              <View
+                style={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  marginLeft: 3,
+                  flexDirection: "column",
+                  height: picHeight,
+                }}
+              >
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                  }}
+                >
+                  <FontAwesome
+                    name={"heart"}
+                    size={13}
+                    color={Colors.lightGrey}
+                  />
+                  <Text style={styles.amount}>{item?.likes?.length}</Text>
+                </View>
+              </View>
+            )}
           </ImageBackground>
         </Ripple>
 
