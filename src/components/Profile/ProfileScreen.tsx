@@ -2,7 +2,8 @@ import { createMaterialTopTabNavigator } from "@react-navigation/material-top-ta
 import { useRoute } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
 import { Image, Text, View } from "react-native";
-import Icon from "react-native-vector-icons/Ionicons";
+import Ionicons from "react-native-vector-icons/Ionicons";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { useSelector } from "react-redux";
 import { IPost, IUser } from "../../interfaces";
 import { authSelector } from "../../store/auth/authSlice";
@@ -66,14 +67,17 @@ function ProfileTabs(user: IUser) {
       screenOptions={({ route }) => ({
         tabBarIcon: ({ focused }) => {
           let iconName;
+          let IconComponent;
 
           if (route.name === "Challanges") {
+            IconComponent = Ionicons;
             iconName = "ios-apps";
           } else if (route.name === "Replies") {
-            iconName = "person-circle";
+            IconComponent = MaterialCommunityIcons;
+            iconName = "reply-circle";
           }
           return (
-            <Icon
+            <IconComponent
               name={iconName}
               size={25}
               color={focused ? Colors.white : Colors.darkGrey}
@@ -204,10 +208,12 @@ const ProfileHeader: React.FC<IProfileHeaderProps> = (
         <Text style={{ fontWeight: "bold", color: Colors.white }}>
           {user.fullName}
         </Text>
+
+        {/* This is may be in profile if we will add edit profile feature 
         <Text style={{ color: Colors.white }}>
           Basketball player | Runner | Swimmer{" "}
         </Text>
-        <Text style={{ color: Colors.white }}>www.mysite.com</Text>
+        <Text style={{ color: Colors.white }}>www.mysite.com</Text> */}
       </View>
     </View>
   );
