@@ -234,7 +234,6 @@ export const ProfileScreen: React.FC<IUser> = (user?: IUser) => {
         RequestMethod.GET,
         profileDetailsEndpoint
       );
-
       res && setProfileDetails(res);
       res && setIsLoading(false);
     }

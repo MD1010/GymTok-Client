@@ -1,5 +1,14 @@
-import React from "react";
-import { Dimensions, Image, ImageStyle, StatusBar, StyleProp, StyleSheet, View, ViewStyle } from "react-native";
+import React, { useEffect } from "react";
+import {
+  Dimensions,
+  Image,
+  ImageStyle,
+  StatusBar,
+  StyleProp,
+  StyleSheet,
+  View,
+  ViewStyle,
+} from "react-native";
 
 interface LoaderProps {
   style?: StyleProp<ImageStyle>;
@@ -7,9 +16,20 @@ interface LoaderProps {
 }
 
 export const Loader: React.FC<LoaderProps> = ({ style, isFullScreen }) => {
+  useEffect(() => {
+    console.log("in loader");
+  }, []);
   return (
-    <View style={[styles.container, isFullScreen && { marginBottom: StatusBar.currentHeight }]}>
-      <Image source={require("../../../assets/loader.gif")} style={[styles.defaultLoaderStyles, style]} />
+    <View
+      style={[
+        styles.container,
+        isFullScreen && { marginBottom: StatusBar.currentHeight },
+      ]}
+    >
+      <Image
+        source={require("../../../assets/loader.gif")}
+        style={[styles.defaultLoaderStyles, style]}
+      />
     </View>
   );
 };
