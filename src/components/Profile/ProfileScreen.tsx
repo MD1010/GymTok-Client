@@ -70,7 +70,7 @@ function ProfileTabs(user: IUser) {
         },
       })}
       tabBarOptions={{
-        style: { backgroundColor: Colors.darkBlue },
+        style: { backgroundColor: Colors.darkBlueOpaque },
         showIcon: true,
         showLabel: true,
         activeTintColor: Colors.white,
@@ -190,7 +190,7 @@ export const ProfileScreen: React.FC<IUser> = (user?: IUser) => {
   return (
     <>
       <ProfileHeader details={profileDetails} user={currentUser} isLoading={isLoading} />
-      <Divider style={{ backgroundColor: Colors.weakGrey, height: 1 }} />
+      <Divider style={{ backgroundColor: Colors.weakGrey }} />
       <ProfileTabs {...currentUser} />
     </>
   );
