@@ -33,13 +33,18 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentPosts,
   const flatListRef = useRef<FlatList>(null);
   const [showFooter, setShowFooter] = useState<boolean>(false);
   const { hasMoreToFetch, error, latestFetchedPosts, userPosts } = useSelector(postsSelector);
-  const posts: IPost[] = currentPosts ? currentPosts : isFeed ? latestFetchedPosts : userPosts;
+  const [posts, setPosts] = useState<IPost[]>([]);
+  // const posts: IPost[] = currentPosts ? currentPosts : isFeed ? latestFetchedPosts : userPosts;
   const [refreshing, setRefreshing] = React.useState<boolean>(false);
   const loadMore: boolean = isLoadMore !== undefined ? isLoadMore : true;
 
   useEffect(() => {
     error && alert(JSON.stringify(error));
   }, [error]);
+
+  useEffect(() => {
+    setPosts(currentPosts ? currentPosts : isFeed ? latestFetchedPosts : userPosts);
+  }, [currentPosts, isFeed, latestFetchedPosts, userPosts]);
 
   useEffect(() => {
     if (posts) {
@@ -56,7 +61,7 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentPosts,
     console.log("refreshing!!!!");
     setRefreshing(true);
     dispatch(getLatestPosts());
-    setRefreshing(false);
+    //setRefreshing(false);
   }, [refreshing]);
 
   const getPosts = () => {
@@ -193,7 +198,14 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentPosts,
         // onResponderRelease={() => console.log(123123123)}
       >
         <FlatList
-          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+          refreshControl={
+            <RefreshControl
+              tintColor="red"
+              colors={["#9Bd35A", "#689F38"]}
+              refreshing={refreshing}
+              onRefresh={onRefresh}
+            />
+          }
           initialNumToRender={5}
           maxToRenderPerBatch={3}
           windowSize={5}
