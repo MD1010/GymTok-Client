@@ -58,13 +58,8 @@ export const GenericComponent: React.FC<Props> = ({
   const Footer = () => {
     if (items.length) {
       if (hasMoreToFetch) {
+        console.log(`has more to fetch?: ${hasMoreToFetch}`);
         return <Loader style={{ height: 100, width: 100 }} />;
-      } else {
-        return (
-          <Text style={{ color: Colors.lightGrey2, fontSize: 15 }}>
-            You have reached the end
-          </Text>
-        );
       }
     }
     return null;
@@ -115,33 +110,34 @@ export const GenericComponent: React.FC<Props> = ({
             imageStyle={{ borderRadius: 3 }}
             source={{ uri: `${STREAMING_SERVER_GIF_ENDPOINT}/${item.gif}` }}
           >
-            {renderBottomVideo ? (
-              renderBottomVideo(item)
-            ) : (
-              <View
-                style={{
-                  display: "flex",
-                  justifyContent: "flex-end",
-                  marginLeft: 3,
-                  flexDirection: "column",
-                  height: picHeight,
-                }}
-              >
-                <View
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                  }}
-                >
-                  <FontAwesome
-                    name={"heart"}
-                    size={13}
-                    color={Colors.lightGrey}
-                  />
-                  <Text style={styles.amount}>{item?.likes?.length}</Text>
-                </View>
-              </View>
-            )}
+            {
+              renderBottomVideo ? renderBottomVideo(item) : null
+              // (
+              // <View
+              //   style={{
+              //     display: "flex",
+              //     justifyContent: "flex-end",
+              //     marginLeft: 3,
+              //     flexDirection: "column",
+              //     height: picHeight,
+              //   }}
+              // >
+              //   <View
+              //     style={{
+              //       flexDirection: "row",
+              //       alignItems: "center",
+              //     }}
+              //   >
+              //     <FontAwesome
+              //       name={"heart"}
+              //       size={13}
+              //       color={Colors.lightGrey}
+              //     />
+              //     <Text style={styles.amount}>{item?.likes?.length}</Text>
+              //   </View>
+              // </View>
+              // )
+            }
           </ImageBackground>
         </Ripple>
 
@@ -162,7 +158,7 @@ export const GenericComponent: React.FC<Props> = ({
         horizontal={isHorizontal}
         numColumns={!isHorizontal ? numOfColumns : 0}
         renderItem={({ item }) => renderItem(item)}
-        onEndReachedThreshold={0}
+        onEndReachedThreshold={0.5}
         ListFooterComponent={showFooter ? <Footer /> : null}
         onEndReached={handleLoadMore}
       />
