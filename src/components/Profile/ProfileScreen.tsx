@@ -14,7 +14,6 @@ const itemsToFetch = 12;
 interface IProfileDetails {
   numOfChallenges: number;
   numOfReplies: number;
-  numOfLikes: number;
 }
 function ProfileTabs(user: IUser) {
   const Tabs = createMaterialTopTabNavigator();
@@ -128,15 +127,15 @@ const ProfileHeader: React.FC<IProfileHeaderProps> = (
 ) => {
   const [numOfChallenges, setNumOfChallenges] = useState<string | number>("-");
   const [numOfReplies, setNumOfReplies] = useState<string | number>("-");
-  const [numOfLikes, setNumOfLikes] = useState<string | number>("-");
+  // const [numOfLikes, setNumOfLikes] = useState<string | number>("-");
 
   const user = props.user;
   const isLoading = props.isLoading;
   useEffect(() => {
     if (!isLoading) {
       setNumOfChallenges(props.details.numOfChallenges);
-      setNumOfReplies(props.details.numOfLikes);
-      setNumOfLikes(props.details.numOfReplies);
+      setNumOfReplies(props.details.numOfReplies);
+      // setNumOfLikes(props.details.numOfLikes);
     }
   }, [isLoading]);
   return (
@@ -187,7 +186,7 @@ const ProfileHeader: React.FC<IProfileHeaderProps> = (
                 Replies
               </Text>
             </View>
-            <View style={{ alignItems: "center", marginLeft: 45 }}>
+            {/* <View style={{ alignItems: "center", marginLeft: 45 }}>
               <Text
                 style={{
                   color: Colors.white,
@@ -200,7 +199,7 @@ const ProfileHeader: React.FC<IProfileHeaderProps> = (
               <Text style={{ fontSize: 10, color: Colors.lightGrey }}>
                 Likes
               </Text>
-            </View>
+            </View> */}
           </View>
         </View>
       </View>
@@ -234,6 +233,7 @@ export const ProfileScreen: React.FC<IUser> = (user?: IUser) => {
         RequestMethod.GET,
         profileDetailsEndpoint
       );
+
       res && setProfileDetails(res);
       res && setIsLoading(false);
     }
