@@ -30,7 +30,8 @@
       },
 
       "softwareKeyboardLayoutMode": "pan",
-      "permissions": ["RECORD_AUDIO", "CAMERA", "CAPTURE_AUDIO_OUTPUT"]
+      "permissions": ["RECORD_AUDIO", "CAMERA", "CAPTURE_AUDIO_OUTPUT"],
+      "useNextNotificationsApi": true
     },
     "web": {
       "favicon": "./assets/favicon.png"

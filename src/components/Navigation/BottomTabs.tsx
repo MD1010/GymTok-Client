@@ -13,9 +13,19 @@ import { ProfileContainer as Profile } from "../Profile/ProfileContainer";
 import { Colors, UIConsts } from "../shared/styles/variables";
 import { colors } from "react-native-elements";
 import { ExploreContainer } from "../Explore/ExploreContainer";
+import { NotificationScreen } from "../Notifications/NotficationScreen";
 
 interface BottomTabsProps {}
 
+// loggedUser
+//               ? () => <View></View>
+//               : () => (
+//                   <NotLoggedInScreen
+//                     text={"Notifications"}
+//                     description={"See your activity and new challenges here"}
+//                     icon={() => <Ionicons name="notifications-sharp" color={Colors.white} size={56} />}
+//                   />
+//                 )
 const EmptyTab = () => null;
 
 export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
@@ -102,17 +112,7 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
 
         <Tab.Screen
           name="Notifications"
-          component={
-            loggedUser
-              ? () => <View></View>
-              : () => (
-                  <NotLoggedInScreen
-                    text={"Notifications"}
-                    description={"See your activity and new challenges here"}
-                    icon={() => <Ionicons name="notifications-sharp" color={Colors.white} size={56} />}
-                  />
-                )
-          }
+          component={NotificationScreen}
           options={{
             tabBarIcon: ({ color, size, focused }) =>
               focused ? (
