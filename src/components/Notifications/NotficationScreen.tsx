@@ -1,42 +1,49 @@
+import { useNavigation } from "@react-navigation/native";
 import Constants from "expo-constants";
 import * as Notifications from "expo-notifications";
 import React, { useState, useEffect, useRef } from "react";
-import { Text, View, Button, Platform } from "react-native";
+import { Text, View, Button, Platform, AppState } from "react-native";
+// import { Linking } from 'react-native';
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
-    shouldShowAlert: true,
+    shouldShowAlert: AppState.currentState != "active" ? true : false,
     shouldPlaySound: false,
     shouldSetBadge: true,
   }),
 });
 
+// Notifications.addNotificationResponseReceivedListener(console.log);
+
 export const NotificationScreen = () => {
   const [expoPushToken, setExpoPushToken] = useState("");
-  const [notification, setNotification] = useState<any>(false);
-  //   const notificationListener = useRef<any>();
+  const [notification, setNotification] = useState<Notifications.Notification>();
+  const notificationListener = useRef<any>();
   const responseListener = useRef<any>();
+  const navigation = useNavigation();
 
   useEffect(() => {
     registerForPushNotificationsAsync().then((token) => setExpoPushToken(token));
-    console.log(123123);
+    console.log("IN notifications screen mount!!");
 
     // This listener is fired whenever a notification is received while the app is foregrounded
-    Notifications.addNotificationReceivedListener((notification) => {
-      console.log("notification recieved", notification);
+    notificationListener.current = Notifications.addNotificationReceivedListener(
+      (notification: Notifications.Notification) => {
+        // console.log("notification recieved", notification);
 
-      setNotification(notification);
-    });
+        setNotification(notification);
+      }
+    );
+    // responseListener.current = Notifications.addNotificationResponseReceivedListener((response) => {
+    //   console.log(response);
+    // });
 
     // This listener is fired whenever a user taps on or interacts with a notification (works when app is foregrounded, backgrounded, or killed)
-    Notifications.addNotificationResponseReceivedListener((response) => {
-      //   console.log(response);
-    });
 
-    // return () => {
-    //   Notifications.removeNotificationSubscription(notificationListener.current);
-    //   Notifications.removeNotificationSubscription(responseListener.current);
-    // };
+    return () => {
+      //   Notifications.removeNotificationSubscription(notificationListener.current);
+      //   Notifications.removeNotificationSubscription(responseListener.current);
+    };
   }, []);
 
   return (

@@ -58,7 +58,25 @@ const downloadAssets = async () => {
   ]);
 };
 
+// Notifications.addNotificationResponseReceivedListener((response) => {
+//   console.log(response);
+// });
+
 function App() {
+  // React.useLayoutEffect(() => {
+  //   // console.log(lastNotificationResponse);
+  //   // if (lastNotificationResponse && lastNotificationResponse.actionIdentifier === Notifications.DEFAULT_ACTION_IDENTIFIER) {
+  //   // handlePush(lastNotificationResponse);
+  // }, [lastNotificationResponse]);
+  // const lastNotificationResponse = Notifications.useLastNotificationResponse();
+  // React.useEffect(() => {
+  //   if (lastNotificationResponse) {
+  //     console.log("TOUCHEDD!!@#!#!@#", lastNotificationResponse);
+
+  //     //   Linking.openURL(lastNotificationResponse.notification.request.content.data.url);
+  //   }
+  // }, [lastNotificationResponse]);
+
   const [isAppReady, setIsAppReady] = useState(false);
   useEffect(() => {
     (async function () {
