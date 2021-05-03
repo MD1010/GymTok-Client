@@ -1,17 +1,14 @@
 import { Feather, FontAwesome, FontAwesome5, Fontisto, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import * as Expo from "expo";
-import AppLoading from "expo-app-loading";
 import { Asset } from "expo-asset";
 import * as Font from "expo-font";
+import * as SplashScreen from "expo-splash-screen";
 import React, { useEffect, useState } from "react";
-import { Image, InteractionManager, StatusBar, View, Text } from "react-native";
-import { SafeAreaProvider } from "react-native-safe-area-context";
+import { Image, StatusBar } from "react-native";
 import { Provider } from "react-redux";
 import { MainNavigator } from "./components/Navigation/StackNavigator";
-import { Colors } from "./components/shared";
 import { loadLoggedUser } from "./store/auth/actions";
 import { store } from "./store/configureStore";
-import * as SplashScreen from "expo-splash-screen";
 
 function cacheImages(images) {
   return images.map((image) => {
@@ -58,25 +55,7 @@ const downloadAssets = async () => {
   ]);
 };
 
-// Notifications.addNotificationResponseReceivedListener((response) => {
-//   console.log(response);
-// });
-
 function App() {
-  // React.useLayoutEffect(() => {
-  //   // console.log(lastNotificationResponse);
-  //   // if (lastNotificationResponse && lastNotificationResponse.actionIdentifier === Notifications.DEFAULT_ACTION_IDENTIFIER) {
-  //   // handlePush(lastNotificationResponse);
-  // }, [lastNotificationResponse]);
-  // const lastNotificationResponse = Notifications.useLastNotificationResponse();
-  // React.useEffect(() => {
-  //   if (lastNotificationResponse) {
-  //     console.log("TOUCHEDD!!@#!#!@#", lastNotificationResponse);
-
-  //     //   Linking.openURL(lastNotificationResponse.notification.request.content.data.url);
-  //   }
-  // }, [lastNotificationResponse]);
-
   const [isAppReady, setIsAppReady] = useState(false);
   useEffect(() => {
     (async function () {

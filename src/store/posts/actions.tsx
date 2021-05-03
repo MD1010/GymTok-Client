@@ -93,3 +93,9 @@ export const updateUserLikePost = (post: IPost, userId: string): AppThunk => {
     }
   };
 };
+
+export const displayNotificationPost = (post: IPost): AppThunk => {
+  return async (dispatch: AppDispatch, getState: () => RootState) => {
+    dispatch(postsActions.displayNotificationPost(post));
+  };
+};

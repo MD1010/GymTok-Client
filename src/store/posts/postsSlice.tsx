@@ -3,6 +3,7 @@ import { ViewStyle } from "react-native";
 import { IPost } from "../../interfaces";
 import { getPostsAfterUserLikePost, getPostsAfterUserRemoveLikeFromPost } from "../../utils/updatePostLikes";
 import { RootState } from "../configureStore";
+import { getLatestPosts } from "./actions";
 
 export const itemsToFetch = 10; // how many posts are fetched on each get
 
@@ -90,6 +91,11 @@ const postsSlice = createSlice({
       if (updatedUserPosts) {
         state.userPosts = updatedUserPosts;
       }
+    },
+
+    displayNotificationPost: (state, action: PayloadAction<IPost>) => {
+      state.latestFetchedPosts = state.latestFetchedPosts.filter((p) => p._id !== action.payload._id);
+      state.latestFetchedPosts.unshift(action.payload);
     },
   },
 });
