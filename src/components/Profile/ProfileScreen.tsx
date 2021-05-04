@@ -40,6 +40,7 @@ function ProfileTabs(user: IUser) {
       }
     );
     if (res.length < itemsToFetch) {
+      console.log(res.length);
       setHasMoreChallenges(false);
     }
     setChallenges([...challenges, ...res]);
@@ -58,6 +59,7 @@ function ProfileTabs(user: IUser) {
       }
     );
     if (res.length < itemsToFetch) {
+      console.log(res.length);
       setHasMoreReplies(false);
     }
     setReplies([...replies, ...res]);
@@ -154,7 +156,7 @@ const ProfileHeader: React.FC<IProfileHeaderProps> = ({
 
   const AboutMe = ({ name, description = null }) => (
     <View style={{ alignItems: "center", marginTop: 20 }}>
-      <Text>{name}</Text>
+      <Text style={{ color: Colors.white }}>{name}</Text>
       {description ? <Text>{description}</Text> : null}
     </View>
   );
@@ -170,6 +172,7 @@ const ProfileHeader: React.FC<IProfileHeaderProps> = ({
         />
         <Text
           style={{
+            color: Colors.white,
             fontWeight: "bold",
             fontSize: 18,
             margin: 15,
