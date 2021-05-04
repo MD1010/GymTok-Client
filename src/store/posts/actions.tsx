@@ -18,7 +18,7 @@ export const getMorePosts = (): AppThunk => {
         page: Math.floor(currentPosts.length / itemsToFetch),
       }
     );
-    console.log(process.env.BASE_API_ENPOINT);
+
     if (res) {
       dispatch(postsActions.fetchMoreSuccess(res));
     } else {
