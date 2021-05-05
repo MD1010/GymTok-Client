@@ -238,7 +238,13 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentPosts,
           viewabilityConfig={config.current}
           onEndReached={loadMore ? handleLoadMore : null}
           onEndReachedThreshold={0.5}
-          ListFooterComponent={showFooter ? <Footer /> : null}
+          ListFooterComponent={
+            showFooter ? (
+              <Footer />
+            ) : posts.length !== 0 ? (
+              <Text style={{ color: Colors.white, fontSize: 15 }}>You have reached the end</Text>
+            ) : null
+          }
           ListFooterComponentStyle={{
             height: 80,
             backgroundColor: Colors.darkBlueOpaque,

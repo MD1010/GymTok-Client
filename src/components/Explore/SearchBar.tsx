@@ -10,7 +10,7 @@ import { GenericComponent } from "../Profile/genericComponent";
 import { Item } from "../Profile/interfaces";
 import debounce from "lodash/debounce";
 import { fetchAPI, RequestMethod } from "../../utils/fetchAPI";
-import { Colors, UIConsts } from "../shared";
+import { Colors, Loader, UIConsts } from "../shared";
 import { IPost } from "../../interfaces";
 import { formatDate } from "../../utils/date";
 
@@ -125,7 +125,9 @@ export const CustomSearchBar: React.FC = () => {
   return (
     <SafeAreaView style={{ flex: 1, height: Dimensions.get("screen").height, width: Dimensions.get("screen").width }}>
       <View style={styles.container}>
-        <Spinner visible={isLoading} textLoading={"Loading..."} textStyle={{ color: "#FFF" }} />
+        {isLoading && <Loader style={{ marginBottom: 50 }} />}
+
+        {/* <Spinner visible={isLoading} textLoading={"Loading..."} textStyle={{ color: "#FFF" }} /> */}
 
         <SearchBar
           containerStyle={{ backgroundColor: Colors.black }}
