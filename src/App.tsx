@@ -1,4 +1,11 @@
-import { Feather, FontAwesome, FontAwesome5, Fontisto, Ionicons, MaterialIcons } from "@expo/vector-icons";
+import {
+  Feather,
+  FontAwesome,
+  FontAwesome5,
+  Fontisto,
+  Ionicons,
+  MaterialIcons,
+} from "@expo/vector-icons";
 import * as Expo from "expo";
 import { Asset } from "expo-asset";
 import * as Font from "expo-font";

@@ -1,7 +1,10 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { ViewStyle } from "react-native";
 import { IPost } from "../../interfaces";
-import { getPostsAfterUserLikePost, getPostsAfterUserRemoveLikeFromPost } from "../../utils/updatePostLikes";
+import {
+  getPostsAfterUserLikePost,
+  getPostsAfterUserRemoveLikeFromPost,
+} from "../../utils/updatePostLikes";
 import { RootState } from "../configureStore";
 import { getLatestPosts } from "./actions";
 
@@ -31,7 +34,10 @@ const postsSlice = createSlice({
   reducers: {
     fetchMoreSuccess: (state, action: PayloadAction<IPost[]>) => {
       if (action.payload.length < itemsToFetch) state.hasMoreToFetch = false;
-      state.latestFetchedPosts = [...state.latestFetchedPosts, ...action.payload];
+      state.latestFetchedPosts = [
+        ...state.latestFetchedPosts,
+        ...action.payload,
+      ];
       // state.latestFetchedPosts.sort((a,b) => new Date(a.publishDate) - new Date(b.publishDate) );
       // state.latestFetchedPosts = [...action.payload,...state.latestFetchedPosts];
       state.error = null;
