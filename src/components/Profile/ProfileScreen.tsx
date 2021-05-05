@@ -1,213 +1,208 @@
-import React from "react";
-import { Item } from "./interfaces";
-import { GenericComponent } from "./genericComponent";
-import { Image, View, Text } from "react-native";
-import { Colors } from "../shared";
-// import { Icon } from "expo";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
+import { useRoute } from "@react-navigation/native";
+import React, { useEffect, useState } from "react";
+import { Image, StyleSheet, Text, View } from "react-native";
+import Ionicons from "react-native-vector-icons/Ionicons";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import { useSelector } from "react-redux";
+import { IPost, IUser } from "../../interfaces";
+import { authSelector } from "../../store/auth/authSlice";
+import { fetchAPI, RequestMethod } from "../../utils/fetchAPI";
+import { Colors } from "../shared";
+import { GenericComponent } from "./genericComponent";
 import Icon from "react-native-vector-icons/Ionicons";
-import { IUser } from "../../interfaces";
+import { Divider } from "react-native-paper";
 
-const challenges = [
-  {
-    _id: 1,
-    video: "cda641c5-b707-4511-bbf0-7801e9e2177f.mp4",
-    gif: "662de7eb-7ec8-41a9-b58d-b657b6fec985.gif",
-    numOfLikes: "100K",
-    component: <Text>fdfdff</Text>,
-  },
-  {
-    _id: 2,
-    video: "cda641c5-b707-4511-bbf0-7801e9e2177f.mp4",
-    gif: "662de7eb-7ec8-41a9-b58d-b657b6fec985.gif",
-    numOfLikes: "100K",
-    component: <Text>fdfdff</Text>,
-  },
-  {
-    _id: 3,
-    video: "cda641c5-b707-4511-bbf0-7801e9e2177f.mp4",
-    gif: "662de7eb-7ec8-41a9-b58d-b657b6fec985.gif",
-    numOfLikes: "100K",
-    component: <Text>Flying #tennis{"\n"} #tennisgirl</Text>,
-  },
-  {
-    _id: 4,
-    video: "cda641c5-b707-4511-bbf0-7801e9e2177f.mp4",
-    gif: "662de7eb-7ec8-41a9-b58d-b657b6fec985.gif",
-    numOfLikes: "100K",
-    component: <Text>fdfdff</Text>,
-  },
-  {
-    _id: 5,
-    video: "cda641c5-b707-4511-bbf0-7801e9e2177f.mp4",
-    gif: "662de7eb-7ec8-41a9-b58d-b657b6fec985.gif",
-    numOfLikes: "100K",
-    component: <Text>fdfdff</Text>,
-  },
-];
-const replies = [
-  {
-    _id: 1,
-    video: "cda641c5-b707-4511-bbf0-7801e9e2177f.mp4",
-    gif: "662de7eb-7ec8-41a9-b58d-b657b6fec985.gif",
-    numOfLikes: "100K",
-    component: <Text>fdfdff</Text>,
-  },
-  {
-    _id: 2,
-    video: "cda641c5-b707-4511-bbf0-7801e9e2177f.mp4",
-    gif: "662de7eb-7ec8-41a9-b58d-b657b6fec985.gif",
-    numOfLikes: "100K",
-    component: <Text>fdfdff</Text>,
-  },
-  {
-    _id: 3,
-    video: "cda641c5-b707-4511-bbf0-7801e9e2177f.mp4",
-    gif: "662de7eb-7ec8-41a9-b58d-b657b6fec985.gif",
-    numOfLikes: "100K",
-    component: <Text>Flying #tennis{"\n"} #tennisgirl</Text>,
-  },
-  {
-    _id: 4,
-    video: "cda641c5-b707-4511-bbf0-7801e9e2177f.mp4",
-    gif: "662de7eb-7ec8-41a9-b58d-b657b6fec985.gif",
-    numOfLikes: "100K",
-    component: <Text>fdfdff</Text>,
-  },
-  {
-    _id: 5,
-    video: "cda641c5-b707-4511-bbf0-7801e9e2177f.mp4",
-    gif: "662de7eb-7ec8-41a9-b58d-b657b6fec985.gif",
-    numOfLikes: "100K",
-    component: <Text>fdfdff</Text>,
-  },
-];
-function ProfileTabs() {
+const itemsToFetch = 12;
+interface IProfileDetails {
+  numOfChallenges: number;
+  numOfReplies: number;
+}
+function ProfileTabs(user: IUser) {
   const Tabs = createMaterialTopTabNavigator();
 
+  const [challenges, setChallenges] = useState([]);
+  const [replies, setReplies] = useState([]);
+  const [hasMoreChallenges, setHasMoreChallenges] = useState(true);
+  const [hasMoreReplies, setHasMoreReplies] = useState(true);
+
+  const getMoreChallenges = async () => {
+    const endpoint = `${process.env.BASE_API_ENPOINT}/posts`;
+    const { res, error } = await fetchAPI<IPost[]>(RequestMethod.GET, endpoint, null, {
+      size: itemsToFetch,
+      page: Math.floor(challenges.length / itemsToFetch),
+      uid: user._id,
+      isReply: false,
+    });
+    if (res.length < itemsToFetch) {
+      setHasMoreChallenges(false);
+    }
+    setChallenges([...challenges, ...res]);
+  };
+  const getMoreReplies = async () => {
+    const endpoint = `${process.env.BASE_API_ENPOINT}/posts`;
+    const { res, error } = await fetchAPI<IPost[]>(RequestMethod.GET, endpoint, null, {
+      size: itemsToFetch,
+      page: Math.floor(replies.length / itemsToFetch),
+      uid: user._id,
+      isReply: true,
+    });
+    if (res.length < itemsToFetch) {
+      setHasMoreReplies(false);
+    }
+    setReplies([...replies, ...res]);
+  };
+
   return (
-      <Tabs.Navigator
-        sceneContainerStyle={{ backgroundColor: Colors.black }}
-        screenOptions={({ route }) => ({
-          tabBarIcon: ({ focused }) => {
-            let iconName;
+    <Tabs.Navigator
+      sceneContainerStyle={{ backgroundColor: Colors.darkBlueOpaque }}
+      screenOptions={({ route }) => ({
+        tabBarIcon: ({ focused }) => {
+          let iconName;
+          let IconComponent;
 
-            if (route.name === "Challanges") {
-              iconName = "ios-apps";
-            } else if (route.name === "Replies") {
-              iconName = "person-circle";
-            }
-
-            // You can return any component that you like here!
-            return <Icon name={iconName} size={25} color={focused ? Colors.white : Colors.darkGrey} />;
-          },
-        })}
-        tabBarOptions={{
-          style: { backgroundColor: Colors.black },
-          showIcon: true,
-          showLabel: true,
-          activeTintColor: Colors.white,
-          labelStyle: { fontSize: 8 },
-          indicatorStyle: { backgroundColor: "transparent" },
-        }}
-      >
-        <Tabs.Screen
-          name="Challanges"
-          // component={Home}
-          children={() => <GenericComponent items={challenges} />}
-        />
-        <Tabs.Screen
-          name="Replies"
-          children={() => <GenericComponent items={replies} />}
-          // component={Settings}
-        />
-      </Tabs.Navigator>
+          if (route.name === "Challanges") {
+            iconName = "ios-apps";
+          } else if (route.name === "Replies") {
+            iconName = "person-circle";
+          }
+          return <Icon name={iconName} size={25} color={focused ? Colors.white : Colors.darkGrey} />;
+        },
+      })}
+      tabBarOptions={{
+        style: { backgroundColor: Colors.darkBlueOpaque },
+        showIcon: true,
+        showLabel: true,
+        activeTintColor: Colors.white,
+        labelStyle: { fontSize: 8 },
+        indicatorStyle: { width: 65, marginHorizontal: 65 },
+      }}
+    >
+      <Tabs.Screen
+        name="Challanges"
+        children={() => (
+          <GenericComponent
+            items={challenges}
+            loadMoreCallback={getMoreChallenges}
+            hasMoreToFetch={hasMoreChallenges}
+          />
+        )}
+      />
+      <Tabs.Screen
+        name="Replies"
+        children={() => (
+          <GenericComponent items={replies} loadMoreCallback={getMoreReplies} hasMoreToFetch={hasMoreReplies} />
+        )}
+      />
+    </Tabs.Navigator>
   );
 }
-interface ProfileProps {
-  items: Item[];
+interface IProfileHeaderProps {
+  details: IProfileDetails;
   user: IUser;
+  isLoading: boolean;
 }
 
-interface ProfileHeaderProps {
-  user: IUser;
-}
+const ProfileHeader: React.FC<IProfileHeaderProps> = ({ user, isLoading, details }) => {
+  const [numOfChallenges, setNumOfChallenges] = useState<string | number>("-");
+  const [numOfReplies, setNumOfReplies] = useState<string | number>("-");
+  useEffect(() => {
+    if (!isLoading) {
+      setNumOfChallenges(details.numOfChallenges);
+      setNumOfReplies(details.numOfReplies);
+    }
+  }, [isLoading]);
 
-const ProfileHeader: React.FC<ProfileHeaderProps> = ({user}) => {
+  const Counter = ({ count, text }) => (
+    <View style={{ alignItems: "center" }}>
+      <Text
+        style={{
+          color: Colors.white,
+          fontSize: 20,
+          fontWeight: "bold",
+        }}
+      >
+        {isLoading ? "-" : count}
+      </Text>
+      <Text style={{ fontSize: 13, color: Colors.lightGrey2 }}>{text}</Text>
+    </View>
+  );
 
+  const AboutMe = ({ name, description = null }) => (
+    <View style={{ alignItems: "center", marginTop: 20 }}>
+      <Text style={{ color: Colors.white }}>{name}</Text>
+      {description ? <Text>{description}</Text> : null}
+    </View>
+  );
 
   return (
-    <View style={{ paddingTop: 40, paddingLeft: 5 }}>
-      <View style={{ flexDirection: "row" }}>
-        <View style={{ flex: 1, alignItems: "center" }}>
-          <Image
-            source={user.image ? {uri: user.image} : require('../../../assets/avatar/user.png')}
-            style={{ width: 75, height: 75, borderRadius: 37.5 }}
-          />
-        </View>
-        <View
+    <View style={{ paddingVertical: 40, backgroundColor: Colors.darkBlueOpaque }}>
+      <View style={{ alignItems: "center" }}>
+        <Image source={require("../../../assets/avatar/user.png")} style={{ width: 100, height: 100 }} />
+        <Text
           style={{
-            flex: 3,
-            alignItems: "center",
-            justifyContent: "center",
+            color: Colors.white,
+            fontWeight: "bold",
+            fontSize: 18,
+            margin: 15,
+            marginBottom: 10,
           }}
         >
-          <View style={{ flexDirection: "row" }}>
-            <View style={{ alignItems: "center" }}>
-              <Text
-                style={{
-                  color: Colors.white,
-                  fontSize: 20,
-                  fontWeight: "bold",
-                }}
-              >
-                20
-              </Text>
-              <Text style={{ fontSize: 10, color: Colors.lightGrey }}>Challenges</Text>
-            </View>
-            <View style={{ alignItems: "center", marginLeft: 45 }}>
-              <Text
-                style={{
-                  color: Colors.white,
-                  fontSize: 20,
-                  fontWeight: "bold",
-                }}
-              >
-                35
-              </Text>
-              <Text style={{ fontSize: 10, color: Colors.lightGrey }}>Replies</Text>
-            </View>
-            <View style={{ alignItems: "center", marginLeft: 45 }}>
-              <Text
-                style={{
-                  color: Colors.white,
-                  fontSize: 20,
-                  fontWeight: "bold",
-                }}
-              >
-                217
-              </Text>
-              <Text style={{ fontSize: 10, color: Colors.lightGrey }}>Likes</Text>
-            </View>
-          </View>
-        </View>
+          @{user.username}
+        </Text>
       </View>
-      <View style={{ margin: 10, marginTop: 15 }}>
-        <Text style={{ fontWeight: "bold", color: Colors.white }}>{user.fullName}</Text>
-        <Text style={{ color: Colors.white }}>Basketball player | Runner | Swimmer </Text>
-        <Text style={{ color: Colors.white }}>www.mysite.com</Text>
+
+      <View
+        style={{
+          alignItems: "center",
+          marginTop: 20,
+          flexDirection: "row",
+          justifyContent: "space-evenly",
+          padding: 5,
+          alignSelf: "center",
+          width: "70%",
+        }}
+      >
+        <Counter text={"Challenges"} count={numOfChallenges} />
+        <Divider
+          style={{
+            height: "100%",
+            width: 1,
+            backgroundColor: Colors.lightGrey,
+          }}
+        />
+        <Counter text={"Replies"} count={numOfReplies} />
       </View>
+
+      <AboutMe name={user.fullName} />
     </View>
   );
 };
 
-export const ProfileScreen: React.FC<ProfileProps> = ({ items, user}) => {
-  // return <GenericComponent items={items} />;
+export const ProfileScreen: React.FC<IUser> = (user?: IUser) => {
+  const route = useRoute<any>();
+  let currentUser = route.params ? route.params.user : user;
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [profileDetails, setProfileDetails] = useState<IProfileDetails>();
+
+  useEffect(() => {
+    setIsLoading(true);
+    async function getProfileDetails() {
+      const profileDetailsEndpoint = `${process.env.BASE_API_ENPOINT}/users/profileDetails?userId=${currentUser._id}`;
+
+      const { res, error } = await fetchAPI(RequestMethod.GET, profileDetailsEndpoint);
+
+      res && setProfileDetails(res);
+      res && setIsLoading(false);
+    }
+    getProfileDetails();
+  }, []);
 
   return (
     <>
-      <ProfileHeader user={user}/>
-      <ProfileTabs />
+      <ProfileHeader details={profileDetails} user={currentUser} isLoading={isLoading} />
+      <Divider style={{ backgroundColor: Colors.weakGrey }} />
+      <ProfileTabs {...currentUser} />
     </>
   );
 };
