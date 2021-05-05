@@ -1,7 +1,7 @@
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { useRoute } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
-import { Image, Text, View } from "react-native";
+import { Image, StyleSheet, Text, View } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { useSelector } from "react-redux";
@@ -103,18 +103,13 @@ interface IProfileHeaderProps {
   isLoading: boolean;
 }
 
-const ProfileHeader: React.FC<IProfileHeaderProps> = (props: IProfileHeaderProps) => {
+const ProfileHeader: React.FC<IProfileHeaderProps> = ({ user, isLoading, details }) => {
   const [numOfChallenges, setNumOfChallenges] = useState<string | number>("-");
   const [numOfReplies, setNumOfReplies] = useState<string | number>("-");
-  // const [numOfLikes, setNumOfLikes] = useState<string | number>("-");
-
-  const user = props.user;
-  const isLoading = props.isLoading;
   useEffect(() => {
     if (!isLoading) {
-      setNumOfChallenges(props.details.numOfChallenges);
-      setNumOfReplies(props.details.numOfReplies);
-      // setNumOfLikes(props.details.numOfLikes);
+      setNumOfChallenges(details.numOfChallenges);
+      setNumOfReplies(details.numOfReplies);
     }
   }, [isLoading]);
 
@@ -135,7 +130,7 @@ const ProfileHeader: React.FC<IProfileHeaderProps> = (props: IProfileHeaderProps
 
   const AboutMe = ({ name, description = null }) => (
     <View style={{ alignItems: "center", marginTop: 20 }}>
-      <Text>{name}</Text>
+      <Text style={{ color: Colors.white }}>{name}</Text>
       {description ? <Text>{description}</Text> : null}
     </View>
   );
@@ -144,7 +139,17 @@ const ProfileHeader: React.FC<IProfileHeaderProps> = (props: IProfileHeaderProps
     <View style={{ paddingVertical: 40, backgroundColor: Colors.darkBlueOpaque }}>
       <View style={{ alignItems: "center" }}>
         <Image source={require("../../../assets/avatar/user.png")} style={{ width: 100, height: 100 }} />
-        <Text style={{ fontWeight: "bold", fontSize: 18, margin: 15, marginBottom: 10 }}>@{user.username}</Text>
+        <Text
+          style={{
+            color: Colors.white,
+            fontWeight: "bold",
+            fontSize: 18,
+            margin: 15,
+            marginBottom: 10,
+          }}
+        >
+          @{user.username}
+        </Text>
       </View>
 
       <View
@@ -159,7 +164,13 @@ const ProfileHeader: React.FC<IProfileHeaderProps> = (props: IProfileHeaderProps
         }}
       >
         <Counter text={"Challenges"} count={numOfChallenges} />
-        <Divider style={{ height: "100%", width: 1, backgroundColor: Colors.lightGrey }} />
+        <Divider
+          style={{
+            height: "100%",
+            width: 1,
+            backgroundColor: Colors.lightGrey,
+          }}
+        />
         <Counter text={"Replies"} count={numOfReplies} />
       </View>
 
