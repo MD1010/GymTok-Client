@@ -115,3 +115,9 @@ export const updateUserLikePost = (post: IPost, userId: string): AppThunk => {
     }
   };
 };
+
+export const addReplyToPost = (postId: string, reply: IPost): AppThunk => {
+  return async (dispatch: AppDispatch, getState: () => RootState) => {
+    dispatch(postsActions.addReplyToPost({ postId, reply }));
+  };
+};

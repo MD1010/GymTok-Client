@@ -13,12 +13,12 @@ import { Player } from "../shared/VideoPlayer";
 import Ripple from "react-native-material-ripple";
 import { formatDate } from "../../utils/date";
 
-interface PostRepliesProps {}
+interface PostRepliesProps { }
 
 type StackParamsList = {
   params: { newReply: IPost };
 };
-export const PostReplies: React.FC<PostRepliesProps> = ({}) => {
+export const PostReplies: React.FC<PostRepliesProps> = ({ }) => {
   const navigation = useNavigation();
   const route = useRoute<RouteProp<StackParamsList, "params">>();
   const [challengeReplies, setChallengeReplies] = useState<any[]>([]);
