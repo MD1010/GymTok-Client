@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { ViewStyle } from "react-native";
 import { IPost } from "../../interfaces";
+import { addReplyToPost } from "../../utils/addReplyToPost";
 import {
   getPostsAfterUserLikePost,
   getPostsAfterUserRemoveLikeFromPost,
@@ -25,6 +26,11 @@ export const initialState: PostsState = {
 interface LikePayload {
   post: IPost;
   userId: string;
+}
+
+interface ReplyPayload {
+  postId: string;
+  reply: IPost;
 }
 
 const postsSlice = createSlice({
@@ -97,6 +103,19 @@ const postsSlice = createSlice({
         state.userPosts = updatedUserPosts;
       }
     },
+    addReplyToPost: (state, action: PayloadAction<ReplyPayload>) => {
+      const updatedLatestFetchedPosts = addReplyToPost(state.latestFetchedPosts, action.payload.postId, action.payload.reply);
+
+      if (updatedLatestFetchedPosts) {
+        state.latestFetchedPosts = updatedLatestFetchedPosts;
+      }
+
+      const updatedUserPosts = addReplyToPost(state.userPosts, action.payload.postId, action.payload.reply);
+
+      if (updatedLatestFetchedPosts) {
+        state.userPosts = updatedUserPosts;
+      }
+    }
   },
 });
 
