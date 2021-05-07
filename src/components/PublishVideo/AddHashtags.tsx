@@ -92,13 +92,14 @@ export const AddHashtagScreen: React.FC<AddHashtagsScreenProps> = ({}) => {
             value={hashtags}
             onChange={onChangeTags}
             labelExtractor={labelExtractor}
-            tagContainerStyle={{ height: 30 }}
+            tagContainerStyle={{ height: 35 }}
             text={text}
             onChangeText={onChangeText}
             tagColor={Colors.blue}
-            tagTextColor="white"
+            // tagTextColor="white"
+            tagTextStyle={{ fontSize: 15, color: Colors.white }}
             inputProps={inputProps}
-            maxHeight={60}
+            maxHeight={70}
           />
         </View>
       </View>
