@@ -9,13 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { IUser } from "../../interfaces";
 import { authSelector } from "../../store/auth/authSlice";
 import { fetchAPI, RequestMethod } from "../../utils/fetchAPI";
-import {
-  Colors,
-  Loader,
-  Player,
-  SubmitButton,
-  TouchableHighlightButton,
-} from "../shared";
+import { Colors, Loader, Player, SubmitButton, TouchableHighlightButton } from "../shared";
 
 type StackParamsList = {
   params: {
@@ -68,11 +62,7 @@ export const PublishScreen: React.FC = () => {
             />
           </View>
         </View>
-        {!isReply && (
-          <Text style={styles.info}>
-            Your friends will be notified when your challenge is uploaded.
-          </Text>
-        )}
+        {!isReply && <Text style={styles.info}>Your friends will be notified when your challenge is uploaded.</Text>}
       </View>
     );
   };
@@ -103,15 +93,11 @@ export const PublishScreen: React.FC = () => {
       uri: route.params.videoUri,
       type: "video/mp4",
     } as any);
-    formData.append("taggedUsers", JSON.stringify(taggedPeople.map(user => user._id)));
+    formData.append("taggedUsers", JSON.stringify(taggedPeople?.map((user) => user._id)));
     formData.append("hashtags", JSON.stringify(hashtags));
 
     setIsLoading(true);
-    const { res, error } = await fetchAPI(
-      RequestMethod.POST,
-      `${process.env.BASE_API_ENPOINT}/posts/upload`,
-      formData
-    );
+    const { res, error } = await fetchAPI(RequestMethod.POST, `${process.env.BASE_API_ENPOINT}/posts/upload`, formData);
 
     if (res) {
       setIsLoading(false);
@@ -171,11 +157,11 @@ export const PublishScreen: React.FC = () => {
         onSelect={() =>
           route.params?.taggedPeople?.length
             ? navigation.navigate("TagPeople", {
-              selectedUsers: route.params?.taggedPeople,
-            })
+                selectedUsers: route.params?.taggedPeople,
+              })
             : navigation.navigate("SearchUser", {
-              excludedUsersToSearch: route.params?.taggedPeople,
-            })
+                excludedUsersToSearch: route.params?.taggedPeople,
+              })
         }
         icon={<Fontisto name="at" color={Colors.lightGrey2} size={14} />}
       />
@@ -185,9 +171,7 @@ export const PublishScreen: React.FC = () => {
         optionText={"Add Hashtags"}
         onSelect={() =>
           navigation.navigate("AddHashtag", {
-            selectedHashtags: route.params?.hashtags?.length
-              ? route.params?.hashtags
-              : [],
+            selectedHashtags: route.params?.hashtags?.length ? route.params?.hashtags : [],
           })
         }
         icon={<Fontisto name="hashtag" color={Colors.lightGrey2} size={14} />}
@@ -197,12 +181,7 @@ export const PublishScreen: React.FC = () => {
 
   const Footer = () => (
     <View style={{ flex: 1.5, alignItems: "center", justifyContent: "center" }}>
-      <SubmitButton
-        buttonText={"Post"}
-        type="solid"
-        backgroundColor={Colors.blue}
-        onSubmit={onSubmit}
-      />
+      <SubmitButton buttonText={"Post"} type="solid" backgroundColor={Colors.blue} onSubmit={onSubmit} />
     </View>
   );
 
