@@ -15,7 +15,11 @@ export const getMorePosts = (): AppThunk => {
     });
 
     if (res) {
-      dispatch(postsActions.fetchMoreSuccess(res));
+      if (res.length > 0) {
+        dispatch(postsActions.fetchMoreSuccess(res));
+      } else {
+        dispatch(postsActions.fetchMoreSuccess(currentPosts.slice()));
+      }
     } else {
       dispatch(postsActions.fetchFailed(error));
     }
@@ -70,14 +74,31 @@ export const getLatestPosts = (): AppThunk => {
     const randomPostsEndpoint = `${process.env.BASE_API_ENPOINT}/posts`;
     const endpoint = loggedUser ? recommendedEndpoint : randomPostsEndpoint;
     const currentPosts = getState().posts.latestFetchedPosts;
+    let maxDate = currentPosts[0].publishDate;
+    currentPosts.map((post, index) => {
+      if (maxDate < post.publishDate) {
+        maxDate = post.publishDate;
+      }
+    });
+    console.log("max dateeeeeee", maxDate);
+    // const maxDate = currentPosts.slice().sort((a, b) => a.publishDate - b.publishDate);
+    // sortedArr.map((item, i) => {
+    //   console.log("sortedItemmmm", sortedArr[i].publishDate);
+    // });
+
     const { res, error } = await fetchAPI<IPost[]>(RequestMethod.GET, endpoint, null, {
       size: itemsToFetch,
       page: Math.floor(currentPosts.length / itemsToFetch),
+      currentMaxDate: maxDate,
     });
 
     if (res) {
       console.log("refreshing and getting newest posts!!");
-      dispatch(postsActions.refreshSuccess(res));
+      if (res.length > 0) {
+        dispatch(postsActions.refreshSuccess(res));
+      } else {
+        dispatch(postsActions.refreshSuccess(currentPosts.slice()));
+      }
     } else {
       dispatch(postsActions.fetchFailed(error));
     }

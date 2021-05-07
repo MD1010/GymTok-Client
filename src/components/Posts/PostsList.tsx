@@ -68,15 +68,18 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentPosts,
     if (loggedUser) {
       isFeed ? dispatch(getMostRecommended()) : dispatch(getUserPosts());
     } else {
+      console.log("getting more posts because user is null");
       // loggedUser is null -> didnt log in yet
       dispatch(getMorePosts());
     }
   };
   useEffect(() => {
+    console.log("use effect logged userrrr", loggedUser);
     // check if user was loaded - undefinded means the store has not been updated yet.
     if (loggedUser !== undefined) {
       isEmpty(posts) && getPosts();
     }
+    getPosts();
   }, [loggedUser]);
 
   // useEffect(() => {

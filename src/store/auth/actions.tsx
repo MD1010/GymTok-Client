@@ -43,6 +43,7 @@ export const logout = (): AppThunk => {
 export const loadLoggedUser = (): AppThunk => {
   return async (dispatch: AppDispatch) => {
     const user = JSON.parse(await AsyncStorage.getItem("loggedUser"));
+    console.log("logged user!!!", user);
     dispatch(authActions.loadLoggedUser(user));
   };
 };
