@@ -15,6 +15,7 @@ import { PopularHashtag } from "./PopularHashtag";
 import { SearchResults } from "./SearchResult";
 import { FontAwesome } from "@expo/vector-icons";
 import { TouchableOpacity, TouchableWithoutFeedback } from "react-native-gesture-handler";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 interface MainDiscoverProps {}
 
@@ -131,63 +132,67 @@ export const MainDiscover: React.FC<MainDiscoverProps> = ({}) => {
   };
 
   return (
-    <View style={styles.exploreContainer}>
-      <SearchBar
-        platform={Platform.OS === "android" ? "android" : "ios"}
-        containerStyle={{ backgroundColor: Colors.black, height: 60 }}
-        inputContainerStyle={{ backgroundColor: Colors.black }}
-        inputStyle={{ color: Colors.white }}
-        onFocus={() => {
-          fetchHashtags();
-          setIsModalVisible(true);
-        }}
-        onSubmitEditing={(event) => handleSubmit(event.nativeEvent.text)}
-        round
-        searchIcon={{ size: 24 }}
-        onChangeText={(text) => {
-          console.log("on change text ", text);
+    <SafeAreaView style={styles.exploreContainer}>
+      <View style={{ flex: 1 }}>
+        <SearchBar
+          platform={Platform.OS === "android" ? "android" : "ios"}
+          containerStyle={{ backgroundColor: Colors.darkBlue }}
+          inputContainerStyle={{ backgroundColor: Colors.darkBlueOpaque }}
+          inputStyle={{ color: Colors.weakGrey }}
+          onFocus={() => {
+            fetchHashtags();
+            setIsModalVisible(true);
+          }}
+          onSubmitEditing={(event) => handleSubmit(event.nativeEvent.text)}
+          round
+          searchIcon={{ size: 24 }}
+          onChangeText={(text) => {
+            console.log("on change text ", text);
 
-          setSearch(text);
-          fetchHashtags(text);
-        }}
-        placeholder="Type Here..."
-        value={search}
-        onCancel={() => setIsModalVisible(false)}
-      />
+            setSearch(text);
+            fetchHashtags(text);
+          }}
+          placeholder="Type Here..."
+          value={search}
+          onCancel={() => setIsModalVisible(false)}
+          onClear={() => setIsModalVisible(false)}
+        />
+      </View>
 
-      {isModalVisible && <SearchResults dataSource={masterDataSource} handleSelectItem={handleSelectItem} />}
-      {relvantItems !== undefined && search.length > 0 ? (
-        <View style={{ flex: 1 }}>
-          <Text style={{ fontSize: 20, padding: 10, color: Colors.white }}>Videos</Text>
-          <GenericComponent
-            items={relvantItems}
-            numColumns={2}
-            pictureHeight={300}
-            renderFooter={(item: IPost) => renderFooter(item)}
-            renderBottomVideo={(item: IPost) => renderBottomVideo(item, 300)}
-            gifStyle={{ margin: 5 }}
-            containerStyle={{ paddingBottom: 30 }}
-          />
-        </View>
-      ) : (
-        <ScrollView>
-          {Object.keys(popularHashtags).map((hashtag, key) => {
-            return (
-              // <View key={key} style={styles.hashtagContainer}>
-              <PopularHashtag key={key} hashtag={hashtag} posts={popularHashtags[hashtag]} />
-              // </View>
-            );
-          })}
-        </ScrollView>
-      )}
-    </View>
+      <View style={{ flex: 11 }}>
+        {isModalVisible && <SearchResults dataSource={masterDataSource} handleSelectItem={handleSelectItem} />}
+        {relvantItems !== undefined && search.length > 0 ? (
+          <View style={{ flex: 1 }}>
+            <Text style={{ fontSize: 20, padding: 10, color: Colors.white }}>Videos</Text>
+            <GenericComponent
+              items={relvantItems}
+              numColumns={2}
+              pictureHeight={300}
+              renderFooter={(item: IPost) => renderFooter(item)}
+              renderBottomVideo={(item: IPost) => renderBottomVideo(item, 300)}
+              gifStyle={{ margin: 5 }}
+              containerStyle={{ paddingBottom: 30 }}
+            />
+          </View>
+        ) : (
+          <ScrollView>
+            {Object.keys(popularHashtags).map((hashtag, key) => {
+              return (
+                // <View key={key} style={styles.hashtagContainer}>
+                <PopularHashtag key={key} hashtag={hashtag} posts={popularHashtags[hashtag]} />
+                // </View>
+              );
+            })}
+          </ScrollView>
+        )}
+      </View>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   exploreContainer: {
     flex: 4,
-    paddingTop: 45,
     backgroundColor: Colors.darkBlueOpaque,
   },
   hashtagContainer: {},
