@@ -8,7 +8,7 @@ import { IPost, IUser } from "../../interfaces";
 import { fetchAPI, RequestMethod } from "../../utils/fetchAPI";
 import { Colors } from "../shared";
 import { GenericComponent } from "./genericComponent";
-import { LogOutFromApp } from "./logOutFromApp";
+import { LogOutFromApp } from "./LogOutFromApp";
 
 const itemsToFetch = 12;
 interface IProfileDetails {
