@@ -21,6 +21,8 @@ const inputProps = {
     fontSize: 14,
     color: Colors.white,
     marginVertical: Platform.OS == "ios" ? 10 : -2,
+    marginLeft: 10,
+    height: 20,
   },
 };
 
@@ -78,7 +80,9 @@ export const AddHashtagScreen: React.FC<AddHashtagsScreenProps> = ({}) => {
   return (
     <View style={styles.container}>
       <View style={{ flex: 1, margin: 10, marginTop: 15 }}>
-        <Text style={{ marginVertical: 10, color: Colors.white }}>
+        <Text
+          style={{ marginVertical: 10, color: Colors.white, paddingBottom: 10 }}
+        >
           Add some hashtags:
         </Text>
         <View
@@ -92,14 +96,16 @@ export const AddHashtagScreen: React.FC<AddHashtagsScreenProps> = ({}) => {
             value={hashtags}
             onChange={onChangeTags}
             labelExtractor={labelExtractor}
-            tagContainerStyle={{ height: 35 }}
+            tagContainerStyle={{ height: 35, marginLeft: 5 }}
             text={text}
             onChangeText={onChangeText}
             tagColor={Colors.blue}
-            // tagTextColor="white"
-            tagTextStyle={{ fontSize: 15, color: Colors.white }}
+            tagTextStyle={{
+              fontSize: 15,
+              color: Colors.white,
+            }}
             inputProps={inputProps}
-            maxHeight={70}
+            maxHeight={100}
           />
         </View>
       </View>
