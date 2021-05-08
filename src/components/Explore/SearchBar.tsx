@@ -13,6 +13,7 @@ import { fetchAPI, RequestMethod } from "../../utils/fetchAPI";
 import { Colors, Loader, UIConsts } from "../shared";
 import { IPost } from "../../interfaces";
 import { formatDate } from "../../utils/date";
+import { MainDiscover } from "./MainDiscover";
 
 export const CustomSearchBar: React.FC = () => {
   const [search, setSearch] = useState("");

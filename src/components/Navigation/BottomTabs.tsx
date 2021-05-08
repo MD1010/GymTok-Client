@@ -32,13 +32,13 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
         sceneContainerStyle={{ backgroundColor: Colors.black }}
         tabBarOptions={{
           activeTintColor: Colors.cyan,
-          activeBackgroundColor: Colors.darkBlue,
+          activeBackgroundColor: Colors.black,
           inactiveTintColor: Colors.white,
           showLabel: false,
           style: {
             height: UIConsts.bottomNavbarHeight /*"7%"*/,
             borderTopWidth: 0,
-            backgroundColor: Colors.darkBlue,
+            backgroundColor: Colors.black,
           },
         }}
       >
