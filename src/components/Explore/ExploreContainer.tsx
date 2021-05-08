@@ -6,16 +6,15 @@ import { authSelector } from "../../store/auth/authSlice";
 import { NotLoggedInScreen } from "../Auth/NotLoggedInScreen";
 import { Colors } from "../shared/styles/variables";
 import { MainDiscover } from "./MainDiscover";
-import { CustomSearchBar } from "./SearchBar";
 
 export const ExploreContainer: React.FC = () => {
   const { loggedUser } = useSelector(authSelector);
 
   return loggedUser ? (
     <View style={{ flex: 1 }}>
-      <View style={{ flex: 2 }}>
+      {/* <View style={{ flex: 2 }}>
         <CustomSearchBar />
-      </View>
+      </View> */}
       <View style={{ flex: 1 }}>
         <MainDiscover />
       </View>

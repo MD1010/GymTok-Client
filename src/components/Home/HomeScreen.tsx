@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { IPost } from "../../interfaces";
 import { PostsList } from "../Posts/PostsList";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-import { PostReplies } from "../Replies/PostReplies";
+import { PostReplies } from "../Posts/PostReplies";
 
 const Tab = createMaterialTopTabNavigator();
 // const Stack = createStackNavigator();

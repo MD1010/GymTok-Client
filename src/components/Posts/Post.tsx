@@ -31,7 +31,7 @@ interface IUIContainer {
   onCommentButtonPress: () => void;
 }
 
-const Heading = ({ createdBy, onCameraPress }) => {
+const Heading = ({ createdBy, onCameraPress, isReply }) => {
   const navigation = useNavigation();
   const showProfile = (createdBy: IUser) => {
     navigation.navigate("ProfileDisplay", { user: createdBy });

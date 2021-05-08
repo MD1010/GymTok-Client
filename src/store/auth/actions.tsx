@@ -20,7 +20,7 @@ export const register = (username: string, fullName: string, password: string, e
 };
 export const login = (username: string, password: string): AppThunk => {
   return async (dispatch: AppDispatch) => {
-    console.log("mother ... ", process.env.BASE_API_ENPOINT);
+    console.log("mother ... ", `${process.env.BASE_API_ENPOINT}/users/login`);
     const registerEnpoint = `${process.env.BASE_API_ENPOINT}/users/login`;
 
     const body = { username, password };
