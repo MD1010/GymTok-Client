@@ -1,9 +1,8 @@
 import Constants from "expo-constants";
 import * as Notifications from "expo-notifications";
-import { Text, View, Button, Platform, AppState } from "react-native";
-import { fetchAPI, RequestMethod } from "../../utils/fetchAPI";
+import { AppState, Platform } from "react-native";
 
-async function registerForPushNotificationsAsync() {
+export async function registerForPushNotificationsAsync() {
   let token;
   if (Constants.isDevice) {
     const { status: existingStatus } = await Notifications.getPermissionsAsync();
@@ -30,22 +29,8 @@ async function registerForPushNotificationsAsync() {
       lightColor: "#FF231F7C",
     });
   }
-
   return token;
 }
-
-export const setPushToken = async (userId: string) => {
-  const pushTokenAPI = `${process.env.BASE_API_ENPOINT}/notifications/pushToken`;
-  const token = await registerForPushNotificationsAsync();
-  console.log("token", token);
-  console.log("userId", userId);
-
-  const { error } = await fetchAPI(RequestMethod.PUT, pushTokenAPI, {
-    userId,
-    token,
-  });
-  if (error) alert(error);
-};
 
 export const registerNotificationListener = () => {
   Notifications.setNotificationHandler({

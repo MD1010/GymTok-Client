@@ -10,7 +10,8 @@ import { MainNavigator } from "./components/Navigation/StackNavigator";
 import { loadLoggedUser } from "./store/auth/actions";
 import { store } from "./store/configureStore";
 import * as Notifications from "expo-notifications";
-import { registerNotificationListener, setPushToken } from "./components/Notifications/NotificationHandler";
+import { registerNotificationListener } from "./components/Notifications/NotificationHandler";
+import { setPushToken } from "./store/notifications/actions";
 
 function cacheImages(images) {
   return images.map((image) => {
