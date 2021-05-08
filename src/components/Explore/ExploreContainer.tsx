@@ -1,61 +1,30 @@
-import { useNavigation } from "@react-navigation/core";
-import React, { useEffect, useState } from "react";
-import { View, StyleSheet, Text } from "react-native";
-import { ScrollView } from "react-native-gesture-handler";
-import { IPopularHashtags } from "../../interfaces";
-import { fetchAPI, RequestMethod } from "../../utils/fetchAPI";
-import { Colors, Loader } from "../shared/";
-import { PopularHashtag } from "./PopularHashtag";
+import React from "react";
+import { View } from "react-native-animatable";
+import Ionicons from "react-native-vector-icons/Ionicons";
+import { useSelector } from "react-redux";
+import { authSelector } from "../../store/auth/authSlice";
+import { NotLoggedInScreen } from "../Auth/NotLoggedInScreen";
+import { Colors } from "../shared/styles/variables";
+import { MainDiscover } from "./MainDiscover";
+import { CustomSearchBar } from "./SearchBar";
 
-interface ExploreContainerProps { }
+export const ExploreContainer: React.FC = () => {
+  const { loggedUser } = useSelector(authSelector);
 
-const POPULAR_HASHTAGS_COUNT = 4;
-
-export const ExploreContainer: React.FC<ExploreContainerProps> = ({ }) => {
-  const navigation = useNavigation();
-  const [popularHashtags, setPopularHashtags] = useState<IPopularHashtags>({})
-  const [isLoadingPopularHashtags, setIsLoadingPopularHashtags] = useState<boolean>(true);
-
-  const loadPopularHashtags = async () => {
-    const challengesEndpoint = `${process.env.BASE_API_ENPOINT}/hashtags/popular?popularCount=${POPULAR_HASHTAGS_COUNT}`;
-    const { res } = await fetchAPI(RequestMethod.GET, challengesEndpoint);
-
-    console.log("res", res);
-
-    res && setPopularHashtags(res);
-
-    setIsLoadingPopularHashtags(false);
-  };
-  useEffect(() => {
-    loadPopularHashtags();
-
-    return () => navigation.removeListener("blur", null);
-
-  }, []);
-
-
-  return (
-    <View style={styles.exploreContainer}>
-      {isLoadingPopularHashtags && <Loader />}
-      <ScrollView>
-        {Object.keys(popularHashtags).map((hashtag, key) => {
-          return (
-            // <View key={key} style={styles.hashtagContainer}>
-            <PopularHashtag key={key} hashtag={hashtag} posts={popularHashtags[hashtag]} />
-            // </View>
-          );
-        })}
-      </ScrollView>
-    </View>);
+  return loggedUser ? (
+    <View style={{ flex: 1 }}>
+      <View style={{ flex: 2 }}>
+        <CustomSearchBar />
+      </View>
+      <View style={{ flex: 1 }}>
+        <MainDiscover />
+      </View>
+    </View>
+  ) : (
+    <NotLoggedInScreen
+      text={"Profile"}
+      description={"Sign up for an account"}
+      icon={() => <Ionicons name="md-person-outline" color={Colors.white} size={56} />}
+    />
+  );
 };
-
-const styles = StyleSheet.create({
-  exploreContainer: {
-    flex: 1,
-    paddingTop: 25,
-    backgroundColor: Colors.darkBlueOpaque,
-
-  },
-  hashtagContainer: {
-  }
-});

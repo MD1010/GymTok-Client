@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, StyleSheet, Text } from "react-native";
+import { View, StyleSheet, Text, Dimensions } from "react-native";
 import { IPost } from "../../interfaces";
 import { GenericComponent } from "../Profile/genericComponent";
 import { Colors } from "../shared";
@@ -29,7 +29,10 @@ export const PopularHashtag: React.FC<PopularHashtagProps> = ({ hashtag, posts }
                 </Text>
             </View>
             <View style={{ flex: 1 }}>
-                <GenericComponent items={posts} horizontal={true} />
+                <GenericComponent
+                    customStyle={{ width: Dimensions.get("window").width / 3 - 20 }}
+                    items={posts}
+                    horizontal={true} />
             </View>
         </View>);
 };
@@ -47,13 +50,15 @@ const styles = StyleSheet.create({
         justifyContent: "space-between"
     },
     hashtagDetails: {
-        flexDirection: "row"
+        flexDirection: "row",
+        justifyContent: "center",
     },
     circle: {
         width: 30,
         height: 30,
         borderRadius: 15,
         borderWidth: 1,
+        justifyContent: "center",
         textAlign: 'center',
         borderColor: Colors.darkGrey,
     },
@@ -66,9 +71,16 @@ const styles = StyleSheet.create({
     hashtagName: {
         marginLeft: 5,
         color: Colors.white,
-        fontSize: 20
+        fontSize: 18
     },
     postsCount: {
+        borderRadius: 4,
+        overflow: "hidden",
+        borderWidth: 0.5,
+        paddingRight: 10,
+        paddingLeft: 10,
+        backgroundColor: Colors.darkGrey,
+        borderColor: Colors.darkGrey,
         color: Colors.white,
         marginRight: 15
     }

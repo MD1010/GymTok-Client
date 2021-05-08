@@ -116,7 +116,6 @@ export const GenericComponent: React.FC<Props> = ({
               height: picHeight,
               ...gifStyle,
             }}
-            imageStyle={{ borderRadius: 3 }}
             source={{ uri: `${STREAMING_SERVER_GIF_ENDPOINT}/${item.gif}` }}
           >
             {renderBottomVideo ? (
