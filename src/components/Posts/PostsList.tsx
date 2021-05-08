@@ -79,7 +79,7 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentPosts,
     if (loggedUser !== undefined) {
       isEmpty(posts) && getPosts();
     }
-    getPosts();
+    // getPosts();
   }, [loggedUser]);
 
   // useEffect(() => {
