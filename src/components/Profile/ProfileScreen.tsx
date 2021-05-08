@@ -12,6 +12,8 @@ import { Colors } from "../shared";
 import { GenericComponent } from "./genericComponent";
 import Icon from "react-native-vector-icons/Ionicons";
 import { Divider } from "react-native-paper";
+import LogOutFromApp from "./LogOutFromApp";
+import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 
 const itemsToFetch = 12;
 interface IProfileDetails {
@@ -28,12 +30,17 @@ function ProfileTabs(user: IUser) {
 
   const getMoreChallenges = async () => {
     const endpoint = `${process.env.BASE_API_ENPOINT}/posts`;
-    const { res, error } = await fetchAPI<IPost[]>(RequestMethod.GET, endpoint, null, {
-      size: itemsToFetch,
-      page: Math.floor(challenges.length / itemsToFetch),
-      uid: user._id,
-      isReply: false,
-    });
+    const { res, error } = await fetchAPI<IPost[]>(
+      RequestMethod.GET,
+      endpoint,
+      null,
+      {
+        size: itemsToFetch,
+        page: Math.floor(challenges.length / itemsToFetch),
+        uid: user._id,
+        isReply: false,
+      }
+    );
     if (res.length < itemsToFetch) {
       setHasMoreChallenges(false);
     }
@@ -41,12 +48,17 @@ function ProfileTabs(user: IUser) {
   };
   const getMoreReplies = async () => {
     const endpoint = `${process.env.BASE_API_ENPOINT}/posts`;
-    const { res, error } = await fetchAPI<IPost[]>(RequestMethod.GET, endpoint, null, {
-      size: itemsToFetch,
-      page: Math.floor(replies.length / itemsToFetch),
-      uid: user._id,
-      isReply: true,
-    });
+    const { res, error } = await fetchAPI<IPost[]>(
+      RequestMethod.GET,
+      endpoint,
+      null,
+      {
+        size: itemsToFetch,
+        page: Math.floor(replies.length / itemsToFetch),
+        uid: user._id,
+        isReply: true,
+      }
+    );
     if (res.length < itemsToFetch) {
       setHasMoreReplies(false);
     }
@@ -66,7 +78,13 @@ function ProfileTabs(user: IUser) {
           } else if (route.name === "Replies") {
             iconName = "person-circle";
           }
-          return <Icon name={iconName} size={25} color={focused ? Colors.white : Colors.darkGrey} />;
+          return (
+            <Icon
+              name={iconName}
+              size={25}
+              color={focused ? Colors.white : Colors.darkGrey}
+            />
+          );
         },
       })}
       tabBarOptions={{
@@ -91,7 +109,11 @@ function ProfileTabs(user: IUser) {
       <Tabs.Screen
         name="Replies"
         children={() => (
-          <GenericComponent items={replies} loadMoreCallback={getMoreReplies} hasMoreToFetch={hasMoreReplies} />
+          <GenericComponent
+            items={replies}
+            loadMoreCallback={getMoreReplies}
+            hasMoreToFetch={hasMoreReplies}
+          />
         )}
       />
     </Tabs.Navigator>
@@ -103,7 +125,11 @@ interface IProfileHeaderProps {
   isLoading: boolean;
 }
 
-const ProfileHeader: React.FC<IProfileHeaderProps> = ({ user, isLoading, details }) => {
+const ProfileHeader: React.FC<IProfileHeaderProps> = ({
+  user,
+  isLoading,
+  details,
+}) => {
   const [numOfChallenges, setNumOfChallenges] = useState<string | number>("-");
   const [numOfReplies, setNumOfReplies] = useState<string | number>("-");
   useEffect(() => {
@@ -136,46 +162,57 @@ const ProfileHeader: React.FC<IProfileHeaderProps> = ({ user, isLoading, details
   );
 
   return (
-    <View style={{ paddingVertical: 40, backgroundColor: Colors.darkBlueOpaque }}>
-      <View style={{ alignItems: "center" }}>
-        <Image source={require("../../../assets/avatar/user.png")} style={{ width: 100, height: 100 }} />
-        <Text
-          style={{
-            color: Colors.white,
-            fontWeight: "bold",
-            fontSize: 18,
-            margin: 15,
-            marginBottom: 10,
-          }}
-        >
-          @{user.username}
-        </Text>
-      </View>
+    <>
+      {/* <View> */}
+      <LogOutFromApp />
+      {/* </View> */}
 
       <View
-        style={{
-          alignItems: "center",
-          marginTop: 20,
-          flexDirection: "row",
-          justifyContent: "space-evenly",
-          padding: 5,
-          alignSelf: "center",
-          width: "70%",
-        }}
+        style={{ paddingVertical: 40, backgroundColor: Colors.darkBlueOpaque }}
       >
-        <Counter text={"Challenges"} count={numOfChallenges} />
-        <Divider
-          style={{
-            height: "100%",
-            width: 1,
-            backgroundColor: Colors.lightGrey,
-          }}
-        />
-        <Counter text={"Replies"} count={numOfReplies} />
-      </View>
+        <View style={{ alignItems: "center" }}>
+          <Image
+            source={require("../../../assets/avatar/user.png")}
+            style={{ width: 100, height: 100 }}
+          />
+          <Text
+            style={{
+              color: Colors.white,
+              fontWeight: "bold",
+              fontSize: 18,
+              margin: 15,
+              marginBottom: 10,
+            }}
+          >
+            @{user.username}
+          </Text>
+        </View>
 
-      <AboutMe name={user.fullName} />
-    </View>
+        <View
+          style={{
+            alignItems: "center",
+            marginTop: 20,
+            flexDirection: "row",
+            justifyContent: "space-evenly",
+            padding: 5,
+            alignSelf: "center",
+            width: "70%",
+          }}
+        >
+          <Counter text={"Challenges"} count={numOfChallenges} />
+          <Divider
+            style={{
+              height: "100%",
+              width: 1,
+              backgroundColor: Colors.lightGrey,
+            }}
+          />
+          <Counter text={"Replies"} count={numOfReplies} />
+        </View>
+
+        <AboutMe name={user.fullName} />
+      </View>
+    </>
   );
 };
 
@@ -190,7 +227,10 @@ export const ProfileScreen: React.FC<IUser> = (user?: IUser) => {
     async function getProfileDetails() {
       const profileDetailsEndpoint = `${process.env.BASE_API_ENPOINT}/users/profileDetails?userId=${currentUser._id}`;
 
-      const { res, error } = await fetchAPI(RequestMethod.GET, profileDetailsEndpoint);
+      const { res, error } = await fetchAPI(
+        RequestMethod.GET,
+        profileDetailsEndpoint
+      );
 
       res && setProfileDetails(res);
       res && setIsLoading(false);
@@ -200,7 +240,11 @@ export const ProfileScreen: React.FC<IUser> = (user?: IUser) => {
 
   return (
     <>
-      <ProfileHeader details={profileDetails} user={currentUser} isLoading={isLoading} />
+      <ProfileHeader
+        details={profileDetails}
+        user={currentUser}
+        isLoading={isLoading}
+      />
       <Divider style={{ backgroundColor: Colors.weakGrey }} />
       <ProfileTabs {...currentUser} />
     </>
