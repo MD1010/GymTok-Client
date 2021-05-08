@@ -33,17 +33,12 @@ export async function registerForPushNotificationsAsync() {
   }
   return token;
 }
-
-export const registerNotificationListener = (dispatch: AppDispatch, userId: string) => {
+export const setNotificationHandler = () => {
   Notifications.setNotificationHandler({
     handleNotification: async () => ({
       shouldShowAlert: AppState.currentState != "active" ? true : false,
       shouldPlaySound: false,
       shouldSetBadge: true,
     }),
-  });
-  Notifications.addNotificationReceivedListener((notification: Notifications.Notification) => {
-    const notificationId = notification.request.content.data?.notificationId as string;
-    dispatch(getNotificationRecieved(notificationId, userId));
   });
 };

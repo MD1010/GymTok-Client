@@ -4,14 +4,14 @@ import { Asset } from "expo-asset";
 import * as Font from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 import React, { useEffect, useState } from "react";
-import { Image, StatusBar } from "react-native";
+import { AppState, Image, StatusBar } from "react-native";
 import { Provider } from "react-redux";
 import { MainNavigator } from "./components/Navigation/StackNavigator";
 import { loadLoggedUser } from "./store/auth/actions";
 import { store } from "./store/configureStore";
 import * as Notifications from "expo-notifications";
-import { registerNotificationListener } from "./components/Notifications/NotificationHandler";
-import { getUserNotifications, setPushToken } from "./store/notifications/actions";
+import { getNotificationRecieved, getUserNotifications, setPushToken } from "./store/notifications/actions";
+import { setNotificationHandler } from "./components/Notifications/NotificationHandler";
 
 function cacheImages(images) {
   return images.map((image) => {
@@ -58,15 +58,17 @@ const downloadAssets = async () => {
   ]);
 };
 
+const addNotificationsListener = (userId: string) => {
+  Notifications.addNotificationReceivedListener((notification: Notifications.Notification) => {
+    const notificationId = notification.request.content.data?.notificationId as string;
+    store.dispatch(getNotificationRecieved(notificationId, userId));
+  });
+};
+
 function App() {
   const [isAppReady, setIsAppReady] = useState(false);
   const loggedUser = store.getState().auth.loggedUser;
   const notificationErrors = store.getState().notifications.error;
-  // Notifications.addNotificationReceivedListener((notification: Notifications.Notification) => {
-  //   console.log("notification recieved", notification);
-
-  //   // setNotification(notification);
-  // });
 
   useEffect(() => {
     notificationErrors && alert(notificationErrors);
@@ -86,10 +88,12 @@ function App() {
   }, []);
 
   useEffect(() => {
-    if (loggedUser?._id) {
-      setPushToken(loggedUser._id);
-      registerNotificationListener(store.dispatch, loggedUser._id);
-      store.dispatch(getUserNotifications(loggedUser._id));
+    const userId = loggedUser?._id;
+    if (userId) {
+      setPushToken(userId);
+      setNotificationHandler();
+      addNotificationsListener(userId);
+      store.dispatch(getUserNotifications(userId));
     }
   }, [loggedUser]);
 
