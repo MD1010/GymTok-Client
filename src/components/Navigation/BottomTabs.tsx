@@ -2,7 +2,7 @@ import { FontAwesome5, Ionicons } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { useNavigation } from "@react-navigation/native";
 import React, { useCallback } from "react";
-import { View, Text } from "react-native";
+import { View, Text, SafeAreaView } from "react-native";
 import { IconButton, Provider } from "react-native-paper";
 import { useSelector } from "react-redux";
 import { authSelector } from "../../store/auth/authSlice";
@@ -14,6 +14,7 @@ import { Colors, UIConsts } from "../shared/styles/variables";
 import { colors } from "react-native-elements";
 import { ExploreContainer } from "../Explore/ExploreContainer";
 import { NotificationScreen } from "../Notifications/NotficationScreen";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
 interface BottomTabsProps {}
 
@@ -34,7 +35,7 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
   const { loggedUser } = useSelector(authSelector);
 
   return (
-    <Provider>
+    <SafeAreaProvider>
       <Tab.Navigator
         initialRouteName="Home"
         backBehavior={"initialRoute"}
@@ -135,6 +136,6 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
           }}
         />
       </Tab.Navigator>
-    </Provider>
+    </SafeAreaProvider>
   );
 };

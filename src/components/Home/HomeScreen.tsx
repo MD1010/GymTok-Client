@@ -25,21 +25,43 @@ export const HomeScreen: React.FC = () => {
   const dispatch = useDispatch();
   const posts = useSelector(postsSelector);
   const redirectedToNotification = useRef(false);
+  // !! todo add logic to reset redirectedToNotification or the further notifications wont be displayed!!!!!
   useEffect(() => {
+    // if (
+    //   lastNotificationResponse &&
+    //   posts.latestFetchedPosts.length &&
+    //   lastNotificationResponse.actionIdentifier === Notifications.DEFAULT_ACTION_IDENTIFIER &&
+    //   !redirectedToNotification.current
+    // ) {
+    //   console.log("from notification", lastNotificationResponse.notification);
+    //   dispatch(displayNotificationPost(posts.latestFetchedPosts[3]));
+    //   redirectedToNotification.current = true;
+    // }
     if (
       lastNotificationResponse &&
-      posts.latestFetchedPosts.length &&
-      lastNotificationResponse.actionIdentifier === Notifications.DEFAULT_ACTION_IDENTIFIER &&
-      !redirectedToNotification.current
+      lastNotificationResponse.actionIdentifier === Notifications.DEFAULT_ACTION_IDENTIFIER
     ) {
-      console.log("from notification", lastNotificationResponse.notification);
-      dispatch(displayNotificationPost(posts.latestFetchedPosts[3]));
+      console.log("!!", posts.latestFetchedPosts);
+
+      let post: IPost = {
+        _id: "123",
+        createdBy: { _id: "123", email: "sad", fullName: "asd", image: "", username: "dorbuch" },
+        description: "Nothing",
+        gif: "asd",
+        hashtags: [],
+        isReply: false,
+        likes: ["asdasd"],
+        replies: ["123"],
+        taggedUsers: [],
+        videoURI: "fdfe5570-de14-4e53-a680-cc3c3994210b.mp4",
+      };
+      // navigation.navigate("Notifications");
+      navigation.navigate("VideoDisplay", { posts: [post] });
       redirectedToNotification.current = true;
     }
-  }, [lastNotificationResponse, posts]);
+  }, [posts]);
 
   const Null = () => null;
-
   return (
     <Tab.Navigator tabBar={Null}>
       <Tab.Screen name="Home" component={PostListComponent} />

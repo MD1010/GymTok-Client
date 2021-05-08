@@ -43,7 +43,7 @@ export const fetchAPI = async <T = any>(
 
     case RequestMethod.DELETE: {
       try {
-        const { data } = await httpClient.delete<T>(url);
+        const { data } = await httpClient.delete<T>(url, { data: body, headers, method });
         return { res: data, error: null };
       } catch (error) {
         return { res: null, error: error.response?.data || error.message };
@@ -51,7 +51,7 @@ export const fetchAPI = async <T = any>(
     }
     case RequestMethod.PUT: {
       try {
-        const { data } = await httpClient.put<T>(url);
+        const { data } = await httpClient.put<T>(url, body, { headers, method });
         return { res: data, error: null };
       } catch (error) {
         return { res: null, error: error.response?.data || error.message };

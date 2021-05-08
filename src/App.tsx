@@ -1,11 +1,4 @@
-import {
-  Feather,
-  FontAwesome,
-  FontAwesome5,
-  Fontisto,
-  Ionicons,
-  MaterialIcons,
-} from "@expo/vector-icons";
+import { Feather, FontAwesome, FontAwesome5, Fontisto, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import * as Expo from "expo";
 import { Asset } from "expo-asset";
 import * as Font from "expo-font";
@@ -16,6 +9,8 @@ import { Provider } from "react-redux";
 import { MainNavigator } from "./components/Navigation/StackNavigator";
 import { loadLoggedUser } from "./store/auth/actions";
 import { store } from "./store/configureStore";
+import * as Notifications from "expo-notifications";
+import { registerNotificationListener, setPushToken } from "./components/Notifications/NotificationHandler";
 
 function cacheImages(images) {
   return images.map((image) => {
@@ -64,18 +59,30 @@ const downloadAssets = async () => {
 
 function App() {
   const [isAppReady, setIsAppReady] = useState(false);
+  const loggedUser = store.getState().auth.loggedUser;
+  // Notifications.addNotificationReceivedListener((notification: Notifications.Notification) => {
+  //   console.log("notification recieved", notification);
+
+  //   // setNotification(notification);
+  // });
+
   useEffect(() => {
     (async function () {
       try {
+        registerNotificationListener();
         await SplashScreen.preventAutoHideAsync();
         await downloadAssets();
         setIsAppReady(true);
-        setTimeout(async () => await SplashScreen.hideAsync(), 700);
+        setTimeout(async () => await SplashScreen.hideAsync(), 800);
       } catch (e) {
         console.warn(e);
       }
     })();
   }, []);
+
+  useEffect(() => {
+    loggedUser?._id && setPushToken(loggedUser._id);
+  }, [loggedUser]);
 
   return (
     isAppReady && (
