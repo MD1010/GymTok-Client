@@ -1,19 +1,14 @@
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { useRoute } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
-import { Image, StyleSheet, Text, View } from "react-native";
-import Ionicons from "react-native-vector-icons/Ionicons";
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import { useSelector } from "react-redux";
+import { Image, Text, View } from "react-native";
+import { Divider } from "react-native-paper";
+import Icon from "react-native-vector-icons/Ionicons";
 import { IPost, IUser } from "../../interfaces";
-import { authSelector } from "../../store/auth/authSlice";
 import { fetchAPI, RequestMethod } from "../../utils/fetchAPI";
 import { Colors } from "../shared";
 import { GenericComponent } from "./genericComponent";
-import Icon from "react-native-vector-icons/Ionicons";
-import { Divider } from "react-native-paper";
-import LogOutFromApp from "./logOutFromApp";
-import { TouchableWithoutFeedback } from "react-native-gesture-handler";
+import { LogOutFromApp } from "./logOutFromApp";
 
 const itemsToFetch = 12;
 interface IProfileDetails {

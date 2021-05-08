@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Alert, Modal, StyleSheet, Text, Pressable, View } from "react-native";
+import { Alert, StyleSheet, Text, Pressable, View, SafeAreaView } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 import { Colors } from "../shared";
 import { authSelector } from "../../store/auth/authSlice";
@@ -7,8 +7,9 @@ import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../../store/auth/actions";
 import { colors } from "react-native-elements";
 import { Divider } from "react-native-paper";
+import Modal from "react-native-modal";
 
-const LogOutFromApp: React.FC = () => {
+export const LogOutFromApp: React.FC = () => {
   const { authError, loggedUser } = useSelector(authSelector);
 
   const dispatch = useDispatch();
@@ -34,36 +35,21 @@ const LogOutFromApp: React.FC = () => {
         // color={focused ? Colors.white : Colors.darkGrey}
       />
 
-      <Modal
-        // statusBarTranslucent
-        animationType="slide"
-        transparent
-        visible={modalVisible}
-        onRequestClose={() => {
-          setModalVisible(!modalVisible);
-        }}
-      >
-        <View style={styles.centeredView}>
+      <Modal isVisible={modalVisible}>
+        <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
           <View style={styles.modalView}>
             <Text style={styles.modalHederText}>Log out from {loggedUser.fullName}?</Text>
-            <Divider style={{ backgroundColor: Colors.weakGrey }} />
+            <Divider style={{ backgroundColor: Colors.white }} />
             <Pressable style={[styles.button]} onPress={logoutFromApp}>
               <Text style={styles.logOutTextStyle}>Log Out</Text>
             </Pressable>
-            <Divider style={{ backgroundColor: Colors.weakGrey }} />
+            <Divider style={{ backgroundColor: Colors.white }} />
             <Pressable style={[styles.button]} onPress={() => setModalVisible(!modalVisible)}>
               <Text style={styles.textStyle}>Cancel</Text>
             </Pressable>
           </View>
         </View>
       </Modal>
-
-      {/* <Pressable
-        style={[styles.button, styles.buttonOpen]}
-        onPress={() => setModalVisible(true)}
-      >
-        <Text style={styles.textStyle}>Show Modal</Text>
-      </Pressable> */}
     </>
   );
 };
@@ -75,11 +61,9 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   modalView: {
-    backgroundColor: "#1F1A2D",
+    backgroundColor: Colors.darkBlueOpaque,
     borderRadius: 20,
     padding: 40,
-    // alignItems: "center",
-    shadowColor: "red",
     shadowOffset: {
       width: 0,
       height: 2,
@@ -93,8 +77,8 @@ const styles = StyleSheet.create({
   },
 
   textStyle: {
-    color: Colors.white,
-    fontWeight: "bold",
+    color: Colors.lightGrey2,
+    // fontWeight: "bold",
     textAlign: "center",
     fontSize: 15,
   },
