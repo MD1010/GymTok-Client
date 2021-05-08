@@ -21,6 +21,7 @@ interface PostProps {
   post: IPost;
   isVisible: boolean;
   containerStyle?: ViewStyle;
+  onPressPostLikeButton: (post: IPost, userId: string) => void;
 }
 
 interface IUIContainer {
@@ -92,7 +93,7 @@ const LikesComments: React.FC<IUIContainer> = ({
   );
 };
 
-export const Post: React.FC<PostProps> = memo(({ post, isVisible, containerStyle }) => {
+export const Post: React.FC<PostProps> = memo(({ post, isVisible, containerStyle, onPressPostLikeButton }) => {
   const { videoURI, createdBy, likes, replies } = post;
   const { loggedUser } = useSelector(authSelector);
   const navigation = useNavigation();
@@ -110,6 +111,7 @@ export const Post: React.FC<PostProps> = memo(({ post, isVisible, containerStyle
 
       setÌsUserLikePost(!isUserLikePost);
       dispatch(updateUserLikePost(post, loggedUser._id));
+      onPressPostLikeButton(post, loggedUser._id);
 
       let requestMethod: RequestMethod;
       const likesApi = `${process.env.BASE_API_ENPOINT}/users/${loggedUser._id}/posts/${post._id}/like`;
@@ -123,6 +125,7 @@ export const Post: React.FC<PostProps> = memo(({ post, isVisible, containerStyle
       if (error) {
         setÌsUserLikePost(isUserLikePost);
         dispatch(updateUserLikePost(post, loggedUser._id));
+        onPressPostLikeButton(post, loggedUser._id);
       }
     }
     // todo: fetch here
