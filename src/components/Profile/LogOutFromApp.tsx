@@ -25,107 +25,91 @@ const LogOutFromApp: React.FC = () => {
   }, []);
   return (
     <>
-      <View style={styles.centeredView}>
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={modalVisible}
-          onRequestClose={() => {
-            Alert.alert("Modal has been closed.");
-            setModalVisible(!modalVisible);
-          }}
-        >
-          <View style={styles.centeredView}>
-            <View style={styles.modalView}>
-              <Text style={styles.modalText}>
-                Log out of {loggedUser.fullName}?
-              </Text>
-              <Divider
-                style={{ backgroundColor: Colors.weakGrey, height: 5 }}
-              />
-              <Pressable
-                style={[styles.button, styles.buttonClose]}
-                onPress={logoutFromApp}
-              >
-                <Text style={styles.logOutTextStyle}>Log Out</Text>
-              </Pressable>
-              <Divider
-                style={{ backgroundColor: Colors.weakGrey, height: 5 }}
-              />
-              <Pressable
-                style={[styles.button, styles.buttonClose]}
-                onPress={() => setModalVisible(!modalVisible)}
-              >
-                <Text style={styles.textStyle}>Cancel</Text>
-              </Pressable>
-            </View>
+      <Icon
+        onPress={openAreYouSureModal}
+        name={"log-out-outline"}
+        size={30}
+        color={Colors.white}
+        style={{ position: "absolute", right: 15, top: 20, zIndex: 1000 }}
+        // color={focused ? Colors.white : Colors.darkGrey}
+      />
+
+      <Modal
+        // statusBarTranslucent
+        animationType="slide"
+        transparent
+        visible={modalVisible}
+        onRequestClose={() => {
+          setModalVisible(!modalVisible);
+        }}
+      >
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <Text style={styles.modalHederText}>Log out from {loggedUser.fullName}?</Text>
+            <Divider style={{ backgroundColor: Colors.weakGrey }} />
+            <Pressable style={[styles.button]} onPress={logoutFromApp}>
+              <Text style={styles.logOutTextStyle}>Log Out</Text>
+            </Pressable>
+            <Divider style={{ backgroundColor: Colors.weakGrey }} />
+            <Pressable style={[styles.button]} onPress={() => setModalVisible(!modalVisible)}>
+              <Text style={styles.textStyle}>Cancel</Text>
+            </Pressable>
           </View>
-        </Modal>
-        <Icon
-          onPress={openAreYouSureModal}
-          name={"log-out-outline"}
-          size={30}
-          color={Colors.white}
-          style={{ backgroundColor: "red" }}
-          // color={focused ? Colors.white : Colors.darkGrey}
-        />
-        {/* <Pressable
+        </View>
+      </Modal>
+
+      {/* <Pressable
         style={[styles.button, styles.buttonOpen]}
         onPress={() => setModalVisible(true)}
       >
         <Text style={styles.textStyle}>Show Modal</Text>
       </Pressable> */}
-      </View>
     </>
   );
 };
 
 const styles = StyleSheet.create({
   centeredView: {
-    flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 22,
+    flex: 1,
   },
   modalView: {
-    margin: 20,
-    backgroundColor: "white",
+    backgroundColor: "#1F1A2D",
     borderRadius: 20,
-    padding: 35,
-    alignItems: "center",
-    shadowColor: "#000",
+    padding: 40,
+    // alignItems: "center",
+    shadowColor: "red",
     shadowOffset: {
       width: 0,
       height: 2,
     },
     shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
+    shadowRadius: 14,
+    elevation: 15,
   },
   button: {
-    // borderRadius: 20,
     padding: 10,
-    elevation: 2,
   },
-  buttonOpen: {
-    // backgroundColor: "#F194FF",
-  },
-  buttonClose: {
-    // backgroundColor: "#2196F3",
-  },
+
   textStyle: {
-    color: "black",
+    color: Colors.white,
     fontWeight: "bold",
     textAlign: "center",
+    fontSize: 15,
   },
   logOutTextStyle: {
     color: "red",
     fontWeight: "bold",
+    textAlign: "center",
+    fontSize: 15,
   },
-  modalText: {
-    marginBottom: 15,
+  modalHederText: {
+    marginBottom: 20,
     textAlign: "center",
     fontWeight: "bold",
+    fontSize: 16,
+    color: Colors.white,
   },
 });
 
