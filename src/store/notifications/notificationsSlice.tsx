@@ -41,6 +41,9 @@ const notificationsSlice = createSlice({
         }
       }
     },
+    getLatestNotificationSuccess: (state, action: PayloadAction<INotification>) => {
+      state.notifications.push(action.payload);
+    },
   },
 });
 

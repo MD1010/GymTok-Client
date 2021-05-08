@@ -1,6 +1,8 @@
 import Constants from "expo-constants";
 import * as Notifications from "expo-notifications";
 import { AppState, Platform } from "react-native";
+import { AppDispatch } from "../../store/configureStore";
+import { getNotificationRecieved, getUserNotifications } from "../../store/notifications/actions";
 
 export async function registerForPushNotificationsAsync() {
   let token;
@@ -32,7 +34,7 @@ export async function registerForPushNotificationsAsync() {
   return token;
 }
 
-export const registerNotificationListener = () => {
+export const registerNotificationListener = (dispatch: AppDispatch, userId: string) => {
   Notifications.setNotificationHandler({
     handleNotification: async () => ({
       shouldShowAlert: AppState.currentState != "active" ? true : false,
@@ -41,6 +43,7 @@ export const registerNotificationListener = () => {
     }),
   });
   Notifications.addNotificationReceivedListener((notification: Notifications.Notification) => {
-    console.log("notification recieved", notification);
+    const notificationId = notification.request.content.data?.notificationId as string;
+    dispatch(getNotificationRecieved(notificationId, userId));
   });
 };

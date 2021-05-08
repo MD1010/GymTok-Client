@@ -15,6 +15,8 @@ import { colors } from "react-native-elements";
 import { ExploreContainer } from "../Explore/ExploreContainer";
 import { NotificationScreen } from "../Notifications/NotficationScreen";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import { Badge } from "react-native-paper";
+import { notificaitonsSelector } from "../../store/notifications/notificationsSlice";
 
 interface BottomTabsProps {}
 
@@ -33,7 +35,7 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
   const navigation = useNavigation();
   const Tab = createBottomTabNavigator();
   const { loggedUser } = useSelector(authSelector);
-
+  const { notifications } = useSelector(notificaitonsSelector);
   return (
     <SafeAreaProvider>
       <Tab.Navigator
@@ -117,9 +119,19 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
           options={{
             tabBarIcon: ({ color, size, focused }) =>
               focused ? (
-                <Ionicons name={"notifications-sharp"} color={color} size={size} />
+                <View>
+                  <Ionicons name={"notifications-sharp"} color={color} size={size} />
+                  <Badge size={22} visible style={{ position: "absolute", bottom: 12, left: 10, fontWeight: "bold" }}>
+                    {notifications.length}
+                  </Badge>
+                </View>
               ) : (
-                <Ionicons name={"notifications-outline"} color={color} size={size} />
+                <View>
+                  <Ionicons name={"notifications-sharp"} color={color} size={size} />
+                  <Badge size={22} visible style={{ position: "absolute", bottom: 12, left: 10, fontWeight: "bold" }}>
+                    {notifications.length}
+                  </Badge>
+                </View>
               ),
           }}
         ></Tab.Screen>

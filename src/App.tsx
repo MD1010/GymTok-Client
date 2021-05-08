@@ -11,7 +11,7 @@ import { loadLoggedUser } from "./store/auth/actions";
 import { store } from "./store/configureStore";
 import * as Notifications from "expo-notifications";
 import { registerNotificationListener } from "./components/Notifications/NotificationHandler";
-import { setPushToken } from "./store/notifications/actions";
+import { getUserNotifications, setPushToken } from "./store/notifications/actions";
 
 function cacheImages(images) {
   return images.map((image) => {
@@ -61,6 +61,7 @@ const downloadAssets = async () => {
 function App() {
   const [isAppReady, setIsAppReady] = useState(false);
   const loggedUser = store.getState().auth.loggedUser;
+  const notificationErrors = store.getState().notifications.error;
   // Notifications.addNotificationReceivedListener((notification: Notifications.Notification) => {
   //   console.log("notification recieved", notification);
 
@@ -68,9 +69,12 @@ function App() {
   // });
 
   useEffect(() => {
+    notificationErrors && alert(notificationErrors);
+  }, [notificationErrors]);
+
+  useEffect(() => {
     (async function () {
       try {
-        registerNotificationListener();
         await SplashScreen.preventAutoHideAsync();
         await downloadAssets();
         setIsAppReady(true);
@@ -82,7 +86,11 @@ function App() {
   }, []);
 
   useEffect(() => {
-    loggedUser?._id && setPushToken(loggedUser._id);
+    if (loggedUser?._id) {
+      setPushToken(loggedUser._id);
+      registerNotificationListener(store.dispatch, loggedUser._id);
+      store.dispatch(getUserNotifications(loggedUser._id));
+    }
   }, [loggedUser]);
 
   return (

@@ -29,6 +29,18 @@ export const getUserNotifications = (userId: string): AppThunk => {
   };
 };
 
+export const getNotificationRecieved = (notificationId: string, userId: string): AppThunk => {
+  const notificationsAPI = `${process.env.BASE_API_ENPOINT}/notifications/${notificationId}/${userId}`;
+  return async (dispatch: AppDispatch) => {
+    const { res, error } = await fetchAPI(RequestMethod.GET, notificationsAPI);
+    if (res) {
+      dispatch(notificationsActions.getLatestNotificationSuccess(res));
+    } else {
+      dispatch(notificationsActions.notificationActionFail(error));
+    }
+  };
+};
+
 export const sendNotification = async (notificationPayload: INotification) => {
   const notificationsAPI = `${process.env.BASE_API_ENPOINT}/notifications/send`;
   const { res, error } = await fetchAPI(RequestMethod.POST, notificationsAPI, notificationPayload);
