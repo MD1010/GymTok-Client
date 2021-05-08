@@ -20,11 +20,6 @@ interface VideoProps {
   isMuted?: boolean;
   onVideoTap?: () => any;
   onVideoLoad?: () => any;
-  /**
-   * if the video is rendered not in flat list as a seperated screen
-   * default is false
-   */
-  renderedInList?: boolean;
 }
 
 export const Player: React.FC<VideoProps> = memo(
@@ -40,8 +35,6 @@ export const Player: React.FC<VideoProps> = memo(
     isMuted,
     onVideoTap,
     onVideoLoad,
-    renderedInList = false,
-    children,
   }) => {
     const statusRef = useRef<any>();
     const [isPaused, setIsPaused] = useState<boolean>(false);
@@ -58,26 +51,6 @@ export const Player: React.FC<VideoProps> = memo(
       setIsPaused(false);
       await ref.current?.playAsync();
     };
-
-    // const loadURI = async () => {
-    //   if (uri.startsWith("file")) {
-    //     return setVideoURI(uri);
-    //   }
-    //   const path = `${Platform.OS === "ios" ? FileSystem.documentDirectory : FileSystem.cacheDirectory}${
-    //     Platform.OS === "ios" ? uri.split("/")[3] : shorthash.unique(uri)
-    //   }`;
-    //   const image = await FileSystem.getInfoAsync(path);
-    //   if (image.exists) {
-    //     console.log("read image from cache");
-    //     console.log("uri exists is  " + image.uri);
-    //     setVideoURI(image.uri);
-    //   } else {
-    //     console.log("downloading image to cache");
-    //     const newImage = await FileSystem.downloadAsync(uri, path);
-    //     console.log("cache url = ", newImage.uri);
-    //     setVideoURI(newImage.uri);
-    //   }
-    // };
 
     useEffect(() => {
       return () => navigation.removeListener("blur", null);
@@ -129,7 +102,7 @@ export const Player: React.FC<VideoProps> = memo(
                   uri,
                 }}
                 resizeMode={resizeMode}
-                shouldPlay={videoInViewPort === undefined ? true : videoInViewPort}
+                shouldPlay={videoInViewPort}
                 isLooping
                 isMuted={isMuted}
                 onPlaybackStatusUpdate={(status) => (statusRef.current = status)}

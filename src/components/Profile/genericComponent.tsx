@@ -7,14 +7,18 @@ import { useSelector } from "react-redux";
 import { IPost } from "../../interfaces";
 import { postsSelector } from "../../store/posts/postsSlice";
 import { STREAMING_SERVER_GIF_ENDPOINT } from "../../utils/consts";
+import { Loader } from "../shared";
 import { Colors } from "../shared/styles/variables";
 
 interface Props {
   items: IPost[];
+  loadMoreCallback: () => any;
+  hasMoreToFetch: boolean;
   horizontal?: boolean;
   numColumns?: number;
   customStyle?: ViewStyle;
   gifStyle?: ViewStyle;
+  containerStyle?: ViewStyle;
   pictureHeight?: number;
   renderFooter?: (item: IPost) => JSX.Element;
   renderBottomVideo?: (item: IPost) => JSX.Element;
@@ -23,20 +27,26 @@ interface Props {
 
 export const GenericComponent: React.FC<Props> = ({
   items,
+  loadMoreCallback,
+  hasMoreToFetch,
   horizontal,
   customStyle,
-  gifStyle,
-  renderFooter,
-  renderBottomVideo,
   numColumns,
   pictureHeight,
   pageHeader,
+  containerStyle,
+  renderBottomVideo,
+  renderFooter,
+  gifStyle,
 }) => {
   const navigation = useNavigation();
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [showFooter, setShowFooter] = useState<boolean>(false);
+
   const isHorizontal: boolean = horizontal ? horizontal : false;
   const numOfColumns: number = numColumns ? numColumns : 3;
   const picHeight: number = pictureHeight ? pictureHeight : styles.theImage.height;
-  const { hasMoreToFetch, error, latestFetchedPosts, userPosts } = useSelector(postsSelector);
+  const { error, latestFetchedPosts, userPosts } = useSelector(postsSelector);
   const [currentItems, setCurrentItems] = useState<any>();
 
   useEffect(() => {
@@ -55,11 +65,38 @@ export const GenericComponent: React.FC<Props> = ({
     setCurrentItems(tempArr);
   }, [items, latestFetchedPosts]);
 
+  const Footer = () => {
+    if (items.length) {
+      if (hasMoreToFetch) {
+        console.log(`has more to fetch?: ${hasMoreToFetch}`);
+        return <Loader style={{ height: 100, width: 100 }} />;
+      }
+    }
+    return null;
+  };
+  // const showVideo = (videoURL) => {
+  //   navigation.navigate("UsersProfile", {
+  //     videoURL: `${STREAMING_SERVER_VIDEO_ENDPOINT}/${videoURL}`,
+  //   });
+  // };
   const showVideo = (postID) => {
     const initialIndex = items.findIndex((post) => post._id === postID);
     navigation.navigate("VideoDisplay", { posts: items, initialIndex });
   };
+  useEffect(() => {
+    if (items) {
+      setShowFooter(false);
+    }
+  }, [items]);
 
+  useEffect(() => {
+    loadMoreCallback && loadMoreCallback();
+  }, []);
+
+  const handleLoadMore = () => {
+    items.length && setShowFooter(true);
+    hasMoreToFetch && loadMoreCallback();
+  };
   const renderItem = (item: IPost) => {
     return (
       <View
@@ -77,7 +114,6 @@ export const GenericComponent: React.FC<Props> = ({
             style={{
               ...styles.theImage,
               height: picHeight,
-              // width: Dimensions.get("window").width / numOfColumns,
               ...gifStyle,
             }}
             imageStyle={{ borderRadius: 3 }}
@@ -113,9 +149,12 @@ export const GenericComponent: React.FC<Props> = ({
       </View>
     );
   };
+  const d = () => console.log(123123);
 
   return (
-    <SafeAreaView style={{ flex: 1, flexDirection: isHorizontal ? "row" : "column" }}>
+    <SafeAreaView
+      style={[{ flex: 1, flexDirection: isHorizontal ? "row" : "column", marginHorizontal: 5 }, containerStyle]}
+    >
       <FlatList
         ListHeaderComponent={pageHeader}
         data={/*items*/ currentItems}
@@ -123,6 +162,9 @@ export const GenericComponent: React.FC<Props> = ({
         horizontal={isHorizontal}
         numColumns={!isHorizontal ? numOfColumns : 0}
         renderItem={({ item }) => renderItem(item)}
+        onEndReachedThreshold={0.5}
+        ListFooterComponent={showFooter ? <Footer /> : null}
+        onEndReached={handleLoadMore}
       />
     </SafeAreaView>
   );
@@ -141,7 +183,7 @@ const styles = StyleSheet.create({
   },
 
   theImage: {
-    margin: 3,
+    margin: 2,
     height: 120,
     resizeMode: "cover",
   },

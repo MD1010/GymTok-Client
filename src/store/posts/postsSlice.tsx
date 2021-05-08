@@ -1,7 +1,11 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { ViewStyle } from "react-native";
 import { IPost } from "../../interfaces";
-import { getPostsAfterUserLikePost, getPostsAfterUserRemoveLikeFromPost } from "../../utils/updatePostLikes";
+import { addReplyToPost } from "../../utils/addReplyToPost";
+import {
+  getPostsAfterUserLikePost,
+  getPostsAfterUserRemoveLikeFromPost,
+} from "../../utils/updatePostLikes";
 import { RootState } from "../configureStore";
 
 export const itemsToFetch = 10; // how many posts are fetched on each get
@@ -24,13 +28,21 @@ interface LikePayload {
   userId: string;
 }
 
+interface ReplyPayload {
+  postId: string;
+  reply: IPost;
+}
+
 const postsSlice = createSlice({
   name: "posts",
   initialState,
   reducers: {
     fetchMoreSuccess: (state, action: PayloadAction<IPost[]>) => {
       if (action.payload.length < itemsToFetch) state.hasMoreToFetch = false;
-      state.latestFetchedPosts = [...state.latestFetchedPosts, ...action.payload];
+      state.latestFetchedPosts = [
+        ...state.latestFetchedPosts,
+        ...action.payload,
+      ];
       // state.latestFetchedPosts.sort((a,b) => new Date(a.publishDate) - new Date(b.publishDate) );
       // state.latestFetchedPosts = [...action.payload,...state.latestFetchedPosts];
       state.error = null;
@@ -91,6 +103,19 @@ const postsSlice = createSlice({
         state.userPosts = updatedUserPosts;
       }
     },
+    addReplyToPost: (state, action: PayloadAction<ReplyPayload>) => {
+      const updatedLatestFetchedPosts = addReplyToPost(state.latestFetchedPosts, action.payload.postId, action.payload.reply);
+
+      if (updatedLatestFetchedPosts) {
+        state.latestFetchedPosts = updatedLatestFetchedPosts;
+      }
+
+      const updatedUserPosts = addReplyToPost(state.userPosts, action.payload.postId, action.payload.reply);
+
+      if (updatedLatestFetchedPosts) {
+        state.userPosts = updatedUserPosts;
+      }
+    }
   },
 });
 

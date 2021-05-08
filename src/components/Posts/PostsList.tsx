@@ -29,7 +29,7 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentPosts,
   const { loggedUser } = useSelector(authSelector);
   const scrollEnded = useRef<boolean>(false);
   // const playingVideoIndex = useRef(0);
-  const [currentlyPlaying, setCurrentlyPlaying] = useState(0);
+  const [currentlyPlaying, setCurrentlyPlaying] = useState(initialPostIndex || 0);
   const flatListRef = useRef<FlatList>(null);
   const [showFooter, setShowFooter] = useState<boolean>(false);
   const { hasMoreToFetch, error, latestFetchedPosts, userPosts } = useSelector(postsSelector);
@@ -42,7 +42,6 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentPosts,
   }, [error]);
 
   useEffect(() => {
-    console.log("fdfdfdfdfdfdfdfdfdf" + loadMore);
     if (posts) {
       setShowFooter(false);
       setRefreshing(false);

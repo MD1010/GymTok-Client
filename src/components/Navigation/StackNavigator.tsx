@@ -2,17 +2,17 @@ import { NavigationContainer } from "@react-navigation/native";
 import { CardStyleInterpolators, createStackNavigator } from "@react-navigation/stack";
 import React from "react";
 import { Dimensions } from "react-native";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 import { LoginContainer as LoginScreen } from "../Auth/LoginContainer";
 import { NotLoggedInModal } from "../Auth/NotLoggedInModal";
 import { RegisterContainer as RegisterScreen } from "../Auth/RegisterContainer";
-import { PostsVideoDisplay } from "../Profile/ProfileVideoModal";
-import { postChallengeScreens } from "../PublishVideo/publishScreens";
-import { PostReplies } from "../Replies/PostReplies";
-import { BottomTabs } from "./BottomTabs";
-import { config } from "./stackNavigationConfig";
+import { ProfileScreen } from "../Profile/ProfileScreen";
 import { ApproveVideo } from "../PublishVideo/ApproveVideo";
 import { CameraScreen } from "../PublishVideo/CameraScreen";
-import { SafeAreaProvider } from "react-native-safe-area-context";
+import { postChallengeScreens } from "../PublishVideo/publishScreens";
+import { PostsVideoDisplay } from "../shared/PostsVideoDisplay";
+import { BottomTabs } from "./BottomTabs";
+import { config } from "./stackNavigationConfig";
 
 interface StackNavigatorProps {}
 
@@ -49,7 +49,9 @@ export const MainNavigator: React.FC<StackNavigatorProps> = ({}) => {
               headerShown: false,
               cardStyle: { backgroundColor: "transparent" },
               cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS,
-              gestureResponseDistance: { vertical: Dimensions.get("screen").height },
+              gestureResponseDistance: {
+                vertical: Dimensions.get("screen").height,
+              },
               gestureDirection: "vertical",
               gestureEnabled: true,
             }}
@@ -66,7 +68,19 @@ export const MainNavigator: React.FC<StackNavigatorProps> = ({}) => {
               headerTitle: "",
               headerTransparent: true,
               cardStyle: { backgroundColor: "transparent" },
-              cardStyleInterpolator: CardStyleInterpolators.forNoAnimation,
+              cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+              gestureEnabled: false,
+            }}
+          />
+          <Stack.Screen
+            name="ProfileDisplay"
+            component={ProfileScreen}
+            options={{
+              headerShown: true,
+              headerTitle: "",
+              headerTransparent: true,
+              // cardStyle: { backgroundColor: Colors.darkBlue },
+              cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
               gestureEnabled: false,
             }}
           />

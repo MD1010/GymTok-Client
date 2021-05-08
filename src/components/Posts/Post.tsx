@@ -5,6 +5,7 @@ import { Text, View, ViewStyle } from "react-native";
 import { Avatar } from "react-native-elements";
 import { TouchableOpacity, TouchableWithoutFeedback } from "react-native-gesture-handler";
 import { useDispatch, useSelector } from "react-redux";
+import { IUser } from "../../interfaces";
 import { IHashtag } from "../../interfaces/Hashtag";
 import { IPost } from "../../interfaces/Post";
 import { authSelector } from "../../store/auth/authSlice";
@@ -31,10 +32,14 @@ interface IUIContainer {
 }
 
 const Heading = ({ createdBy, onCameraPress }) => {
+  const navigation = useNavigation();
+  const showProfile = (createdBy: IUser) => {
+    navigation.navigate("ProfileDisplay", { user: createdBy });
+  };
   return (
     <View style={[styles.rowContainer, { marginVertical: 20, justifyContent: "space-between" }]}>
       <View style={{ flexDirection: "row", alignItems: "center" }}>
-        <TouchableWithoutFeedback onPress={() => console.log("avatar clicked!")}>
+        <TouchableWithoutFeedback onPress={() => showProfile(createdBy)}>
           <Avatar
             source={createdBy?.image ? { uri: createdBy?.image } : require("../../../assets/avatar/user.png")}
             rounded
@@ -108,7 +113,6 @@ export const Post: React.FC<PostProps> = memo(({ post, isVisible, containerStyle
 
       let requestMethod: RequestMethod;
       const likesApi = `${process.env.BASE_API_ENPOINT}/users/${loggedUser._id}/posts/${post._id}/like`;
-
       if (!isUserLikePost) {
         requestMethod = RequestMethod.POST;
       } else {
@@ -150,13 +154,7 @@ export const Post: React.FC<PostProps> = memo(({ post, isVisible, containerStyle
 
   return (
     <View style={[styles.container, containerStyle]}>
-      <Player
-        style={styles.video}
-        uri={streaminServerUrl}
-        videoInViewPort={isVisible}
-        resizeMode="cover"
-        renderedInList
-      />
+      <Player style={styles.video} uri={streaminServerUrl} videoInViewPort={isVisible} resizeMode="cover" />
       <View style={styles.infoContainer}>
         <Heading createdBy={createdBy} onCameraPress={() => onCameraPress()} />
 

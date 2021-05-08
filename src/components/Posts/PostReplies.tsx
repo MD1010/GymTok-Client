@@ -13,12 +13,12 @@ import { Player } from "../shared/VideoPlayer";
 import Ripple from "react-native-material-ripple";
 import { formatDate } from "../../utils/date";
 
-interface PostRepliesProps { }
+interface PostRepliesProps {}
 
 type StackParamsList = {
   params: { newReply: IPost };
 };
-export const PostReplies: React.FC<PostRepliesProps> = ({ }) => {
+export const PostReplies: React.FC<PostRepliesProps> = ({}) => {
   const navigation = useNavigation();
   const route = useRoute<RouteProp<StackParamsList, "params">>();
   const [challengeReplies, setChallengeReplies] = useState<any[]>([]);
@@ -52,7 +52,12 @@ export const PostReplies: React.FC<PostRepliesProps> = ({ }) => {
     if (route.params?.newReply) {
       setChallengeReplies([
         ...challengeReplies,
-        route.params?.newReply
+        {
+          _id: challengeReplies.length,
+          url: route.params.newReply.videoURI,
+          gif: route.params.newReply.gif,
+          numOfLikes: 0,
+        },
       ]);
     }
   }, [route.params?.newReply]);
