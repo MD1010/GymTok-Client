@@ -12,8 +12,8 @@ import { Colors } from "../shared/styles/variables";
 
 interface Props {
   items: IPost[];
-  loadMoreCallback: () => any;
-  hasMoreToFetch: boolean;
+  loadMoreCallback?: () => any;
+  hasMoreToFetch?: boolean;
   horizontal?: boolean;
   numColumns?: number;
   customStyle?: ViewStyle;

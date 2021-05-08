@@ -1,6 +1,7 @@
 import { useNavigation } from "@react-navigation/core";
 import React, { useEffect, useState } from "react";
 import { View, StyleSheet, Text } from "react-native";
+import { ScrollView } from "react-native-gesture-handler";
 import { IPopularHashtags } from "../../interfaces";
 import { fetchAPI, RequestMethod } from "../../utils/fetchAPI";
 import { Colors, Loader } from "../shared/";
@@ -19,14 +20,13 @@ export const ExploreContainer: React.FC<ExploreContainerProps> = ({ }) => {
     const challengesEndpoint = `${process.env.BASE_API_ENPOINT}/hashtags/popular?popularCount=${POPULAR_HASHTAGS_COUNT}`;
     const { res } = await fetchAPI(RequestMethod.GET, challengesEndpoint);
 
-    // console.log("res", res);
+    console.log("res", res);
 
     res && setPopularHashtags(res);
 
     setIsLoadingPopularHashtags(false);
   };
   useEffect(() => {
-    console.log("popularHashtags", popularHashtags)
     loadPopularHashtags();
 
     return () => navigation.removeListener("blur", null);
@@ -37,11 +37,15 @@ export const ExploreContainer: React.FC<ExploreContainerProps> = ({ }) => {
   return (
     <View style={styles.exploreContainer}>
       {isLoadingPopularHashtags && <Loader />}
-      {Object.keys(popularHashtags).map((hashtag, key) => {
-        return (
-          <PopularHashtag key={key} hashtag={hashtag} posts={popularHashtags[hashtag]} />
-        );
-      })}
+      <ScrollView>
+        {Object.keys(popularHashtags).map((hashtag, key) => {
+          return (
+            // <View key={key} style={styles.hashtagContainer}>
+            <PopularHashtag key={key} hashtag={hashtag} posts={popularHashtags[hashtag]} />
+            // </View>
+          );
+        })}
+      </ScrollView>
     </View>);
 };
 
@@ -50,8 +54,8 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 25,
     backgroundColor: Colors.darkBlueOpaque,
+
   },
   hashtagContainer: {
-
   }
 });

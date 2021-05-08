@@ -13,23 +13,37 @@ export const PopularHashtag: React.FC<PopularHashtagProps> = ({ hashtag, posts }
     return (
         <View style={styles.hashtagContainer}>
             <View style={styles.hashtagDetails}>
-                <Text style={styles.hastagName}>
+                <Text style={styles.hashtagName}>
                     # {hashtag}
                 </Text>
+                <Text style={styles.postsCount}>
+                    {posts.length}
+                </Text>
             </View>
-            <GenericComponent items={posts} horizontal={true} />
+            <View style={{ flex: 1 }}>
+                <GenericComponent items={posts} horizontal={true} />
+            </View>
         </View>);
 };
 
 const styles = StyleSheet.create({
     hashtagContainer: {
-        flex: 1
+        position: "relative",
+        marginBottom: 30,
     },
     hashtagDetails: {
-        marginLeft: 10
+        marginLeft: 10,
+        marginBottom: 5,
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between"
     },
-    hastagName: {
+    hashtagName: {
         color: Colors.white,
         fontSize: 20
+    },
+    postsCount: {
+        color: Colors.white,
+        marginRight: 15
     }
 });
