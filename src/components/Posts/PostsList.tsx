@@ -79,10 +79,12 @@ export const PostsList: React.FC<PostsListProps> = memo(
     useEffect(() => {
       console.log("posts changed..");
       if (posts) {
-        setIsLoading(false);
+        console.log("here!");
+        isFeed && setIsLoading(false);
         setShowFooter(false);
         setRefreshing(false);
       } else {
+        console.log("here mother");
         setShowFooter(true);
       }
     }, [posts]);
@@ -113,7 +115,7 @@ export const PostsList: React.FC<PostsListProps> = memo(
     useEffect(() => {
       // check if user was loaded - undefinded means the store has not been updated yet.
       if (loggedUser !== undefined) {
-        setIsLoading(true);
+        isFeed && setIsLoading(true);
         isEmpty(posts) && getPosts();
       }
     }, [loggedUser]);
@@ -212,6 +214,7 @@ export const PostsList: React.FC<PostsListProps> = memo(
     };
 
     const handleLoadMore = () => {
+      console.log("here222!");
       setShowFooter(true);
       hasMoreToFetch && getPosts();
     };
