@@ -41,7 +41,7 @@ export const HomeScreen: React.FC = () => {
       lastNotificationResponse &&
       lastNotificationResponse.actionIdentifier === Notifications.DEFAULT_ACTION_IDENTIFIER
     ) {
-      console.log("!!", posts.latestFetchedPosts);
+      // console.log("!!", posts.latestFetchedPosts);
 
       let post: IPost = {
         _id: "123",

@@ -1,6 +1,6 @@
 import AsyncStorage from "@react-native-community/async-storage";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { INotification } from "../../interfaces/AppNotification";
+import { INotification } from "../../interfaces/Notification";
 import { IUser } from "../../interfaces/User";
 import { RootState } from "../configureStore";
 

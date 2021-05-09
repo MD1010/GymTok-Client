@@ -1,5 +1,5 @@
 import { registerForPushNotificationsAsync } from "../../components/Notifications/NotificationHandler";
-import { INotification } from "../../interfaces/AppNotification";
+import { INotification } from "../../interfaces/Notification";
 import { fetchAPI, RequestMethod } from "../../utils/fetchAPI";
 import { AppDispatch, AppThunk } from "../configureStore";
 import { notificationsActions } from "./notificationsSlice";
@@ -29,15 +29,15 @@ export const getUserNotifications = (userId: string): AppThunk => {
   };
 };
 
-export const getNotificationRecieved = (notificationId: string, userId: string): AppThunk => {
-  const notificationsAPI = `${process.env.BASE_API_ENPOINT}/notifications/${notificationId}/${userId}`;
+export const getNotificationRecieved = (notification: INotification): AppThunk => {
+  // const notificationsAPI = `${process.env.BASE_API_ENPOINT}/notifications/${notificationId}/${userId}`;
   return async (dispatch: AppDispatch) => {
-    const { res, error } = await fetchAPI(RequestMethod.GET, notificationsAPI);
-    if (res) {
-      dispatch(notificationsActions.getLatestNotificationSuccess(res));
-    } else {
-      dispatch(notificationsActions.notificationActionFail(error));
-    }
+    // const { res, error } = await fetchAPI(RequestMethod.GET, notificationsAPI);
+    // if (res) {
+    dispatch(notificationsActions.getLatestNotificationSuccess(notification));
+    // } else {
+    // dispatch(notificationsActions.notificationActionFail(error));
+    // }
   };
 };
 

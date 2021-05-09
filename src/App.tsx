@@ -12,6 +12,7 @@ import { store } from "./store/configureStore";
 import * as Notifications from "expo-notifications";
 import { getNotificationRecieved, getUserNotifications, setPushToken } from "./store/notifications/actions";
 import { setNotificationHandler } from "./components/Notifications/NotificationHandler";
+import { INotification } from "./interfaces/Notification";
 
 function cacheImages(images) {
   return images.map((image) => {
@@ -60,8 +61,20 @@ const downloadAssets = async () => {
 
 const addNotificationsListener = (userId: string) => {
   Notifications.addNotificationReceivedListener((notification: Notifications.Notification) => {
-    const notificationId = notification.request.content.data?.notificationId as string;
-    store.dispatch(getNotificationRecieved(notificationId, userId));
+    const { data, body, title } = notification.request.content;
+    const { _id, date, sender, ...props } = data as any;
+    const notificationReceived: INotification = {
+      _id,
+      body,
+      title,
+      data: props,
+      date,
+      sender,
+      isRead: false,
+    };
+    console.log("received", notificationReceived);
+
+    store.dispatch(getNotificationRecieved(notificationReceived));
   });
 };
 

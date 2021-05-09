@@ -1,11 +1,12 @@
 import { IPost } from "./Post";
+import { IUser } from "./User";
 
 export interface INotification {
   _id: string;
   title: string;
   body: string;
   date: Date;
-  data: IPost;
+  data: any;
   isRead: boolean;
-  notifiedUsers: string[];
+  sender: IUser;
 }
