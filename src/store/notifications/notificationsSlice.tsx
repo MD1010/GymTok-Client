@@ -8,11 +8,13 @@ export interface NotificationsState {
   receivedNotifications: INotification[];
   isLoading: boolean;
   error: string;
+  lastDeletedNotification: { index: number; notification: INotification };
 }
 export const initialState: NotificationsState = {
   receivedNotifications: [],
   isLoading: false,
   error: null,
+  lastDeletedNotification: null,
 };
 const notificationsSlice = createSlice({
   name: "notifications",
@@ -28,8 +30,15 @@ const notificationsSlice = createSlice({
       state.error = null;
     },
 
-    deleteUserNotificationSuccess: (state, action: PayloadAction<INotification>) => {
-      state.receivedNotifications.splice(state.receivedNotifications.indexOf(action.payload), 1);
+    deleteUserNotification: (state, action: PayloadAction<INotification>) => {
+      const notification = action.payload;
+      const index = state.receivedNotifications.indexOf(notification);
+      state.lastDeletedNotification = { index, notification };
+      state.receivedNotifications.splice(state.receivedNotifications.indexOf(notification), 1);
+    },
+    deleteUserNotificationFailed: (state, action: PayloadAction<INotification>) => {
+      const { index, notification } = state.lastDeletedNotification;
+      state.receivedNotifications.splice(index, 0, notification);
     },
     deleteAllNotificationsSuccess: (state, action: PayloadAction<INotification>) => {
       state.receivedNotifications = [];

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { memo, useCallback, useEffect, useState } from "react";
 import { Animated, Pressable, SafeAreaView, StyleSheet, Text, TouchableHighlightBase, View } from "react-native";
 import { Avatar } from "react-native-elements";
 import { useDispatch, useSelector } from "react-redux";
@@ -17,7 +17,7 @@ import { Feather, Fontisto, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { calcTimeAgo } from "../../utils/timeAgo";
 import { Badge, Divider } from "react-native-paper";
 import { useNavigation } from "@react-navigation/core";
-import { deleteUserNotifications, markNotificationAsRead } from "../../store/notifications/actions";
+import { deleteNotification, deleteUserNotifications, markNotificationAsRead } from "../../store/notifications/actions";
 import { authSelector } from "../../store/auth/authSlice";
 import { NotLoggedInScreen } from "../Auth/NotLoggedInScreen";
 import { postsSelector } from "../../store/posts/postsSlice";
@@ -25,12 +25,13 @@ import Ripple from "react-native-material-ripple";
 import Swipeable from "react-native-gesture-handler/Swipeable";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
-const Notification = ({ notification, userId }: { notification: INotification; userId: string }) => {
+const Notification = memo(({ notification, userId }: { notification: INotification; userId: string }) => {
   const { title, sender, date, isRead, data, body, _id } = notification;
   const [postTime, setPostTime] = useState<string>(calcTimeAgo(date));
   const navigation = useNavigation();
   const dispatch = useDispatch();
   // const {} = useSelector(postsSelector)
+  console.log("render notification", notification._id);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -45,21 +46,9 @@ const Notification = ({ notification, userId }: { notification: INotification; u
     dispatch(markNotificationAsRead(notification, userId));
   };
 
-  // const _renderRightAction = (icon, color, backgroundColor, x, progress) => {
-  //   // const trans = progress.interpolate({
-  //   //   inputRange: [0, 1],
-  //   //   outputRange: [x, 0],
-  //   // });
-
-  //   // return (
-  //   //   <View style={{ flex: 1, transform: [{ translateX: trans }] }}>
-  //   //     <View style={{ backgroundColor: "red" }}>{/* <RectButton></RectButton> */}</View>
-  //   //   </View>
-  //   // );
-  //   <View style={{ flex: 1, backgroundColor: "red" }}>
-  //     <Text>Delete</Text>
-  //   </View>;
-  // };
+  const handleDeleteNotification = (notification: INotification) => {
+    dispatch(deleteNotification(notification, userId));
+  };
 
   const leftActions = (progress, dragX) => {
     const scale = dragX.interpolate({
@@ -70,36 +59,24 @@ const Notification = ({ notification, userId }: { notification: INotification; u
     return (
       <View style={styles.leftAction}>
         <Animated.Text style={[styles.actionText, { transform: [{ scale }] }]}>
-          {/* <Feather name="trash-2" color={Colors.white} size={24} /> */}
-          Delete
+          <Feather name="trash-2" color={Colors.white} size={25} />
         </Animated.Text>
       </View>
     );
   };
 
-  // const _renderRightActions = (progress) => (
-  //   <View style={{ flexDirection: "row" }}>
-  //     <View style={{ flex: 1, backgroundColor: "red" }}>
-  //       <Text>Delete</Text>
-  //     </View>
-
-  //     {/* {_renderRightAction("menu", "#000000", "#eeeeee", 192, progress)}
-  //     {_renderRightAction("bell", "#000000", "#cccccc", 128, progress)}
-  //     {_renderRightAction("delete", "#ffffff", "#dd2c00", 64, progress)} */}
-  //   </View>
-  // );
-
   return (
-    <Swipeable
-      // friction={1}
-      // rightThreshold={10}
-      renderLeftActions={leftActions}
-      onSwipeableOpen={() => console.log(123123)}
-    >
+    <Swipeable renderLeftActions={leftActions} onSwipeableOpen={() => handleDeleteNotification(notification)}>
       <TouchableHighlight
         underlayColor={Colors.darkBlueOpaque}
         onPress={() => openNotification(notification)}
-        style={{ flexDirection: "row", alignItems: "center", padding: 10, justifyContent: "center" }}
+        style={{
+          backgroundColor: Colors.black,
+          flexDirection: "row",
+          alignItems: "center",
+          padding: 10,
+          justifyContent: "center",
+        }}
       >
         <>
           <Avatar source={sender.image ? { uri: sender.image } : images.avatar} rounded size={50}></Avatar>
@@ -117,7 +94,7 @@ const Notification = ({ notification, userId }: { notification: INotification; u
       </TouchableHighlight>
     </Swipeable>
   );
-};
+});
 const EmptyNotificationsList = () => (
   <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
     <Ionicons name="notifications-sharp" color={Colors.white} size={56} />

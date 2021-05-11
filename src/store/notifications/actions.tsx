@@ -59,13 +59,14 @@ export const deleteUserNotifications = (userId: string): AppThunk => {
   };
 };
 
-export const deleteNotification = (notificationId: string, userId: string): AppThunk => {
-  const notificationsAPI = `${process.env.BASE_API_ENPOINT}/notifications/${notificationId}/${userId}`;
+export const deleteNotification = (notification: INotification, userId: string): AppThunk => {
+  const notificationsAPI = `${process.env.BASE_API_ENPOINT}/notifications/${notification._id}/${userId}`;
   return async (dispatch: AppDispatch) => {
+    dispatch(notificationsActions.deleteUserNotification(notification));
     const { res, error } = await fetchAPI(RequestMethod.DELETE, notificationsAPI);
-    if (res) {
-      dispatch(notificationsActions.deleteUserNotificationSuccess(res));
-    } else {
+
+    if (error) {
+      dispatch(notificationsActions.deleteUserNotificationFailed(notification));
       dispatch(notificationsActions.notificationActionFail(error));
     }
   };
