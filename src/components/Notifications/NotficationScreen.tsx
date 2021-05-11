@@ -14,12 +14,14 @@ import { useNavigation } from "@react-navigation/core";
 import { markNotificationAsRead } from "../../store/notifications/actions";
 import { authSelector } from "../../store/auth/authSlice";
 import { NotLoggedInScreen } from "../Auth/NotLoggedInScreen";
+import { postsSelector } from "../../store/posts/postsSlice";
 
 const Notification = ({ notification, userId }: { notification: INotification; userId: string }) => {
   const { title, sender, date, isRead, data, body, _id } = notification;
   const [postTime, setPostTime] = useState<string>(calcTimeAgo(date));
   const navigation = useNavigation();
   const dispatch = useDispatch();
+  // const {} = useSelector(postsSelector)
 
   useEffect(() => {
     setInterval(() => {
@@ -28,12 +30,8 @@ const Notification = ({ notification, userId }: { notification: INotification; u
   }, []);
 
   const openNotification = (notification: INotification) => {
-    //todo mark the notification as read
-    dispatch(markNotificationAsRead(notification._id, userId));
-    //todo decrease the counter
-    //todo get the whole post by the post id from the store
-    //todo navigate to the videodisplay with the post
-    // navigation.navigate("VideoDisplay", { posts: [] });
+    navigation.navigate("VideoDisplay", { posts: [notification.data] });
+    dispatch(markNotificationAsRead(notification, userId));
   };
 
   return (

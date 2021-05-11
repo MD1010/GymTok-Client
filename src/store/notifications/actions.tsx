@@ -71,9 +71,10 @@ export const deleteNotification = (notificationId: string, userId: string): AppT
   };
 };
 
-export const markNotificationAsRead = (notificationId: string, userId: string): AppThunk => {
-  const notificationsAPI = `${process.env.BASE_API_ENPOINT}/notifications/${notificationId}/${userId}`;
+export const markNotificationAsRead = (notification: INotification, userId: string): AppThunk => {
+  const notificationsAPI = `${process.env.BASE_API_ENPOINT}/notifications/${notification._id}/${userId}`;
   return async (dispatch: AppDispatch) => {
+    if (notification.isRead) return;
     const { res, error } = await fetchAPI(RequestMethod.PUT, notificationsAPI);
     if (res) {
       dispatch(notificationsActions.markNotificationReadSuccess(res));
