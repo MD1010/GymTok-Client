@@ -106,14 +106,6 @@ export const NotificationScreen = () => {
   const loggedUser = useSelector(authSelector).loggedUser;
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    return () => {};
-  }, []);
-
-  useEffect(() => {
-    // notifications.length && console.log("notification changed", notifications);
-  }, [notifications]);
-
   const renderItem = ({ item, index }) => <Notification key={item._id} notification={item} userId={loggedUser._id} />;
 
   const NotificationList = () => (
