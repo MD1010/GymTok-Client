@@ -29,7 +29,7 @@ const notificationsSlice = createSlice({
     },
 
     deleteUserNotificationSuccess: (state, action: PayloadAction<INotification>) => {
-      state.receivedNotifications.filter((n) => n._id !== action.payload._id);
+      state.receivedNotifications.splice(state.receivedNotifications.indexOf(action.payload), 1);
     },
     deleteAllNotificationsSuccess: (state, action: PayloadAction<INotification>) => {
       state.receivedNotifications = [];
