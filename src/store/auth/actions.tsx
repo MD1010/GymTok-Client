@@ -4,6 +4,8 @@ import { AppDispatch, AppThunk } from "../configureStore";
 import { authActions } from "./authSlice";
 import * as Facebook from "expo-facebook";
 import * as Google from "expo-google-app-auth";
+import { notificationsActions } from "../notifications/notificationsSlice";
+import { getUserNotifications } from "../notifications/actions";
 
 export const register = (username: string, fullName: string, password: string, email: string): AppThunk => {
   return async (dispatch: AppDispatch) => {
@@ -28,6 +30,7 @@ export const login = (username: string, password: string): AppThunk => {
     const { res, error } = await fetchAPI(RequestMethod.POST, registerEnpoint, body);
     if (res) {
       dispatch(authActions.login(res));
+      dispatch(getUserNotifications(res.user._id));
     } else {
       dispatch(authActions.authFailed({ error }));
     }

@@ -86,6 +86,15 @@ export const NotificationScreen = () => {
           <FlatList renderItem={renderItem} keyExtractor={keyExtractor} data={notifications}></FlatList>
         </View>
       );
+  } else {
+    return (
+      <NotLoggedInScreen
+        redirectScreen={"Notifications"}
+        text={"Notifications"}
+        description={"See your activity and new challenges here"}
+        icon={() => <Ionicons name="notifications-sharp" color={Colors.white} size={56} />}
+      />
+    );
   }
 };
 export const styles = StyleSheet.create({

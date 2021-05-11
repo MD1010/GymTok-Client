@@ -59,7 +59,7 @@ const downloadAssets = async () => {
   ]);
 };
 
-const addNotificationsListener = (userId: string) => {
+const addNotificationsListener = () => {
   Notifications.addNotificationReceivedListener((notification: Notifications.Notification) => {
     const { data, body, title } = notification.request.content;
     const { _id, date, sender, ...props } = data as any;
@@ -72,7 +72,6 @@ const addNotificationsListener = (userId: string) => {
       sender,
       isRead: false,
     };
-    console.log("received", notificationReceived);
 
     store.dispatch(getNotificationRecieved(notificationReceived));
   });
@@ -90,6 +89,8 @@ function App() {
   useEffect(() => {
     (async function () {
       try {
+        setNotificationHandler();
+        addNotificationsListener();
         await SplashScreen.preventAutoHideAsync();
         await downloadAssets();
         setIsAppReady(true);
@@ -104,8 +105,6 @@ function App() {
     const userId = loggedUser?._id;
     if (userId) {
       setPushToken(userId);
-      setNotificationHandler();
-      addNotificationsListener(userId);
       store.dispatch(getUserNotifications(userId));
     }
   }, [loggedUser]);

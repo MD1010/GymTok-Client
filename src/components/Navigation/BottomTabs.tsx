@@ -121,7 +121,7 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
               focused ? (
                 <View>
                   <Ionicons name={"notifications-sharp"} color={color} size={size} />
-                  {unreadNotifications.length ? (
+                  {loggedUser && unreadNotifications.length ? (
                     <Badge size={22} visible style={{ position: "absolute", bottom: 12, left: 10, fontWeight: "bold" }}>
                       {unreadNotifications.length}
                     </Badge>
@@ -130,7 +130,7 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
               ) : (
                 <View>
                   <Ionicons name={"notifications-outline"} color={color} size={size} />
-                  {unreadNotifications.length ? (
+                  {loggedUser && unreadNotifications.length ? (
                     <Badge size={22} visible style={{ position: "absolute", bottom: 12, left: 10, fontWeight: "bold" }}>
                       {unreadNotifications.length}
                     </Badge>

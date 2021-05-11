@@ -7,9 +7,15 @@ interface NotLoggedInProps {
   text: string | null;
   icon: () => JSX.Element;
   description: string;
+  redirectScreen?: string;
 }
 
-export const NotLoggedInScreen: React.FC<NotLoggedInProps> = ({ text, icon: Icon, description }) => {
+export const NotLoggedInScreen: React.FC<NotLoggedInProps> = ({
+  text,
+  icon: Icon,
+  description,
+  redirectScreen = "Home",
+}) => {
   const navigation = useNavigation();
   return (
     <>
@@ -31,7 +37,7 @@ export const NotLoggedInScreen: React.FC<NotLoggedInProps> = ({ text, icon: Icon
           <TouchableOpacity
             style={styles.buttonStyle}
             onPress={() => {
-              navigation.navigate("NotLoggedIn");
+              navigation.navigate("NotLoggedIn", { redirectScreen });
             }}
           >
             <Text style={styles.buttonTextStyle}>Sign up</Text>
