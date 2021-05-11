@@ -129,7 +129,7 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
                 </View>
               ) : (
                 <View>
-                  <Ionicons name={"notifications-sharp"} color={color} size={size} />
+                  <Ionicons name={"notifications-outline"} color={color} size={size} />
                   {unreadNotifications.length ? (
                     <Badge size={22} visible style={{ position: "absolute", bottom: 12, left: 10, fontWeight: "bold" }}>
                       {unreadNotifications.length}
