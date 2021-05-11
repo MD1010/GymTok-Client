@@ -16,7 +16,7 @@ import { ExploreContainer } from "../Explore/ExploreContainer";
 import { NotificationScreen } from "../Notifications/NotficationScreen";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { Badge } from "react-native-paper";
-import { notificaitonsSelector } from "../../store/notifications/notificationsSlice";
+import { notificaitonsSelector, unreadNotificationsSelector } from "../../store/notifications/notificationsSlice";
 
 interface BottomTabsProps {}
 
@@ -35,7 +35,7 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
   const navigation = useNavigation();
   const Tab = createBottomTabNavigator();
   const { loggedUser } = useSelector(authSelector);
-  const { notifications } = useSelector(notificaitonsSelector);
+  const unreadNotifications = useSelector(unreadNotificationsSelector);
   return (
     <SafeAreaProvider>
       <Tab.Navigator
@@ -121,16 +121,20 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
               focused ? (
                 <View>
                   <Ionicons name={"notifications-sharp"} color={color} size={size} />
-                  <Badge size={22} visible style={{ position: "absolute", bottom: 12, left: 10, fontWeight: "bold" }}>
-                    {notifications.length}
-                  </Badge>
+                  {unreadNotifications.length ? (
+                    <Badge size={22} visible style={{ position: "absolute", bottom: 12, left: 10, fontWeight: "bold" }}>
+                      {unreadNotifications.length}
+                    </Badge>
+                  ) : null}
                 </View>
               ) : (
                 <View>
                   <Ionicons name={"notifications-sharp"} color={color} size={size} />
-                  <Badge size={22} visible style={{ position: "absolute", bottom: 12, left: 10, fontWeight: "bold" }}>
-                    {notifications.length}
-                  </Badge>
+                  {unreadNotifications.length ? (
+                    <Badge size={22} visible style={{ position: "absolute", bottom: 12, left: 10, fontWeight: "bold" }}>
+                      {unreadNotifications.length}
+                    </Badge>
+                  ) : null}
                 </View>
               ),
           }}

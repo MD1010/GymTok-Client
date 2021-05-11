@@ -5,12 +5,12 @@ import { IUser } from "../../interfaces/User";
 import { RootState } from "../configureStore";
 
 export interface NotificationsState {
-  notifications: INotification[];
+  receivedNotifications: INotification[];
   isLoading: boolean;
   error: string;
 }
 export const initialState: NotificationsState = {
-  notifications: [],
+  receivedNotifications: [],
   isLoading: false,
   error: null,
 };
@@ -23,31 +23,33 @@ const notificationsSlice = createSlice({
       state.error = action.payload;
     },
     getNotificationsSuccess: (state, action: PayloadAction<INotification[]>) => {
-      state.notifications = action.payload;
+      state.receivedNotifications = action.payload;
       state.isLoading = false;
       state.error = null;
     },
 
     deleteUserNotificationSuccess: (state, action: PayloadAction<INotification>) => {
-      state.notifications.filter((n) => n._id !== action.payload._id);
+      state.receivedNotifications.filter((n) => n._id !== action.payload._id);
     },
     deleteAllNotificationsSuccess: (state, action: PayloadAction<INotification>) => {
-      state.notifications = [];
+      state.receivedNotifications = [];
     },
     markNotificationReadSuccess: (state, action: PayloadAction<INotification>) => {
-      for (const notification of state.notifications) {
+      for (const notification of state.receivedNotifications) {
         if (notification._id === action.payload._id) {
           notification.isRead = true;
         }
       }
     },
     getLatestNotificationSuccess: (state, action: PayloadAction<INotification>) => {
-      state.notifications.push(action.payload);
+      state.receivedNotifications.push(action.payload);
     },
   },
 });
 
 export const notificationsActions = notificationsSlice.actions;
 export const notificaitonsSelector = (state: RootState) => state.notifications;
+export const unreadNotificationsSelector = (state: RootState) =>
+  state.notifications.receivedNotifications.filter((x) => !x.isRead);
 
 export default notificationsSlice.reducer;
