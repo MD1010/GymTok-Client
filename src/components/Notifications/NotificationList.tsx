@@ -19,7 +19,7 @@ const EmptyNotificationsList = () => (
 );
 
 export const NotificationList = () => {
-  const { receivedNotifications: notifications, error, isLoading } = useSelector(notificaitonsSelector);
+  const { receivedNotifications: notifications } = useSelector(notificaitonsSelector);
   const { loggedUser } = useSelector(authSelector);
 
   const keyExtractor = (item: INotification, i) => item._id;

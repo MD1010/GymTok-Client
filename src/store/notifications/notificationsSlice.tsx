@@ -1,5 +1,5 @@
 import AsyncStorage from "@react-native-community/async-storage";
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, current, PayloadAction } from "@reduxjs/toolkit";
 import { INotification } from "../../interfaces/Notification";
 import { IUser } from "../../interfaces/User";
 import { RootState } from "../configureStore";
@@ -32,9 +32,9 @@ const notificationsSlice = createSlice({
 
     deleteUserNotification: (state, action: PayloadAction<INotification>) => {
       const notification = action.payload;
-      const index = state.receivedNotifications.indexOf(notification);
+      const index = state.receivedNotifications.findIndex((x) => x._id === notification._id);
       state.lastDeletedNotification = { index, notification };
-      state.receivedNotifications.splice(state.receivedNotifications.indexOf(notification), 1);
+      state.receivedNotifications.splice(index, 1);
     },
     deleteUserNotificationFailed: (state, action: PayloadAction<INotification>) => {
       const { index, notification } = state.lastDeletedNotification;

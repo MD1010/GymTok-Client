@@ -34,6 +34,7 @@ export const UserNotification = ({ notification, userId }: { notification: INoti
   };
 
   const handleDeleteNotification = (notification: INotification) => {
+    console.log("about to delete", notification._id);
     dispatch(deleteNotification(notification, userId));
   };
 
