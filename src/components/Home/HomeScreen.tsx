@@ -8,6 +8,8 @@ import { useNavigation } from "@react-navigation/native";
 import { useDispatch, useSelector } from "react-redux";
 import { postsActions, postsSelector } from "../../store/posts/postsSlice";
 import { displayNotificationPost } from "../../store/posts/actions";
+import { notificationsActions } from "../../store/notifications/notificationsSlice";
+import { INotification } from "../../interfaces/Notification";
 
 const Tab = createMaterialTopTabNavigator();
 // const Stack = createStackNavigator();
@@ -20,22 +22,37 @@ const PostRepliesComponent = (props) => {
 };
 
 export const HomeScreen: React.FC = () => {
-  const lastNotificationResponse = Notifications.useLastNotificationResponse();
-  const dispatch = useDispatch();
-  const posts = useSelector(postsSelector);
-  const receivedPushNotification = useRef(false);
-  useEffect(() => {
-    if (
-      lastNotificationResponse &&
-      posts.latestFetchedPosts.length &&
-      !receivedPushNotification.current &&
-      lastNotificationResponse.actionIdentifier === Notifications.DEFAULT_ACTION_IDENTIFIER
-    ) {
-      const post: any = lastNotificationResponse.notification.request.content.data;
-      dispatch(postsActions.displayNotificationPost(post));
-      receivedPushNotification.current = true;
-    }
-  }, [posts.latestFetchedPosts]);
+  // const lastNotificationResponse = Notifications.useLastNotificationResponse();
+  // const dispatch = useDispatch();
+  // const posts = useSelector(postsSelector);
+  // const receivedPushNotification = useRef(false);
+  // useEffect(() => {
+  //   if (
+  //     lastNotificationResponse &&
+  //     posts.latestFetchedPosts.length &&
+  //     !receivedPushNotification.current &&
+  //     lastNotificationResponse.actionIdentifier === Notifications.DEFAULT_ACTION_IDENTIFIER
+  //   ) {
+  //     const {
+  //       notification: { request },
+  //     } = lastNotificationResponse;
+  //     const post: any = request.content.data;
+  //     const { data, body, title } = request.content;
+  //     const { _id, date, sender, ...props } = data as any;
+  //     const notificationReceived: INotification = {
+  //       _id,
+  //       body,
+  //       title,
+  //       data: props,
+  //       date,
+  //       sender,
+  //       isRead: false,
+  //     };
+  //     dispatch(notificationsActions.markNotificationReadSuccess(notificationReceived));
+  //     dispatch(postsActions.displayNotificationPost(post));
+  //     receivedPushNotification.current = true;
+  //   }
+  // }, [posts.latestFetchedPosts]);
 
   const Null = () => null;
   return (
