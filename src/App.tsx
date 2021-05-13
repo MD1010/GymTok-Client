@@ -75,7 +75,7 @@ const addNotificationsListener = () => {
       isRead: false,
     };
 
-    console.log("received");
+    // todo patch for ios - for some reason handler triggered twice
     const x = store.getState().notifications.receivedNotifications.find((x) => x._id === notificationReceived._id);
     if (!x) store.dispatch(getNotificationRecieved(notificationReceived));
   });
