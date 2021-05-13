@@ -12,7 +12,9 @@ import { UserNotification } from "./Notification";
 const EmptyNotificationsList = () => (
   <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
     <Ionicons name="notifications-sharp" color={Colors.white} size={56} />
-    <Text style={{ paddingVertical: 10, fontSize: 16, padding: 15 }}>You have no notifications left</Text>
+    <Text style={{ paddingVertical: 10, fontSize: 16, padding: 15, color: Colors.white }}>
+      You have no notifications left
+    </Text>
   </View>
 );
 

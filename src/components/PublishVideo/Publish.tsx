@@ -7,15 +7,11 @@ import { TextInput } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch, useSelector } from "react-redux";
 import { IUser } from "../../interfaces";
+import { INotification } from "../../interfaces/Notification";
 import { authSelector } from "../../store/auth/authSlice";
+import { sendNotification } from "../../store/notifications/actions";
 import { fetchAPI, RequestMethod } from "../../utils/fetchAPI";
-import {
-  Colors,
-  Loader,
-  Player,
-  SubmitButton,
-  TouchableHighlightButton,
-} from "../shared";
+import { Colors, Loader, Player, SubmitButton, TouchableHighlightButton } from "../shared";
 
 type StackParamsList = {
   params: {
@@ -35,7 +31,7 @@ export const PublishScreen: React.FC = () => {
   const hashtags = route?.params?.hashtags;
   const [isLoading, setIsLoading] = useState(false);
   const { loggedUser } = useSelector(authSelector);
-  const captionInput = useRef<string>();
+  const captionInput = useRef<string>(null);
 
   const Header = () => {
     const handleSetCaption = (text: string) => {
@@ -68,11 +64,7 @@ export const PublishScreen: React.FC = () => {
             />
           </View>
         </View>
-        {!isReply && (
-          <Text style={styles.info}>
-            Your friends will be notified when your challenge is uploaded.
-          </Text>
-        )}
+        {!isReply && <Text style={styles.info}>Your friends will be notified when your challenge is uploaded.</Text>}
       </View>
     );
   };
@@ -95,7 +87,7 @@ export const PublishScreen: React.FC = () => {
 
   const publishChallenge = async () => {
     let formData = new FormData();
-
+    const notifiedUserIds = taggedPeople?.map((user) => user._id) || [];
     formData.append("description", captionInput.current);
     formData.append("createdBy", loggedUser._id);
     formData.append("video", {
@@ -103,19 +95,24 @@ export const PublishScreen: React.FC = () => {
       uri: route.params.videoUri,
       type: "video/mp4",
     } as any);
-    formData.append("taggedUsers", JSON.stringify(taggedPeople.map(user => user._id)));
+    formData.append("taggedUsers", JSON.stringify(notifiedUserIds));
     formData.append("hashtags", JSON.stringify(hashtags));
 
     setIsLoading(true);
-    const { res, error } = await fetchAPI(
-      RequestMethod.POST,
-      `${process.env.BASE_API_ENPOINT}/posts/upload`,
-      formData
-    );
+    const { res, error } = await fetchAPI(RequestMethod.POST, `${process.env.BASE_API_ENPOINT}/posts/upload`, formData);
 
     if (res) {
+      console.log("res upload", res);
       setIsLoading(false);
       navigation.navigate("Home");
+      const notification: any = {
+        body: "Check it now!",
+        data: res,
+        title: "New Challenge for you",
+        notifiedUsers: notifiedUserIds,
+        sender: loggedUser._id,
+      };
+      sendNotification(notification);
     } else if (error) {
       setIsLoading(false);
       alert(JSON.stringify(error));
@@ -171,11 +168,11 @@ export const PublishScreen: React.FC = () => {
         onSelect={() =>
           route.params?.taggedPeople?.length
             ? navigation.navigate("TagPeople", {
-              selectedUsers: route.params?.taggedPeople,
-            })
+                selectedUsers: route.params?.taggedPeople,
+              })
             : navigation.navigate("SearchUser", {
-              excludedUsersToSearch: route.params?.taggedPeople,
-            })
+                excludedUsersToSearch: route.params?.taggedPeople,
+              })
         }
         icon={<Fontisto name="at" color={Colors.lightGrey2} size={14} />}
       />
@@ -185,9 +182,7 @@ export const PublishScreen: React.FC = () => {
         optionText={"Add Hashtags"}
         onSelect={() =>
           navigation.navigate("AddHashtag", {
-            selectedHashtags: route.params?.hashtags?.length
-              ? route.params?.hashtags
-              : [],
+            selectedHashtags: route.params?.hashtags?.length ? route.params?.hashtags : [],
           })
         }
         icon={<Fontisto name="hashtag" color={Colors.lightGrey2} size={14} />}
@@ -197,12 +192,7 @@ export const PublishScreen: React.FC = () => {
 
   const Footer = () => (
     <View style={{ flex: 1.5, alignItems: "center", justifyContent: "center" }}>
-      <SubmitButton
-        buttonText={"Post"}
-        type="solid"
-        backgroundColor={Colors.blue}
-        onSubmit={onSubmit}
-      />
+      <SubmitButton buttonText={"Post"} type="solid" backgroundColor={Colors.blue} onSubmit={onSubmit} />
     </View>
   );
 

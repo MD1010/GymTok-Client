@@ -35,6 +35,7 @@ export const styles = StyleSheet.create({
     width: 5,
     overflow: "hidden",
     borderRadius: 50,
+    marginRight: 15,
   },
   leftAction: {
     // alignItems: "center",

@@ -13,22 +13,13 @@ import { ProfileContainer as Profile } from "../Profile/ProfileContainer";
 import { Colors, UIConsts } from "../shared/styles/variables";
 import { colors } from "react-native-elements";
 import { ExploreContainer } from "../Explore/ExploreContainer";
-import { NotificationScreen } from "../Notifications/NotficationScreen";
+import { NotificationScreen } from "../Notifications/NotificationScreen";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import { Badge } from "react-native-paper";
+import { Badge } from "react-native-elements";
 import { notificaitonsSelector, unreadNotificationsSelector } from "../../store/notifications/notificationsSlice";
 
 interface BottomTabsProps {}
 
-// loggedUser
-//               ? () => <View></View>
-//               : () => (
-//                   <NotLoggedInScreen
-//                     text={"Notifications"}
-//                     description={"See your activity and new challenges here"}
-//                     icon={() => <Ionicons name="notifications-sharp" color={Colors.white} size={56} />}
-//                   />
-//                 )
 const EmptyTab = () => null;
 
 export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
@@ -55,11 +46,6 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
         }}
       >
         <Tab.Screen
-          // listeners={({ navigation, route }) => ({
-          //   tabPress: (e) => {
-          //     isHomeTabActive.current = true;
-          //   },
-          // })}
           name="Home"
           component={HomeScreen}
           options={{
@@ -122,18 +108,34 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
                 <View>
                   <Ionicons name={"notifications-sharp"} color={color} size={size} />
                   {loggedUser && unreadNotifications.length ? (
-                    <Badge size={22} visible style={{ position: "absolute", bottom: 12, left: 10, fontWeight: "bold" }}>
-                      {unreadNotifications.length}
-                    </Badge>
+                    <Badge
+                      value={unreadNotifications.length}
+                      status={"error"}
+                      textStyle={{ fontWeight: "bold" }}
+                      containerStyle={{
+                        position: "absolute",
+                        top: -4,
+                        right: -4,
+                      }}
+                      badgeStyle={{ borderWidth: 0 }}
+                    ></Badge>
                   ) : null}
                 </View>
               ) : (
                 <View>
                   <Ionicons name={"notifications-outline"} color={color} size={size} />
                   {loggedUser && unreadNotifications.length ? (
-                    <Badge size={22} visible style={{ position: "absolute", bottom: 12, left: 10, fontWeight: "bold" }}>
-                      {unreadNotifications.length}
-                    </Badge>
+                    <Badge
+                      value={unreadNotifications.length}
+                      status={"error"}
+                      textStyle={{ fontWeight: "bold" }}
+                      containerStyle={{
+                        position: "absolute",
+                        top: -4,
+                        right: -4,
+                      }}
+                      badgeStyle={{ borderWidth: 0 }}
+                    ></Badge>
                   ) : null}
                 </View>
               ),

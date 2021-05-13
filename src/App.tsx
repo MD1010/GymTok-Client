@@ -60,6 +60,8 @@ const downloadAssets = async () => {
 };
 
 const addNotificationsListener = () => {
+  console.log("registering notification listener!!");
+
   Notifications.addNotificationReceivedListener((notification: Notifications.Notification) => {
     const { data, body, title } = notification.request.content;
     const { _id, date, sender, ...props } = data as any;
@@ -73,7 +75,9 @@ const addNotificationsListener = () => {
       isRead: false,
     };
 
-    store.dispatch(getNotificationRecieved(notificationReceived));
+    console.log("received");
+    const x = store.getState().notifications.receivedNotifications.find((x) => x._id === notificationReceived._id);
+    if (!x) store.dispatch(getNotificationRecieved(notificationReceived));
   });
 };
 
@@ -90,7 +94,6 @@ function App() {
     (async function () {
       try {
         setNotificationHandler();
-        addNotificationsListener();
         await SplashScreen.preventAutoHideAsync();
         await downloadAssets();
         setIsAppReady(true);
@@ -105,6 +108,8 @@ function App() {
     const userId = loggedUser?._id;
     if (userId) {
       setPushToken(userId);
+
+      addNotificationsListener();
       store.dispatch(getUserNotifications(userId));
     }
   }, [loggedUser]);

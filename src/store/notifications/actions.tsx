@@ -44,7 +44,7 @@ export const getNotificationRecieved = (notification: INotification): AppThunk =
 export const sendNotification = async (notificationPayload: INotification) => {
   const notificationsAPI = `${process.env.BASE_API_ENPOINT}/notifications/send`;
   const { res, error } = await fetchAPI(RequestMethod.POST, notificationsAPI, notificationPayload);
-  if (error) alert(error);
+  if (error) alert(JSON.stringify(error));
 };
 
 export const deleteUserNotifications = (userId: string): AppThunk => {

@@ -1,115 +1,65 @@
-import Constants from "expo-constants";
-import * as Notifications from "expo-notifications";
-import React, { useEffect, useRef, useState } from "react";
-import { Button, Platform, Text, View } from "react-native";
-
-Notifications.setNotificationHandler({
-  handleNotification: async () => ({
-    shouldShowAlert: true,
-    shouldPlaySound: true,
-    shouldSetBadge: true,
-  }),
-});
+import { Feather, Ionicons } from "@expo/vector-icons";
+import React from "react";
+import { SafeAreaView, StyleSheet, Text, View } from "react-native";
+import Ripple from "react-native-material-ripple";
+import { Divider } from "react-native-paper";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useDispatch, useSelector } from "react-redux";
+import { authSelector } from "../../store/auth/authSlice";
+import { deleteUserNotifications } from "../../store/notifications/actions";
+import { NotLoggedInScreen } from "../Auth/NotLoggedInScreen";
+import { Colors } from "../shared";
+import { NotificationList } from "./NotificationList";
+import { styles } from "./styles";
 
 export const NotificationScreen = () => {
-  const [expoPushToken, setExpoPushToken] = useState("");
-  const [notification, setNotification] = useState<any>(false);
-  const notificationListener = useRef<any>();
-  const responseListener = useRef<any>();
+  const loggedUser = useSelector(authSelector).loggedUser;
+  const dispatch = useDispatch();
+  const insets = useSafeAreaInsets();
 
-  useEffect(() => {
-    registerForPushNotificationsAsync().then((token) => setExpoPushToken(token));
-
-    // This listener is fired whenever a notification is received while the app is foregrounded
-    notificationListener.current = Notifications.addNotificationReceivedListener((notification) => {
-      console.log("123", notification);
-
-      setNotification(notification);
-    });
-
-    // This listener is fired whenever a user taps on or interacts with a notification (works when app is foregrounded, backgrounded, or killed)
-    responseListener.current = Notifications.addNotificationResponseReceivedListener((response) => {
-      console.log(response);
-    });
-
-    return () => {
-      Notifications.removeNotificationSubscription(notificationListener.current);
-      Notifications.removeNotificationSubscription(responseListener.current);
-    };
-  }, []);
-
-  return (
-    <View
-      style={{
-        flex: 1,
-        alignItems: "center",
-        justifyContent: "space-around",
-      }}
-    >
-      <Text>Your expo push token: {expoPushToken}</Text>
-      <View style={{ alignItems: "center", justifyContent: "center" }}>
-        <Text>Title: {notification && notification.request.content.title} </Text>
-        <Text>Body: {notification && notification.request.content.body}</Text>
-        <Text>Data: {notification && JSON.stringify(notification.request.content.data)}</Text>
-      </View>
-      <Button
-        title="Press to Send Notification"
-        onPress={async () => {
-          await sendPushNotification(expoPushToken);
-        }}
-      />
-    </View>
-  );
-};
-
-// Can use this function below, OR use Expo's Push Notification Tool-> https://expo.io/notifications
-async function sendPushNotification(expoPushToken) {
-  const message = {
-    to: expoPushToken,
-    sound: "default",
-    title: "Original Title",
-    body: "And here is the body!",
-    data: { someData: "goes here" },
+  const clearNotifications = () => {
+    dispatch(deleteUserNotifications(loggedUser._id));
   };
 
-  await fetch("https://exp.host/--/api/v2/push/send", {
-    method: "POST",
-    headers: {
-      Accept: "application/json",
-      "Accept-encoding": "gzip, deflate",
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(message),
-  });
-}
-
-async function registerForPushNotificationsAsync() {
-  let token;
-  if (Constants.isDevice) {
-    const { status: existingStatus } = await Notifications.getPermissionsAsync();
-    let finalStatus = existingStatus;
-    if (existingStatus !== "granted") {
-      const { status } = await Notifications.requestPermissionsAsync();
-      finalStatus = status;
-    }
-    if (finalStatus !== "granted") {
-      alert("Failed to get push token for push notification!");
-      return;
-    }
-    token = (await Notifications.getExpoPushTokenAsync()).data;
-    console.log(token);
+  if (loggedUser) {
+    return (
+      <View style={{ flex: 1, marginTop: insets.top }}>
+        <View style={[styles.pageHeader]}>
+          <Text style={styles.pageTitle}>All activity</Text>
+          <View style={{ position: "absolute", right: 15 }}>
+            <Ripple
+              rippleColor={Colors.darkGrey}
+              rippleContainerBorderRadius={50}
+              rippleCentered
+              onPress={clearNotifications}
+            >
+              <View
+                style={{
+                  borderRadius: 50,
+                  backgroundColor: Colors.darkBlue,
+                  padding: 8,
+                  overflow: "hidden",
+                }}
+              >
+                <Feather name="trash-2" color={Colors.white} size={18} />
+              </View>
+            </Ripple>
+          </View>
+        </View>
+        <Divider style={{ backgroundColor: Colors.lightGrey }} />
+        <View style={{ marginVertical: 15, flex: 1 }}>
+          <NotificationList />
+        </View>
+      </View>
+    );
   } else {
-    alert("Must use physical device for Push Notifications");
+    return (
+      <NotLoggedInScreen
+        redirectScreen={"Notifications"}
+        text={"Notifications"}
+        description={"See your activity and new challenges here"}
+        icon={() => <Ionicons name="notifications-sharp" color={Colors.white} size={56} />}
+      />
+    );
   }
-
-  if (Platform.OS === "android") {
-    Notifications.setNotificationChannelAsync("default", {
-      name: "default",
-      importance: Notifications.AndroidImportance.MAX,
-      vibrationPattern: [0, 250, 250, 250],
-      lightColor: "#FF231F7C",
-    });
-  }
-
-  return token;
-}
+};

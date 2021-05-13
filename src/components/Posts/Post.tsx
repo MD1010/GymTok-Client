@@ -154,7 +154,7 @@ export const Post: React.FC<PostProps> = memo(({ post, isVisible, containerStyle
 
   return (
     <View style={[styles.container, containerStyle]}>
-      <Player style={styles.video} uri={streaminServerUrl} videoInViewPort={isVisible} resizeMode="cover" />
+      {/* <Player style={styles.video} uri={streaminServerUrl} videoInViewPort={isVisible} resizeMode="cover" /> */}
       <View style={styles.infoContainer}>
         <Heading createdBy={createdBy} onCameraPress={() => onCameraPress()} />
 

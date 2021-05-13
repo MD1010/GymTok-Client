@@ -62,18 +62,20 @@ export const UserNotification = ({ notification, userId }: { notification: INoti
           flexDirection: "row",
           alignItems: "center",
           padding: 10,
-          justifyContent: "center",
+          //   paddingHorizontal: 15,
+          //   marginRight: 50,
+          //   paddingHorizontal: 25,
+          //   justifyContent: "center",
         }}
       >
         <>
           <Avatar source={sender.image ? { uri: sender.image } : images.avatar} rounded size={50}></Avatar>
 
-          <View style={{ marginHorizontal: 15 }}>
+          <View style={{ marginHorizontal: 15, flex: 1 }}>
             <Text style={!isRead && { fontWeight: "bold" }}>
               <Text style={styles.username}>{sender.fullName} </Text>
-              <Text style={styles.content}>Challenged you to try his challenge </Text>
+              <Text style={styles.content}>Challenged you in a new challenge</Text>
             </Text>
-            <Text style={[styles.content, !isRead && { fontWeight: "bold" }]}>{body}</Text>
             <Text style={styles.postTime}>{postTime}</Text>
           </View>
           {isRead ? null : <View style={styles.notRead}></View>}
