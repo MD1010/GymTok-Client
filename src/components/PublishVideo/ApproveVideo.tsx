@@ -57,7 +57,7 @@ export const ApproveVideo: React.FC = () => {
 
   return (
     <View style={styles.container}>
-      <Player style={styles.video} uri={videoURL} resizeMode="cover" />
+      <Player style={styles.video} uri={videoURL} resizeMode="cover" videoInViewPort />
       <View style={styles.infoContainer}>
         <UIContainer goBack={goBack} goForward={goForward} />
       </View>
@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     marginTop: 15,
-    marginBottom: 10
+    marginBottom: 10,
   },
 
   infoContainer: {
