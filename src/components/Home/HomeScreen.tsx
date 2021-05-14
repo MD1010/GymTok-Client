@@ -4,6 +4,8 @@ import * as Notifications from "expo-notifications";
 import React, { useEffect } from "react";
 import { PostsList } from "../Posts/PostsList";
 import { PostReplies } from "../Posts/PostReplies";
+import { useSelector } from "react-redux";
+import { notificaitonsSelector } from "../../store/notifications/notificationsSlice";
 
 const Tab = createMaterialTopTabNavigator();
 // const Stack = createStackNavigator();
@@ -17,16 +19,18 @@ const PostRepliesComponent = (props) => {
 
 export const HomeScreen: React.FC = () => {
   const lastNotificationResponse = Notifications.useLastNotificationResponse();
+  const notifications = useSelector(notificaitonsSelector).receivedNotifications;
 
   const navigation = useNavigation();
   useEffect(() => {
     if (
       lastNotificationResponse &&
+      notifications.length &&
       lastNotificationResponse.actionIdentifier === Notifications.DEFAULT_ACTION_IDENTIFIER
     ) {
       navigation.navigate("Notifications");
     }
-  }, [lastNotificationResponse]);
+  }, [lastNotificationResponse, notifications]);
 
   const Null = () => null;
   return (

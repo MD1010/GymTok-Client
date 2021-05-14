@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   modalView: {
-    backgroundColor: Colors.weakGrey,
+    backgroundColor: "#1a1818",
     borderRadius: 20,
     padding: 40,
     shadowOffset: {

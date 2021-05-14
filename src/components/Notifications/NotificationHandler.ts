@@ -4,7 +4,7 @@ import { AppState, Platform } from "react-native";
 import { AppDispatch } from "../../store/configureStore";
 import { getNotificationRecieved, getUserNotifications } from "../../store/notifications/actions";
 
-export async function registerForPushNotificationsAsync() {
+export async function getTokenAfterPermissionGrant() {
   let token;
   if (Constants.isDevice) {
     const { status: existingStatus } = await Notifications.getPermissionsAsync();

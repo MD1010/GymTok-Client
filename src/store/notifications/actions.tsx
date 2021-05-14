@@ -1,4 +1,5 @@
-import { registerForPushNotificationsAsync } from "../../components/Notifications/NotificationHandler";
+import * as Notifications from "expo-notifications";
+import { getTokenAfterPermissionGrant } from "../../components/Notifications/NotificationHandler";
 import { INotification } from "../../interfaces/Notification";
 import { fetchAPI, RequestMethod } from "../../utils/fetchAPI";
 import { AppDispatch, AppThunk } from "../configureStore";
@@ -6,9 +7,20 @@ import { notificationsActions } from "./notificationsSlice";
 
 export const setPushToken = async (userId: string) => {
   const pushTokenAPI = `${process.env.BASE_API_ENPOINT}/notifications/pushToken`;
-  const token = await registerForPushNotificationsAsync();
+  const token = await getTokenAfterPermissionGrant();
 
   const { error } = await fetchAPI(RequestMethod.PUT, pushTokenAPI, {
+    userId,
+    token,
+  });
+  if (error) alert(error);
+};
+
+export const unregisterFromNotifications = async (userId: string) => {
+  const pushTokenAPI = `${process.env.BASE_API_ENPOINT}/notifications/pushToken`;
+  const token = await getTokenAfterPermissionGrant();
+
+  const { error } = await fetchAPI(RequestMethod.DELETE, pushTokenAPI, {
     userId,
     token,
   });
@@ -30,14 +42,8 @@ export const getUserNotifications = (userId: string): AppThunk => {
 };
 
 export const getNotificationRecieved = (notification: INotification): AppThunk => {
-  // const notificationsAPI = `${process.env.BASE_API_ENPOINT}/notifications/${notificationId}/${userId}`;
   return async (dispatch: AppDispatch) => {
-    // const { res, error } = await fetchAPI(RequestMethod.GET, notificationsAPI);
-    // if (res) {
     dispatch(notificationsActions.getLatestNotificationSuccess(notification));
-    // } else {
-    // dispatch(notificationsActions.notificationActionFail(error));
-    // }
   };
 };
 

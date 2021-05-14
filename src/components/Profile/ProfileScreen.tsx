@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { Image, Text, View } from "react-native";
 import { Divider } from "react-native-paper";
 import Icon from "react-native-vector-icons/Ionicons";
+import { useDispatch } from "react-redux";
 import { IPost, IUser } from "../../interfaces";
 import { fetchAPI, RequestMethod } from "../../utils/fetchAPI";
 import { Colors } from "../shared";
@@ -187,6 +188,7 @@ export const ProfileScreen: React.FC<IUser> = (user?: IUser) => {
   let currentUser = route.params ? route.params.user : user;
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [profileDetails, setProfileDetails] = useState<IProfileDetails>();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     setIsLoading(true);
