@@ -32,6 +32,7 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentPosts,
   const [currentlyPlaying, setCurrentlyPlaying] = useState(initialPostIndex || 0);
   const flatListRef = useRef<FlatList>(null);
   const [showFooter, setShowFooter] = useState<boolean>(false);
+
   const { hasMoreToFetch, error, latestFetchedPosts, userPosts } = useSelector(postsSelector);
   const [posts, setPosts] = useState<IPost[]>([]);
   // const posts: IPost[] = currentPosts ? currentPosts : isFeed ? latestFetchedPosts : userPosts;
@@ -50,9 +51,15 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentPosts,
     if (posts) {
       setShowFooter(false);
       setRefreshing(false);
+    } else {
+      setShowFooter(true);
     }
   }, [posts]);
 
+  // useEffect(() => {
+  //   console.log("first time");
+  //   setShowFooter(true);
+  // }, []);
   useEffect(() => {
     navigation.setParams({ post: posts[currentlyPlaying] });
   }, [currentlyPlaying, posts]);
@@ -190,7 +197,7 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentPosts,
   //   onStartShouldSetPanResponder: () => false,
   // });
   return (
-    <View>
+    <>
       <View
         // {...panResponder.panHandlers}
         style={{ height: viewHeight, backgroundColor: Colors.black }}
@@ -230,10 +237,16 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentPosts,
             flatListRef.current = ref;
           }}
           onScrollToIndexFailed={(error) => {
-            flatListRef.current.scrollToOffset({ offset: error.averageItemLength * error.index, animated: true });
+            flatListRef.current.scrollToOffset({
+              offset: error.averageItemLength * error.index,
+              animated: true,
+            });
             setTimeout(() => {
               if (posts.length !== 0 && flatListRef.current !== null) {
-                flatListRef.current.scrollToIndex({ index: error.index, animated: true });
+                flatListRef.current.scrollToIndex({
+                  index: error.index,
+                  animated: true,
+                });
               }
             }, 0);
           }}
@@ -256,6 +269,6 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentPosts,
           }}
         ></FlatList>
       </View>
-    </View>
+    </>
   );
 });

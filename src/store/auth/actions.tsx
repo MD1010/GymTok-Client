@@ -5,12 +5,21 @@ import { authActions } from "./authSlice";
 import * as Facebook from "expo-facebook";
 import * as Google from "expo-google-app-auth";
 
-export const register = (username: string, fullName: string, password: string, email: string): AppThunk => {
+export const register = (
+  username: string,
+  fullName: string,
+  password: string,
+  email: string
+): AppThunk => {
   return async (dispatch: AppDispatch) => {
     const registerEnpoint = `${process.env.BASE_API_ENPOINT}/users/register`;
     const body = { username, fullName, password, email };
     dispatch(authActions.resetAuthError());
-    const { res, error } = await fetchAPI(RequestMethod.POST, registerEnpoint, body);
+    const { res, error } = await fetchAPI(
+      RequestMethod.POST,
+      registerEnpoint,
+      body
+    );
     if (res) {
       dispatch(authActions.login(res));
     } else {
@@ -25,7 +34,11 @@ export const login = (username: string, password: string): AppThunk => {
 
     const body = { username, password };
     dispatch(authActions.resetAuthError());
-    const { res, error } = await fetchAPI(RequestMethod.POST, registerEnpoint, body);
+    const { res, error } = await fetchAPI(
+      RequestMethod.POST,
+      registerEnpoint,
+      body
+    );
     if (res) {
       dispatch(authActions.login(res));
     } else {
@@ -61,7 +74,11 @@ export const registerIfNeed = (
     const body = { email, username, password, fullName, photoUrl };
 
     dispatch(authActions.resetAuthError());
-    const { res, error } = await fetchAPI(RequestMethod.POST, registerIfNeedEnpoint, body);
+    const { res, error } = await fetchAPI(
+      RequestMethod.POST,
+      registerIfNeedEnpoint,
+      body
+    );
 
     if (res) {
       dispatch(

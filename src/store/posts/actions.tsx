@@ -7,6 +7,7 @@ import { itemsToFetch, postsActions } from "./postsSlice";
 export const getMorePosts = (): AppThunk => {
   return async (dispatch: AppDispatch, getState: () => RootState) => {
     const currentPosts = getState()?.posts?.latestFetchedPosts;
+
     const endpoint = `${process.env.BASE_API_ENPOINT}/posts`;
 
     console.log(endpoint);
