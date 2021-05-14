@@ -31,7 +31,7 @@ interface IUIContainer {
   onCommentButtonPress: () => void;
 }
 
-const Heading = ({ createdBy, onCameraPress }) => {
+const Heading = ({ createdBy, onCameraPress, isReply }) => {
   const navigation = useNavigation();
   const showProfile = (createdBy: IUser) => {
     navigation.navigate("ProfileDisplay", { user: createdBy });
@@ -47,11 +47,13 @@ const Heading = ({ createdBy, onCameraPress }) => {
         </TouchableWithoutFeedback>
         <Text style={styles.creator}>@{createdBy?.username}</Text>
       </View>
-      <View>
-        <TouchableOpacity onPress={() => onCameraPress()}>
-          <FontAwesome name={"camera"} size={22} color={Colors.white} />
-        </TouchableOpacity>
-      </View>
+      {!isReply && (
+        <View>
+          <TouchableOpacity onPress={() => onCameraPress()}>
+            <FontAwesome name={"camera"} size={22} color={Colors.white} />
+          </TouchableOpacity>
+        </View>
+      )}
     </View>
   );
 };
@@ -156,7 +158,7 @@ export const Post: React.FC<PostProps> = memo(({ post, isVisible, containerStyle
     <View style={[styles.container, containerStyle]}>
       <Player style={styles.video} uri={streaminServerUrl} videoInViewPort={isVisible} resizeMode="cover" />
       <View style={styles.infoContainer}>
-        <Heading createdBy={createdBy} onCameraPress={() => onCameraPress()} />
+        <Heading createdBy={createdBy} isReply={post.isReply} onCameraPress={() => onCameraPress()} />
 
         <Text style={styles.info}>{post.description}</Text>
 

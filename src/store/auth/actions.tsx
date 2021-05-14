@@ -20,7 +20,7 @@ export const register = (username: string, fullName: string, password: string, e
 };
 export const login = (username: string, password: string): AppThunk => {
   return async (dispatch: AppDispatch) => {
-    console.log("mother ... ", process.env.BASE_API_ENPOINT);
+    console.log("mother ... ", `${process.env.BASE_API_ENPOINT}/users/login`);
     const registerEnpoint = `${process.env.BASE_API_ENPOINT}/users/login`;
 
     const body = { username, password };
@@ -43,6 +43,7 @@ export const logout = (): AppThunk => {
 export const loadLoggedUser = (): AppThunk => {
   return async (dispatch: AppDispatch) => {
     const user = JSON.parse(await AsyncStorage.getItem("loggedUser"));
+    console.log("logged user!!!", user);
     dispatch(authActions.loadLoggedUser(user));
   };
 };

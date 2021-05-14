@@ -3,6 +3,7 @@ import { Animated, Text, View, StyleSheet, Button, Dimensions, FlatList } from "
 import * as Animatable from "react-native-animatable";
 import { Ionicons } from "@expo/vector-icons";
 import { Colors } from "../shared";
+import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 
 interface Props {
   dataSource: any[];
@@ -13,14 +14,16 @@ export const SearchResults: React.FC<Props> = ({ dataSource, handleSelectItem })
   const ItemView = ({ item }) => {
     return (
       // Flat List Item
-      <View style={styles.itemStyle}>
-        <Text onPress={() => getItem(item)}>
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <Ionicons name="search-outline" color={"white"} size={20} style={{ marginRight: 5 }} />
-            <Text style={{ color: Colors.white }}>{item.hashtag.toUpperCase()}</Text>
-          </View>
-        </Text>
-      </View>
+      <TouchableWithoutFeedback onPress={() => getItem(item)}>
+        <View style={styles.itemStyle}>
+          <Text>
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <Ionicons name="search-outline" color={"white"} size={20} style={{ marginRight: 5 }} />
+              <Text style={{ color: Colors.white }}>{item.hashtag.toUpperCase()}</Text>
+            </View>
+          </Text>
+        </View>
+      </TouchableWithoutFeedback>
     );
   };
 

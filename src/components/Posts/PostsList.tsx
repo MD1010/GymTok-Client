@@ -33,13 +33,18 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentPosts,
   const flatListRef = useRef<FlatList>(null);
   const [showFooter, setShowFooter] = useState<boolean>(false);
   const { hasMoreToFetch, error, latestFetchedPosts, userPosts } = useSelector(postsSelector);
-  const posts: IPost[] = currentPosts ? currentPosts : isFeed ? latestFetchedPosts : userPosts;
+  const [posts, setPosts] = useState<IPost[]>([]);
+  // const posts: IPost[] = currentPosts ? currentPosts : isFeed ? latestFetchedPosts : userPosts;
   const [refreshing, setRefreshing] = React.useState<boolean>(false);
   const loadMore: boolean = isLoadMore !== undefined ? isLoadMore : true;
 
   useEffect(() => {
     error && alert(JSON.stringify(error));
   }, [error]);
+
+  useEffect(() => {
+    setPosts(currentPosts ? currentPosts : isFeed ? latestFetchedPosts : userPosts);
+  }, [currentPosts, isFeed, latestFetchedPosts, userPosts]);
 
   useEffect(() => {
     if (posts) {
@@ -56,22 +61,25 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentPosts,
     console.log("refreshing!!!!");
     setRefreshing(true);
     dispatch(getLatestPosts());
-    setRefreshing(false);
+    //setRefreshing(false);
   }, [refreshing]);
 
   const getPosts = () => {
     if (loggedUser) {
       isFeed ? dispatch(getMostRecommended()) : dispatch(getUserPosts());
     } else {
+      console.log("getting more posts because user is null");
       // loggedUser is null -> didnt log in yet
       dispatch(getMorePosts());
     }
   };
   useEffect(() => {
+    console.log("use effect logged userrrr", loggedUser);
     // check if user was loaded - undefinded means the store has not been updated yet.
     if (loggedUser !== undefined) {
       isEmpty(posts) && getPosts();
     }
+    // getPosts();
   }, [loggedUser]);
 
   // useEffect(() => {
@@ -193,7 +201,16 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentPosts,
         // onResponderRelease={() => console.log(123123123)}
       >
         <FlatList
-          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+          refreshControl={
+            isFeed && (
+              <RefreshControl
+                tintColor="red"
+                colors={["#9Bd35A", "#689F38"]}
+                refreshing={refreshing}
+                onRefresh={onRefresh}
+              />
+            )
+          }
           initialNumToRender={5}
           maxToRenderPerBatch={3}
           windowSize={5}
@@ -224,7 +241,13 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentPosts,
           viewabilityConfig={config.current}
           onEndReached={loadMore ? handleLoadMore : null}
           onEndReachedThreshold={0.5}
-          ListFooterComponent={showFooter ? <Footer /> : null}
+          ListFooterComponent={
+            showFooter ? (
+              <Footer />
+            ) : posts.length !== 0 ? (
+              <Text style={{ color: Colors.white, fontSize: 15 }}>You have reached the end</Text>
+            ) : null
+          }
           ListFooterComponentStyle={{
             height: 80,
             backgroundColor: Colors.darkBlueOpaque,

@@ -13,6 +13,7 @@ import { ProfileContainer as Profile } from "../Profile/ProfileContainer";
 import { Colors, UIConsts } from "../shared/styles/variables";
 import { colors } from "react-native-elements";
 import { ExploreContainer } from "../Explore/ExploreContainer";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
 interface BottomTabsProps {}
 
@@ -24,7 +25,7 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
   const { loggedUser } = useSelector(authSelector);
 
   return (
-    <Provider>
+    <SafeAreaProvider>
       <Tab.Navigator
         initialRouteName="Home"
         backBehavior={"initialRoute"}
@@ -35,7 +36,7 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
           inactiveTintColor: Colors.white,
           showLabel: false,
           style: {
-            height: UIConsts.bottomNavbarHeight,
+            height: UIConsts.bottomNavbarHeight /*"7%"*/,
             borderTopWidth: 0,
             backgroundColor: Colors.black,
           },
@@ -135,6 +136,6 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
           }}
         />
       </Tab.Navigator>
-    </Provider>
+    </SafeAreaProvider>
   );
 };
