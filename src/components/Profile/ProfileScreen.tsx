@@ -183,7 +183,12 @@ const ProfileHeader: React.FC<IProfileHeaderProps> = ({ user, isLoading, details
   );
 };
 
-export const ProfileScreen: React.FC<IUser> = (user?: IUser) => {
+interface ProfileScreenProps {
+  user: IUser;
+  inProfileTab: boolean;
+}
+
+export const ProfileScreen: React.FC<ProfileScreenProps> = ({ user, inProfileTab = false }) => {
   const route = useRoute<any>();
   let currentUser = route.params ? route.params.user : user;
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -205,7 +210,7 @@ export const ProfileScreen: React.FC<IUser> = (user?: IUser) => {
 
   return (
     <>
-      <LogOutFromApp />
+      {inProfileTab && <LogOutFromApp />}
       <ProfileHeader details={profileDetails} user={currentUser} isLoading={isLoading} />
       <Divider style={{ backgroundColor: Colors.weakGrey }} />
       <ProfileTabs {...currentUser} />
