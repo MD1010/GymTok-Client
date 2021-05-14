@@ -29,11 +29,11 @@ export const ConfirmPopup: React.FC<IConfirmPopupProps> = ({
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
         <View style={styles.modalView}>
           <Text style={styles.modalHederText}>{headerText}</Text>
-          <Divider style={{ backgroundColor: Colors.white }} />
+          <Divider style={{ backgroundColor: Colors.lightGrey }} />
           <Pressable style={[styles.button]} onPress={onConfirm}>
             <Text style={styles.logOutTextStyle}>{confirmText}</Text>
           </Pressable>
-          <Divider style={{ backgroundColor: Colors.white }} />
+          <Divider style={{ backgroundColor: Colors.lightGrey }} />
           <Pressable style={[styles.button]} onPress={onCancel}>
             <Text style={styles.textStyle}>{cancelText || "Cancel"}</Text>
           </Pressable>
@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   modalView: {
-    backgroundColor: Colors.darkBlueOpaque,
+    backgroundColor: Colors.weakGrey,
     borderRadius: 20,
     padding: 40,
     shadowOffset: {
