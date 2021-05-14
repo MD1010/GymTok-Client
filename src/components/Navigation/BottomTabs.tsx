@@ -1,22 +1,19 @@
 import { FontAwesome5, Ionicons } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { useNavigation } from "@react-navigation/native";
-import React, { useCallback } from "react";
-import { View, Text, SafeAreaView } from "react-native";
-import { IconButton, Provider } from "react-native-paper";
+import React from "react";
+import { View } from "react-native";
+import { Badge } from "react-native-elements";
+import { IconButton } from "react-native-paper";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 import { useSelector } from "react-redux";
 import { authSelector } from "../../store/auth/authSlice";
-import { NotLoggedInScreen } from "../Auth/NotLoggedInScreen";
+import { unreadNotificationsSelector } from "../../store/notifications/notificationsSlice";
+import { ExploreContainer } from "../Explore/ExploreContainer";
 import { HomeScreen } from "../Home/HomeScreen";
-import { ExploreScreen } from "../Explore/ExploreScreen";
+import { NotificationScreen } from "../Notifications/NotificationScreen";
 import { ProfileContainer as Profile } from "../Profile/ProfileContainer";
 import { Colors, UIConsts } from "../shared/styles/variables";
-import { colors } from "react-native-elements";
-import { ExploreContainer } from "../Explore/ExploreContainer";
-import { NotificationScreen } from "../Notifications/NotificationScreen";
-import { SafeAreaProvider } from "react-native-safe-area-context";
-import { Badge } from "react-native-elements";
-import { notificaitonsSelector, unreadNotificationsSelector } from "../../store/notifications/notificationsSlice";
 
 interface BottomTabsProps {}
 
@@ -39,7 +36,7 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
           inactiveTintColor: Colors.white,
           showLabel: false,
           style: {
-            height: UIConsts.bottomNavbarHeight,
+            height: UIConsts.bottomNavbarHeight /*"7%"*/,
             borderTopWidth: 0,
             backgroundColor: Colors.black,
           },

@@ -1,10 +1,8 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { indexOf } from "lodash";
-import { ViewStyle } from "react-native";
 import { IPost } from "../../interfaces";
+import { addReplyToPost } from "../../utils/addReplyToPost";
 import { getPostsAfterUserLikePost, getPostsAfterUserRemoveLikeFromPost } from "../../utils/updatePostLikes";
 import { RootState } from "../configureStore";
-import { getLatestPosts } from "./actions";
 
 export const itemsToFetch = 10; // how many posts are fetched on each get
 
@@ -24,6 +22,11 @@ export const initialState: PostsState = {
 interface LikePayload {
   post: IPost;
   userId: string;
+}
+
+interface ReplyPayload {
+  postId: string;
+  reply: IPost;
 }
 
 const postsSlice = createSlice({
@@ -93,10 +96,22 @@ const postsSlice = createSlice({
         state.userPosts = updatedUserPosts;
       }
     },
+    addReplyToPost: (state, action: PayloadAction<ReplyPayload>) => {
+      const updatedLatestFetchedPosts = addReplyToPost(
+        state.latestFetchedPosts,
+        action.payload.postId,
+        action.payload.reply
+      );
 
-    displayNotificationPost: (state, action: PayloadAction<IPost>) => {
-      state.latestFetchedPosts.splice(state.latestFetchedPosts.indexOf(action.payload), 1);
-      state.latestFetchedPosts.unshift(action.payload);
+      if (updatedLatestFetchedPosts) {
+        state.latestFetchedPosts = updatedLatestFetchedPosts;
+      }
+
+      const updatedUserPosts = addReplyToPost(state.userPosts, action.payload.postId, action.payload.reply);
+
+      if (updatedLatestFetchedPosts) {
+        state.userPosts = updatedUserPosts;
+      }
     },
   },
 });

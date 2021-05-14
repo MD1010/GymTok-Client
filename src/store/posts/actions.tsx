@@ -7,15 +7,20 @@ import { itemsToFetch, postsActions } from "./postsSlice";
 export const getMorePosts = (): AppThunk => {
   return async (dispatch: AppDispatch, getState: () => RootState) => {
     const currentPosts = getState()?.posts?.latestFetchedPosts;
+
     const endpoint = `${process.env.BASE_API_ENPOINT}/posts`;
-    console.log(process.env.BASE_API_ENPOINT);
+
+    console.log(endpoint);
     const { res, error } = await fetchAPI<IPost[]>(RequestMethod.GET, endpoint, null, {
       size: itemsToFetch,
       page: Math.floor(currentPosts.length / itemsToFetch),
     });
-    console.log(process.env.BASE_API_ENPOINT);
     if (res) {
-      dispatch(postsActions.fetchMoreSuccess(res));
+      if (res.length > 0) {
+        dispatch(postsActions.fetchMoreSuccess(res));
+      } else {
+        dispatch(postsActions.fetchMoreSuccess(currentPosts.slice()));
+      }
     } else {
       dispatch(postsActions.fetchFailed(error));
     }
@@ -70,14 +75,31 @@ export const getLatestPosts = (): AppThunk => {
     const randomPostsEndpoint = `${process.env.BASE_API_ENPOINT}/posts`;
     const endpoint = loggedUser ? recommendedEndpoint : randomPostsEndpoint;
     const currentPosts = getState().posts.latestFetchedPosts;
+    let maxDate = currentPosts[0].publishDate;
+    currentPosts.map((post, index) => {
+      if (maxDate < post.publishDate) {
+        maxDate = post.publishDate;
+      }
+    });
+    console.log("max dateeeeeee", maxDate);
+    // const maxDate = currentPosts.slice().sort((a, b) => a.publishDate - b.publishDate);
+    // sortedArr.map((item, i) => {
+    //   console.log("sortedItemmmm", sortedArr[i].publishDate);
+    // });
+
     const { res, error } = await fetchAPI<IPost[]>(RequestMethod.GET, endpoint, null, {
       size: itemsToFetch,
       page: Math.floor(currentPosts.length / itemsToFetch),
+      currentMaxDate: maxDate,
     });
 
     if (res) {
       console.log("refreshing and getting newest posts!!");
-      dispatch(postsActions.refreshSuccess(res));
+      if (res.length > 0) {
+        dispatch(postsActions.refreshSuccess(res));
+      } else {
+        dispatch(postsActions.refreshSuccess(currentPosts.slice()));
+      }
     } else {
       dispatch(postsActions.fetchFailed(error));
     }
@@ -94,8 +116,8 @@ export const updateUserLikePost = (post: IPost, userId: string): AppThunk => {
   };
 };
 
-export const displayNotificationPost = (post: IPost): AppThunk => {
+export const addReplyToPost = (postId: string, reply: IPost): AppThunk => {
   return async (dispatch: AppDispatch, getState: () => RootState) => {
-    dispatch(postsActions.displayNotificationPost(post));
+    dispatch(postsActions.addReplyToPost({ postId, reply }));
   };
 };

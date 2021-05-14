@@ -7,12 +7,21 @@ import * as Google from "expo-google-app-auth";
 import { notificationsActions } from "../notifications/notificationsSlice";
 import { getUserNotifications, setPushToken } from "../notifications/actions";
 
-export const register = (username: string, fullName: string, password: string, email: string): AppThunk => {
+export const register = (
+  username: string,
+  fullName: string,
+  password: string,
+  email: string
+): AppThunk => {
   return async (dispatch: AppDispatch) => {
     const registerEnpoint = `${process.env.BASE_API_ENPOINT}/users/register`;
     const body = { username, fullName, password, email };
     dispatch(authActions.resetAuthError());
-    const { res, error } = await fetchAPI(RequestMethod.POST, registerEnpoint, body);
+    const { res, error } = await fetchAPI(
+      RequestMethod.POST,
+      registerEnpoint,
+      body
+    );
     if (res) {
       dispatch(authActions.login(res));
     } else {
@@ -22,12 +31,16 @@ export const register = (username: string, fullName: string, password: string, e
 };
 export const login = (username: string, password: string): AppThunk => {
   return async (dispatch: AppDispatch) => {
-    console.log("mother ... ", process.env.BASE_API_ENPOINT);
+    console.log("mother ... ", `${process.env.BASE_API_ENPOINT}/users/login`);
     const registerEnpoint = `${process.env.BASE_API_ENPOINT}/users/login`;
 
     const body = { username, password };
     dispatch(authActions.resetAuthError());
-    const { res, error } = await fetchAPI(RequestMethod.POST, registerEnpoint, body);
+    const { res, error } = await fetchAPI(
+      RequestMethod.POST,
+      registerEnpoint,
+      body
+    );
     if (res) {
       dispatch(authActions.login(res));
       dispatch(getUserNotifications(res.user._id));
@@ -47,6 +60,7 @@ export const logout = (): AppThunk => {
 export const loadLoggedUser = (): AppThunk => {
   return async (dispatch: AppDispatch) => {
     const user = JSON.parse(await AsyncStorage.getItem("loggedUser"));
+    console.log("logged user!!!", user);
     dispatch(authActions.loadLoggedUser(user));
   };
 };
@@ -64,7 +78,11 @@ export const registerIfNeed = (
     const body = { email, username, password, fullName, photoUrl };
 
     dispatch(authActions.resetAuthError());
-    const { res, error } = await fetchAPI(RequestMethod.POST, registerIfNeedEnpoint, body);
+    const { res, error } = await fetchAPI(
+      RequestMethod.POST,
+      registerIfNeedEnpoint,
+      body
+    );
 
     if (res) {
       dispatch(

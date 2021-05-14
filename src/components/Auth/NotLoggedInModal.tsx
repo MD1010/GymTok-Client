@@ -51,6 +51,7 @@ async function loginWithFacebook() {
 
 async function loginWithGoogle() {
   try {
+    console.log("google idddd " + process.env.GOOGLE_ANDROID_CLIENT_ID, process.env.GOOGLE_IOS_CLIENT_ID);
     const result = await Google.logInAsync({
       androidClientId: process.env.GOOGLE_ANDROID_CLIENT_ID,
       iosClientId: process.env.GOOGLE_IOS_CLIENT_ID,

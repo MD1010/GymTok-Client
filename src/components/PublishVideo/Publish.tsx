@@ -10,6 +10,7 @@ import { IUser } from "../../interfaces";
 import { INotification } from "../../interfaces/Notification";
 import { authSelector } from "../../store/auth/authSlice";
 import { sendNotification } from "../../store/notifications/actions";
+import { addReplyToPost } from "../../store/posts/actions";
 import { fetchAPI, RequestMethod } from "../../utils/fetchAPI";
 import { Colors, Loader, Player, SubmitButton, TouchableHighlightButton } from "../shared";
 
@@ -26,6 +27,7 @@ type StackParamsList = {
 export const PublishScreen: React.FC = () => {
   const route = useRoute<RouteProp<StackParamsList, "params">>();
   const navigation = useNavigation();
+  const dispatch = useDispatch();
   const isReply = route.params.isReply;
   const taggedPeople = route?.params?.taggedPeople;
   const hashtags = route?.params?.hashtags;
@@ -126,19 +128,20 @@ export const PublishScreen: React.FC = () => {
     formData.append("createdBy", loggedUser._id);
     formData.append("video", {
       name: "upload",
-      uri: route.params.videoUri,
+      uri: route.params?.videoUri,
       type: "video/mp4",
     } as any);
 
     const { res, error } = await fetchAPI(
       RequestMethod.POST,
-      `${process.env.BASE_API_ENPOINT}/posts/${route.params.postId}/reply/upload`,
+      `${process.env.BASE_API_ENPOINT}/posts/${route.params?.postId}/reply/upload`,
       formData
     );
 
     if (res) {
       setIsLoading(false);
       navigation.navigate("Home", { screen: "PostReplies", params: { newReply: res } });
+      dispatch(addReplyToPost(route.params?.postId, res));
     } else if (error) {
       setIsLoading(false);
       alert(JSON.stringify(error));

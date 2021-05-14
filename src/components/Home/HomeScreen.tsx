@@ -3,7 +3,7 @@ import { useNavigation } from "@react-navigation/native";
 import * as Notifications from "expo-notifications";
 import React, { useEffect } from "react";
 import { PostsList } from "../Posts/PostsList";
-import { PostReplies } from "../Replies/PostReplies";
+import { PostReplies } from "../Posts/PostReplies";
 
 const Tab = createMaterialTopTabNavigator();
 // const Stack = createStackNavigator();
