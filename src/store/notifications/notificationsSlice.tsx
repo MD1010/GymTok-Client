@@ -1,7 +1,5 @@
-import AsyncStorage from "@react-native-community/async-storage";
-import { createSlice, current, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { INotification } from "../../interfaces/Notification";
-import { IUser } from "../../interfaces/User";
 import { RootState } from "../configureStore";
 
 export interface NotificationsState {
@@ -51,7 +49,7 @@ const notificationsSlice = createSlice({
       }
     },
     getLatestNotificationSuccess: (state, action: PayloadAction<INotification>) => {
-      state.receivedNotifications.push(action.payload);
+      state.receivedNotifications.unshift(action.payload);
     },
   },
 });
