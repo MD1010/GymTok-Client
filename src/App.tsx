@@ -106,13 +106,15 @@ function App() {
   }, []);
 
   useEffect(() => {
-    const userId = loggedUser?._id;
-    if (userId) {
-      setPushToken(userId);
+    (async () => {
+      const userId = loggedUser?._id;
+      if (userId) {
+        await setPushToken(userId);
 
-      addNotificationsListener();
-      store.dispatch(getUserNotifications(userId));
-    }
+        addNotificationsListener();
+        store.dispatch(getUserNotifications(userId));
+      }
+    })();
   }, [loggedUser]);
 
   return (
