@@ -1,15 +1,9 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
-import { IPost } from "../../interfaces";
-import { PostsList } from "../Posts/PostsList";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-import { PostReplies } from "../Replies/PostReplies";
-import * as Notifications from "expo-notifications";
 import { useNavigation } from "@react-navigation/native";
-import { useDispatch, useSelector } from "react-redux";
-import { postsActions, postsSelector } from "../../store/posts/postsSlice";
-import { displayNotificationPost } from "../../store/posts/actions";
-import { notificationsActions } from "../../store/notifications/notificationsSlice";
-import { INotification } from "../../interfaces/Notification";
+import * as Notifications from "expo-notifications";
+import React, { useEffect } from "react";
+import { PostsList } from "../Posts/PostsList";
+import { PostReplies } from "../Replies/PostReplies";
 
 const Tab = createMaterialTopTabNavigator();
 // const Stack = createStackNavigator();
@@ -22,37 +16,17 @@ const PostRepliesComponent = (props) => {
 };
 
 export const HomeScreen: React.FC = () => {
-  // const lastNotificationResponse = Notifications.useLastNotificationResponse();
-  // const dispatch = useDispatch();
-  // const posts = useSelector(postsSelector);
-  // const receivedPushNotification = useRef(false);
-  // useEffect(() => {
-  //   if (
-  //     lastNotificationResponse &&
-  //     posts.latestFetchedPosts.length &&
-  //     !receivedPushNotification.current &&
-  //     lastNotificationResponse.actionIdentifier === Notifications.DEFAULT_ACTION_IDENTIFIER
-  //   ) {
-  //     const {
-  //       notification: { request },
-  //     } = lastNotificationResponse;
-  //     const post: any = request.content.data;
-  //     const { data, body, title } = request.content;
-  //     const { _id, date, sender, ...props } = data as any;
-  //     const notificationReceived: INotification = {
-  //       _id,
-  //       body,
-  //       title,
-  //       data: props,
-  //       date,
-  //       sender,
-  //       isRead: false,
-  //     };
-  //     dispatch(notificationsActions.markNotificationReadSuccess(notificationReceived));
-  //     dispatch(postsActions.displayNotificationPost(post));
-  //     receivedPushNotification.current = true;
-  //   }
-  // }, [posts.latestFetchedPosts]);
+  const lastNotificationResponse = Notifications.useLastNotificationResponse();
+
+  const navigation = useNavigation();
+  useEffect(() => {
+    if (
+      lastNotificationResponse &&
+      lastNotificationResponse.actionIdentifier === Notifications.DEFAULT_ACTION_IDENTIFIER
+    ) {
+      navigation.navigate("Notifications");
+    }
+  }, [lastNotificationResponse]);
 
   const Null = () => null;
   return (
