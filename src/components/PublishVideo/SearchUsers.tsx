@@ -12,6 +12,8 @@ import { SearchInput } from "../shared/SearchInput";
 import { UserSkeletons } from "../shared/skeletons/UserSkeletons";
 import { UserList } from "../shared/UserList";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useSelector } from "react-redux";
+import { authSelector } from "../../store/auth/authSlice";
 
 type StackParamsList = {
   params: { excludedUsersToSearch: IUser[] };
@@ -22,7 +24,10 @@ export const SearchUsersScreen: React.FC = () => {
   const [results, setResults] = useState<IUser[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const route = useRoute<RouteProp<StackParamsList, "params">>();
-  const excludedIdsToSearch = route.params?.excludedUsersToSearch?.map((user) => user._id) || [];
+  const loggedUserId = useSelector(authSelector).loggedUser._id;
+  const excludedIdsToSearch = route.params?.excludedUsersToSearch?.map((user) => user._id).concat(loggedUserId) || [
+    loggedUserId,
+  ];
   const insets = useSafeAreaInsets();
   const selectUser = (user) => {
     navigation.dispatch((state) => {
