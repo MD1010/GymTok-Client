@@ -43,6 +43,7 @@ export const SearchResults: React.FC<Props> = ({ dataSource, handleSelectItem })
   const getItem = (item) => {
     // Function for click on an item
     // alert("Id : " + item.id + " Title : " + item.title);
+
     handleSelectItem(item);
   };
   return (
