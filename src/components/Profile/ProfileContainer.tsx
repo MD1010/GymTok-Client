@@ -16,7 +16,7 @@ export const ProfileContainer: React.FC<ProfileContainerProps> = ({}) => {
   const { loggedUser } = useSelector(authSelector);
 
   return loggedUser ? (
-    <ProfileScreen {...loggedUser} />
+    <ProfileScreen user={loggedUser} inProfileTab />
   ) : (
     <NotLoggedInScreen
       text={"Profile"}

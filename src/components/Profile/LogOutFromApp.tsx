@@ -36,7 +36,7 @@ export const LogOutFromApp: React.FC = () => {
       />
 
       <ConfirmPopup
-        headerText={`Log out from ${loggedUser.fullName}?`}
+        headerText={`Log out from ${loggedUser?.fullName}?`}
         onConfirm={logoutFromApp}
         confirmText={"Log Out"}
         isVisible={isModalVisible}
