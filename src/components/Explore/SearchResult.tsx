@@ -1,9 +1,11 @@
 import React, { useEffect, useRef } from "react";
-import { Animated, Text, View, StyleSheet, Button, Dimensions, FlatList } from "react-native";
+import { Animated, Text, View, StyleSheet, Button, Dimensions, FlatList, Platform } from "react-native";
 import * as Animatable from "react-native-animatable";
 import { Ionicons } from "@expo/vector-icons";
 import { Colors } from "../shared";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
+import { KeyboardAwareFlatList, KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import KeyboardSpacer from "react-native-keyboard-spacer";
 
 interface Props {
   dataSource: any[];
@@ -46,14 +48,16 @@ export const SearchResults: React.FC<Props> = ({ dataSource, handleSelectItem })
 
     handleSelectItem(item);
   };
+
   return (
-    <Animatable.View animation="fadeInUpBig" duration={500} style={styles.tagFriends}>
-      <FlatList
+    <Animatable.View animation="fadeInUpBig" duration={500} style={{ height: Dimensions.get("screen").height }}>
+      <KeyboardAwareFlatList
         data={dataSource}
         keyExtractor={(item, index) => index.toString()}
         ItemSeparatorComponent={ItemSeparatorView}
         renderItem={ItemView}
       />
+      <KeyboardSpacer />
     </Animatable.View>
   );
 };
