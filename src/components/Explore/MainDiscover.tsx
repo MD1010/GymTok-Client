@@ -50,9 +50,10 @@ export const MainDiscover: React.FC<MainDiscoverProps> = ({}) => {
       const { res } = await fetchAPI(RequestMethod.GET, `${process.env.BASE_API_ENPOINT}/hashtags`, null, {
         searchTerm,
       });
+      console.log("my tagsssss", res);
       res && setMasterDataSource(res);
 
-      setIsLoading(false);
+      //setIsLoading(false);
     }, 400),
     []
   );
@@ -60,14 +61,15 @@ export const MainDiscover: React.FC<MainDiscoverProps> = ({}) => {
   const handleSubmit = async (hashtagId: string) => {
     setIsLoading(true);
     const { res } = await fetchAPI(RequestMethod.GET, `${process.env.BASE_API_ENPOINT}/posts/hashtag/${hashtagId}`);
-
+    console.log("usersss undefined result tagggg", res);
     setIsLoading(false);
+    setIsModalVisible(false);
 
     // res.map((challenge) => {
     //   challenge.component = <Text style={{ color: Colors.white }}>{challenge.description}</Text>;
     // });
 
-    setRelavantItems(res);
+    setRelavantItems(res ? res : undefined);
   };
 
   const handleSelectItem = (hashtag) => {
@@ -136,7 +138,7 @@ export const MainDiscover: React.FC<MainDiscoverProps> = ({}) => {
       <View style={{ flex: 1 }}>
         <SearchBar
           platform={Platform.OS === "android" ? "android" : "ios"}
-          containerStyle={{ backgroundColor: Colors.darkBlue }}
+          containerStyle={{ backgroundColor: Colors.darkBlueOpaque }}
           inputContainerStyle={{ backgroundColor: Colors.darkBlueOpaque }}
           inputStyle={{ color: Colors.weakGrey }}
           onFocus={() => {
@@ -161,7 +163,11 @@ export const MainDiscover: React.FC<MainDiscoverProps> = ({}) => {
 
       <View style={{ flex: 11 }}>
         {isModalVisible && <SearchResults dataSource={masterDataSource} handleSelectItem={handleSelectItem} />}
-        {relvantItems !== undefined && search.length > 0 ? (
+        {isLoading ? (
+          <View style={{ flex: 1 }}>
+            <Loader />
+          </View>
+        ) : relvantItems !== undefined && search.length > 0 ? (
           <View style={{ flex: 1 }}>
             <Text style={{ fontSize: 20, padding: 10, color: Colors.white }}>Videos</Text>
             <GenericComponent
@@ -173,6 +179,10 @@ export const MainDiscover: React.FC<MainDiscoverProps> = ({}) => {
               gifStyle={{ margin: 5 }}
               containerStyle={{ paddingBottom: 30 }}
             />
+          </View>
+        ) : relvantItems === undefined && search.length > 0 ? (
+          <View style={{ flex: 1, justifyContent: "center", flexDirection: "row", alignItems: "center" }}>
+            <Text style={{ fontSize: 20, color: Colors.white }}>No Results :(</Text>
           </View>
         ) : (
           <ScrollView>

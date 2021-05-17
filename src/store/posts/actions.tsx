@@ -39,7 +39,7 @@ export const getUserPosts = (): AppThunk => {
       page: Math.floor(getState().posts.latestFetchedPosts.length / itemsToFetch),
       createdBy: loggedUser,
     });
-    console.log("fdfdfd");
+    console.log("fdasasafdfd");
     if (res) {
       dispatch(postsActions.userPostsFetchSuccess(res));
     } else {
@@ -81,7 +81,7 @@ export const getLatestPosts = (): AppThunk => {
         maxDate = post.publishDate;
       }
     });
-    console.log("max dateeeeeee", maxDate);
+    console.log("max dateefdfeeeee", maxDate);
     // const maxDate = currentPosts.slice().sort((a, b) => a.publishDate - b.publishDate);
     // sortedArr.map((item, i) => {
     //   console.log("sortedItemmmm", sortedArr[i].publishDate);
