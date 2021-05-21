@@ -50,7 +50,7 @@ export const SearchResults: React.FC<Props> = ({ dataSource, handleSelectItem })
   };
 
   return (
-    <Animatable.View animation="fadeInUpBig" duration={500} style={{ height: Dimensions.get("screen").height }}>
+    <Animatable.View animation="fadeInUpBig" duration={10} style={{ height: Dimensions.get("screen").height }}>
       <KeyboardAwareFlatList
         data={dataSource}
         keyExtractor={(item, index) => index.toString()}

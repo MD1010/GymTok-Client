@@ -50,7 +50,7 @@ export const MainDiscover: React.FC<MainDiscoverProps> = ({}) => {
       const { res } = await fetchAPI(RequestMethod.GET, `${process.env.BASE_API_ENPOINT}/hashtags`, null, {
         searchTerm,
       });
-      console.log("my tagsssss", res);
+      console.log("my tagsdddssss", res);
       res && setMasterDataSource(res);
 
       //setIsLoading(false);
@@ -135,7 +135,7 @@ export const MainDiscover: React.FC<MainDiscoverProps> = ({}) => {
 
   return (
     <SafeAreaView style={styles.exploreContainer}>
-      <View style={{ flex: 1 }}>
+      <View style={{ flex: 1, marginBottom: 20 }}>
         <SearchBar
           platform={Platform.OS === "android" ? "android" : "ios"}
           containerStyle={{ backgroundColor: Colors.darkBlueOpaque }}
