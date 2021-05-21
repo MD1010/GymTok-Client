@@ -36,7 +36,7 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
           inactiveTintColor: Colors.white,
           showLabel: false,
           style: {
-            height: UIConsts.bottomNavbarHeight /*"7%"*/,
+            // height: UIConsts.bottomNavbarHeight /*"7%"*/,
             borderTopWidth: 0,
             backgroundColor: Colors.black,
           },
