@@ -1,6 +1,7 @@
 import { useNavigation } from "@react-navigation/native";
 import React from "react";
 import { Dimensions, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { Colors } from "../shared/styles/variables";
 
 interface NotLoggedInProps {
@@ -18,7 +19,7 @@ export const NotLoggedInScreen: React.FC<NotLoggedInProps> = ({
 }) => {
   const navigation = useNavigation();
   return (
-    <>
+    <SafeAreaView>
       <View style={styles.container}>
         <View
           style={{
@@ -44,7 +45,7 @@ export const NotLoggedInScreen: React.FC<NotLoggedInProps> = ({
           </TouchableOpacity>
         </View>
       </View>
-    </>
+    </SafeAreaView>
   );
 };
 

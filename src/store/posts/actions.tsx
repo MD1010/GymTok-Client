@@ -10,7 +10,6 @@ export const getMorePosts = (): AppThunk => {
 
     const endpoint = `${process.env.BASE_API_ENPOINT}/posts`;
 
-    console.log(endpoint);
     const { res, error } = await fetchAPI<IPost[]>(RequestMethod.GET, endpoint, null, {
       size: itemsToFetch,
       page: Math.floor(currentPosts.length / itemsToFetch),

@@ -13,7 +13,7 @@ import { ExploreContainer } from "../Explore/ExploreContainer";
 import { HomeScreen } from "../Home/HomeScreen";
 import { NotificationScreen } from "../Notifications/NotificationScreen";
 import { ProfileContainer as Profile } from "../Profile/ProfileContainer";
-import { Colors, UIConsts } from "../shared/styles/variables";
+import { Colors } from "../shared/styles/variables";
 
 interface BottomTabsProps {}
 
@@ -36,7 +36,6 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
           inactiveTintColor: Colors.white,
           showLabel: false,
           style: {
-            height: UIConsts.bottomNavbarHeight /*"7%"*/,
             borderTopWidth: 0,
             backgroundColor: Colors.black,
           },

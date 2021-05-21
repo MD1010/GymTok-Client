@@ -38,7 +38,7 @@ export const styles = StyleSheet.create({
     bottom: 0,
     paddingLeft: 10,
     paddingRight: 10,
-    paddingBottom: 15,
+    marginBottom: 15,
   },
 
   creator: {
