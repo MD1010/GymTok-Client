@@ -108,13 +108,12 @@ export const PostsList: React.FC<PostsListProps> = memo(
         // loggedUser is null -> didnt log in yet
         dispatch(getMorePosts());
       }
-      setIsLoading(true);
     };
     useEffect(() => {
       // check if user was loaded - undefinded means the store has not been updated yet.
       if (loggedUser !== undefined) {
         console.log("loading...");
-
+        setIsLoading(true);
         isEmpty(posts) && getPosts();
       }
 
