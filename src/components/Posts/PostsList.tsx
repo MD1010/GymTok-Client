@@ -41,7 +41,6 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentPosts,
   const [refreshing, setRefreshing] = React.useState<boolean>(false);
   const loadMore: boolean = isLoadMore !== undefined ? isLoadMore : true;
   const bottomTabsHeight = useBottomTabBarHeight();
-  console.log("123123123", bottomTabsHeight);
 
   useEffect(() => {
     error && alert(JSON.stringify(error));
@@ -84,13 +83,12 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentPosts,
       // loggedUser is null -> didnt log in yet
       dispatch(getMorePosts());
     }
-    setIsLoading(true);
   };
   useEffect(() => {
     // check if user was loaded - undefinded means the store has not been updated yet.
     if (loggedUser !== undefined) {
       console.log("loading...");
-
+      setIsLoading(true);
       isEmpty(posts) && getPosts();
     }
 
