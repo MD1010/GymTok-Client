@@ -4,7 +4,7 @@ export function getPostsAfterUserLikePost(posts: IPost[], postId: string, userId
     const postsCopy = [...posts];
     const likedPost = postsCopy.find(post => post._id === postId);
     if (likedPost) {
-        likedPost.likes.push(userId);
+        likedPost.likes = [...likedPost.likes, userId];
         return postsCopy;
     }
 }

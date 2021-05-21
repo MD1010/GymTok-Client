@@ -110,6 +110,22 @@ export const PostsList: React.FC<PostsListProps> = memo(
       }
       setIsLoading(true);
     };
+
+    const onPressPostLikeButton = (pressedPost: IPost, userId: string) => {
+      const existPostIndex = posts.findIndex(post => post._id === pressedPost._id);
+
+      if (existPostIndex !== -1) {
+        const copiedPosts = [...posts];
+        if (copiedPosts[existPostIndex].likes.includes(userId)) {
+          copiedPosts[existPostIndex].likes = copiedPosts[existPostIndex].likes.filter(likedUser => likedUser !== userId);
+        } else {
+          copiedPosts[existPostIndex].likes = [...copiedPosts[existPostIndex].likes, userId];
+        }
+
+        setPosts(copiedPosts);
+      }
+    }
+
     useEffect(() => {
       // check if user was loaded - undefinded means the store has not been updated yet.
       if (loggedUser !== undefined) {
@@ -120,30 +136,6 @@ export const PostsList: React.FC<PostsListProps> = memo(
 
       // getPosts();
     }, [loggedUser]);
-
-    // useEffect(() => {
-    //   if (currentPosts !== undefined) {
-    //     for (let i = 0; i < posts.length; i++) {
-    //       for (let j = 0; j < latestFetchedPosts.length; j++) {
-    //         if (posts[i]._id === latestFetchedPosts[j]._id) {
-    //           console.log("fount liked post!!!!");
-    //           console.log(latestFetchedPosts[j]);
-    //           posts[i] = latestFetchedPosts[j];
-    //         }
-    //       }
-    //     }
-    //   }
-    // }, [currentPosts, latestFetchedPosts]);
-
-    // useEffect(() => {
-    //   if (currentPostID && posts.length > 0) {
-    //     console.log("currentID: " + currentPostID);
-    //     setPostIndex(posts.findIndex((post) => post._id === currentPostID));
-    //     // console.log(posts[wantedIndex]);
-    //     console.log("wnted index" + wantedIndex);
-    //     // if (wantedIndex != -1) goIndex(wantedIndex);
-    //   }
-    // }, [posts, currentPostID]);
 
     useFocusEffect(
       React.useCallback(() => {
@@ -225,6 +217,7 @@ export const PostsList: React.FC<PostsListProps> = memo(
           post={item}
           isVisible={index === currentlyPlaying && !navigatedOutOfScreen}
           containerStyle={{ height: viewHeight }}
+          onPressPostLikeButton={onPressPostLikeButton}
         />
       );
     };
@@ -240,11 +233,11 @@ export const PostsList: React.FC<PostsListProps> = memo(
         <View
           // {...panResponder.panHandlers}
           style={{ height: viewHeight, backgroundColor: Colors.black }}
-          // onStartShouldSetResponder={() => true}
-          // onStartShouldSetResponderCapture={() => true}
-          // onMoveShouldSetResponder={() => true}
-          // onMoveShouldSetResponderCapture={() => true}
-          // onResponderRelease={() => console.log(123123123)}
+        // onStartShouldSetResponder={() => true}
+        // onStartShouldSetResponderCapture={() => true}
+        // onMoveShouldSetResponder={() => true}
+        // onMoveShouldSetResponderCapture={() => true}
+        // onResponderRelease={() => console.log(123123123)}
         >
           <FlatList
             refreshControl={
