@@ -56,30 +56,6 @@ export const Player: React.FC<VideoProps> = memo(
       return () => navigation.removeListener("blur", null);
     }, []);
 
-    useFocusEffect(
-      React.useCallback(() => {
-        navigation.addListener("blur", async (e) => {
-          await ref.current?.pauseAsync();
-          isBlurred.current = true;
-        });
-      }, [])
-    );
-
-    useEffect(() => {
-      (async function () {
-        if (videoInViewPort) {
-          isBlurred.current ? await ref.current?.playAsync() : await ref.current?.replayAsync();
-          isBlurred.current = false;
-          isPaused && setIsPaused(false);
-        } else if (videoInViewPort !== undefined) {
-          await ref.current?.pauseAsync();
-        }
-        return async () => {
-          await ref.current?.pauseAsync();
-        };
-      })();
-    }, [videoInViewPort]);
-
     return (
       <TouchableWithoutFeedback
         onPress={() =>

@@ -1,5 +1,16 @@
 import React, { useEffect, useRef } from "react";
-import { Animated, Text, View, StyleSheet, Button, Dimensions, FlatList, Platform } from "react-native";
+import {
+  Animated,
+  Text,
+  View,
+  StyleSheet,
+  Button,
+  Dimensions,
+  FlatList,
+  Platform,
+  KeyboardAvoidingView,
+  Keyboard,
+} from "react-native";
 import * as Animatable from "react-native-animatable";
 import { Ionicons } from "@expo/vector-icons";
 import { Colors } from "../shared";
@@ -45,14 +56,15 @@ export const SearchResults: React.FC<Props> = ({ dataSource, handleSelectItem })
   const getItem = (item) => {
     // Function for click on an item
     // alert("Id : " + item.id + " Title : " + item.title);
-
+    Keyboard.dismiss();
     handleSelectItem(item);
   };
 
   return (
-    <Animatable.View animation="fadeInUpBig" duration={500} style={{ height: Dimensions.get("screen").height }}>
+    <Animatable.View animation="fadeInUpBig" duration={10} style={{ height: Dimensions.get("screen").height }}>
       <KeyboardAwareFlatList
-        data={dataSource}
+        enableOnAndroid={true}
+        data={[...dataSource, { hashtag: "fdfd" }, { hashtag: "dov" }]}
         keyExtractor={(item, index) => index.toString()}
         ItemSeparatorComponent={ItemSeparatorView}
         renderItem={ItemView}
