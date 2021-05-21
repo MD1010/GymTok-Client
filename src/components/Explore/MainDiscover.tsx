@@ -5,7 +5,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { View, StyleSheet, Text, Dimensions, Platform } from "react-native";
 import { Avatar, SearchBar } from "react-native-elements";
 import { ScrollView } from "react-native-gesture-handler";
-import { IPopularHashtags, IPost } from "../../interfaces";
+import { IPopularHashtags, IPost, IUser } from "../../interfaces";
 import { formatDate } from "../../utils/date";
 import { fetchAPI, RequestMethod } from "../../utils/fetchAPI";
 import { GenericComponent } from "../Profile/genericComponent";
@@ -14,7 +14,10 @@ import { PopularHashtag } from "./PopularHashtag";
 
 import { SearchResults } from "./SearchResult";
 import { FontAwesome } from "@expo/vector-icons";
-import { TouchableOpacity, TouchableWithoutFeedback } from "react-native-gesture-handler";
+import {
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+} from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 interface MainDiscoverProps {}
@@ -30,7 +33,8 @@ export const MainDiscover: React.FC<MainDiscoverProps> = ({}) => {
 
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [relvantItems, setRelavantItems] = useState<IPost[] | undefined>(undefined);
+  const [relvantItems, setRelavantItems] =
+    useState<IPost[] | undefined>(undefined);
   const route = useRoute<any>();
 
   const loadPopularHashtags = async () => {
@@ -47,9 +51,14 @@ export const MainDiscover: React.FC<MainDiscoverProps> = ({}) => {
 
   const fetchHashtags = useCallback(
     debounce(async (searchTerm?: string) => {
-      const { res } = await fetchAPI(RequestMethod.GET, `${process.env.BASE_API_ENPOINT}/hashtags`, null, {
-        searchTerm,
-      });
+      const { res } = await fetchAPI(
+        RequestMethod.GET,
+        `${process.env.BASE_API_ENPOINT}/hashtags`,
+        null,
+        {
+          searchTerm,
+        }
+      );
       console.log("my tagsssss", res);
       res && setMasterDataSource(res);
 
@@ -60,7 +69,10 @@ export const MainDiscover: React.FC<MainDiscoverProps> = ({}) => {
 
   const handleSubmit = async (hashtagId: string) => {
     setIsLoading(true);
-    const { res } = await fetchAPI(RequestMethod.GET, `${process.env.BASE_API_ENPOINT}/posts/hashtag/${hashtagId}`);
+    const { res } = await fetchAPI(
+      RequestMethod.GET,
+      `${process.env.BASE_API_ENPOINT}/posts/hashtag/${hashtagId}`
+    );
     console.log("usersss undefined result tagggg", res);
     setIsLoading(false);
     setIsModalVisible(false);
@@ -80,9 +92,21 @@ export const MainDiscover: React.FC<MainDiscoverProps> = ({}) => {
   };
 
   const renderFooter = (item: IPost) => {
+    const showProfile = (createdBy: IUser) => {
+      navigation.navigate("ProfileDisplay", { user: createdBy });
+    };
     return (
       <View>
-        <Text style={{ color: Colors.white, marginTop: 3, margin: 5, fontWeight: "bold" }}>{item?.description}</Text>
+        <Text
+          style={{
+            color: Colors.white,
+            marginTop: 3,
+            margin: 5,
+            fontWeight: "bold",
+          }}
+        >
+          {item?.description}
+        </Text>
         <View
           style={{
             justifyContent: "space-between",
@@ -91,20 +115,43 @@ export const MainDiscover: React.FC<MainDiscoverProps> = ({}) => {
             marginTop: 5,
           }}
         >
-          <View style={{ flexDirection: "row", paddingHorizontal: 5, marginBottom: 10 }}>
-            <Avatar
-              source={
-                item?.createdBy?.image ? { uri: item?.createdBy?.image } : require("../../../assets/avatar/user.png")
-              }
-              rounded
-            />
-            <Text style={{ color: Colors.darkGrey, alignSelf: "center", marginLeft: 5 }}>
+          <View
+            style={{
+              flexDirection: "row",
+              paddingHorizontal: 5,
+              marginBottom: 10,
+            }}
+          >
+            <TouchableWithoutFeedback
+              onPress={() => showProfile(item.createdBy)}
+            >
+              <Avatar
+                source={
+                  item?.createdBy?.image
+                    ? { uri: item?.createdBy?.image }
+                    : require("../../../assets/avatar/user.png")
+                }
+                rounded
+              />
+            </TouchableWithoutFeedback>
+            <Text
+              style={{
+                color: Colors.darkGrey,
+                alignSelf: "center",
+                marginLeft: 5,
+              }}
+            >
               {item?.createdBy?.username}
             </Text>
           </View>
 
           <View style={{ flexDirection: "row", alignSelf: "center" }}>
-            <FontAwesome style={{ alignSelf: "center" }} name={"heart-o"} size={13} color={Colors.darkGrey} />
+            <FontAwesome
+              style={{ alignSelf: "center" }}
+              name={"heart-o"}
+              size={13}
+              color={Colors.darkGrey}
+            />
             <Text
               style={{
                 fontSize: 13,
@@ -123,9 +170,29 @@ export const MainDiscover: React.FC<MainDiscoverProps> = ({}) => {
 
   const renderBottomVideo = (item: IPost, picHeight: number) => {
     return (
-      <View style={{ display: "flex", justifyContent: "flex-end", flexDirection: "column", height: picHeight }}>
-        <View style={{ flexDirection: "row", alignItems: "center", marginRight: 10 }}>
-          <Text style={{ color: Colors.white, fontWeight: "bold", fontSize: 12, margin: 3 }}>
+      <View
+        style={{
+          display: "flex",
+          justifyContent: "flex-end",
+          flexDirection: "column",
+          height: picHeight,
+        }}
+      >
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            marginRight: 10,
+          }}
+        >
+          <Text
+            style={{
+              color: Colors.white,
+              fontWeight: "bold",
+              fontSize: 12,
+              margin: 3,
+            }}
+          >
             {formatDate(item?.publishDate)}
           </Text>
         </View>
@@ -162,14 +229,21 @@ export const MainDiscover: React.FC<MainDiscoverProps> = ({}) => {
       </View>
 
       <View style={{ flex: 11 }}>
-        {isModalVisible && <SearchResults dataSource={masterDataSource} handleSelectItem={handleSelectItem} />}
+        {isModalVisible && (
+          <SearchResults
+            dataSource={masterDataSource}
+            handleSelectItem={handleSelectItem}
+          />
+        )}
         {isLoading ? (
           <View style={{ flex: 1 }}>
             <Loader />
           </View>
         ) : relvantItems !== undefined && search.length > 0 ? (
           <View style={{ flex: 1 }}>
-            <Text style={{ fontSize: 20, padding: 10, color: Colors.white }}>Videos</Text>
+            <Text style={{ fontSize: 20, padding: 10, color: Colors.white }}>
+              Videos
+            </Text>
             <GenericComponent
               items={relvantItems}
               numColumns={2}
@@ -181,15 +255,28 @@ export const MainDiscover: React.FC<MainDiscoverProps> = ({}) => {
             />
           </View>
         ) : relvantItems === undefined && search.length > 0 ? (
-          <View style={{ flex: 1, justifyContent: "center", flexDirection: "row", alignItems: "center" }}>
-            <Text style={{ fontSize: 20, color: Colors.white }}>No Results :(</Text>
+          <View
+            style={{
+              flex: 1,
+              justifyContent: "center",
+              flexDirection: "row",
+              alignItems: "center",
+            }}
+          >
+            <Text style={{ fontSize: 20, color: Colors.white }}>
+              No Results :(
+            </Text>
           </View>
         ) : (
           <ScrollView>
             {Object.keys(popularHashtags).map((hashtag, key) => {
               return (
                 // <View key={key} style={styles.hashtagContainer}>
-                <PopularHashtag key={key} hashtag={hashtag} posts={popularHashtags[hashtag]} />
+                <PopularHashtag
+                  key={key}
+                  hashtag={hashtag}
+                  posts={popularHashtags[hashtag]}
+                />
                 // </View>
               );
             })}
