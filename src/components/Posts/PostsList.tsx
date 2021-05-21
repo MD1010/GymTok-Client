@@ -89,7 +89,7 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentPosts,
     if (loggedUser !== undefined) {
       console.log("loading...");
       setIsLoading(true);
-      isEmpty(posts) && getPosts();
+      isEmpty(posts) && isEmpty(currentPosts) && getPosts();
     }
 
     // getPosts();
@@ -157,18 +157,8 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentPosts,
     [isFeed, bottomTabsHeight]
   );
   const config = useRef<ViewabilityConfig>({
-    itemVisiblePercentThreshold: 90,
-    // minimumViewTime: 150,
+    itemVisiblePercentThreshold: 100,
   });
-
-  const itemLayout = useCallback(
-    (_, index) => ({
-      length: viewHeight,
-      offset: viewHeight * index,
-      index,
-    }),
-    []
-  );
 
   const Footer = () => {
     if (posts.length) {
@@ -236,7 +226,7 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentPosts,
           disableIntervalMomentum
           renderItem={renderItem}
           keyExtractor={keyExtractor}
-          getItemLayout={itemLayout}
+          // getItemLayout={itemLayout}
           snapToAlignment={"start"}
           decelerationRate={"fast"}
           ref={(ref) => {
