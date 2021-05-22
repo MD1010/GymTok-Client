@@ -35,7 +35,10 @@ const postsSlice = createSlice({
   reducers: {
     fetchMoreSuccess: (state, action: PayloadAction<IPost[]>) => {
       if (action.payload.length < itemsToFetch) state.hasMoreToFetch = false;
-      state.latestFetchedPosts = [...state.latestFetchedPosts, ...action.payload];
+      state.latestFetchedPosts = [
+        ...state.latestFetchedPosts,
+        ...action.payload,
+      ];
       // state.latestFetchedPosts.sort((a,b) => new Date(a.publishDate) - new Date(b.publishDate) );
       // state.latestFetchedPosts = [...action.payload,...state.latestFetchedPosts];
       state.error = null;
@@ -107,7 +110,11 @@ const postsSlice = createSlice({
         state.latestFetchedPosts = updatedLatestFetchedPosts;
       }
 
-      const updatedUserPosts = addReplyToPost(state.userPosts, action.payload.postId, action.payload.reply);
+      const updatedUserPosts = addReplyToPost(
+        state.userPosts,
+        action.payload.postId,
+        action.payload.reply
+      );
 
       if (updatedLatestFetchedPosts) {
         state.userPosts = updatedUserPosts;
@@ -118,5 +125,11 @@ const postsSlice = createSlice({
 
 export const postsActions = postsSlice.actions;
 export const postsSelector = (state: RootState) => state.posts;
+export const challengesSelector = (state: RootState) =>
+  state.posts.userPosts.filter((post) => post.isReply);
+export const repliesSelector = (state: RootState) =>
+  state.posts.userPosts.filter((post) => {
+    !post.isReply;
+  });
 
 export default postsSlice.reducer;
