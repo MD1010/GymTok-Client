@@ -6,10 +6,11 @@ import { Colors } from "../shared";
 
 interface PopularHashtagProps {
     hashtag: string;
-    posts: IPost[]
+    posts: IPost[];
+    updatePostsForHashtag: (posts: IPost[]) => void;
 }
 
-export const PopularHashtag: React.FC<PopularHashtagProps> = ({ hashtag, posts }) => {
+export const PopularHashtag: React.FC<PopularHashtagProps> = ({ hashtag, posts, updatePostsForHashtag }) => {
     return (
         <View style={styles.hashtagContainer}>
             <View style={styles.popularHashtagDetails}>
@@ -32,6 +33,7 @@ export const PopularHashtag: React.FC<PopularHashtagProps> = ({ hashtag, posts }
                 <GenericComponent
                     customStyle={{ width: Dimensions.get("window").width / 3 - 20 }}
                     items={posts}
+                    setItems={updatePostsForHashtag}
                     horizontal={true} />
             </View>
         </View>);
