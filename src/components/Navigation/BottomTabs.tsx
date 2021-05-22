@@ -37,6 +37,7 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
           showLabel: false,
           style: {
             borderTopWidth: 0,
+            padding: 5,
             backgroundColor: "rgba(8, 8, 74,.4)",
           },
         }}

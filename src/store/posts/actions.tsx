@@ -119,3 +119,15 @@ export const addReplyToPost = (postId: string, reply: IPost): AppThunk => {
     dispatch(postsActions.addReplyToPost({ postId, reply }));
   };
 };
+
+export const postsUpdated = (updatedPosts: IPost[]): AppThunk => {
+  return async (dispatch: AppDispatch, getState: () => RootState) => {
+    dispatch(postsActions.postsUpdated(updatedPosts));
+  };
+};
+
+export const resetPostUpdated = (updatedPosts: IPost[]): AppThunk => {
+  return async (dispatch: AppDispatch, getState: () => RootState) => {
+    dispatch(postsActions.resetPostsUpdated());
+  };
+};

@@ -1,11 +1,13 @@
 import { FontAwesome } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+import isEmpty from "lodash/isEmpty";
 import React, { useEffect, useState } from "react";
 import { Dimensions, FlatList, ImageBackground, SafeAreaView, StyleSheet, Text, View, ViewStyle } from "react-native";
 import Ripple from "react-native-material-ripple";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { IPost } from "../../interfaces";
-import { postsSelector } from "../../store/posts/postsSlice";
+import { resetPostUpdated } from "../../store/posts/actions";
+import { postsActions, postsSelector } from "../../store/posts/postsSlice";
 import { STREAMING_SERVER_GIF_ENDPOINT } from "../../utils/consts";
 import { Loader } from "../shared";
 import { Colors } from "../shared/styles/variables";
@@ -39,7 +41,7 @@ export const GenericComponent: React.FC<Props> = ({
   renderBottomVideo,
   renderFooter,
   gifStyle,
-  setItems
+  setItems,
 }) => {
   const navigation = useNavigation();
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -48,6 +50,8 @@ export const GenericComponent: React.FC<Props> = ({
   const isHorizontal: boolean = horizontal ? horizontal : false;
   const numOfColumns: number = numColumns ? numColumns : 3;
   const picHeight: number = pictureHeight ? pictureHeight : styles.theImage.height;
+  const { lastUpdatedPosts } = useSelector(postsSelector);
+  const dispatch = useDispatch();
 
   const Footer = () => {
     if (items.length) {
@@ -63,18 +67,23 @@ export const GenericComponent: React.FC<Props> = ({
   //     videoURL: `${STREAMING_SERVER_VIDEO_ENDPOINT}/${videoURL}`,
   //   });
   // };
+  useEffect(() => {
+    console.log("last updated", lastUpdatedPosts.length);
+    !isEmpty(lastUpdatedPosts) && updateItems(lastUpdatedPosts);
+  }, [lastUpdatedPosts]);
 
   const updateItems = (posts: IPost[]) => {
     setItems && setItems(posts);
-  }
+  };
 
   const showVideo = (postID) => {
     const initialIndex = items.findIndex((post) => post._id === postID);
-    navigation.navigate("VideoDisplay", { posts: items, initialIndex, updateAllPosts: updateItems });
+    navigation.navigate("VideoDisplay", { posts: items, initialIndex });
   };
   useEffect(() => {
     if (items) {
       setShowFooter(false);
+      dispatch(postsActions.resetPostsUpdated());
     }
   }, [items]);
 

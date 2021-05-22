@@ -17,7 +17,7 @@ export const PostsVideoDisplay: React.FC = () => {
         currentPosts={route.params.posts}
         isLoadMore={false}
         initialPostIndex={route.params?.initialIndex}
-        updateAllPosts={route.params?.updateAllPosts}
+        // updateAllPosts={route.params?.updateAllPosts}
       />
     </View>
   );

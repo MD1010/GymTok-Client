@@ -11,12 +11,14 @@ export interface PostsState {
   latestFetchedPosts: IPost[]; // last itemsToFetch that are displayed
   userPosts: IPost[];
   hasMoreToFetch: boolean;
+  lastUpdatedPosts: IPost[];
 }
 export const initialState: PostsState = {
   error: null,
   latestFetchedPosts: [],
   userPosts: [],
   hasMoreToFetch: true,
+  lastUpdatedPosts: [],
 };
 
 interface LikePayload {
@@ -65,11 +67,7 @@ const postsSlice = createSlice({
         state.latestFetchedPosts = updatedLatestFetchedPosts;
       }
 
-      const updatedUserPosts = userLikePost(
-        state.userPosts,
-        action.payload.post._id,
-        action.payload.userId
-      );
+      const updatedUserPosts = userLikePost(state.userPosts, action.payload.post._id, action.payload.userId);
 
       if (updatedUserPosts) {
         state.userPosts = updatedUserPosts;
@@ -86,11 +84,7 @@ const postsSlice = createSlice({
         state.latestFetchedPosts = updatedLatestFetchedPosts;
       }
 
-      const updatedUserPosts = userDislikePost(
-        state.userPosts,
-        action.payload.post._id,
-        action.payload.userId
-      );
+      const updatedUserPosts = userDislikePost(state.userPosts, action.payload.post._id, action.payload.userId);
 
       if (updatedUserPosts) {
         state.userPosts = updatedUserPosts;
@@ -112,6 +106,12 @@ const postsSlice = createSlice({
       if (updatedLatestFetchedPosts) {
         state.userPosts = updatedUserPosts;
       }
+    },
+    postsUpdated: (state, action: PayloadAction<IPost[]>) => {
+      state.lastUpdatedPosts = action.payload;
+    },
+    resetPostsUpdated: (state, action: PayloadAction) => {
+      state.lastUpdatedPosts = [];
     },
   },
 });
