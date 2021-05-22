@@ -7,7 +7,7 @@ export const config: StackNavigationOptions = {
   headerTintColor: "#fff",
   headerBackTitleVisible: false,
   cardStyle: {
-    backgroundColor: Colors.darkBlue,
+    backgroundColor: Colors.black,
   },
   headerTitleStyle: {
     fontWeight: "bold",
@@ -15,7 +15,7 @@ export const config: StackNavigationOptions = {
     borderWidth: 0,
   },
   headerStyle: {
-    backgroundColor: Colors.darkBlueOpaque,
+    backgroundColor: Colors.black,
     // borderBottomWidth: 0.3,
     // elevation: 0,
   },

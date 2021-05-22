@@ -4,7 +4,7 @@ import { Colors } from "../shared/styles/variables";
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.darkBlue,
+    backgroundColor: Colors.black,
     padding: 10,
   },
   form: {

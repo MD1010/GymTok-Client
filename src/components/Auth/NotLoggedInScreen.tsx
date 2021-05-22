@@ -1,3 +1,4 @@
+import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { useNavigation } from "@react-navigation/native";
 import React from "react";
 import { Dimensions, StyleSheet, Text, TouchableOpacity, View } from "react-native";
@@ -18,12 +19,13 @@ export const NotLoggedInScreen: React.FC<NotLoggedInProps> = ({
   redirectScreen = "Home",
 }) => {
   const navigation = useNavigation();
+  const bottomTabsHeight = useBottomTabBarHeight();
   return (
     <SafeAreaView>
-      <View style={styles.container}>
+      <View style={[styles.container, { height: Dimensions.get("window").height - bottomTabsHeight }]}>
         <View
           style={{
-            backgroundColor: Colors.darkBlueOpaque,
+            backgroundColor: Colors.black,
             padding: 15,
             borderBottomWidth: 0.3,
             borderColor: Colors.lightGrey2,
@@ -54,7 +56,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    marginTop: -25,
   },
   pageTitle: {
     alignSelf: "center",
@@ -64,7 +65,7 @@ const styles = StyleSheet.create({
     // marginTop: 25,
   },
   container: {
-    backgroundColor: Colors.darkBlue,
+    backgroundColor: Colors.black,
     height: Dimensions.get("window").height,
     justifyContent: "center",
   },

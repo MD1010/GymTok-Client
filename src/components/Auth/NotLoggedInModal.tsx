@@ -13,6 +13,7 @@ import {
   TouchableWithoutFeedback,
   View,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch } from "react-redux";
 import { registerIfNeed } from "../../store/auth/actions";
 import { Colors } from "../shared/styles/variables";
@@ -107,7 +108,7 @@ export const NotLoggedInModal: React.FC = () => {
   };
 
   return (
-    <View style={styles.modalContainer}>
+    <SafeAreaView style={styles.modalContainer}>
       <View style={[styles.modalBody]}>
         <View style={{ position: "absolute", left: 15, top: 15 }}>
           <TouchableWithoutFeedback onPress={() => navigation.goBack()}>
@@ -174,7 +175,7 @@ export const NotLoggedInModal: React.FC = () => {
           </TouchableWithoutFeedback>
         </View>
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -184,7 +185,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   modalBody: {
-    backgroundColor: Colors.darkBlue,
+    backgroundColor: Colors.black,
     flex: 1,
     padding: 30,
   },

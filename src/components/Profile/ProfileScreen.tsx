@@ -3,6 +3,7 @@ import { useRoute } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
 import { Image, Text, View } from "react-native";
 import { Divider } from "react-native-paper";
+import { SafeAreaView } from "react-native-safe-area-context";
 import Icon from "react-native-vector-icons/Ionicons";
 import { useDispatch } from "react-redux";
 import { IPost, IUser } from "../../interfaces";
@@ -54,7 +55,7 @@ function ProfileTabs(user: IUser) {
 
   return (
     <Tabs.Navigator
-      sceneContainerStyle={{ backgroundColor: Colors.darkBlueOpaque }}
+      sceneContainerStyle={{ backgroundColor: Colors.black }}
       screenOptions={({ route }) => ({
         tabBarIcon: ({ focused }) => {
           let iconName;
@@ -69,7 +70,7 @@ function ProfileTabs(user: IUser) {
         },
       })}
       tabBarOptions={{
-        style: { backgroundColor: Colors.darkBlueOpaque },
+        style: { backgroundColor: Colors.black },
         showIcon: true,
         showLabel: true,
         activeTintColor: Colors.white,
@@ -95,7 +96,8 @@ function ProfileTabs(user: IUser) {
             items={replies}
             loadMoreCallback={getMoreReplies}
             hasMoreToFetch={hasMoreReplies}
-            setItems={setReplies} />
+            setItems={setReplies}
+          />
         )}
       />
     </Tabs.Navigator>
@@ -145,7 +147,7 @@ const ProfileHeader: React.FC<IProfileHeaderProps> = ({ user, isLoading, details
 
       {/* </View> */}
 
-      <View style={{ paddingVertical: 40, backgroundColor: Colors.darkBlueOpaque }}>
+      <View style={{ paddingVertical: 40, backgroundColor: Colors.black }}>
         <View style={{ alignItems: "center" }}>
           <Image source={require("../../../assets/avatar/user.png")} style={{ width: 100, height: 100 }} />
           <Text
@@ -216,11 +218,11 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({ user, inProfileTab
   }, []);
 
   return (
-    <>
+    <SafeAreaView style={{ flex: 1 }}>
       {inProfileTab && <LogOutFromApp />}
       <ProfileHeader details={profileDetails} user={currentUser} isLoading={isLoading} />
       <Divider style={{ backgroundColor: Colors.weakGrey }} />
       <ProfileTabs {...currentUser} />
-    </>
+    </SafeAreaView>
   );
 };
