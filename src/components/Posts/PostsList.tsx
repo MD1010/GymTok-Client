@@ -6,12 +6,14 @@ import { Button } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
 import { IPost } from "../../interfaces/Post";
 import { authSelector } from "../../store/auth/authSlice";
-import { getLatestPosts, getMorePosts, getMostRecommended, getUserPosts } from "../../store/posts/actions";
+import { getLatestPosts, getMorePosts, getMostRecommended, getUserPosts, updateUserLikePost } from "../../store/posts/actions";
 import { postsSelector } from "../../store/posts/postsSlice";
 import { Loader } from "../shared";
 import { Colors, UIConsts } from "../shared/styles/variables";
 import { Post } from "./Post";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
+import { fetchAPI, RequestMethod } from "../../utils/fetchAPI";
+import { userPressLikeOnPost } from "../../utils/updatePostLikes";
 
 interface PostsListProps {
   /**
@@ -21,9 +23,10 @@ userPosts   *  in home page isFeed is true, else it is false
   currentPosts?: IPost[];
   isLoadMore?: boolean;
   initialPostIndex?: number;
+  updateAllPosts?: (posts: IPost[]) => void;
 }
 
-export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentPosts, isLoadMore, initialPostIndex }) => {
+export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentPosts, isLoadMore, initialPostIndex, updateAllPosts }) => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const [navigatedOutOfScreen, setNavigatedOutOfScreen] = useState<boolean>(false);
@@ -95,30 +98,6 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentPosts,
     // getPosts();
   }, [loggedUser]);
 
-  // useEffect(() => {
-  //   if (currentPosts !== undefined) {
-  //     for (let i = 0; i < posts.length; i++) {
-  //       for (let j = 0; j < latestFetchedPosts.length; j++) {
-  //         if (posts[i]._id === latestFetchedPosts[j]._id) {
-  //           console.log("fount liked post!!!!");
-  //           console.log(latestFetchedPosts[j]);
-  //           posts[i] = latestFetchedPosts[j];
-  //         }
-  //       }
-  //     }
-  //   }
-  // }, [currentPosts, latestFetchedPosts]);
-
-  // useEffect(() => {
-  //   if (currentPostID && posts.length > 0) {
-  //     console.log("currentID: " + currentPostID);
-  //     setPostIndex(posts.findIndex((post) => post._id === currentPostID));
-  //     // console.log(posts[wantedIndex]);
-  //     console.log("wnted index" + wantedIndex);
-  //     // if (wantedIndex != -1) goIndex(wantedIndex);
-  //   }
-  // }, [posts, currentPostID]);
-
   useFocusEffect(
     React.useCallback(() => {
       navigation.addListener("blur", () => {
@@ -136,6 +115,29 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentPosts,
       navigation.removeListener("focus", null);
     };
   }, []);
+
+  const loggedUserPressLike = async (post: IPost, isUserLikePost: boolean) => {
+    const updatedPosts = userPressLikeOnPost(posts, post, loggedUser._id);
+    setPosts(updatedPosts);
+    dispatch(updateUserLikePost(post, loggedUser._id));
+    updateAllPosts && updateAllPosts(updatedPosts);
+
+    let requestMethod: RequestMethod;
+    const likesApi = `${process.env.BASE_API_ENPOINT}/users/${loggedUser._id}/posts/${post._id}/like`;
+    if (!isUserLikePost) {
+      requestMethod = RequestMethod.POST;
+    } else {
+      requestMethod = RequestMethod.DELETE;
+    }
+    const { res, error } = await fetchAPI(requestMethod, likesApi);
+
+    if (error) {
+      setPosts(userPressLikeOnPost(posts, post, loggedUser._id));
+      dispatch(updateUserLikePost(post, loggedUser._id));
+    } else {
+      return res;
+    }
+  };
 
   const onViewRef = useRef(({ viewableItems, changed }) => {
     if (viewableItems[0]?.index === undefined) return;
@@ -191,6 +193,7 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentPosts,
         post={item}
         isVisible={index === currentlyPlaying && !navigatedOutOfScreen}
         containerStyle={{ height: viewHeight }}
+        loggedUserPressLike={loggedUserPressLike}
       />
     );
   };
@@ -206,11 +209,11 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentPosts,
       <View
         // {...panResponder.panHandlers}
         style={{ height: viewHeight, backgroundColor: Colors.black }}
-        // onStartShouldSetResponder={() => true}
-        // onStartShouldSetResponderCapture={() => true}
-        // onMoveShouldSetResponder={() => true}
-        // onMoveShouldSetResponderCapture={() => true}
-        // onResponderRelease={() => console.log(123123123)}
+      // onStartShouldSetResponder={() => true}
+      // onStartShouldSetResponderCapture={() => true}
+      // onMoveShouldSetResponder={() => true}
+      // onMoveShouldSetResponderCapture={() => true}
+      // onResponderRelease={() => console.log(123123123)}
       >
         <FlatList
           refreshControl={

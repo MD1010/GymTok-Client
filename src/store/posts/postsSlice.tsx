@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { IPost } from "../../interfaces";
 import { addReplyToPost } from "../../utils/addReplyToPost";
-import { getPostsAfterUserLikePost, getPostsAfterUserRemoveLikeFromPost } from "../../utils/updatePostLikes";
+import { userLikePost, userDislikePost } from "../../utils/updatePostLikes";
 import { RootState } from "../configureStore";
 
 export const itemsToFetch = 10; // how many posts are fetched on each get
@@ -55,7 +55,7 @@ const postsSlice = createSlice({
       state.error = null;
     },
     userLikePost: (state, action: PayloadAction<LikePayload>) => {
-      const updatedLatestFetchedPosts = getPostsAfterUserLikePost(
+      const updatedLatestFetchedPosts = userLikePost(
         state.latestFetchedPosts,
         action.payload.post._id,
         action.payload.userId
@@ -65,7 +65,7 @@ const postsSlice = createSlice({
         state.latestFetchedPosts = updatedLatestFetchedPosts;
       }
 
-      const updatedUserPosts = getPostsAfterUserLikePost(
+      const updatedUserPosts = userLikePost(
         state.userPosts,
         action.payload.post._id,
         action.payload.userId
@@ -76,7 +76,7 @@ const postsSlice = createSlice({
       }
     },
     userRemoveLikePost: (state, action: PayloadAction<LikePayload>) => {
-      const updatedLatestFetchedPosts = getPostsAfterUserRemoveLikeFromPost(
+      const updatedLatestFetchedPosts = userDislikePost(
         state.latestFetchedPosts,
         action.payload.post._id,
         action.payload.userId
@@ -86,7 +86,7 @@ const postsSlice = createSlice({
         state.latestFetchedPosts = updatedLatestFetchedPosts;
       }
 
-      const updatedUserPosts = getPostsAfterUserRemoveLikeFromPost(
+      const updatedUserPosts = userDislikePost(
         state.userPosts,
         action.payload.post._id,
         action.payload.userId

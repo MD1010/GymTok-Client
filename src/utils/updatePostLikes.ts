@@ -1,15 +1,25 @@
 import { IPost } from "../interfaces";
 
-export function getPostsAfterUserLikePost(posts: IPost[], postId: string, userId: string) {
+export function userPressLikeOnPost(posts: IPost[], post: IPost, userId: string) {
+    if (post.likes.includes(userId)) {
+        const updatedPosts = userDislikePost(posts, post._id, userId);
+        return updatedPosts;
+    } else {
+        const updatedPosts = userLikePost(posts, post._id, userId)
+        return updatedPosts;
+    }
+}
+
+export function userLikePost(posts: IPost[], postId: string, userId: string) {
     const postsCopy = [...posts];
     const likedPost = postsCopy.find(post => post._id === postId);
     if (likedPost) {
-        likedPost.likes.push(userId);
+        likedPost.likes = likedPost.likes.concat(userId);
         return postsCopy;
     }
 }
 
-export function getPostsAfterUserRemoveLikeFromPost(posts: IPost[], postId: string, userId: string) {
+export function userDislikePost(posts: IPost[], postId: string, userId: string) {
     const postsCopy = [...posts];
     const postToRemoveUserLike = postsCopy.find(post => post._id === postId);
     if (postToRemoveUserLike) {
@@ -17,3 +27,4 @@ export function getPostsAfterUserRemoveLikeFromPost(posts: IPost[], postId: stri
         return postsCopy;
     }
 }
+

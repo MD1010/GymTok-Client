@@ -20,11 +20,11 @@ import {
 } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-interface MainDiscoverProps {}
+interface MainDiscoverProps { }
 
 const POPULAR_HASHTAGS_COUNT = 4;
 
-export const MainDiscover: React.FC<MainDiscoverProps> = ({}) => {
+export const MainDiscover: React.FC<MainDiscoverProps> = ({ }) => {
   const navigation = useNavigation();
   const [popularHashtags, setPopularHashtags] = useState<IPopularHashtags>({});
 
@@ -43,18 +43,26 @@ export const MainDiscover: React.FC<MainDiscoverProps> = ({}) => {
 
     res && setPopularHashtags(res);
   };
+
   useEffect(() => {
     loadPopularHashtags();
 
     return () => navigation.removeListener("blur", null);
   }, []);
 
+  const updatePostsForHashtag = (hashtag: string, posts: IPost[]) => {
+    if (popularHashtags[hashtag]) {
+      const copiedPopularHashtags = { ...popularHashtags }
+      copiedPopularHashtags[hashtag] = posts;
+      setPopularHashtags(copiedPopularHashtags);
+    }
+  }
+
   const fetchHashtags = useCallback(
     debounce(async (searchTerm?: string) => {
       const { res } = await fetchAPI(RequestMethod.GET, `${process.env.BASE_API_ENPOINT}/hashtags`, null, {
         searchTerm,
       });
-      console.log("my tagsdddssss", res);
       res && setMasterDataSource(res);
 
       //setIsLoading(false);
@@ -241,6 +249,7 @@ export const MainDiscover: React.FC<MainDiscoverProps> = ({}) => {
             </Text>
             <GenericComponent
               items={relvantItems}
+              setItems={setRelavantItems}
               numColumns={2}
               pictureHeight={300}
               renderFooter={(item: IPost) => renderFooter(item)}
@@ -271,6 +280,7 @@ export const MainDiscover: React.FC<MainDiscoverProps> = ({}) => {
                   key={key}
                   hashtag={hashtag}
                   posts={popularHashtags[hashtag]}
+                  updatePostsForHashtag={posts => updatePostsForHashtag(hashtag, posts)}
                 />
                 // </View>
               );

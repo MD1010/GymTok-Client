@@ -8,9 +8,6 @@ import { postsSelector } from "../../store/posts/postsSlice";
 
 export const PostsVideoDisplay: React.FC = () => {
   const route = useRoute<any>();
-  const headerHeight = useHeaderHeight();
-  const { hasMoreToFetch, error, latestFetchedPosts, userPosts } = useSelector(postsSelector);
-  const [currentItems, setCurrentItems] = useState<any>();
 
   // todo Dov modify postlist to display correct index
   return (
@@ -20,12 +17,8 @@ export const PostsVideoDisplay: React.FC = () => {
         currentPosts={route.params.posts}
         isLoadMore={false}
         initialPostIndex={route.params?.initialIndex}
+        updateAllPosts={route.params?.updateAllPosts}
       />
-      {/* <ChallengesContainer
-        currentVideoID={route.params.videoURL?.split("/")[3]}
-        getOnlyUserChallenges={true}
-        containerStyle={{ height: Dimensions.get("window").height }}
-      /> */}
     </View>
   );
 };

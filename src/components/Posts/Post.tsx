@@ -21,6 +21,7 @@ interface PostProps {
   post: IPost;
   isVisible: boolean;
   containerStyle?: ViewStyle;
+  loggedUserPressLike: (post: IPost, isUserLikePost: boolean) => Promise<IPost>;
 }
 
 interface IUIContainer {
@@ -29,6 +30,7 @@ interface IUIContainer {
   isUserLikeChallenge: boolean;
   onLikeButtonPress: () => void;
   onCommentButtonPress: () => void;
+
 }
 
 const Heading = ({ createdBy, onCameraPress, isReply }) => {
@@ -94,7 +96,7 @@ const LikesComments: React.FC<IUIContainer> = ({
   );
 };
 
-export const Post: React.FC<PostProps> = memo(({ post, isVisible, containerStyle }) => {
+export const Post: React.FC<PostProps> = memo(({ post, isVisible, containerStyle, loggedUserPressLike }) => {
   const { videoURI, createdBy, likes, replies } = post;
   const { loggedUser } = useSelector(authSelector);
   const navigation = useNavigation();
@@ -106,28 +108,13 @@ export const Post: React.FC<PostProps> = memo(({ post, isVisible, containerStyle
     loggedUser && setÌsUserLikePost(post.likes.includes(loggedUser?._id));
   }, [post, loggedUser]);
 
-  const onLikeButtonPress = async () => {
+  const onLikeButtonPress = () => {
     if (loggedUser) {
       console.log("user:" + loggedUser?.fullName + " click on like button.");
-
       setÌsUserLikePost(!isUserLikePost);
-      dispatch(updateUserLikePost(post, loggedUser._id));
 
-      let requestMethod: RequestMethod;
-      const likesApi = `${process.env.BASE_API_ENPOINT}/users/${loggedUser._id}/posts/${post._id}/like`;
-      if (!isUserLikePost) {
-        requestMethod = RequestMethod.POST;
-      } else {
-        requestMethod = RequestMethod.DELETE;
-      }
-      const { res, error } = await fetchAPI(requestMethod, likesApi);
-
-      if (error) {
-        setÌsUserLikePost(isUserLikePost);
-        dispatch(updateUserLikePost(post, loggedUser._id));
-      }
+      loggedUserPressLike(post, isUserLikePost)
     }
-    // todo: fetch here
     else {
       navigation.navigate("NotLoggedIn");
       console.log("guest click on like button, need to log-in");

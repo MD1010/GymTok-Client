@@ -23,6 +23,7 @@ interface Props {
   renderFooter?: (item: IPost) => JSX.Element;
   renderBottomVideo?: (item: IPost) => JSX.Element;
   pageHeader?: () => JSX.Element;
+  setItems?: (items: IPost[]) => void;
 }
 
 export const GenericComponent: React.FC<Props> = ({
@@ -38,6 +39,7 @@ export const GenericComponent: React.FC<Props> = ({
   renderBottomVideo,
   renderFooter,
   gifStyle,
+  setItems
 }) => {
   const navigation = useNavigation();
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -46,24 +48,6 @@ export const GenericComponent: React.FC<Props> = ({
   const isHorizontal: boolean = horizontal ? horizontal : false;
   const numOfColumns: number = numColumns ? numColumns : 3;
   const picHeight: number = pictureHeight ? pictureHeight : styles.theImage.height;
-  const { error, latestFetchedPosts, userPosts } = useSelector(postsSelector);
-  const [currentItems, setCurrentItems] = useState<any>();
-
-  useEffect(() => {
-    let tempArr = [...items];
-    for (let i = 0; i < tempArr.length; i++) {
-      for (let j = 0; j < latestFetchedPosts.length; j++) {
-        if (tempArr[i]._id === latestFetchedPosts[j]._id) {
-          console.log("fount liked post!!!!");
-          console.log(tempArr[i].likes.length);
-          console.log(latestFetchedPosts[j].likes.length);
-          tempArr[i] = { ...latestFetchedPosts[j] };
-          console.log(tempArr[i].likes.length);
-        }
-      }
-    }
-    setCurrentItems(tempArr);
-  }, [items, latestFetchedPosts]);
 
   const Footer = () => {
     if (items.length) {
@@ -79,9 +63,14 @@ export const GenericComponent: React.FC<Props> = ({
   //     videoURL: `${STREAMING_SERVER_VIDEO_ENDPOINT}/${videoURL}`,
   //   });
   // };
+
+  const updateItems = (posts: IPost[]) => {
+    setItems && setItems(posts);
+  }
+
   const showVideo = (postID) => {
     const initialIndex = items.findIndex((post) => post._id === postID);
-    navigation.navigate("VideoDisplay", { posts: items, initialIndex });
+    navigation.navigate("VideoDisplay", { posts: items, initialIndex, updateAllPosts: updateItems });
   };
   useEffect(() => {
     if (items) {
@@ -156,7 +145,7 @@ export const GenericComponent: React.FC<Props> = ({
     >
       <FlatList
         ListHeaderComponent={pageHeader}
-        data={/*items*/ currentItems}
+        data={/*items*/ items}
         keyExtractor={(item, index) => index.toString()}
         horizontal={isHorizontal}
         numColumns={!isHorizontal ? numOfColumns : 0}

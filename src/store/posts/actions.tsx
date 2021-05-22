@@ -38,7 +38,6 @@ export const getUserPosts = (): AppThunk => {
       page: Math.floor(getState().posts.latestFetchedPosts.length / itemsToFetch),
       createdBy: loggedUser,
     });
-    console.log("fdasafdfdfdfsafdfd");
     if (res) {
       dispatch(postsActions.userPostsFetchSuccess(res));
     } else {
