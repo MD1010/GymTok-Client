@@ -36,6 +36,7 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentPosts,
 
   const { hasMoreToFetch, error, latestFetchedPosts, userPosts } = useSelector(postsSelector);
   const [posts, setPosts] = useState<IPost[]>([]);
+  //const isLoading = useRef<boolean>(true);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   // const posts: IPost[] = currentPosts ? currentPosts : isFeed ? latestFetchedPosts : userPosts;
   const [refreshing, setRefreshing] = React.useState<boolean>(false);
@@ -48,6 +49,7 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentPosts,
 
   useEffect(() => {
     setPosts(currentPosts ? currentPosts : isFeed ? latestFetchedPosts : userPosts);
+    //isLoading.current = false;
     setIsLoading(false);
   }, [currentPosts, isFeed, latestFetchedPosts, userPosts]);
 
@@ -66,6 +68,8 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentPosts,
   // }, []);
   useEffect(() => {
     navigation.setParams({ post: posts[currentlyPlaying] });
+    //isLoading.current = false;
+    setIsLoading(false);
   }, [currentlyPlaying, posts]);
 
   const onRefresh = React.useCallback(async () => {
@@ -88,8 +92,14 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentPosts,
     // check if user was loaded - undefinded means the store has not been updated yet.
     if (loggedUser !== undefined) {
       console.log("loading...");
+      //isLoading.current = true;
       setIsLoading(true);
-      isEmpty(posts) && getPosts();
+      if (isEmpty(posts)) {
+        getPosts();
+      } else {
+        //isLoading.current = false;
+        setIsLoading(false);
+      }
     }
 
     // getPosts();
@@ -108,34 +118,6 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentPosts,
   //     }
   //   }
   // }, [currentPosts, latestFetchedPosts]);
-
-  // useEffect(() => {
-  //   if (currentPostID && posts.length > 0) {
-  //     console.log("currentID: " + currentPostID);
-  //     setPostIndex(posts.findIndex((post) => post._id === currentPostID));
-  //     // console.log(posts[wantedIndex]);
-  //     console.log("wnted index" + wantedIndex);
-  //     // if (wantedIndex != -1) goIndex(wantedIndex);
-  //   }
-  // }, [posts, currentPostID]);
-
-  useFocusEffect(
-    React.useCallback(() => {
-      navigation.addListener("blur", () => {
-        setNavigatedOutOfScreen(true);
-      });
-      navigation.addListener("focus", () => {
-        setNavigatedOutOfScreen(false);
-      });
-    }, [])
-  );
-
-  useEffect(() => {
-    return () => {
-      navigation.removeListener("blur", null);
-      navigation.removeListener("focus", null);
-    };
-  }, []);
 
   const onViewRef = useRef(({ viewableItems, changed }) => {
     if (viewableItems[0]?.index === undefined) return;
