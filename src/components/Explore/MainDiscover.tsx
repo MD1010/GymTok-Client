@@ -20,11 +20,11 @@ import {
 } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-interface MainDiscoverProps {}
+interface MainDiscoverProps { }
 
 const POPULAR_HASHTAGS_COUNT = 4;
 
-export const MainDiscover: React.FC<MainDiscoverProps> = ({}) => {
+export const MainDiscover: React.FC<MainDiscoverProps> = ({ }) => {
   const navigation = useNavigation();
   const [popularHashtags, setPopularHashtags] = useState<IPopularHashtags>({});
 
@@ -241,6 +241,7 @@ export const MainDiscover: React.FC<MainDiscoverProps> = ({}) => {
             </Text>
             <GenericComponent
               items={relvantItems}
+              setItems={setRelavantItems}
               numColumns={2}
               pictureHeight={300}
               renderFooter={(item: IPost) => renderFooter(item)}

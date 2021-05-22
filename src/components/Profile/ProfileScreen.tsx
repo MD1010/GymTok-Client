@@ -83,13 +83,18 @@ function ProfileTabs(user: IUser) {
             items={challenges}
             loadMoreCallback={getMoreChallenges}
             hasMoreToFetch={hasMoreChallenges}
+            setItems={setChallenges}
           />
         )}
       />
       <Tabs.Screen
         name="Replies"
         children={() => (
-          <GenericComponent items={replies} loadMoreCallback={getMoreReplies} hasMoreToFetch={hasMoreReplies} />
+          <GenericComponent
+            items={replies}
+            loadMoreCallback={getMoreReplies}
+            hasMoreToFetch={hasMoreReplies}
+            setItems={setReplies} />
         )}
       />
     </Tabs.Navigator>
