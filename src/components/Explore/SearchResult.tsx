@@ -64,7 +64,7 @@ export const SearchResults: React.FC<Props> = ({ dataSource, handleSelectItem })
     <Animatable.View animation="fadeInUpBig" duration={10} style={{ height: Dimensions.get("screen").height }}>
       <KeyboardAwareFlatList
         enableOnAndroid={true}
-        data={[...dataSource, { hashtag: "fdfd" }, { hashtag: "dov" }]}
+        data={dataSource}
         keyExtractor={(item, index) => index.toString()}
         ItemSeparatorComponent={ItemSeparatorView}
         renderItem={ItemView}

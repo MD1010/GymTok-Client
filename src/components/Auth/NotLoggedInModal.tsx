@@ -37,7 +37,6 @@ async function loginWithFacebook() {
       // console.log(await response.json(), ' ', result.token);
 
       const res = await response.json();
-      Alert.alert("Logged in!", `Hi ${res.name}!`);
       return res;
     } else {
       // type === 'cancel'
