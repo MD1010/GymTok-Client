@@ -39,6 +39,7 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentPosts,
 
   const { hasMoreToFetch, error, latestFetchedPosts, userPosts } = useSelector(postsSelector);
   const [posts, setPosts] = useState<IPost[]>([]);
+  //const isLoading = useRef<boolean>(true);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   // const posts: IPost[] = currentPosts ? currentPosts : isFeed ? latestFetchedPosts : userPosts;
   const [refreshing, setRefreshing] = React.useState<boolean>(false);
@@ -51,6 +52,7 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentPosts,
 
   useEffect(() => {
     setPosts(currentPosts ? currentPosts : isFeed ? latestFetchedPosts : userPosts);
+    //isLoading.current = false;
     setIsLoading(false);
   }, [currentPosts, isFeed, latestFetchedPosts, userPosts]);
 
@@ -69,6 +71,8 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentPosts,
   // }, []);
   useEffect(() => {
     navigation.setParams({ post: posts[currentlyPlaying] });
+    //isLoading.current = false;
+    setIsLoading(false);
   }, [currentlyPlaying, posts]);
 
   const onRefresh = React.useCallback(async () => {
@@ -91,53 +95,32 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentPosts,
     // check if user was loaded - undefinded means the store has not been updated yet.
     if (loggedUser !== undefined) {
       console.log("loading...");
+      //isLoading.current = true;
       setIsLoading(true);
-      isEmpty(posts) && isEmpty(currentPosts) && getPosts();
+      if (isEmpty(posts)) {
+        getPosts();
+      } else {
+        //isLoading.current = false;
+        setIsLoading(false);
+      }
     }
 
     // getPosts();
   }, [loggedUser]);
 
-  useFocusEffect(
-    React.useCallback(() => {
-      navigation.addListener("blur", () => {
-        setNavigatedOutOfScreen(true);
-      });
-      navigation.addListener("focus", () => {
-        setNavigatedOutOfScreen(false);
-      });
-    }, [])
-  );
-
-  useEffect(() => {
-    return () => {
-      navigation.removeListener("blur", null);
-      navigation.removeListener("focus", null);
-    };
-  }, []);
-
-  const loggedUserPressLike = async (post: IPost, isUserLikePost: boolean) => {
-    const updatedPosts = userPressLikeOnPost(posts, post, loggedUser._id);
-    setPosts(updatedPosts);
-    dispatch(updateUserLikePost(post, loggedUser._id));
-    updateAllPosts && updateAllPosts(updatedPosts);
-
-    let requestMethod: RequestMethod;
-    const likesApi = `${process.env.BASE_API_ENPOINT}/users/${loggedUser._id}/posts/${post._id}/like`;
-    if (!isUserLikePost) {
-      requestMethod = RequestMethod.POST;
-    } else {
-      requestMethod = RequestMethod.DELETE;
-    }
-    const { res, error } = await fetchAPI(requestMethod, likesApi);
-
-    if (error) {
-      setPosts(userPressLikeOnPost(posts, post, loggedUser._id));
-      dispatch(updateUserLikePost(post, loggedUser._id));
-    } else {
-      return res;
-    }
-  };
+  // useEffect(() => {
+  //   if (currentPosts !== undefined) {
+  //     for (let i = 0; i < posts.length; i++) {
+  //       for (let j = 0; j < latestFetchedPosts.length; j++) {
+  //         if (posts[i]._id === latestFetchedPosts[j]._id) {
+  //           console.log("fount liked post!!!!");
+  //           console.log(latestFetchedPosts[j]);
+  //           posts[i] = latestFetchedPosts[j];
+  //         }
+  //       }
+  //     }
+  //   }
+  // }, [currentPosts, latestFetchedPosts]);
 
   const onViewRef = useRef(({ viewableItems, changed }) => {
     if (viewableItems[0]?.index === undefined) return;

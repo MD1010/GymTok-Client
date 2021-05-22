@@ -25,6 +25,7 @@ function ProfileTabs(user: IUser) {
   const [hasMoreReplies, setHasMoreReplies] = useState(true);
 
   const getMoreChallenges = async () => {
+    console.log("gfgfg");
     const endpoint = `${process.env.BASE_API_ENPOINT}/posts`;
     const { res, error } = await fetchAPI<IPost[]>(RequestMethod.GET, endpoint, null, {
       size: itemsToFetch,
@@ -201,8 +202,8 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({ user, inProfileTab
   const dispatch = useDispatch();
 
   useEffect(() => {
-    setIsLoading(true);
     async function getProfileDetails() {
+      setIsLoading(true);
       const profileDetailsEndpoint = `${process.env.BASE_API_ENPOINT}/users/profileDetails?userId=${currentUser._id}`;
 
       const { res, error } = await fetchAPI(RequestMethod.GET, profileDetailsEndpoint);
@@ -210,6 +211,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({ user, inProfileTab
       res && setProfileDetails(res);
       res && setIsLoading(false);
     }
+    console.log("dov dov profileeeeee");
     getProfileDetails();
   }, []);
 

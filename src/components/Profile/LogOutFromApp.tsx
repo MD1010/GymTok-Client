@@ -15,6 +15,8 @@ export const LogOutFromApp: React.FC = () => {
   const { loggedUser } = useSelector(authSelector);
 
   const logoutFromApp = useCallback(() => {
+    console.log(123123);
+
     dispatch(logout());
     setModalVisible(false);
   }, []);
@@ -32,7 +34,7 @@ export const LogOutFromApp: React.FC = () => {
         name={"log-out-outline"}
         size={30}
         color={Colors.white}
-        style={{ position: "absolute", right: 15, top: 20, zIndex: 1000 }}
+        style={{ position: "absolute", right: 15, top: 50, zIndex: 1000 }}
       />
 
       <ConfirmPopup
