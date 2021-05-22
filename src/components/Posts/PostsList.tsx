@@ -40,7 +40,7 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentPosts,
   // const posts: IPost[] = currentPosts ? currentPosts : isFeed ? latestFetchedPosts : userPosts;
   const [refreshing, setRefreshing] = React.useState<boolean>(false);
   const loadMore: boolean = isLoadMore !== undefined ? isLoadMore : true;
-  const bottomTabsHeight = useBottomTabBarHeight();
+  const bottomTabsHeight = isFeed ? useBottomTabBarHeight() : 0;
 
   useEffect(() => {
     error && alert(JSON.stringify(error));
@@ -157,18 +157,8 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentPosts,
     [isFeed, bottomTabsHeight]
   );
   const config = useRef<ViewabilityConfig>({
-    itemVisiblePercentThreshold: 90,
-    // minimumViewTime: 150,
+    itemVisiblePercentThreshold: 100,
   });
-
-  const itemLayout = useCallback(
-    (_, index) => ({
-      length: viewHeight,
-      offset: viewHeight * index,
-      index,
-    }),
-    []
-  );
 
   const Footer = () => {
     if (posts.length) {
@@ -236,7 +226,7 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentPosts,
           disableIntervalMomentum
           renderItem={renderItem}
           keyExtractor={keyExtractor}
-          getItemLayout={itemLayout}
+          // getItemLayout={itemLayout}
           snapToAlignment={"start"}
           decelerationRate={"fast"}
           ref={(ref) => {
