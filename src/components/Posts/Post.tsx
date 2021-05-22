@@ -108,17 +108,12 @@ export const Post: React.FC<PostProps> = memo(({ post, isVisible, containerStyle
     loggedUser && setÌsUserLikePost(post.likes.includes(loggedUser?._id));
   }, [post, loggedUser]);
 
-  const onLikeButtonPress = async () => {
+  const onLikeButtonPress = () => {
     if (loggedUser) {
       console.log("user:" + loggedUser?.fullName + " click on like button.");
       setÌsUserLikePost(!isUserLikePost);
 
-      const response = await loggedUserPressLike(post, isUserLikePost)
-
-      if (!response) {
-        setÌsUserLikePost(isUserLikePost);
-        loggedUserPressLike(post, isUserLikePost);
-      }
+      loggedUserPressLike(post, isUserLikePost)
     }
     else {
       navigation.navigate("NotLoggedIn");
