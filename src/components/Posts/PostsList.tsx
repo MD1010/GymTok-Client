@@ -13,6 +13,7 @@ import { Colors, UIConsts } from "../shared/styles/variables";
 import { Post } from "./Post";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { fetchAPI, RequestMethod } from "../../utils/fetchAPI";
+import { userPressLikeOnPost } from "../../utils/updatePostLikes";
 
 interface PostsListProps {
   /**
@@ -115,6 +116,7 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentPosts,
   }, []);
 
   const loggedUserPressLike = async (post: IPost, isUserLikePost: boolean) => {
+    setPosts(userPressLikeOnPost(posts, post, loggedUser._id));
     dispatch(updateUserLikePost(post, loggedUser._id));
 
     let requestMethod: RequestMethod;
@@ -127,6 +129,7 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentPosts,
     const { res, error } = await fetchAPI(requestMethod, likesApi);
 
     if (error) {
+      setPosts(userPressLikeOnPost(posts, post, loggedUser._id));
       dispatch(updateUserLikePost(post, loggedUser._id));
     } else {
       return res;
