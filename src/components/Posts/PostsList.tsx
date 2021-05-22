@@ -23,9 +23,10 @@ userPosts   *  in home page isFeed is true, else it is false
   currentPosts?: IPost[];
   isLoadMore?: boolean;
   initialPostIndex?: number;
+  updateAllPosts?: (posts: IPost[]) => void;
 }
 
-export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentPosts, isLoadMore, initialPostIndex }) => {
+export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentPosts, isLoadMore, initialPostIndex, updateAllPosts }) => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const [navigatedOutOfScreen, setNavigatedOutOfScreen] = useState<boolean>(false);
@@ -116,8 +117,10 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentPosts,
   }, []);
 
   const loggedUserPressLike = async (post: IPost, isUserLikePost: boolean) => {
-    setPosts(userPressLikeOnPost(posts, post, loggedUser._id));
+    const updatedPosts = userPressLikeOnPost(posts, post, loggedUser._id);
+    setPosts(updatedPosts);
     dispatch(updateUserLikePost(post, loggedUser._id));
+    updateAllPosts && updateAllPosts(updatedPosts);
 
     let requestMethod: RequestMethod;
     const likesApi = `${process.env.BASE_API_ENPOINT}/users/${loggedUser._id}/posts/${post._id}/like`;
