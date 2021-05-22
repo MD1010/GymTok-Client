@@ -21,7 +21,7 @@ type StackParamsList = {
 export const PostReplies: React.FC<PostRepliesProps> = ({}) => {
   const navigation = useNavigation();
   const route = useRoute<RouteProp<StackParamsList, "params">>();
-  const [challengeReplies, setChallengeReplies] = useState<any[]>([]);
+  const [challengeReplies, setChallengeReplies] = useState<IPost[]>([]);
   const [videoGif, setVideoGif] = useState<string>(null);
   const [post, setPost] = useState<IPost>();
   // const [isLoadingChallengeVideo, setIsLoadingChallengeVideo] = useState<boolean>(true);
@@ -52,12 +52,7 @@ export const PostReplies: React.FC<PostRepliesProps> = ({}) => {
     if (route.params?.newReply) {
       setChallengeReplies([
         ...challengeReplies,
-        {
-          _id: challengeReplies.length,
-          url: route.params.newReply.videoURI,
-          gif: route.params.newReply.gif,
-          numOfLikes: 0,
-        },
+        route.params?.newReply
       ]);
     }
   }, [route.params?.newReply]);
