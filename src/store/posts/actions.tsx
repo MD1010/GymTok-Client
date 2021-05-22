@@ -3,6 +3,7 @@ import { fetchAPI, RequestMethod } from "../../utils/fetchAPI";
 import { AppDispatch, AppThunk } from "../configureStore";
 import { RootState } from "../rootReducer";
 import { itemsToFetch, postsActions } from "./postsSlice";
+import { getNumberOfPosts } from "./utils";
 
 export const getMorePosts = (): AppThunk => {
   return async (dispatch: AppDispatch, getState: () => RootState) => {
@@ -10,10 +11,15 @@ export const getMorePosts = (): AppThunk => {
 
     const endpoint = `${process.env.BASE_API_ENPOINT}/posts`;
 
-    const { res, error } = await fetchAPI<IPost[]>(RequestMethod.GET, endpoint, null, {
-      size: itemsToFetch,
-      page: Math.floor(currentPosts.length / itemsToFetch),
-    });
+    const { res, error } = await fetchAPI<IPost[]>(
+      RequestMethod.GET,
+      endpoint,
+      null,
+      {
+        size: itemsToFetch,
+        page: Math.floor(currentPosts.length / itemsToFetch),
+      }
+    );
     if (res) {
       if (res.length > 0) {
         dispatch(postsActions.fetchMoreSuccess(res));
@@ -26,20 +32,32 @@ export const getMorePosts = (): AppThunk => {
   };
 };
 
-export const getUserPosts = (): AppThunk => {
+export const getUserPosts = (isReply): AppThunk => {
   return async (dispatch: AppDispatch, getState: () => RootState) => {
     // todo https://www.goodday.work/t/RRaDG3
     // todo send param to this func if you want replies or real posts and send the relevant query params
     const endpoint = `${process.env.BASE_API_ENPOINT}/posts`;
     const loggedUser = getState()?.auth?.loggedUser._id;
+    const currentPostsLenght = getNumberOfPosts(
+      getState().posts.userPosts,
+      isReply
+    );
+    const { res, error } = await fetchAPI<IPost[]>(
+      RequestMethod.GET,
+      endpoint,
+      null,
+      {
+        size: itemsToFetch,
+        page: Math.floor(currentPostsLenght / itemsToFetch),
+        createdBy: loggedUser,
+        isReply,
+      }
+    );
 
-    const { res, error } = await fetchAPI<IPost[]>(RequestMethod.GET, endpoint, null, {
-      size: itemsToFetch,
-      page: Math.floor(getState().posts.latestFetchedPosts.length / itemsToFetch),
-      createdBy: loggedUser,
-    });
     if (res) {
-      dispatch(postsActions.userPostsFetchSuccess(res));
+      dispatch(
+        postsActions.userProfilePostsFetchSuccess({ isReply, posts: res })
+      );
     } else {
       dispatch(postsActions.fetchFailed(error));
     }
@@ -52,10 +70,15 @@ export const getMostRecommended = (): AppThunk => {
     const endpoint = `${process.env.BASE_API_ENPOINT}/users/${loggedUser}/recommendedPosts`;
     console.log(endpoint);
     const currentPosts = getState().posts.latestFetchedPosts;
-    const { res, error } = await fetchAPI<IPost[]>(RequestMethod.GET, endpoint, null, {
-      size: itemsToFetch,
-      page: Math.floor(currentPosts.length / itemsToFetch),
-    });
+    const { res, error } = await fetchAPI<IPost[]>(
+      RequestMethod.GET,
+      endpoint,
+      null,
+      {
+        size: itemsToFetch,
+        page: Math.floor(currentPosts.length / itemsToFetch),
+      }
+    );
 
     if (res) {
       dispatch(postsActions.fetchMoreSuccess(res));
@@ -85,11 +108,16 @@ export const getLatestPosts = (): AppThunk => {
     //   console.log("sortedItemmmm", sortedArr[i].publishDate);
     // });
 
-    const { res, error } = await fetchAPI<IPost[]>(RequestMethod.GET, endpoint, null, {
-      size: itemsToFetch,
-      page: Math.floor(currentPosts.length / itemsToFetch),
-      currentMaxDate: maxDate,
-    });
+    const { res, error } = await fetchAPI<IPost[]>(
+      RequestMethod.GET,
+      endpoint,
+      null,
+      {
+        size: itemsToFetch,
+        page: Math.floor(currentPosts.length / itemsToFetch),
+        currentMaxDate: maxDate,
+      }
+    );
 
     if (res) {
       console.log("refreshing and getting newest posts!!");

@@ -11,12 +11,16 @@ export interface PostsState {
   latestFetchedPosts: IPost[]; // last itemsToFetch that are displayed
   userPosts: IPost[];
   hasMoreToFetch: boolean;
+  hasMoreChallengesToFetch: boolean;
+  hasMoreRepliesToFetch: boolean;
 }
 export const initialState: PostsState = {
   error: null,
   latestFetchedPosts: [],
   userPosts: [],
   hasMoreToFetch: true,
+  hasMoreChallengesToFetch: true,
+  hasMoreRepliesToFetch: true,
 };
 
 interface LikePayload {
@@ -47,6 +51,23 @@ const postsSlice = createSlice({
       if (action.payload.length < itemsToFetch) state.hasMoreToFetch = false;
       state.userPosts = [...state.userPosts, ...action.payload];
       state.error = null;
+    },
+    userProfilePostsFetchSuccess: (
+      state,
+      action: PayloadAction<{ isReply: string; posts: IPost[] }>
+    ) => {
+      console.log(`isReply: ${action.payload.isReply}`);
+      if (action.payload.posts.length < itemsToFetch) {
+        if (action.payload.isReply) {
+          state.hasMoreRepliesToFetch = false;
+        } else {
+          state.hasMoreChallengesToFetch = false;
+        }
+      }
+      state.userPosts = [...state.userPosts, ...action.payload.posts];
+    },
+    setUserPosts: (state, action: PayloadAction<IPost[]>) => {
+      state.userPosts = action.payload;
     },
     refreshSuccess: (state, action: PayloadAction<IPost[]>) => {
       state.latestFetchedPosts = action.payload;
@@ -125,11 +146,17 @@ const postsSlice = createSlice({
 
 export const postsActions = postsSlice.actions;
 export const postsSelector = (state: RootState) => state.posts;
-export const challengesSelector = (state: RootState) =>
-  state.posts.userPosts.filter((post) => post.isReply);
-export const repliesSelector = (state: RootState) =>
-  state.posts.userPosts.filter((post) => {
+export const challengesSelector = (state: RootState) => {
+  const post = state.posts.userPosts.filter((post) => post.isReply);
+  console.log("1");
+  return post;
+};
+export const repliesSelector = (state: RootState) => {
+  const post = state.posts.userPosts.filter((post) => {
     !post.isReply;
   });
+  console.log("2");
+  return post;
+};
 
 export default postsSlice.reducer;

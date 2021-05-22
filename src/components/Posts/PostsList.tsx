@@ -112,7 +112,14 @@ export const PostsList: React.FC<PostsListProps> = memo(
 
     const getPosts = () => {
       if (loggedUser) {
-        isFeed ? dispatch(getMostRecommended()) : dispatch(getUserPosts());
+        if (isFeed) {
+          ("herer");
+          dispatch(getMostRecommended());
+        }
+        // } else {
+        //   console.log("bitch");
+        //   dispatch(getUserPosts());
+        // }
       } else {
         console.log("getting more posts because user is null");
         // loggedUser is null -> didnt log in yet

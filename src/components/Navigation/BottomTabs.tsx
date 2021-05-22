@@ -9,6 +9,7 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import { useSelector } from "react-redux";
 import { authSelector } from "../../store/auth/authSlice";
 import { unreadNotificationsSelector } from "../../store/notifications/notificationsSlice";
+import { postsSelector } from "../../store/posts/postsSlice";
 import { ExploreContainer } from "../Explore/ExploreContainer";
 import { HomeScreen } from "../Home/HomeScreen";
 import { NotificationScreen } from "../Notifications/NotificationScreen";
@@ -84,7 +85,13 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
                     style={{ backgroundColor: Colors.lightPurpule }}
                     color={Colors.white}
                     size={40}
-                    icon={() => <FontAwesome5 name="plus" size={20} color={Colors.white} />}
+                    icon={() => (
+                      <FontAwesome5
+                        name="plus"
+                        size={20}
+                        color={Colors.white}
+                      />
+                    )}
                     onPress={() => {
                       navigation.navigate("Camera");
                     }}
@@ -102,7 +109,11 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
             tabBarIcon: ({ color, size, focused }) =>
               focused ? (
                 <View>
-                  <Ionicons name={"notifications-sharp"} color={color} size={size} />
+                  <Ionicons
+                    name={"notifications-sharp"}
+                    color={color}
+                    size={size}
+                  />
                   {loggedUser && unreadNotifications.length ? (
                     <Badge
                       value={unreadNotifications.length}
@@ -119,7 +130,11 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
                 </View>
               ) : (
                 <View>
-                  <Ionicons name={"notifications-outline"} color={color} size={size} />
+                  <Ionicons
+                    name={"notifications-outline"}
+                    color={color}
+                    size={size}
+                  />
                   {loggedUser && unreadNotifications.length ? (
                     <Badge
                       value={unreadNotifications.length}

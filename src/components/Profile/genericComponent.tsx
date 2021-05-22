@@ -1,7 +1,16 @@
 import { FontAwesome } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
-import { Dimensions, FlatList, ImageBackground, SafeAreaView, StyleSheet, Text, View, ViewStyle } from "react-native";
+import {
+  Dimensions,
+  FlatList,
+  ImageBackground,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  View,
+  ViewStyle,
+} from "react-native";
 import Ripple from "react-native-material-ripple";
 import { useSelector } from "react-redux";
 import { IPost } from "../../interfaces";
@@ -39,7 +48,7 @@ export const GenericComponent: React.FC<Props> = ({
   renderBottomVideo,
   renderFooter,
   gifStyle,
-  setItems
+  setItems,
 }) => {
   const navigation = useNavigation();
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -47,7 +56,9 @@ export const GenericComponent: React.FC<Props> = ({
 
   const isHorizontal: boolean = horizontal ? horizontal : false;
   const numOfColumns: number = numColumns ? numColumns : 3;
-  const picHeight: number = pictureHeight ? pictureHeight : styles.theImage.height;
+  const picHeight: number = pictureHeight
+    ? pictureHeight
+    : styles.theImage.height;
 
   const Footer = () => {
     if (items.length) {
@@ -66,11 +77,15 @@ export const GenericComponent: React.FC<Props> = ({
 
   const updateItems = (posts: IPost[]) => {
     setItems && setItems(posts);
-  }
+  };
 
   const showVideo = (postID) => {
     const initialIndex = items.findIndex((post) => post._id === postID);
-    navigation.navigate("VideoDisplay", { posts: items, initialIndex, updateAllPosts: updateItems });
+    navigation.navigate("VideoDisplay", {
+      posts: items,
+      initialIndex,
+      updateAllPosts: updateItems,
+    });
   };
   useEffect(() => {
     if (items) {
@@ -79,11 +94,13 @@ export const GenericComponent: React.FC<Props> = ({
   }, [items]);
 
   useEffect(() => {
+    console.log("hereeeee");
     loadMoreCallback && loadMoreCallback();
   }, []);
 
   const handleLoadMore = () => {
     items.length && setShowFooter(true);
+
     hasMoreToFetch && loadMoreCallback();
   };
   const renderItem = (item: IPost) => {
@@ -125,7 +142,11 @@ export const GenericComponent: React.FC<Props> = ({
                     alignItems: "center",
                   }}
                 >
-                  <FontAwesome name={"heart"} size={13} color={Colors.lightGrey} />
+                  <FontAwesome
+                    name={"heart"}
+                    size={13}
+                    color={Colors.lightGrey}
+                  />
                   <Text style={styles.amount}>{item?.likes?.length}</Text>
                 </View>
               </View>
@@ -141,7 +162,14 @@ export const GenericComponent: React.FC<Props> = ({
 
   return (
     <SafeAreaView
-      style={[{ flex: 1, flexDirection: isHorizontal ? "row" : "column", marginHorizontal: 5 }, containerStyle]}
+      style={[
+        {
+          flex: 1,
+          flexDirection: isHorizontal ? "row" : "column",
+          marginHorizontal: 5,
+        },
+        containerStyle,
+      ]}
     >
       <FlatList
         ListHeaderComponent={pageHeader}
