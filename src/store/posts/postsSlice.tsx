@@ -110,9 +110,9 @@ const postsSlice = createSlice({
     postsUpdated: (state, action: PayloadAction<IPost[]>) => {
       state.lastUpdatedPosts = action.payload;
     },
-    resetPostsUpdated: (state, action: PayloadAction) => {
-      state.lastUpdatedPosts = [];
-    },
+    // resetPostsUpdated: (state, action: PayloadAction) => {
+    //   state.lastUpdatedPosts = [];
+    // },
   },
 });
 

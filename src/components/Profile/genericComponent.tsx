@@ -1,12 +1,11 @@
 import { FontAwesome } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import isEmpty from "lodash/isEmpty";
-import React, { useEffect, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 import { Dimensions, FlatList, ImageBackground, SafeAreaView, StyleSheet, Text, View, ViewStyle } from "react-native";
 import Ripple from "react-native-material-ripple";
 import { useDispatch, useSelector } from "react-redux";
 import { IPost } from "../../interfaces";
-import { resetPostUpdated } from "../../store/posts/actions";
 import { postsActions, postsSelector } from "../../store/posts/postsSlice";
 import { STREAMING_SERVER_GIF_ENDPOINT } from "../../utils/consts";
 import { Loader } from "../shared";
@@ -82,8 +81,10 @@ export const GenericComponent: React.FC<Props> = ({
   };
   useEffect(() => {
     if (items) {
+      console.log("new items set likes = ", items?.[1]?.likes?.length);
+
       setShowFooter(false);
-      dispatch(postsActions.resetPostsUpdated());
+      // dispatch(postsActions.resetPostsUpdated());
     }
   }, [items]);
 
@@ -146,7 +147,6 @@ export const GenericComponent: React.FC<Props> = ({
       </View>
     );
   };
-  const d = () => console.log(123123);
 
   return (
     <SafeAreaView

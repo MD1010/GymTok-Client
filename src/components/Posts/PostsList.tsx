@@ -14,7 +14,7 @@ import {
   postsUpdated,
   updateUserLikePost,
 } from "../../store/posts/actions";
-import { postsSelector } from "../../store/posts/postsSlice";
+import { postsActions, postsSelector } from "../../store/posts/postsSlice";
 import { Loader } from "../shared";
 import { Colors, UIConsts } from "../shared/styles/variables";
 import { Post } from "./Post";
@@ -44,8 +44,8 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentPosts,
   const flatListRef = useRef<FlatList>(null);
   const [showFooter, setShowFooter] = useState<boolean>(false);
 
-  const { hasMoreToFetch, error, latestFetchedPosts, userPosts } = useSelector(postsSelector);
-  const [posts, setPosts] = useState<IPost[]>([]);
+  const { hasMoreToFetch, error, latestFetchedPosts, userPosts, lastUpdatedPosts } = useSelector(postsSelector);
+  let posts = currentPosts ? currentPosts : isFeed ? latestFetchedPosts : userPosts;
   //const isLoading = useRef<boolean>(true);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   // const posts: IPost[] = currentPosts ? currentPosts : isFeed ? latestFetchedPosts : userPosts;
@@ -58,10 +58,28 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentPosts,
   }, [error]);
 
   useEffect(() => {
-    setPosts(currentPosts ? currentPosts : isFeed ? latestFetchedPosts : userPosts);
+    console.log("currentPosts changed", currentPosts?.length);
+    // if (currentPosts?.length) {
+    //   console.log("setting current posts");
+    //   setPosts(currentPosts);
+    // } else if (isFeed) {
+    //   console.log("setting latest fetched");
+    //   setPosts(latestFetchedPosts);
+    // } else {
+    //   console.log("setting user posts");
+    //   setPosts(userPosts);
+    // }
+
+    // !isEmpty(lastUpdatedPosts) && setPosts(lastUpdatedPosts);
+    // setPosts(currentPosts?.length ? currentPosts : isFeed ? latestFetchedPosts : userPosts);
     //isLoading.current = false;
     setIsLoading(false);
-  }, [currentPosts, isFeed, latestFetchedPosts, userPosts]);
+  }, [currentPosts, isFeed, latestFetchedPosts, userPosts, lastUpdatedPosts]);
+
+  useEffect(() => {
+    console.log("UPDATED!!");
+    currentPosts = lastUpdatedPosts;
+  }, [lastUpdatedPosts]);
 
   useEffect(() => {
     if (posts) {
@@ -135,8 +153,8 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentPosts,
 
   const loggedUserPressLike = async (post: IPost, isUserLikePost: boolean) => {
     const updatedPosts = userPressLikeOnPost(posts, post, loggedUser._id);
-    console.log("WHAT", updatedPosts.length);
-    setPosts(updatedPosts);
+    console.log("UPDATING  TO CORRECT VALUE");
+    posts = updatedPosts;
     dispatch(updateUserLikePost(post, loggedUser._id));
     dispatch(postsUpdated(updatedPosts));
     // updateAllPosts && updateAllPosts(updatedPosts);
@@ -151,7 +169,7 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentPosts,
     const { res, error } = await fetchAPI(requestMethod, likesApi);
 
     if (error) {
-      setPosts(userPressLikeOnPost(posts, post, loggedUser._id));
+      posts = userPressLikeOnPost(posts, post, loggedUser._id);
       dispatch(updateUserLikePost(post, loggedUser._id));
     } else {
       return res;
@@ -238,16 +256,10 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentPosts,
   //   onStartShouldSetPanResponder: () => false,
   // });
   return (
-    <>
-      <View
-        // {...panResponder.panHandlers}
-        style={{ height: viewHeight, backgroundColor: Colors.black }}
-        // onStartShouldSetResponder={() => true}
-        // onStartShouldSetResponderCapture={() => true}
-        // onMoveShouldSetResponder={() => true}
-        // onMoveShouldSetResponderCapture={() => true}
-        // onResponderRelease={() => console.log(123123123)}
-      >
+    <View style={{ height: viewHeight, backgroundColor: Colors.black }}>
+      {isLoading && isFeed ? (
+        <Loader />
+      ) : (
         <FlatList
           refreshControl={
             isFeed && (
@@ -259,14 +271,12 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentPosts,
               />
             )
           }
+          extraData={lastUpdatedPosts}
           initialNumToRender={5}
           maxToRenderPerBatch={3}
           windowSize={5}
           initialScrollIndex={initialPostIndex}
-          // removeClippedSubviews
-          // updateCellsBatchingPeriod={5}
           data={posts}
-          // snapToInterval={currentlyPlaying === posts.length - 1 ? null : viewHeight}
           pagingEnabled
           disableIntervalMomentum
           renderItem={renderItem}
@@ -308,13 +318,8 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentPosts,
             justifyContent: "center",
             alignItems: "center",
           }}
-        ></FlatList>
-        {isLoading ? (
-          <View style={{ paddingBottom: Dimensions.get("screen").height / 2.2 }}>
-            <Loader />
-          </View>
-        ) : null}
-      </View>
-    </>
+        />
+      )}
+    </View>
   );
 });

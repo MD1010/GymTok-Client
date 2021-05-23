@@ -126,8 +126,8 @@ export const postsUpdated = (updatedPosts: IPost[]): AppThunk => {
   };
 };
 
-export const resetPostUpdated = (updatedPosts: IPost[]): AppThunk => {
-  return async (dispatch: AppDispatch, getState: () => RootState) => {
-    dispatch(postsActions.resetPostsUpdated());
-  };
-};
+// export const resetPostUpdated = (updatedPosts: IPost[]): AppThunk => {
+//   return async (dispatch: AppDispatch, getState: () => RootState) => {
+//     dispatch(postsActions.resetPostsUpdated());
+//   };
+// };

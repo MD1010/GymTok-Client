@@ -8,6 +8,9 @@ import { postsSelector } from "../../store/posts/postsSlice";
 
 export const PostsVideoDisplay: React.FC = () => {
   const route = useRoute<any>();
+  // useEffect(() => {
+  //   console.log("new posts in post video display", route.params.posts[1].likes.length ?? 0);
+  // }, [route.params.posts[1].likes.length]);
 
   // todo Dov modify postlist to display correct index
   return (
