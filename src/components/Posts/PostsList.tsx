@@ -43,7 +43,8 @@ export const PostsList: React.FC<PostsListProps> = memo(
     const [showFooter, setShowFooter] = useState<boolean>(true);
 
     const { hasMoreToFetch, error, latestFetchedPosts, userPosts } = useSelector(postsSelector);
-    const posts = useRef<IPost[]>([]);
+    //const posts = useRef<IPost[]>([]);
+    let posts: IPost[] = currentPosts ? currentPosts : isFeed ? latestFetchedPosts : userPosts;
 
     //const isLoading = useRef<boolean>(true);
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -56,23 +57,23 @@ export const PostsList: React.FC<PostsListProps> = memo(
     }, [error]);
 
     useEffect(() => {
-      posts.current = currentPosts ? currentPosts : isFeed ? latestFetchedPosts : userPosts;
+      posts = currentPosts ? currentPosts : isFeed ? latestFetchedPosts : userPosts;
 
       setIsLoading(false);
     }, [currentPosts, isFeed, latestFetchedPosts, userPosts]);
 
     useEffect(() => {
-      if (posts.current) {
+      if (posts) {
         setShowFooter(false);
         setRefreshing(false);
       } else {
         setShowFooter(true);
       }
-    }, [posts.current]);
+    }, [posts]);
 
     useEffect(() => {
       if (isFeed) {
-        navigation.setParams({ post: posts.current[currentlyPlaying] });
+        navigation.setParams({ post: posts[currentlyPlaying] });
         //isLoading.current = false;
         setIsLoading(false);
       }
@@ -98,14 +99,14 @@ export const PostsList: React.FC<PostsListProps> = memo(
       // check if user was loaded - undefinded means the store has not been updated yet.
       if (loggedUser !== undefined) {
         console.log("loading...");
-        //isLoading.current = true;
+
         setIsLoading(true);
-        if (isEmpty(posts.current)) {
+        if (isEmpty(posts)) {
           console.log("posts are emptyyy!!!!");
           getPosts();
         } else {
           console.log("posts are notttt emptyyy!!!!");
-          //isLoading.current = false;
+
           setIsLoading(false);
         }
       }
@@ -130,8 +131,8 @@ export const PostsList: React.FC<PostsListProps> = memo(
     }, []);
 
     const loggedUserPressLike = async (post: IPost, isUserLikePost: boolean) => {
-      const updatedPosts = userPressLikeOnPost(posts.current, post, loggedUser._id);
-      posts.current = updatedPosts;
+      const updatedPosts = userPressLikeOnPost(posts, post, loggedUser._id);
+      posts = updatedPosts;
 
       dispatch(updateUserLikePost(post, loggedUser._id));
       updateAllPosts && updateAllPosts(updatedPosts);
@@ -146,7 +147,7 @@ export const PostsList: React.FC<PostsListProps> = memo(
       const { res, error } = await fetchAPI(requestMethod, likesApi);
 
       if (error) {
-        posts.current = userPressLikeOnPost(posts.current, post, loggedUser._id);
+        posts = userPressLikeOnPost(posts, post, loggedUser._id);
         dispatch(updateUserLikePost(post, loggedUser._id));
       } else {
         return res;
@@ -178,7 +179,7 @@ export const PostsList: React.FC<PostsListProps> = memo(
     );
 
     const Footer = () => {
-      if (posts.current.length) {
+      if (posts.length) {
         if (hasMoreToFetch) {
           return <Loader style={{ height: 100, width: 100 }} />;
         } else {
@@ -224,7 +225,7 @@ export const PostsList: React.FC<PostsListProps> = memo(
             maxToRenderPerBatch={3}
             windowSize={5}
             initialScrollIndex={initialPostIndex}
-            data={posts.current}
+            data={posts}
             pagingEnabled
             disableIntervalMomentum
             renderItem={renderItem}
@@ -241,7 +242,7 @@ export const PostsList: React.FC<PostsListProps> = memo(
                 animated: true,
               });
               setTimeout(() => {
-                if (posts.current.length !== 0 && flatListRef.current !== null) {
+                if (posts.length !== 0 && flatListRef.current !== null) {
                   flatListRef.current.scrollToIndex({
                     index: error.index,
                     animated: true,
@@ -256,7 +257,7 @@ export const PostsList: React.FC<PostsListProps> = memo(
             ListFooterComponent={
               showFooter ? (
                 <Footer />
-              ) : posts.current.length !== 0 ? (
+              ) : posts.length !== 0 ? (
                 <Text style={{ color: Colors.white, fontSize: 15 }}>You have reached the end</Text>
               ) : null
             }
