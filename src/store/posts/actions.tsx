@@ -79,7 +79,7 @@ export const getLatestPosts = (): AppThunk => {
         maxDate = post.publishDate;
       }
     });
-    console.log("max dateedsdsdfdfeeeee", maxDate);
+    console.log("max dateefdfdfdsdsdfdfeeeee", maxDate);
     // const maxDate = currentPosts.slice().sort((a, b) => a.publishDate - b.publishDate);
     // sortedArr.map((item, i) => {
     //   console.log("sortedItemmmm", sortedArr[i].publishDate);

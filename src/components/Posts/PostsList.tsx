@@ -206,7 +206,7 @@ export const PostsList: React.FC<PostsListProps> = memo(
 
     return (
       <View style={{ flex: 1, backgroundColor: Colors.black }}>
-        {isLoading ? (
+        {isLoading && isFeed ? (
           <Loader />
         ) : (
           <FlatList
