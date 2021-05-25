@@ -12,13 +12,15 @@ import { Colors } from "../shared/styles/variables";
 import { Player } from "../shared/VideoPlayer";
 import Ripple from "react-native-material-ripple";
 import { formatDate } from "../../utils/date";
+import { postsSelector } from "../../store/posts/postsSlice";
+import { useSelector } from "react-redux";
 
-interface PostRepliesProps { }
+interface PostRepliesProps {}
 
 type StackParamsList = {
   params: { newReply: IPost };
 };
-export const PostReplies: React.FC<PostRepliesProps> = ({ }) => {
+export const PostReplies: React.FC<PostRepliesProps> = ({}) => {
   const navigation = useNavigation();
   const route = useRoute<RouteProp<StackParamsList, "params">>();
   const [challengeReplies, setChallengeReplies] = useState<IPost[]>([]);
@@ -27,6 +29,7 @@ export const PostReplies: React.FC<PostRepliesProps> = ({ }) => {
   // const [isLoadingChallengeVideo, setIsLoadingChallengeVideo] = useState<boolean>(true);
   const [isLoadingReplies, setIsLoadingReplies] = useState<boolean>(true);
   const [isVideoInViewPort, setIsVideoInViewPort] = useState(false);
+  const { lastUpdatedPosts } = useSelector(postsSelector);
 
   const getChallengeReplies = async () => {
     setIsLoadingReplies(true);
@@ -50,10 +53,7 @@ export const PostReplies: React.FC<PostRepliesProps> = ({ }) => {
 
   useEffect(() => {
     if (route.params?.newReply) {
-      setChallengeReplies([
-        ...challengeReplies,
-        route.params?.newReply
-      ]);
+      setChallengeReplies([...challengeReplies, route.params?.newReply]);
     }
   }, [route.params?.newReply]);
 
@@ -81,6 +81,13 @@ export const PostReplies: React.FC<PostRepliesProps> = ({ }) => {
   const showOriginalVideo = () => {
     navigation.navigate("VideoDisplay", { posts: [post] });
   };
+  useEffect(() => {
+    lastUpdatedPosts && setChallengeReplies(lastUpdatedPosts);
+  }, [lastUpdatedPosts]);
+
+  // useEffect(() => {
+  //   challengeReplies.length && console.log(challengeReplies[0].likes);
+  // }, [challengeReplies]);
 
   const OriginalVideoPreview = () =>
     videoGif && (

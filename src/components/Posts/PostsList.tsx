@@ -45,6 +45,7 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentPosts,
   const [showFooter, setShowFooter] = useState<boolean>(false);
 
   const { hasMoreToFetch, error, latestFetchedPosts, userPosts, lastUpdatedPosts } = useSelector(postsSelector);
+
   let posts = currentPosts ? currentPosts : isFeed ? latestFetchedPosts : userPosts;
   //const isLoading = useRef<boolean>(true);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -58,7 +59,6 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentPosts,
   }, [error]);
 
   useEffect(() => {
-    console.log("currentPosts changed", currentPosts?.length);
     // if (currentPosts?.length) {
     //   console.log("setting current posts");
     //   setPosts(currentPosts);
@@ -75,11 +75,6 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentPosts,
     //isLoading.current = false;
     setIsLoading(false);
   }, [currentPosts, isFeed, latestFetchedPosts, userPosts, lastUpdatedPosts]);
-
-  useEffect(() => {
-    console.log("UPDATED!!");
-    currentPosts = lastUpdatedPosts;
-  }, [lastUpdatedPosts]);
 
   useEffect(() => {
     if (posts) {
@@ -153,8 +148,7 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentPosts,
 
   const loggedUserPressLike = async (post: IPost, isUserLikePost: boolean) => {
     const updatedPosts = userPressLikeOnPost(posts, post, loggedUser._id);
-    console.log("UPDATING  TO CORRECT VALUE");
-    posts = updatedPosts;
+    // posts = updatedPosts;
     dispatch(updateUserLikePost(post, loggedUser._id));
     dispatch(postsUpdated(updatedPosts));
     // updateAllPosts && updateAllPosts(updatedPosts);
@@ -169,26 +163,13 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentPosts,
     const { res, error } = await fetchAPI(requestMethod, likesApi);
 
     if (error) {
-      posts = userPressLikeOnPost(posts, post, loggedUser._id);
+      // posts = userPressLikeOnPost(posts, post, loggedUser._id);
+      dispatch(postsUpdated(posts));
       dispatch(updateUserLikePost(post, loggedUser._id));
     } else {
       return res;
     }
   };
-
-  // useEffect(() => {
-  //   if (currentPosts !== undefined) {
-  //     for (let i = 0; i < posts.length; i++) {
-  //       for (let j = 0; j < latestFetchedPosts.length; j++) {
-  //         if (posts[i]._id === latestFetchedPosts[j]._id) {
-  //           console.log("fount liked post!!!!");
-  //           console.log(latestFetchedPosts[j]);
-  //           posts[i] = latestFetchedPosts[j];
-  //         }
-  //       }
-  //     }
-  //   }
-  // }, [currentPosts, latestFetchedPosts]);
 
   const onViewRef = useRef(({ viewableItems, changed }) => {
     if (viewableItems[0]?.index === undefined) return;

@@ -49,7 +49,7 @@ export const GenericComponent: React.FC<Props> = ({
   const isHorizontal: boolean = horizontal ? horizontal : false;
   const numOfColumns: number = numColumns ? numColumns : 3;
   const picHeight: number = pictureHeight ? pictureHeight : styles.theImage.height;
-  const { lastUpdatedPosts } = useSelector(postsSelector);
+  // const { lastUpdatedPosts } = useSelector(postsSelector);
   const dispatch = useDispatch();
 
   const Footer = () => {
@@ -66,10 +66,10 @@ export const GenericComponent: React.FC<Props> = ({
   //     videoURL: `${STREAMING_SERVER_VIDEO_ENDPOINT}/${videoURL}`,
   //   });
   // };
-  useEffect(() => {
-    console.log("last updated", lastUpdatedPosts.length);
-    !isEmpty(lastUpdatedPosts) && updateItems(lastUpdatedPosts);
-  }, [lastUpdatedPosts]);
+  // useEffect(() => {
+  //   // console.log("lCHUKINZON", lastUpdatedPosts.length);
+  //   items && updateItems(items);
+  // }, [items]);
 
   const updateItems = (posts: IPost[]) => {
     setItems && setItems(posts);
