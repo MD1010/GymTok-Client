@@ -56,23 +56,21 @@ const postsSlice = createSlice({
       state.userPosts = [...state.userPosts, ...action.payload];
       state.error = null;
     },
-    userProfilePostsFetchSuccess: (
+    userProfileChallengesFetchSuccess: (
       state,
-      action: PayloadAction<{ isReply: string; posts: IPost[] }>
+      action: PayloadAction<IPost[]>
     ) => {
-      if (action.payload.posts.length < itemsToFetch) {
-        if (action.payload.isReply) {
-          state.hasMoreRepliesToFetch = false;
-        } else {
-          state.hasMoreChallengesToFetch = false;
-        }
-      }
+      console.log("setting more challenges!");
+      if (action.payload.length < itemsToFetch)
+        state.hasMoreChallengesToFetch = false;
+      state.userChallenges = [...state.userChallenges, ...action.payload];
+    },
+    userProfileRepliesFetchSuccess: (state, action: PayloadAction<IPost[]>) => {
+      console.log("setting more replies!");
 
-      let stateToUpdate = action.payload.isReply
-        ? state.userReplies
-        : state.userChallenges;
-
-      stateToUpdate = [...stateToUpdate, ...action.payload.posts];
+      if (action.payload.length < itemsToFetch)
+        state.hasMoreRepliesToFetch = false;
+      state.userReplies = [...state.userReplies, ...action.payload];
     },
     setUserPosts: (state, action: PayloadAction<IPost[]>) => {
       state.userPosts = action.payload;

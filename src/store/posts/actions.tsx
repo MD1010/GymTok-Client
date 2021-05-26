@@ -41,7 +41,9 @@ export const getUserPosts = (isReply): AppThunk => {
     const postEntity = isReply
       ? getState().posts.userReplies
       : getState().posts.userChallenges;
+
     const currentPostsLenght = postEntity.length;
+    console.log(currentPostsLenght);
     const { res, error } = await fetchAPI<IPost[]>(
       RequestMethod.GET,
       endpoint,
@@ -49,15 +51,19 @@ export const getUserPosts = (isReply): AppThunk => {
       {
         size: itemsToFetch,
         page: Math.floor(currentPostsLenght / itemsToFetch),
-        createdBy: loggedUser,
+        uid: loggedUser,
         isReply,
       }
     );
 
     if (res) {
-      dispatch(
-        postsActions.userProfilePostsFetchSuccess({ isReply, posts: res })
-      );
+      console.log(loggedUser);
+      console.log(`res lenght - ${res.length} isReply = ${isReply}`);
+      if (!isReply) {
+        dispatch(postsActions.userProfileChallengesFetchSuccess(res));
+      } else {
+        dispatch(postsActions.userProfileRepliesFetchSuccess(res));
+      }
     } else {
       dispatch(postsActions.fetchFailed(error));
     }

@@ -78,13 +78,13 @@ export const GenericComponent: React.FC<Props> = ({
     setItems && setItems(posts);
   };
 
-  useEffect(() => {
-    if (items) {
-      console.log("papitka");
+  // useEffect(() => {
+  //   if (items) {
+  //     console.log("papitka");
 
-      console.log(items);
-    }
-  }, [items]);
+  //     console.log(items);
+  //   }
+  // }, [items]);
 
   const showVideo = (postID) => {
     const initialIndex = items.findIndex((post) => post._id === postID);
