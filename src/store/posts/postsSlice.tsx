@@ -10,6 +10,8 @@ export interface PostsState {
   error: string | null;
   latestFetchedPosts: IPost[]; // last itemsToFetch that are displayed
   userPosts: IPost[];
+  userChallenges: IPost[];
+  userReplies: IPost[];
   hasMoreToFetch: boolean;
   hasMoreChallengesToFetch: boolean;
   hasMoreRepliesToFetch: boolean;
@@ -18,6 +20,8 @@ export const initialState: PostsState = {
   error: null,
   latestFetchedPosts: [],
   userPosts: [],
+  userChallenges: [],
+  userReplies: [],
   hasMoreToFetch: true,
   hasMoreChallengesToFetch: true,
   hasMoreRepliesToFetch: true,
@@ -56,7 +60,6 @@ const postsSlice = createSlice({
       state,
       action: PayloadAction<{ isReply: string; posts: IPost[] }>
     ) => {
-      console.log(`isReply: ${action.payload.isReply}`);
       if (action.payload.posts.length < itemsToFetch) {
         if (action.payload.isReply) {
           state.hasMoreRepliesToFetch = false;
@@ -64,7 +67,12 @@ const postsSlice = createSlice({
           state.hasMoreChallengesToFetch = false;
         }
       }
-      state.userPosts = [...state.userPosts, ...action.payload.posts];
+
+      let stateToUpdate = action.payload.isReply
+        ? state.userReplies
+        : state.userChallenges;
+
+      stateToUpdate = [...stateToUpdate, ...action.payload.posts];
     },
     setUserPosts: (state, action: PayloadAction<IPost[]>) => {
       state.userPosts = action.payload;
@@ -146,17 +154,8 @@ const postsSlice = createSlice({
 
 export const postsActions = postsSlice.actions;
 export const postsSelector = (state: RootState) => state.posts;
-export const challengesSelector = (state: RootState) => {
-  const post = state.posts.userPosts.filter((post) => post.isReply);
-  console.log("1");
-  return post;
-};
-export const repliesSelector = (state: RootState) => {
-  const post = state.posts.userPosts.filter((post) => {
-    !post.isReply;
-  });
-  console.log("2");
-  return post;
-};
+export const challengesSelector = (state: RootState) =>
+  state.posts.userChallenges;
+export const repliesSelector = (state: RootState) => state.posts.userReplies;
 
 export default postsSlice.reducer;

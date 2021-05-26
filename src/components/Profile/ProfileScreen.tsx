@@ -252,7 +252,6 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
       res && setProfileDetails(res);
       res && setIsLoading(false);
     }
-    console.log("dov dov profileeeeee");
     getProfileDetails();
   }, []);
 

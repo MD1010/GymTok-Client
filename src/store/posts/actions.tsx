@@ -38,10 +38,10 @@ export const getUserPosts = (isReply): AppThunk => {
     // todo send param to this func if you want replies or real posts and send the relevant query params
     const endpoint = `${process.env.BASE_API_ENPOINT}/posts`;
     const loggedUser = getState()?.auth?.loggedUser._id;
-    const currentPostsLenght = getNumberOfPosts(
-      getState().posts.userPosts,
-      isReply
-    );
+    const postEntity = isReply
+      ? getState().posts.userReplies
+      : getState().posts.userChallenges;
+    const currentPostsLenght = postEntity.length;
     const { res, error } = await fetchAPI<IPost[]>(
       RequestMethod.GET,
       endpoint,

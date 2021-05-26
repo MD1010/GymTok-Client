@@ -63,7 +63,6 @@ export const GenericComponent: React.FC<Props> = ({
   const Footer = () => {
     if (items.length) {
       if (hasMoreToFetch) {
-        console.log(`has more to fetch?: ${hasMoreToFetch}`);
         return <Loader style={{ height: 100, width: 100 }} />;
       }
     }
@@ -78,6 +77,14 @@ export const GenericComponent: React.FC<Props> = ({
   const updateItems = (posts: IPost[]) => {
     setItems && setItems(posts);
   };
+
+  useEffect(() => {
+    if (items) {
+      console.log("papitka");
+
+      console.log(items);
+    }
+  }, [items]);
 
   const showVideo = (postID) => {
     const initialIndex = items.findIndex((post) => post._id === postID);
@@ -94,7 +101,6 @@ export const GenericComponent: React.FC<Props> = ({
   }, [items]);
 
   useEffect(() => {
-    console.log("hereeeee");
     loadMoreCallback && loadMoreCallback();
   }, []);
 
@@ -158,7 +164,6 @@ export const GenericComponent: React.FC<Props> = ({
       </View>
     );
   };
-  const d = () => console.log(123123);
 
   return (
     <SafeAreaView
