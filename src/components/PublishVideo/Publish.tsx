@@ -11,8 +11,15 @@ import { INotification } from "../../interfaces/Notification";
 import { authSelector } from "../../store/auth/authSlice";
 import { sendNotification } from "../../store/notifications/actions";
 import { addReplyToPost } from "../../store/posts/actions";
+import { postsActions } from "../../store/posts/postsSlice";
 import { fetchAPI, RequestMethod } from "../../utils/fetchAPI";
-import { Colors, Loader, Player, SubmitButton, TouchableHighlightButton } from "../shared";
+import {
+  Colors,
+  Loader,
+  Player,
+  SubmitButton,
+  TouchableHighlightButton,
+} from "../shared";
 
 type StackParamsList = {
   params: {
@@ -66,7 +73,11 @@ export const PublishScreen: React.FC = () => {
             />
           </View>
         </View>
-        {!isReply && <Text style={styles.info}>Your friends will be notified when your challenge is uploaded.</Text>}
+        {!isReply && (
+          <Text style={styles.info}>
+            Your friends will be notified when your challenge is uploaded.
+          </Text>
+        )}
       </View>
     );
   };
@@ -101,11 +112,17 @@ export const PublishScreen: React.FC = () => {
     formData.append("hashtags", JSON.stringify(hashtags));
 
     setIsLoading(true);
-    const { res, error } = await fetchAPI(RequestMethod.POST, `${process.env.BASE_API_ENPOINT}/posts/upload`, formData);
+    const { res, error } = await fetchAPI(
+      RequestMethod.POST,
+      `${process.env.BASE_API_ENPOINT}/posts/upload`,
+      formData
+    );
 
     if (res) {
       console.log("res upload", res);
       setIsLoading(false);
+      dispatch(postsActions.userProfileRepliesFetchSuccess([res]));
+      dispatch(postsActions.increaseNumOfChallenges());
       navigation.navigate("Home");
       const notification: any = {
         body: "Check it now!",
@@ -140,8 +157,13 @@ export const PublishScreen: React.FC = () => {
 
     if (res) {
       setIsLoading(false);
-      navigation.navigate("Home", { screen: "PostReplies", params: { newReply: res } });
+      navigation.navigate("Home", {
+        screen: "PostReplies",
+        params: { newReply: res },
+      });
       dispatch(addReplyToPost(route.params?.postId, res));
+      dispatch(postsActions.userProfileRepliesFetchSuccess([res]));
+      dispatch(postsActions.increaseNumOfReplies());
     } else if (error) {
       setIsLoading(false);
       alert(JSON.stringify(error));
@@ -185,7 +207,9 @@ export const PublishScreen: React.FC = () => {
         optionText={"Add Hashtags"}
         onSelect={() =>
           navigation.navigate("AddHashtag", {
-            selectedHashtags: route.params?.hashtags?.length ? route.params?.hashtags : [],
+            selectedHashtags: route.params?.hashtags?.length
+              ? route.params?.hashtags
+              : [],
           })
         }
         icon={<Fontisto name="hashtag" color={Colors.lightGrey2} size={14} />}
@@ -195,7 +219,12 @@ export const PublishScreen: React.FC = () => {
 
   const Footer = () => (
     <View style={{ flex: 1.5, alignItems: "center", justifyContent: "center" }}>
-      <SubmitButton buttonText={"Post"} type="solid" backgroundColor={Colors.blue} onSubmit={onSubmit} />
+      <SubmitButton
+        buttonText={"Post"}
+        type="solid"
+        backgroundColor={Colors.blue}
+        onSubmit={onSubmit}
+      />
     </View>
   );
 
