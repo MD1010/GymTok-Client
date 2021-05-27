@@ -19,9 +19,6 @@ import {
   repliesSelector,
 } from "../../store/posts/postsSlice";
 import { getUserChallenges, getUserReplies } from "../../store/posts/actions";
-import { RotationGestureHandler } from "react-native-gesture-handler";
-import { getNumberOfPosts } from "../../store/posts/utils";
-import { IProfileDetails } from "../../interfaces/Profile";
 
 const itemsToFetch = 12;
 
@@ -31,6 +28,7 @@ interface IProfileTabs {
 }
 function ProfileTabs(props: IProfileTabs) {
   const dispatch = useDispatch();
+
   let currentChallenges;
   let currentReplies;
   let getMoreReplies;
@@ -39,8 +37,10 @@ function ProfileTabs(props: IProfileTabs) {
   let hasMoreRepliesToFetchFlag;
   let setChallengesCallback;
   let setRepliesCallback;
+
   const user = props.user;
   const isCurrentUserLoggedUser = props.isCurrentUserLoggedUser;
+
   if (isCurrentUserLoggedUser) {
     currentChallenges = useSelector(challengesSelector);
     currentReplies = useSelector(repliesSelector);
@@ -66,8 +66,10 @@ function ProfileTabs(props: IProfileTabs) {
     hasMoreRepliesToFetchFlag = hasMoreRepliesToFetch;
     setChallengesCallback = setChallenges;
     setRepliesCallback = setReplies;
+
     getMoreReplies = async () => {
       const endpoint = `${process.env.BASE_API_ENPOINT}/posts`;
+      console.log("fetching more replies and puting in state");
       const { res, error } = await fetchAPI<IPost[]>(
         RequestMethod.GET,
         endpoint,
@@ -85,6 +87,7 @@ function ProfileTabs(props: IProfileTabs) {
       setReplies([...replies, ...res]);
     };
     getMoreChallenges = async () => {
+      console.log("fetching more challenges and puting in state");
       const endpoint = `${process.env.BASE_API_ENPOINT}/posts`;
       const { res, error } = await fetchAPI<IPost[]>(
         RequestMethod.GET,
@@ -106,12 +109,6 @@ function ProfileTabs(props: IProfileTabs) {
   }
 
   const Tabs = createMaterialTopTabNavigator();
-  const checkCallback = () => {
-    console.log("arrow function");
-  };
-  function checkCallback2() {
-    console.log("regular function");
-  }
   return (
     <Tabs.Navigator
       sceneContainerStyle={{ backgroundColor: Colors.darkBlueOpaque }}

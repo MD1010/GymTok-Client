@@ -3,7 +3,6 @@ import { fetchAPI, RequestMethod } from "../../utils/fetchAPI";
 import { AppDispatch, AppThunk } from "../configureStore";
 import { RootState } from "../rootReducer";
 import { itemsToFetch, postsActions } from "./postsSlice";
-import { getNumberOfPosts } from "./utils";
 
 export const getMorePosts = (): AppThunk => {
   return async (dispatch: AppDispatch, getState: () => RootState) => {
@@ -37,6 +36,7 @@ export const getUserReplies = (): AppThunk => {
     const endpoint = `${process.env.BASE_API_ENPOINT}/posts`;
     const loggedUserId = getState()?.auth?.loggedUser._id;
     const currentPostsLenght = getState()?.posts.userReplies.length;
+    console.log("fetching more replies and puting in redux");
 
     const { res, error } = await fetchAPI<IPost[]>(
       RequestMethod.GET,
@@ -63,7 +63,7 @@ export const getUserChallenges = (): AppThunk => {
     const endpoint = `${process.env.BASE_API_ENPOINT}/posts`;
     const loggedUserId = getState().auth.loggedUser._id;
     const currentPostsLenght = getState()?.posts.userChallenges.length;
-
+    console.log("fetching more challenges and puting in redux");
     const { res, error } = await fetchAPI<IPost[]>(
       RequestMethod.GET,
       endpoint,
