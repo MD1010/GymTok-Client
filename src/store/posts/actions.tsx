@@ -32,18 +32,12 @@ export const getMorePosts = (): AppThunk => {
   };
 };
 
-export const getUserPosts = (isReply): AppThunk => {
+export const getUserReplies = (): AppThunk => {
   return async (dispatch: AppDispatch, getState: () => RootState) => {
-    // todo https://www.goodday.work/t/RRaDG3
-    // todo send param to this func if you want replies or real posts and send the relevant query params
     const endpoint = `${process.env.BASE_API_ENPOINT}/posts`;
-    const loggedUser = getState()?.auth?.loggedUser._id;
-    const postEntity = isReply
-      ? getState().posts.userReplies
-      : getState().posts.userChallenges;
+    const loggedUserId = getState()?.auth?.loggedUser._id;
+    const currentPostsLenght = getState()?.posts.userChallenges.length;
 
-    const currentPostsLenght = postEntity.length;
-    console.log(currentPostsLenght);
     const { res, error } = await fetchAPI<IPost[]>(
       RequestMethod.GET,
       endpoint,
@@ -51,25 +45,44 @@ export const getUserPosts = (isReply): AppThunk => {
       {
         size: itemsToFetch,
         page: Math.floor(currentPostsLenght / itemsToFetch),
-        uid: loggedUser,
-        isReply,
+        uid: loggedUserId,
+        isReply: true,
       }
     );
 
     if (res) {
-      console.log(loggedUser);
-      console.log(`res lenght - ${res.length} isReply = ${isReply}`);
-      if (!isReply) {
-        dispatch(postsActions.userProfileChallengesFetchSuccess(res));
-      } else {
-        dispatch(postsActions.userProfileRepliesFetchSuccess(res));
-      }
+      dispatch(postsActions.userProfileRepliesFetchSuccess(res));
     } else {
       dispatch(postsActions.fetchFailed(error));
     }
   };
 };
 
+export const getUserChallenges = (): AppThunk => {
+  return async (dispatch: AppDispatch, getState: () => RootState) => {
+    const endpoint = `${process.env.BASE_API_ENPOINT}/posts`;
+    const loggedUserId = getState().auth.loggedUser._id;
+    const currentPostsLenght = getState()?.posts.userChallenges.length;
+
+    const { res, error } = await fetchAPI<IPost[]>(
+      RequestMethod.GET,
+      endpoint,
+      null,
+      {
+        size: itemsToFetch,
+        page: Math.floor(currentPostsLenght / itemsToFetch),
+        uid: loggedUserId,
+        isReply: false,
+      }
+    );
+
+    if (res) {
+      dispatch(postsActions.userProfileChallengesFetchSuccess(res));
+    } else {
+      dispatch(postsActions.fetchFailed(error));
+    }
+  };
+};
 export const getMostRecommended = (): AppThunk => {
   return async (dispatch: AppDispatch, getState: () => RootState) => {
     const loggedUser = getState()?.auth?.loggedUser?.username;

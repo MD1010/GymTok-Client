@@ -4,7 +4,7 @@ import { addReplyToPost } from "../../utils/addReplyToPost";
 import { userLikePost, userDislikePost } from "../../utils/updatePostLikes";
 import { RootState } from "../configureStore";
 
-export const itemsToFetch = 10; // how many posts are fetched on each get
+export const itemsToFetch = 12; // how many posts are fetched on each get
 
 export interface PostsState {
   error: string | null;
@@ -64,6 +64,7 @@ const postsSlice = createSlice({
       if (action.payload.length < itemsToFetch)
         state.hasMoreChallengesToFetch = false;
       state.userChallenges = [...state.userChallenges, ...action.payload];
+      console.log(state.userChallenges.length);
     },
     userProfileRepliesFetchSuccess: (state, action: PayloadAction<IPost[]>) => {
       console.log("setting more replies!");
@@ -72,8 +73,11 @@ const postsSlice = createSlice({
         state.hasMoreRepliesToFetch = false;
       state.userReplies = [...state.userReplies, ...action.payload];
     },
-    setUserPosts: (state, action: PayloadAction<IPost[]>) => {
-      state.userPosts = action.payload;
+    setUserChallenges: (state, action: PayloadAction<IPost[]>) => {
+      state.userChallenges = action.payload;
+    },
+    setUserReplies: (state, action: PayloadAction<IPost[]>) => {
+      state.userReplies = action.payload;
     },
     refreshSuccess: (state, action: PayloadAction<IPost[]>) => {
       state.latestFetchedPosts = action.payload;

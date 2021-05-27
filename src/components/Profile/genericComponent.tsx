@@ -105,8 +105,8 @@ export const GenericComponent: React.FC<Props> = ({
   }, []);
 
   const handleLoadMore = () => {
+    console.log("here");
     items.length && setShowFooter(true);
-
     hasMoreToFetch && loadMoreCallback();
   };
   const renderItem = (item: IPost) => {

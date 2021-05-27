@@ -16,56 +16,101 @@ import {
   postsSelector,
   repliesSelector,
 } from "../../store/posts/postsSlice";
-import { getUserPosts } from "../../store/posts/actions";
+import { getUserChallenges, getUserReplies } from "../../store/posts/actions";
+import { RotationGestureHandler } from "react-native-gesture-handler";
 
 const itemsToFetch = 12;
 interface IProfileDetails {
   numOfChallenges: number;
   numOfReplies: number;
 }
-function ProfileTabs(user: IUser) {
-  const Tabs = createMaterialTopTabNavigator();
-  const challenges = useSelector(challengesSelector);
-  const replies = useSelector(repliesSelector);
-  // const [challenges, setChallenges] = useState([]);
-  // const [replies, setReplies] = useState([]);
-  const [hasMoreChallenges, setHasMoreChallenges] = useState(true);
-  const [hasMoreReplies, setHasMoreReplies] = useState(true);
+interface IProfileTabs {
+  user: IUser;
+  isCurrentUserLoggedUser: boolean;
+}
+function ProfileTabs(props: IProfileTabs) {
   const dispatch = useDispatch();
-  const { hasMoreChallengesToFetch, hasMoreRepliesToFetch } =
-    useSelector(postsSelector);
+  let currentChallenges;
+  let currentReplies;
+  let getMoreReplies;
+  let getMoreChallenges;
+  let hasMoreChallengesToFetchFlag;
+  let hasMoreRepliesToFetchFlag;
+  let setChallengesCallback;
+  let setRepliesCallback;
+  const user = props.user;
+  const isCurrentUserLoggedUser = props.isCurrentUserLoggedUser;
+  if (isCurrentUserLoggedUser) {
+    currentChallenges = useSelector(challengesSelector);
+    currentReplies = useSelector(repliesSelector);
+    const { hasMoreChallengesToFetch, hasMoreRepliesToFetch } =
+      useSelector(postsSelector);
+    hasMoreChallengesToFetchFlag = hasMoreChallengesToFetch;
+    hasMoreRepliesToFetchFlag = hasMoreRepliesToFetch;
+    getMoreReplies = dispatch(getUserReplies);
+    getMoreChallenges = dispatch(getUserChallenges);
+    setChallengesCallback = (items) =>
+      dispatch(postsActions.setUserChallenges(items));
+    setRepliesCallback = (items) =>
+      dispatch(postsActions.setUserReplies(items));
+  } else {
+    const [challenges, setChallenges] = useState([]);
+    const [replies, setReplies] = useState([]);
+    const [hasMoreChallengesToFetch, sethasMoreChallengesToFetch] =
+      useState(true);
+    const [hasMoreRepliesToFetch, sethasMoreRepliesToFetch] = useState(true);
+    currentChallenges = challenges;
+    currentReplies = replies;
+    hasMoreChallengesToFetchFlag = hasMoreChallengesToFetch;
+    hasMoreRepliesToFetchFlag = hasMoreRepliesToFetch;
+    setChallengesCallback = setChallenges;
+    setRepliesCallback = setReplies;
+    getMoreReplies = async () => {
+      const endpoint = `${process.env.BASE_API_ENPOINT}/posts`;
+      const { res, error } = await fetchAPI<IPost[]>(
+        RequestMethod.GET,
+        endpoint,
+        null,
+        {
+          size: itemsToFetch,
+          page: Math.floor(replies.length / itemsToFetch),
+          uid: user._id,
+          isReply: true,
+        }
+      );
+      if (res.length < itemsToFetch) {
+        sethasMoreRepliesToFetch(false);
+      }
+      setReplies([...replies, ...res]);
+    };
+    getMoreChallenges = async () => {
+      const endpoint = `${process.env.BASE_API_ENPOINT}/posts`;
+      const { res, error } = await fetchAPI<IPost[]>(
+        RequestMethod.GET,
+        endpoint,
+        null,
+        {
+          size: itemsToFetch,
+          page: Math.floor(challenges.length / itemsToFetch),
+          uid: user._id,
+          isReply: false,
+        }
+      );
+      if (res.length < itemsToFetch) {
+        sethasMoreChallengesToFetch(false);
+      }
 
-  // const getMoreChallenges = async () => {
-  //   console.log("gfgfg");
-  //   const endpoint = `${process.env.BASE_API_ENPOINT}/posts`;
-  //   const { res, error } = await fetchAPI<IPost[]>(RequestMethod.GET, endpoint, null, {
-  //     size: itemsToFetch,
-  //     page: Math.floor(challenges.length / itemsToFetch),
-  //     uid: user._id,
-  //     isReply: false,
-  //   });
-  //   if (res.length < itemsToFetch) {
-  //     setHasMoreChallenges(false);
-  //   }
-  //   setChallenges([...challenges, ...res]);
-  // };
-  // const getMoreReplies = async () => {
-  //   const endpoint = `${process.env.BASE_API_ENPOINT}/posts`;
-  //   const { res, error } = await fetchAPI<IPost[]>(RequestMethod.GET, endpoint, null, {
-  //     size: itemsToFetch,
-  //     page: Math.floor(replies.length / itemsToFetch),
-  //     uid: user._id,
-  //     isReply: true,
-  //   });
-  //   if (res.length < itemsToFetch) {
-  //     setHasMoreReplies(false);
-  //   }
-  //   setReplies([...replies, ...res]);
-  // };
-  // useCallback(
-  //   (items) => dispatch(postsActions.userPostsFetchSuccess(items)),
-  //   [items]
-  // );
+      setChallenges([...challenges, ...res]);
+    };
+  }
+
+  const Tabs = createMaterialTopTabNavigator();
+  const checkCallback = () => {
+    console.log("arrow function");
+  };
+  function checkCallback2() {
+    console.log("regular function");
+  }
   return (
     <Tabs.Navigator
       sceneContainerStyle={{ backgroundColor: Colors.darkBlueOpaque }}
@@ -101,13 +146,13 @@ function ProfileTabs(user: IUser) {
         name="Challanges"
         children={() => (
           <GenericComponent
-            items={challenges}
+            items={currentChallenges}
             // loadMoreCallback={getMoreChallenges}
-            loadMoreCallback={() => dispatch(getUserPosts(false))}
-            hasMoreToFetch={hasMoreChallengesToFetch}
+            loadMoreCallback={getMoreChallenges}
+            hasMoreToFetch={hasMoreChallengesToFetchFlag}
             // setItems={setChallenges}
 
-            setItems={(items) => dispatch(postsActions.setUserPosts(items))}
+            setItems={setChallengesCallback}
           />
         )}
       />
@@ -115,12 +160,12 @@ function ProfileTabs(user: IUser) {
         name="Replies"
         children={() => (
           <GenericComponent
-            items={replies}
+            items={currentReplies}
             // loadMoreCallback={getMoreReplies}
-            loadMoreCallback={() => dispatch(getUserPosts(true))}
-            hasMoreToFetch={hasMoreRepliesToFetch}
+            loadMoreCallback={getMoreReplies}
+            hasMoreToFetch={hasMoreRepliesToFetchFlag}
             // setItems={setReplies}
-            setItems={(items) => dispatch(postsActions.setUserPosts(items))}
+            setItems={setRepliesCallback}
           />
         )}
       />
@@ -234,7 +279,15 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
   inProfileTab = false,
 }) => {
   const route = useRoute<any>();
-  let currentUser = route.params ? route.params.user : user;
+  let isCurrentUserLoggedUser = true;
+  let currentUser;
+  if (route.params) {
+    currentUser = route.params.user;
+    isCurrentUserLoggedUser = false;
+  } else {
+    currentUser = user;
+  }
+
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [profileDetails, setProfileDetails] = useState<IProfileDetails>();
   const dispatch = useDispatch();
@@ -264,7 +317,10 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
         isLoading={isLoading}
       />
       <Divider style={{ backgroundColor: Colors.weakGrey }} />
-      <ProfileTabs {...currentUser} />
+      <ProfileTabs
+        user={currentUser}
+        isCurrentUserLoggedUser={isCurrentUserLoggedUser}
+      />
     </>
   );
 };
