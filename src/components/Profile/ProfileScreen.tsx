@@ -12,18 +12,19 @@ import { GenericComponent } from "./genericComponent";
 import { LogOutFromApp } from "./LogOutFromApp";
 import {
   challengesSelector,
+  numOfChallengesSelector,
+  numOfRepliesSelector,
   postsActions,
   postsSelector,
   repliesSelector,
 } from "../../store/posts/postsSlice";
 import { getUserChallenges, getUserReplies } from "../../store/posts/actions";
 import { RotationGestureHandler } from "react-native-gesture-handler";
+import { getNumberOfPosts } from "../../store/posts/utils";
+import { IProfileDetails } from "../../interfaces/Profile";
 
 const itemsToFetch = 12;
-interface IProfileDetails {
-  numOfChallenges: number;
-  numOfReplies: number;
-}
+
 interface IProfileTabs {
   user: IUser;
   isCurrentUserLoggedUser: boolean;
@@ -47,8 +48,8 @@ function ProfileTabs(props: IProfileTabs) {
       useSelector(postsSelector);
     hasMoreChallengesToFetchFlag = hasMoreChallengesToFetch;
     hasMoreRepliesToFetchFlag = hasMoreRepliesToFetch;
-    getMoreReplies = dispatch(getUserReplies);
-    getMoreChallenges = dispatch(getUserChallenges);
+    getMoreReplies = () => dispatch(getUserReplies());
+    getMoreChallenges = () => dispatch(getUserChallenges());
     setChallengesCallback = (items) =>
       dispatch(postsActions.setUserChallenges(items));
     setRepliesCallback = (items) =>
@@ -147,11 +148,8 @@ function ProfileTabs(props: IProfileTabs) {
         children={() => (
           <GenericComponent
             items={currentChallenges}
-            // loadMoreCallback={getMoreChallenges}
             loadMoreCallback={getMoreChallenges}
             hasMoreToFetch={hasMoreChallengesToFetchFlag}
-            // setItems={setChallenges}
-
             setItems={setChallengesCallback}
           />
         )}
@@ -161,10 +159,8 @@ function ProfileTabs(props: IProfileTabs) {
         children={() => (
           <GenericComponent
             items={currentReplies}
-            // loadMoreCallback={getMoreReplies}
             loadMoreCallback={getMoreReplies}
             hasMoreToFetch={hasMoreRepliesToFetchFlag}
-            // setItems={setReplies}
             setItems={setRepliesCallback}
           />
         )}
@@ -173,25 +169,13 @@ function ProfileTabs(props: IProfileTabs) {
   );
 }
 interface IProfileHeaderProps {
-  details: IProfileDetails;
   user: IUser;
   isLoading: boolean;
 }
 
-const ProfileHeader: React.FC<IProfileHeaderProps> = ({
-  user,
-  isLoading,
-  details,
-}) => {
-  const [numOfChallenges, setNumOfChallenges] = useState<string | number>("-");
-  const [numOfReplies, setNumOfReplies] = useState<string | number>("-");
-  useEffect(() => {
-    if (!isLoading) {
-      setNumOfChallenges(details.numOfChallenges);
-      setNumOfReplies(details.numOfReplies);
-    }
-  }, [isLoading]);
-
+const ProfileHeader: React.FC<IProfileHeaderProps> = ({ user, isLoading }) => {
+  const numOfChallenges = useSelector(numOfChallengesSelector);
+  const numOfReplies = useSelector(numOfRepliesSelector);
   const Counter = ({ count, text }) => (
     <View style={{ alignItems: "center" }}>
       <Text
@@ -289,7 +273,6 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
   }
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [profileDetails, setProfileDetails] = useState<IProfileDetails>();
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -301,8 +284,14 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
         RequestMethod.GET,
         profileDetailsEndpoint
       );
+      res &&
+        dispatch(
+          postsActions.setProfileDetails({
+            numOfChallenges: res.numOfChallenges,
+            numOfReplies: res.numOfReplies,
+          })
+        );
 
-      res && setProfileDetails(res);
       res && setIsLoading(false);
     }
     getProfileDetails();
@@ -311,11 +300,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
   return (
     <>
       {inProfileTab && <LogOutFromApp />}
-      <ProfileHeader
-        details={profileDetails}
-        user={currentUser}
-        isLoading={isLoading}
-      />
+      <ProfileHeader user={currentUser} isLoading={isLoading} />
       <Divider style={{ backgroundColor: Colors.weakGrey }} />
       <ProfileTabs
         user={currentUser}
