@@ -36,7 +36,7 @@ export const getUserReplies = (): AppThunk => {
   return async (dispatch: AppDispatch, getState: () => RootState) => {
     const endpoint = `${process.env.BASE_API_ENPOINT}/posts`;
     const loggedUserId = getState()?.auth?.loggedUser._id;
-    const currentPostsLenght = getState()?.posts.userChallenges.length;
+    const currentPostsLenght = getState()?.posts.userReplies.length;
 
     const { res, error } = await fetchAPI<IPost[]>(
       RequestMethod.GET,
