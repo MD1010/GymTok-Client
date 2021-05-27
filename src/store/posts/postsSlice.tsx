@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { IPost } from "../../interfaces";
+import { IProfileDetails } from "../../interfaces/Profile";
 import { addReplyToPost } from "../../utils/addReplyToPost";
 import { userLikePost, userDislikePost } from "../../utils/updatePostLikes";
 import { RootState } from "../configureStore";
@@ -12,6 +13,8 @@ export interface PostsState {
   userPosts: IPost[];
   userChallenges: IPost[];
   userReplies: IPost[];
+  numOfUserChallenges: number | string;
+  numOfUserReplies: number | string;
   hasMoreToFetch: boolean;
   hasMoreChallengesToFetch: boolean;
   hasMoreRepliesToFetch: boolean;
@@ -22,6 +25,8 @@ export const initialState: PostsState = {
   userPosts: [],
   userChallenges: [],
   userReplies: [],
+  numOfUserChallenges: "-",
+  numOfUserReplies: "-",
   hasMoreToFetch: true,
   hasMoreChallengesToFetch: true,
   hasMoreRepliesToFetch: true,
@@ -64,7 +69,7 @@ const postsSlice = createSlice({
       if (action.payload.length < itemsToFetch)
         state.hasMoreChallengesToFetch = false;
       state.userChallenges = [...state.userChallenges, ...action.payload];
-      console.log(state.userChallenges.length);
+      console.log(`new challenges lenght: ${state.userChallenges.length}`);
     },
     userProfileRepliesFetchSuccess: (state, action: PayloadAction<IPost[]>) => {
       console.log("setting more replies!");
@@ -72,6 +77,23 @@ const postsSlice = createSlice({
       if (action.payload.length < itemsToFetch)
         state.hasMoreRepliesToFetch = false;
       state.userReplies = [...state.userReplies, ...action.payload];
+      console.log(`new replies lenght: ${state.userReplies.length}`);
+    },
+    setProfileDetails: (state, action: PayloadAction<IProfileDetails>) => {
+      console.log("hereeeee");
+      state.numOfUserChallenges = action.payload.numOfChallenges;
+      state.numOfUserReplies = action.payload.numOfReplies;
+    },
+    increaseNumOfChallenges: (state) => {
+      console.log("in increas func");
+      typeof state.numOfUserChallenges == "number"
+        ? (state.numOfUserChallenges = state.numOfUserChallenges + 1)
+        : null;
+    },
+    increaseNumOfReplies: (state) => {
+      typeof state.numOfUserReplies == "number"
+        ? (state.numOfUserReplies = state.numOfUserReplies + 1)
+        : null;
     },
     setUserChallenges: (state, action: PayloadAction<IPost[]>) => {
       state.userChallenges = action.payload;
@@ -159,5 +181,9 @@ export const postsSelector = (state: RootState) => state.posts;
 export const challengesSelector = (state: RootState) =>
   state.posts.userChallenges;
 export const repliesSelector = (state: RootState) => state.posts.userReplies;
+export const numOfChallengesSelector = (state: RootState) =>
+  state.posts.numOfUserChallenges;
+export const numOfRepliesSelector = (state: RootState) =>
+  state.posts.numOfUserReplies;
 
 export default postsSlice.reducer;
