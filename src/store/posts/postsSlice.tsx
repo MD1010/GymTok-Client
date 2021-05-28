@@ -4,6 +4,7 @@ import { IProfileDetails } from "../../interfaces/Profile";
 import { addReplyToPost } from "../../utils/addReplyToPost";
 import { userLikePost, userDislikePost } from "../../utils/updatePostLikes";
 import { RootState } from "../configureStore";
+import cloneDeep from "lodash/cloneDeep";
 
 export const itemsToFetch = 12; // how many posts are fetched on each get
 
@@ -173,6 +174,7 @@ const postsSlice = createSlice({
         state.userPosts = updatedUserPosts;
       }
     },
+    clearDataBeforeLogOut: (state) => initialState,
   },
 });
 
