@@ -13,6 +13,7 @@ import { sendNotification } from "../../store/notifications/actions";
 import { addReplyToPost } from "../../store/posts/actions";
 import { fetchAPI, RequestMethod } from "../../utils/fetchAPI";
 import { Colors, Loader, Player, SubmitButton, TouchableHighlightButton } from "../shared";
+import * as config from "../../config.json"
 
 type StackParamsList = {
   params: {
@@ -101,7 +102,7 @@ export const PublishScreen: React.FC = () => {
     formData.append("hashtags", JSON.stringify(hashtags));
 
     setIsLoading(true);
-    const { res, error } = await fetchAPI(RequestMethod.POST, `${process.env.BASE_API_ENPOINT}/posts/upload`, formData);
+    const { res, error } = await fetchAPI(RequestMethod.POST, `${config.BASE_API_ENPOINT}/posts/upload`, formData);
 
     if (res) {
       console.log("res upload", res);
@@ -134,7 +135,7 @@ export const PublishScreen: React.FC = () => {
 
     const { res, error } = await fetchAPI(
       RequestMethod.POST,
-      `${process.env.BASE_API_ENPOINT}/posts/${route.params?.postId}/reply/upload`,
+      `${config.BASE_API_ENPOINT}/posts/${route.params?.postId}/reply/upload`,
       formData
     );
 

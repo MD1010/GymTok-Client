@@ -5,10 +5,11 @@ import { getUserNotifications, setPushToken, unregisterFromNotifications } from 
 import { notificationsActions } from "../notifications/notificationsSlice";
 import { RootState } from "../rootReducer";
 import { authActions } from "./authSlice";
+import * as config from "../../config.json"
 
 export const register = (username: string, fullName: string, password: string, email: string): AppThunk => {
   return async (dispatch: AppDispatch) => {
-    const registerEnpoint = `${process.env.BASE_API_ENPOINT}/users/register`;
+    const registerEnpoint = `${config.BASE_API_ENPOINT}/users/register`;
     const body = { username, fullName, password, email };
     dispatch(authActions.resetAuthError());
     const { res, error } = await fetchAPI(RequestMethod.POST, registerEnpoint, body);
@@ -21,8 +22,8 @@ export const register = (username: string, fullName: string, password: string, e
 };
 export const login = (username: string, password: string): AppThunk => {
   return async (dispatch: AppDispatch) => {
-    console.log("mother ..dsds. ", `${process.env.BASE_API_ENPOINT}/users/login`);
-    const registerEnpoint = `${process.env.BASE_API_ENPOINT}/users/login`;
+    console.log("mother ..dsds. ", `${config.BASE_API_ENPOINT}/users/login`);
+    const registerEnpoint = `${config.BASE_API_ENPOINT}/users/login`;
 
     const body = { username, password };
     dispatch(authActions.resetAuthError());
@@ -60,7 +61,7 @@ export const registerIfNeed = (
   photoUrl: string
 ): AppThunk => {
   return async (dispatch: AppDispatch) => {
-    const registerIfNeedEnpoint = `${process.env.BASE_API_ENPOINT}/users/registerIfNeed`;
+    const registerIfNeedEnpoint = `${config.BASE_API_ENPOINT}/users/registerIfNeed`;
 
     const body = { email, username, password, fullName, photoUrl };
 

@@ -16,6 +16,7 @@ import { SearchResults } from "./SearchResult";
 import { FontAwesome } from "@expo/vector-icons";
 import { TouchableOpacity, TouchableWithoutFeedback } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
+import * as config from "../../config.json"
 
 interface MainDiscoverProps {}
 
@@ -34,7 +35,7 @@ export const MainDiscover: React.FC<MainDiscoverProps> = ({}) => {
   const route = useRoute<any>();
 
   const loadPopularHashtags = async () => {
-    const challengesEndpoint = `${process.env.BASE_API_ENPOINT}/hashtags/popular?popularCount=${POPULAR_HASHTAGS_COUNT}`;
+    const challengesEndpoint = `${config.BASE_API_ENPOINT}/hashtags/popular?popularCount=${POPULAR_HASHTAGS_COUNT}`;
     const { res } = await fetchAPI(RequestMethod.GET, challengesEndpoint);
 
     res && setPopularHashtags(res);
@@ -56,7 +57,7 @@ export const MainDiscover: React.FC<MainDiscoverProps> = ({}) => {
 
   const fetchHashtags = useCallback(
     debounce(async (searchTerm?: string) => {
-      const { res } = await fetchAPI(RequestMethod.GET, `${process.env.BASE_API_ENPOINT}/hashtags`, null, {
+      const { res } = await fetchAPI(RequestMethod.GET, `${config.BASE_API_ENPOINT}/hashtags`, null, {
         searchTerm,
       });
       res && setMasterDataSource(res);
@@ -68,7 +69,7 @@ export const MainDiscover: React.FC<MainDiscoverProps> = ({}) => {
 
   const handleSubmit = async (hashtagId: string) => {
     setIsLoading(true);
-    const { res } = await fetchAPI(RequestMethod.GET, `${process.env.BASE_API_ENPOINT}/posts/hashtag/${hashtagId}`);
+    const { res } = await fetchAPI(RequestMethod.GET, `${config.BASE_API_ENPOINT}/posts/hashtag/${hashtagId}`);
     console.log("usersss undefined result tagggg", res);
     setIsLoading(false);
     setIsModalVisible(false);

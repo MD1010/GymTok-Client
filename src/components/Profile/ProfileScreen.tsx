@@ -11,6 +11,7 @@ import { fetchAPI, RequestMethod } from "../../utils/fetchAPI";
 import { Colors } from "../shared";
 import { GenericComponent } from "./genericComponent";
 import { LogOutFromApp } from "./LogOutFromApp";
+import * as config from "../../config.json"
 
 const itemsToFetch = 12;
 interface IProfileDetails {
@@ -27,7 +28,7 @@ function ProfileTabs(user: IUser) {
 
   const getMoreChallenges = async () => {
     console.log("gfgfg");
-    const endpoint = `${process.env.BASE_API_ENPOINT}/posts`;
+    const endpoint = `${config.BASE_API_ENPOINT}/posts`;
     const { res, error } = await fetchAPI<IPost[]>(RequestMethod.GET, endpoint, null, {
       size: itemsToFetch,
       page: Math.floor(challenges.length / itemsToFetch),
@@ -40,7 +41,7 @@ function ProfileTabs(user: IUser) {
     setChallenges([...challenges, ...res]);
   };
   const getMoreReplies = async () => {
-    const endpoint = `${process.env.BASE_API_ENPOINT}/posts`;
+    const endpoint = `${config.BASE_API_ENPOINT}/posts`;
     const { res, error } = await fetchAPI<IPost[]>(RequestMethod.GET, endpoint, null, {
       size: itemsToFetch,
       page: Math.floor(replies.length / itemsToFetch),
@@ -206,7 +207,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({ user, inProfileTab
   useEffect(() => {
     async function getProfileDetails() {
       setIsLoading(true);
-      const profileDetailsEndpoint = `${process.env.BASE_API_ENPOINT}/users/profileDetails?userId=${currentUser._id}`;
+      const profileDetailsEndpoint = `${config.BASE_API_ENPOINT}/users/profileDetails?userId=${currentUser._id}`;
 
       const { res, error } = await fetchAPI(RequestMethod.GET, profileDetailsEndpoint);
 
