@@ -1,6 +1,6 @@
 import { FontAwesome } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Dimensions,
   FlatList,
@@ -53,7 +53,7 @@ export const GenericComponent: React.FC<Props> = ({
   const navigation = useNavigation();
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [showFooter, setShowFooter] = useState<boolean>(false);
-
+  let callOnScrollEnd = useRef(false);
   const isHorizontal: boolean = horizontal ? horizontal : false;
   const numOfColumns: number = numColumns ? numColumns : 3;
   const picHeight: number = pictureHeight
@@ -185,7 +185,15 @@ export const GenericComponent: React.FC<Props> = ({
         renderItem={({ item }) => renderItem(item)}
         onEndReachedThreshold={0.5}
         ListFooterComponent={showFooter ? <Footer /> : null}
-        onEndReached={handleLoadMore}
+        // onEndReached={handleLoadMore}
+        onEndReached={() => {
+          callOnScrollEnd.current = true;
+          items.length && hasMoreToFetch && setShowFooter(true);
+        }}
+        onMomentumScrollEnd={() => {
+          callOnScrollEnd && handleLoadMore();
+          callOnScrollEnd.current = false;
+        }}
       />
     </SafeAreaView>
   );
