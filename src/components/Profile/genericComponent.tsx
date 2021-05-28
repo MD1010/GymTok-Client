@@ -18,7 +18,7 @@ import { postsSelector } from "../../store/posts/postsSlice";
 import { STREAMING_SERVER_GIF_ENDPOINT } from "../../utils/consts";
 import { Loader } from "../shared";
 import { Colors } from "../shared/styles/variables";
-
+import isEqaul from "lodash/isEqual";
 interface Props {
   items: IPost[];
   loadMoreCallback?: () => any;
@@ -54,6 +54,7 @@ export const GenericComponent: React.FC<Props> = ({
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [showFooter, setShowFooter] = useState<boolean>(false);
   let callOnScrollEnd = useRef(false);
+  let lastItems = useRef(undefined);
   const isHorizontal: boolean = horizontal ? horizontal : false;
   const numOfColumns: number = numColumns ? numColumns : 3;
   const picHeight: number = pictureHeight
@@ -68,23 +69,10 @@ export const GenericComponent: React.FC<Props> = ({
     }
     return null;
   };
-  // const showVideo = (videoURL) => {
-  //   navigation.navigate("UsersProfile", {
-  //     videoURL: `${STREAMING_SERVER_VIDEO_ENDPOINT}/${videoURL}`,
-  //   });
-  // };
 
   const updateItems = (posts: IPost[]) => {
     setItems && setItems(posts);
   };
-
-  // useEffect(() => {
-  //   if (items) {
-  //     console.log("papitka");
-
-  //     console.log(items);
-  //   }
-  // }, [items]);
 
   const showVideo = (postID) => {
     const initialIndex = items.findIndex((post) => post._id === postID);
@@ -106,8 +94,11 @@ export const GenericComponent: React.FC<Props> = ({
 
   const handleLoadMore = () => {
     console.log("here");
-    items.length && setShowFooter(true);
-    hasMoreToFetch && loadMoreCallback();
+    if (!isEqaul(lastItems.current, items)) {
+      items.length && setShowFooter(true);
+      hasMoreToFetch && loadMoreCallback();
+      lastItems.current = [...items];
+    }
   };
   const renderItem = (item: IPost) => {
     return (
