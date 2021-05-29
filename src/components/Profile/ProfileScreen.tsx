@@ -3,6 +3,7 @@ import { useRoute } from "@react-navigation/native";
 import React, { useCallback, useEffect, useState } from "react";
 import { Image, Text, View } from "react-native";
 import { Divider } from "react-native-paper";
+import { SafeAreaView } from "react-native-safe-area-context";
 import Icon from "react-native-vector-icons/Ionicons";
 import { useDispatch, useSelector } from "react-redux";
 import { IPost, IUser } from "../../interfaces";
@@ -19,6 +20,7 @@ import {
   repliesSelector,
 } from "../../store/posts/postsSlice";
 import { getUserChallenges, getUserReplies } from "../../store/posts/actions";
+import * as config from "../../config.json";
 
 const itemsToFetch = 12;
 
@@ -111,7 +113,7 @@ function ProfileTabs(props: IProfileTabs) {
   const Tabs = createMaterialTopTabNavigator();
   return (
     <Tabs.Navigator
-      sceneContainerStyle={{ backgroundColor: Colors.darkBlueOpaque }}
+      sceneContainerStyle={{ backgroundColor: Colors.black }}
       screenOptions={({ route }) => ({
         tabBarIcon: ({ focused }) => {
           let iconName;
@@ -132,7 +134,7 @@ function ProfileTabs(props: IProfileTabs) {
         },
       })}
       tabBarOptions={{
-        style: { backgroundColor: Colors.darkBlueOpaque },
+        style: { backgroundColor: Colors.black },
         showIcon: true,
         showLabel: true,
         activeTintColor: Colors.white,
@@ -201,9 +203,7 @@ const ProfileHeader: React.FC<IProfileHeaderProps> = ({ user, isLoading }) => {
 
       {/* </View> */}
 
-      <View
-        style={{ paddingVertical: 40, backgroundColor: Colors.darkBlueOpaque }}
-      >
+      <View style={{ paddingVertical: 40, backgroundColor: Colors.black }}>
         <View style={{ alignItems: "center" }}>
           <Image
             source={require("../../../assets/avatar/user.png")}
@@ -275,7 +275,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
   useEffect(() => {
     async function getProfileDetails() {
       setIsLoading(true);
-      const profileDetailsEndpoint = `${process.env.BASE_API_ENPOINT}/users/profileDetails?userId=${currentUser._id}`;
+      const profileDetailsEndpoint = `${config.BASE_API_ENPOINT}/users/profileDetails?userId=${currentUser._id}`;
 
       const { res, error } = await fetchAPI(
         RequestMethod.GET,
@@ -295,7 +295,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
   }, []);
 
   return (
-    <>
+    <SafeAreaView style={{ flex: 1 }}>
       {inProfileTab && <LogOutFromApp />}
       <ProfileHeader user={currentUser} isLoading={isLoading} />
       <Divider style={{ backgroundColor: Colors.weakGrey }} />
@@ -303,6 +303,6 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
         user={currentUser}
         isCurrentUserLoggedUser={isCurrentUserLoggedUser}
       />
-    </>
+    </SafeAreaView>
   );
 };

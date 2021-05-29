@@ -10,6 +10,7 @@ import { notificationsActions } from "../notifications/notificationsSlice";
 import { postsActions } from "../posts/postsSlice";
 import { RootState } from "../rootReducer";
 import { authActions } from "./authSlice";
+import * as config from "../../config.json";
 
 export const register = (
   username: string,
@@ -18,7 +19,7 @@ export const register = (
   email: string
 ): AppThunk => {
   return async (dispatch: AppDispatch) => {
-    const registerEnpoint = `${process.env.BASE_API_ENPOINT}/users/register`;
+    const registerEnpoint = `${config.BASE_API_ENPOINT}/users/register`;
     const body = { username, fullName, password, email };
     dispatch(authActions.resetAuthError());
     const { res, error } = await fetchAPI(
@@ -82,7 +83,7 @@ export const registerIfNeed = (
   photoUrl: string
 ): AppThunk => {
   return async (dispatch: AppDispatch) => {
-    const registerIfNeedEnpoint = `${process.env.BASE_API_ENPOINT}/users/registerIfNeed`;
+    const registerIfNeedEnpoint = `${config.BASE_API_ENPOINT}/users/registerIfNeed`;
 
     const body = { email, username, password, fullName, photoUrl };
 

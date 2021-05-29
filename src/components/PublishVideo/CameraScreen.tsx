@@ -1,20 +1,13 @@
 import { Feather, Fontisto, Ionicons, MaterialIcons } from "@expo/vector-icons";
-import {
-  RouteProp,
-  useFocusEffect,
-  useNavigation,
-  useRoute,
-} from "@react-navigation/native";
+import { RouteProp, useFocusEffect, useNavigation, useRoute } from "@react-navigation/native";
 import { StackNavigationOptions } from "@react-navigation/stack";
 import { Camera } from "expo-camera";
 import * as ImagePicker from "expo-image-picker";
 import * as Permissions from "expo-permissions";
 import React, { useEffect, useRef, useState } from "react";
 import { Dimensions, Platform, StyleSheet, View } from "react-native";
-import {
-  PinchGestureHandler,
-  TouchableOpacity,
-} from "react-native-gesture-handler";
+import { PinchGestureHandler, TouchableOpacity } from "react-native-gesture-handler";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { Colors } from "../shared/styles/variables";
 import { StopWatchContainer } from "./StopWatch";
 
@@ -54,20 +47,13 @@ export const CameraScreen: React.FC = () => {
       style={{ padding: 10 }}
       onPress={() => {
         setFlash(
-          flash === Camera.Constants.FlashMode.on
-            ? Camera.Constants.FlashMode.off
-            : Camera.Constants.FlashMode.on
+          flash === Camera.Constants.FlashMode.on ? Camera.Constants.FlashMode.off : Camera.Constants.FlashMode.on
         );
       }}
     />
   );
 
-  const centerHeader = () => (
-    <StopWatchContainer
-      stopwatchReset={stopwatchReset}
-      stopwatchStart={stopwatchStart}
-    />
-  );
+  const centerHeader = () => <StopWatchContainer stopwatchReset={stopwatchReset} stopwatchStart={stopwatchStart} />;
   const headerLeft = () => (
     <MaterialIcons
       name="close"
@@ -92,7 +78,7 @@ export const CameraScreen: React.FC = () => {
         Platform.OS === "ios"
           ? await Camera.requestPermissionsAsync()
           : (await Permissions.askAsync(Permissions.AUDIO_RECORDING)) &&
-          (await Permissions.askAsync(Permissions.CAMERA));
+            (await Permissions.askAsync(Permissions.CAMERA));
       await ImagePicker.getMediaLibraryPermissionsAsync(true);
       setPermissionGranted(audioRecording.granted);
     })();
@@ -157,10 +143,7 @@ export const CameraScreen: React.FC = () => {
 
   const onPinchGestureEvent = (event: any) => {
     console.log("original zoom: " + event.nativeEvent.scale);
-    const tempZoom =
-      event.nativeEvent.scale < 1
-        ? event.nativeEvent.scale / 100
-        : event.nativeEvent.scale / 10;
+    const tempZoom = event.nativeEvent.scale < 1 ? event.nativeEvent.scale / 100 : event.nativeEvent.scale / 10;
 
     console.log("new temp zoom: " + tempZoom);
 
@@ -207,34 +190,21 @@ export const CameraScreen: React.FC = () => {
 
   return (
     <PinchGestureHandler onGestureEvent={onPinchGestureEvent}>
-      <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
         {isCameraEnabled ? (
-          <Camera
-            ref={cameraRef}
-            style={styles.camera}
-            type={type}
-            flashMode={flash}
-            zoom={zoom}
-            ratio={"16:9"}
-          >
+          <Camera ref={cameraRef} style={styles.camera} type={type} flashMode={flash} zoom={zoom} ratio={"16:9"}>
             <View style={{ flex: 1, padding: 25 }}>
               {!recording && !isRecordingDone ? (
                 <View style={styles.menuButtons}>
                   <TouchableOpacity
                     onPress={() => {
                       setType(
-                        type === Camera.Constants.Type.back
-                          ? Camera.Constants.Type.front
-                          : Camera.Constants.Type.back
+                        type === Camera.Constants.Type.back ? Camera.Constants.Type.front : Camera.Constants.Type.back
                       );
                     }}
                   >
                     <MaterialIcons
-                      name={
-                        Platform.OS === "android"
-                          ? "flip-camera-android"
-                          : "flip-camera-ios"
-                      }
+                      name={Platform.OS === "android" ? "flip-camera-android" : "flip-camera-ios"}
                       color={"white"}
                       size={35}
                     />
@@ -253,11 +223,7 @@ export const CameraScreen: React.FC = () => {
                       pickVideo();
                     }}
                   >
-                    <Ionicons
-                      name={"md-image-outline"}
-                      color={"white"}
-                      size={35}
-                    />
+                    <Ionicons name={"md-image-outline"} color={"white"} size={35} />
                   </TouchableOpacity>
                 </View>
               ) : (
@@ -286,7 +252,7 @@ export const CameraScreen: React.FC = () => {
         ) : (
           <View style={{ flex: 1, backgroundColor: "black" }}></View>
         )}
-      </View>
+      </SafeAreaView>
     </PinchGestureHandler>
   );
 };

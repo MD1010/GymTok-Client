@@ -6,8 +6,8 @@ import { colors, Divider } from "react-native-elements";
 import { TextInput } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch, useSelector } from "react-redux";
+import * as config from "../../config.json";
 import { IUser } from "../../interfaces";
-import { INotification } from "../../interfaces/Notification";
 import { authSelector } from "../../store/auth/authSlice";
 import { sendNotification } from "../../store/notifications/actions";
 import { addReplyToPost } from "../../store/posts/actions";
@@ -151,7 +151,7 @@ export const PublishScreen: React.FC = () => {
 
     const { res, error } = await fetchAPI(
       RequestMethod.POST,
-      `${process.env.BASE_API_ENPOINT}/posts/${route.params?.postId}/reply/upload`,
+      `${config.BASE_API_ENPOINT}/posts/${route.params?.postId}/reply/upload`,
       formData
     );
 

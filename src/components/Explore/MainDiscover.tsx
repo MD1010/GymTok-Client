@@ -14,17 +14,15 @@ import { PopularHashtag } from "./PopularHashtag";
 
 import { SearchResults } from "./SearchResult";
 import { FontAwesome } from "@expo/vector-icons";
-import {
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-} from "react-native-gesture-handler";
+import { TouchableOpacity, TouchableWithoutFeedback } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
+import * as config from "../../config.json"
 
-interface MainDiscoverProps { }
+interface MainDiscoverProps {}
 
 const POPULAR_HASHTAGS_COUNT = 4;
 
-export const MainDiscover: React.FC<MainDiscoverProps> = ({ }) => {
+export const MainDiscover: React.FC<MainDiscoverProps> = ({}) => {
   const navigation = useNavigation();
   const [popularHashtags, setPopularHashtags] = useState<IPopularHashtags>({});
 
@@ -33,12 +31,11 @@ export const MainDiscover: React.FC<MainDiscoverProps> = ({ }) => {
 
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [relvantItems, setRelavantItems] =
-    useState<IPost[] | undefined>(undefined);
+  const [relvantItems, setRelavantItems] = useState<IPost[] | undefined>(undefined);
   const route = useRoute<any>();
 
   const loadPopularHashtags = async () => {
-    const challengesEndpoint = `${process.env.BASE_API_ENPOINT}/hashtags/popular?popularCount=${POPULAR_HASHTAGS_COUNT}`;
+    const challengesEndpoint = `${config.BASE_API_ENPOINT}/hashtags/popular?popularCount=${POPULAR_HASHTAGS_COUNT}`;
     const { res } = await fetchAPI(RequestMethod.GET, challengesEndpoint);
 
     res && setPopularHashtags(res);
@@ -52,15 +49,15 @@ export const MainDiscover: React.FC<MainDiscoverProps> = ({ }) => {
 
   const updatePostsForHashtag = (hashtag: string, posts: IPost[]) => {
     if (popularHashtags[hashtag]) {
-      const copiedPopularHashtags = { ...popularHashtags }
+      const copiedPopularHashtags = { ...popularHashtags };
       copiedPopularHashtags[hashtag] = posts;
       setPopularHashtags(copiedPopularHashtags);
     }
-  }
+  };
 
   const fetchHashtags = useCallback(
     debounce(async (searchTerm?: string) => {
-      const { res } = await fetchAPI(RequestMethod.GET, `${process.env.BASE_API_ENPOINT}/hashtags`, null, {
+      const { res } = await fetchAPI(RequestMethod.GET, `${config.BASE_API_ENPOINT}/hashtags`, null, {
         searchTerm,
       });
       res && setMasterDataSource(res);
@@ -72,10 +69,7 @@ export const MainDiscover: React.FC<MainDiscoverProps> = ({ }) => {
 
   const handleSubmit = async (hashtagId: string) => {
     setIsLoading(true);
-    const { res } = await fetchAPI(
-      RequestMethod.GET,
-      `${process.env.BASE_API_ENPOINT}/posts/hashtag/${hashtagId}`
-    );
+    const { res } = await fetchAPI(RequestMethod.GET, `${config.BASE_API_ENPOINT}/posts/hashtag/${hashtagId}`);
     console.log("usersss undefined result tagggg", res);
     setIsLoading(false);
     setIsModalVisible(false);
@@ -125,14 +119,10 @@ export const MainDiscover: React.FC<MainDiscoverProps> = ({ }) => {
               marginBottom: 10,
             }}
           >
-            <TouchableWithoutFeedback
-              onPress={() => showProfile(item.createdBy)}
-            >
+            <TouchableWithoutFeedback onPress={() => showProfile(item.createdBy)}>
               <Avatar
                 source={
-                  item?.createdBy?.image
-                    ? { uri: item?.createdBy?.image }
-                    : require("../../../assets/avatar/user.png")
+                  item?.createdBy?.image ? { uri: item?.createdBy?.image } : require("../../../assets/avatar/user.png")
                 }
                 rounded
               />
@@ -149,12 +139,7 @@ export const MainDiscover: React.FC<MainDiscoverProps> = ({ }) => {
           </View>
 
           <View style={{ flexDirection: "row", alignSelf: "center" }}>
-            <FontAwesome
-              style={{ alignSelf: "center" }}
-              name={"heart-o"}
-              size={13}
-              color={Colors.darkGrey}
-            />
+            <FontAwesome style={{ alignSelf: "center" }} name={"heart-o"} size={13} color={Colors.darkGrey} />
             <Text
               style={{
                 fontSize: 13,
@@ -208,8 +193,8 @@ export const MainDiscover: React.FC<MainDiscoverProps> = ({ }) => {
       <View style={{ flex: 1, marginBottom: 20 }}>
         <SearchBar
           platform={Platform.OS === "android" ? "android" : "ios"}
-          containerStyle={{ backgroundColor: Colors.darkBlueOpaque }}
-          inputContainerStyle={{ backgroundColor: Colors.darkBlueOpaque }}
+          containerStyle={{ backgroundColor: Colors.black }}
+          inputContainerStyle={{ backgroundColor: Colors.black }}
           inputStyle={{ color: Colors.weakGrey }}
           onFocus={() => {
             fetchHashtags();
@@ -232,21 +217,14 @@ export const MainDiscover: React.FC<MainDiscoverProps> = ({ }) => {
       </View>
 
       <View style={{ flex: 11 }}>
-        {isModalVisible && (
-          <SearchResults
-            dataSource={masterDataSource}
-            handleSelectItem={handleSelectItem}
-          />
-        )}
+        {isModalVisible && <SearchResults dataSource={masterDataSource} handleSelectItem={handleSelectItem} />}
         {isLoading ? (
           <View style={{ flex: 1 }}>
             <Loader />
           </View>
         ) : relvantItems !== undefined && search.length > 0 ? (
           <View style={{ flex: 1 }}>
-            <Text style={{ fontSize: 20, padding: 10, color: Colors.white }}>
-              Videos
-            </Text>
+            <Text style={{ fontSize: 20, padding: 10, color: Colors.white }}>Videos</Text>
             <GenericComponent
               items={relvantItems}
               setItems={setRelavantItems}
@@ -267,9 +245,7 @@ export const MainDiscover: React.FC<MainDiscoverProps> = ({ }) => {
               alignItems: "center",
             }}
           >
-            <Text style={{ fontSize: 20, color: Colors.white }}>
-              No Results :(
-            </Text>
+            <Text style={{ fontSize: 20, color: Colors.white }}>No Results :(</Text>
           </View>
         ) : (
           <ScrollView>
@@ -280,7 +256,7 @@ export const MainDiscover: React.FC<MainDiscoverProps> = ({ }) => {
                   key={key}
                   hashtag={hashtag}
                   posts={popularHashtags[hashtag]}
-                  updatePostsForHashtag={posts => updatePostsForHashtag(hashtag, posts)}
+                  updatePostsForHashtag={(posts) => updatePostsForHashtag(hashtag, posts)}
                 />
                 // </View>
               );
@@ -295,7 +271,7 @@ export const MainDiscover: React.FC<MainDiscoverProps> = ({ }) => {
 const styles = StyleSheet.create({
   exploreContainer: {
     flex: 4,
-    backgroundColor: Colors.darkBlueOpaque,
+    backgroundColor: Colors.black,
   },
   hashtagContainer: {},
 });

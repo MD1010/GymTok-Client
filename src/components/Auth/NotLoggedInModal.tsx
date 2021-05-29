@@ -13,9 +13,11 @@ import {
   TouchableWithoutFeedback,
   View,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch } from "react-redux";
 import { registerIfNeed } from "../../store/auth/actions";
 import { Colors } from "../shared/styles/variables";
+import * as config from "../../config.json"
 
 type StackParamsList = {
   params: { redirectScreen: string };
@@ -24,7 +26,7 @@ type StackParamsList = {
 async function loginWithFacebook() {
   try {
     await Facebook.initializeAsync({
-      appId: process.env.FACEBOOK_APP_ID,
+      appId: config.FACEBOOK_APP_ID,
     });
     const result = await Facebook.logInWithReadPermissionsAsync({
       permissions: ["public_profile", "email"],
@@ -50,10 +52,10 @@ async function loginWithFacebook() {
 
 async function loginWithGoogle() {
   try {
-    console.log("google idddd " + process.env.GOOGLE_ANDROID_CLIENT_ID, process.env.GOOGLE_IOS_CLIENT_ID);
+    console.log("google idddd " + config.GOOGLE_ANDROID_CLIENT_ID, config.GOOGLE_IOS_CLIENT_ID);
     const result = await Google.logInAsync({
-      androidClientId: process.env.GOOGLE_ANDROID_CLIENT_ID,
-      iosClientId: process.env.GOOGLE_IOS_CLIENT_ID,
+      androidClientId: config.GOOGLE_ANDROID_CLIENT_ID,
+      iosClientId: config.GOOGLE_IOS_CLIENT_ID,
       scopes: ["profile", "email"],
     });
 
@@ -107,7 +109,7 @@ export const NotLoggedInModal: React.FC = () => {
   };
 
   return (
-    <View style={styles.modalContainer}>
+    <SafeAreaView style={styles.modalContainer}>
       <View style={[styles.modalBody]}>
         <View style={{ position: "absolute", left: 15, top: 15 }}>
           <TouchableWithoutFeedback onPress={() => navigation.goBack()}>
@@ -174,7 +176,7 @@ export const NotLoggedInModal: React.FC = () => {
           </TouchableWithoutFeedback>
         </View>
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -184,7 +186,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   modalBody: {
-    backgroundColor: Colors.darkBlue,
+    backgroundColor: Colors.black,
     flex: 1,
     padding: 30,
   },

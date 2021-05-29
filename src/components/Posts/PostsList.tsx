@@ -1,22 +1,7 @@
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import isEmpty from "lodash/isEmpty";
-import React, {
-  memo,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
-import {
-  Dimensions,
-  FlatList,
-  Text,
-  View,
-  ViewabilityConfig,
-  RefreshControl,
-  InteractionManager,
-} from "react-native";
+import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Dimensions, FlatList, Text, View, ViewabilityConfig, RefreshControl, InteractionManager } from "react-native";
 import { Button } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
 import { IPost } from "../../interfaces/Post";
@@ -35,6 +20,7 @@ import { Post } from "./Post";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { fetchAPI, RequestMethod } from "../../utils/fetchAPI";
 import { userPressLikeOnPost } from "../../utils/updatePostLikes";
+import * as configs from "../../config.json"
 
 interface PostsListProps {
   /**
@@ -51,23 +37,19 @@ export const PostsList: React.FC<PostsListProps> = memo(
   ({ isFeed, currentPosts, isLoadMore, initialPostIndex, updateAllPosts }) => {
     const navigation = useNavigation();
     const dispatch = useDispatch();
-    const [navigatedOutOfScreen, setNavigatedOutOfScreen] =
-      useState<boolean>(false);
+    const [navigatedOutOfScreen, setNavigatedOutOfScreen] = useState<boolean>(false);
     const { loggedUser } = useSelector(authSelector);
     const scrollEnded = useRef<boolean>(false);
     // const playingVideoIndex = useRef(0);
-    const [currentlyPlaying, setCurrentlyPlaying] = useState(
-      initialPostIndex || 0
-    );
+    const [currentlyPlaying, setCurrentlyPlaying] = useState(initialPostIndex || 0);
     const flatListRef = useRef<FlatList>(null);
     const [showFooter, setShowFooter] = useState<boolean>(false);
 
-    const { hasMoreToFetch, error, latestFetchedPosts, userPosts } =
-      useSelector(postsSelector);
-    const [posts, setPosts] = useState<IPost[]>([]);
+    const { hasMoreToFetch, error, latestFetchedPosts, userPosts } = useSelector(postsSelector);
+    // const [posts, setPosts] = useState<IPost[]>([]);
     //const isLoading = useRef<boolean>(true);
     const [isLoading, setIsLoading] = useState<boolean>(true);
-    // const posts: IPost[] = currentPosts ? currentPosts : isFeed ? latestFetchedPosts : userPosts;
+    let posts: IPost[] = currentPosts ? currentPosts : isFeed ? latestFetchedPosts : userPosts;
     const [refreshing, setRefreshing] = React.useState<boolean>(false);
     const loadMore: boolean = isLoadMore !== undefined ? isLoadMore : true;
     const bottomTabsHeight = isFeed ? useBottomTabBarHeight() : 0;
@@ -76,13 +58,13 @@ export const PostsList: React.FC<PostsListProps> = memo(
       error && alert(JSON.stringify(error));
     }, [error]);
 
-    useEffect(() => {
-      setPosts(
-        currentPosts ? currentPosts : isFeed ? latestFetchedPosts : userPosts
-      );
-      //isLoading.current = false;
-      setIsLoading(false);
-    }, [currentPosts, isFeed, latestFetchedPosts, userPosts]);
+    // useEffect(() => {
+    //   setPosts(
+    //     currentPosts ? currentPosts : isFeed ? latestFetchedPosts : userPosts
+    //   );
+    //   //isLoading.current = false;
+    //   setIsLoading(false);
+    // }, [currentPosts, isFeed, latestFetchedPosts, userPosts]);
 
     useEffect(() => {
       if (posts) {
@@ -161,17 +143,14 @@ export const PostsList: React.FC<PostsListProps> = memo(
       };
     }, []);
 
-    const loggedUserPressLike = async (
-      post: IPost,
-      isUserLikePost: boolean
-    ) => {
+    const loggedUserPressLike = async (post: IPost, isUserLikePost: boolean) => {
       const updatedPosts = userPressLikeOnPost(posts, post, loggedUser._id);
-      setPosts(updatedPosts);
+      // setPosts(updatedPosts);
       dispatch(updateUserLikePost(post, loggedUser._id));
       updateAllPosts && updateAllPosts(updatedPosts);
 
       let requestMethod: RequestMethod;
-      const likesApi = `${process.env.BASE_API_ENPOINT}/users/${loggedUser._id}/posts/${post._id}/like`;
+      const likesApi = `${configs.BASE_API_ENPOINT}/users/${loggedUser._id}/posts/${post._id}/like`;
       if (!isUserLikePost) {
         requestMethod = RequestMethod.POST;
       } else {
@@ -180,8 +159,9 @@ export const PostsList: React.FC<PostsListProps> = memo(
       const { res, error } = await fetchAPI(requestMethod, likesApi);
 
       if (error) {
-        setPosts(userPressLikeOnPost(posts, post, loggedUser._id));
+        // setPosts(userPressLikeOnPost(posts, post, loggedUser._id));
         dispatch(updateUserLikePost(post, loggedUser._id));
+        updateAllPosts && updateAllPosts(updatedPosts);
       } else {
         return res;
       }
@@ -217,10 +197,7 @@ export const PostsList: React.FC<PostsListProps> = memo(
     }, []);
     const keyExtractor = useCallback((challenge, i) => i.toString(), []);
     const viewHeight = useMemo(
-      () =>
-        isFeed
-          ? Dimensions.get("window").height - bottomTabsHeight
-          : Dimensions.get("window").height,
+      () => (isFeed ? Dimensions.get("window").height - bottomTabsHeight : Dimensions.get("window").height),
       [isFeed, bottomTabsHeight]
     );
     const config = useRef<ViewabilityConfig>({
@@ -241,11 +218,7 @@ export const PostsList: React.FC<PostsListProps> = memo(
         if (hasMoreToFetch) {
           return <Loader style={{ height: 100, width: 100 }} />;
         } else {
-          return (
-            <Text style={{ color: Colors.lightGrey2, fontSize: 15 }}>
-              You have reached the end
-            </Text>
-          );
+          return <Text style={{ color: Colors.lightGrey2, fontSize: 15 }}>You have reached the end</Text>;
         }
       }
       return null;
@@ -335,9 +308,7 @@ export const PostsList: React.FC<PostsListProps> = memo(
               showFooter ? (
                 <Footer />
               ) : posts.length !== 0 ? (
-                <Text style={{ color: Colors.white, fontSize: 15 }}>
-                  You have reached the end
-                </Text>
+                <Text style={{ color: Colors.white, fontSize: 15 }}>You have reached the end</Text>
               ) : null
             }
             ListFooterComponentStyle={{
@@ -348,9 +319,7 @@ export const PostsList: React.FC<PostsListProps> = memo(
             }}
           ></FlatList>
           {isLoading ? (
-            <View
-              style={{ paddingBottom: Dimensions.get("screen").height / 2.2 }}
-            >
+            <View style={{ paddingBottom: Dimensions.get("screen").height / 2.2 }}>
               <Loader />
             </View>
           ) : null}

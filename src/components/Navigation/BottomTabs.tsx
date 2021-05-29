@@ -33,12 +33,12 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
         sceneContainerStyle={{ backgroundColor: Colors.black }}
         tabBarOptions={{
           activeTintColor: Colors.cyan,
-          activeBackgroundColor: Colors.black,
+          // activeBackgroundColor: Colors.black,
           inactiveTintColor: Colors.white,
           showLabel: false,
           style: {
             borderTopWidth: 0,
-            backgroundColor: Colors.black,
+            backgroundColor: "rgba(8, 8, 74,.4)",
           },
         }}
       >
@@ -82,7 +82,7 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
                   }}
                 >
                   <IconButton
-                    style={{ backgroundColor: Colors.lightPurpule }}
+                    style={{ backgroundColor: Colors.lightPurpule, borderWidth: 0 }}
                     color={Colors.white}
                     size={40}
                     icon={() => (

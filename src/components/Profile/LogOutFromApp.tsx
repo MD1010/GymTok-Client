@@ -34,7 +34,7 @@ export const LogOutFromApp: React.FC = () => {
         name={"log-out-outline"}
         size={30}
         color={Colors.white}
-        style={{ position: "absolute", right: 15, top: 50, zIndex: 1000 }}
+        style={{ position: "absolute", right: 15, top: 10, zIndex: 1000 }}
       />
 
       <ConfirmPopup
