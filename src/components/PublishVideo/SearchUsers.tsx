@@ -14,6 +14,7 @@ import { UserList } from "../shared/UserList";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useSelector } from "react-redux";
 import { authSelector } from "../../store/auth/authSlice";
+import * as config from "../../config.json"
 
 type StackParamsList = {
   params: { excludedUsersToSearch: IUser[] };
@@ -47,7 +48,7 @@ export const SearchUsersScreen: React.FC = () => {
     debounce(async (searchTerm: string) => {
       if (searchTerm) {
         console.log("search!!");
-        const { res } = await fetchAPI(RequestMethod.GET, `${process.env.BASE_API_ENPOINT}/users`, null, {
+        const { res } = await fetchAPI(RequestMethod.GET, `${config.BASE_API_ENPOINT}/users`, null, {
           searchTerm,
           excludedIds: excludedIdsToSearch,
         });

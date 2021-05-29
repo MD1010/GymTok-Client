@@ -21,6 +21,7 @@ import { Post } from "./Post";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { fetchAPI, RequestMethod } from "../../utils/fetchAPI";
 import { userPressLikeOnPost } from "../../utils/updatePostLikes";
+import * as configs from "../../config.json"
 
 interface PostsListProps {
   /**
