@@ -79,7 +79,7 @@ export const PostReplies: React.FC<PostRepliesProps> = ({}) => {
   }, [post]);
 
   const showOriginalVideo = () => {
-    navigation.navigate("VideoDisplay", { posts: [post] });
+    navigation.navigate("VideoDisplay", { posts: [post], isOriginal: true });
   };
   useEffect(() => {
     lastUpdatedPosts && setChallengeReplies(lastUpdatedPosts);

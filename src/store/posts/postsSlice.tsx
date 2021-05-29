@@ -65,15 +65,12 @@ const postsSlice = createSlice({
       );
 
       if (!isEqual(state.latestFetchedPosts, updatedLatestFetchedPosts)) {
-        console.log("!!!");
-
         state.latestFetchedPosts = updatedLatestFetchedPosts;
       }
 
       const updatedUserPosts = userLikePost(state.userPosts, action.payload.post._id, action.payload.userId);
 
       if (!isEqual(state.userPosts, updatedUserPosts)) {
-        console.log("!!!");
         state.userPosts = updatedUserPosts;
       }
     },
@@ -85,14 +82,12 @@ const postsSlice = createSlice({
       );
 
       if (!isEqual(state.latestFetchedPosts, updatedLatestFetchedPosts)) {
-        console.log("!!!");
         state.latestFetchedPosts = updatedLatestFetchedPosts;
       }
 
       const updatedUserPosts = userDislikePost(state.userPosts, action.payload.post._id, action.payload.userId);
 
       if (!isEqual(state.userPosts, updatedUserPosts)) {
-        console.log("!!!");
         state.userPosts = updatedUserPosts;
       }
     },
