@@ -45,8 +45,8 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentPosts,
   const [showFooter, setShowFooter] = useState<boolean>(false);
 
   const { hasMoreToFetch, error, latestFetchedPosts, userPosts, lastUpdatedPosts } = useSelector(postsSelector);
-
-  let posts = currentPosts ? currentPosts : isFeed ? latestFetchedPosts : userPosts;
+  const [posts, setPosts] = useState<IPost[]>([]);
+  // let posts = currentPosts ? currentPosts : isFeed ? latestFetchedPosts : userPosts;
   //const isLoading = useRef<boolean>(true);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   // const posts: IPost[] = currentPosts ? currentPosts : isFeed ? latestFetchedPosts : userPosts;
@@ -73,8 +73,11 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentPosts,
     // !isEmpty(lastUpdatedPosts) && setPosts(lastUpdatedPosts);
     // setPosts(currentPosts?.length ? currentPosts : isFeed ? latestFetchedPosts : userPosts);
     //isLoading.current = false;
-    setIsLoading(false);
-  }, [currentPosts, isFeed, latestFetchedPosts, userPosts, lastUpdatedPosts]);
+    console.log("!@#!@#!@#!@#");
+
+    setPosts(currentPosts ? currentPosts : isFeed ? latestFetchedPosts : userPosts);
+    isLoading && setIsLoading(false);
+  }, [currentPosts, isFeed, latestFetchedPosts, userPosts]);
 
   useEffect(() => {
     if (posts) {
@@ -151,6 +154,7 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentPosts,
     // posts = updatedPosts;
     dispatch(updateUserLikePost(post, loggedUser._id));
     dispatch(postsUpdated(updatedPosts));
+    setPosts(updatedPosts);
     // updateAllPosts && updateAllPosts(updatedPosts);
 
     let requestMethod: RequestMethod;
@@ -166,6 +170,7 @@ export const PostsList: React.FC<PostsListProps> = memo(({ isFeed, currentPosts,
       // posts = userPressLikeOnPost(posts, post, loggedUser._id);
       dispatch(postsUpdated(posts));
       dispatch(updateUserLikePost(post, loggedUser._id));
+      setPosts(updatedPosts);
     } else {
       return res;
     }

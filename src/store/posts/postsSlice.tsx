@@ -3,6 +3,7 @@ import { IPost } from "../../interfaces";
 import { addReplyToPost } from "../../utils/addReplyToPost";
 import { userLikePost, userDislikePost } from "../../utils/updatePostLikes";
 import { RootState } from "../configureStore";
+import isEqual from "lodash/isEqual";
 
 export const itemsToFetch = 10; // how many posts are fetched on each get
 
@@ -63,13 +64,16 @@ const postsSlice = createSlice({
         action.payload.userId
       );
 
-      if (updatedLatestFetchedPosts) {
+      if (!isEqual(state.latestFetchedPosts, updatedLatestFetchedPosts)) {
+        console.log("!!!");
+
         state.latestFetchedPosts = updatedLatestFetchedPosts;
       }
 
       const updatedUserPosts = userLikePost(state.userPosts, action.payload.post._id, action.payload.userId);
 
-      if (updatedUserPosts) {
+      if (!isEqual(state.userPosts, updatedUserPosts)) {
+        console.log("!!!");
         state.userPosts = updatedUserPosts;
       }
     },
@@ -80,13 +84,15 @@ const postsSlice = createSlice({
         action.payload.userId
       );
 
-      if (updatedLatestFetchedPosts) {
+      if (!isEqual(state.latestFetchedPosts, updatedLatestFetchedPosts)) {
+        console.log("!!!");
         state.latestFetchedPosts = updatedLatestFetchedPosts;
       }
 
       const updatedUserPosts = userDislikePost(state.userPosts, action.payload.post._id, action.payload.userId);
 
-      if (updatedUserPosts) {
+      if (!isEqual(state.userPosts, updatedUserPosts)) {
+        console.log("!!!");
         state.userPosts = updatedUserPosts;
       }
     },
@@ -97,13 +103,13 @@ const postsSlice = createSlice({
         action.payload.reply
       );
 
-      if (updatedLatestFetchedPosts) {
+      if (!isEqual(state.latestFetchedPosts, updatedLatestFetchedPosts)) {
         state.latestFetchedPosts = updatedLatestFetchedPosts;
       }
 
       const updatedUserPosts = addReplyToPost(state.userPosts, action.payload.postId, action.payload.reply);
 
-      if (updatedLatestFetchedPosts) {
+      if (!isEqual(state.userPosts, updatedUserPosts)) {
         state.userPosts = updatedUserPosts;
       }
     },

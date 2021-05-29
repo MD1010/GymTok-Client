@@ -71,9 +71,9 @@ export const GenericComponent: React.FC<Props> = ({
   //   items && updateItems(items);
   // }, [items]);
 
-  const updateItems = (posts: IPost[]) => {
-    setItems && setItems(posts);
-  };
+  // const updateItems = (posts: IPost[]) => {
+  //   setItems && setItems(posts);
+  // };
 
   const showVideo = (postID) => {
     const initialIndex = items.findIndex((post) => post._id === postID);
