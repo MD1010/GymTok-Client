@@ -17,7 +17,7 @@ const itemsToFetch = 12;
 
 interface IProfileTabs {
   user: IUser;
-  updatedProfileDetails: (profileDetails: IProfileDetails) => void;
+  getProfileDetails: () => void;
 }
 
 interface IProfileDetails {
@@ -25,7 +25,7 @@ interface IProfileDetails {
   numOfReplies: number;
 }
 
-const ProfileTabs: React.FC<IProfileTabs> = ({ user, updatedProfileDetails }) => {
+const ProfileTabs: React.FC<IProfileTabs> = ({ user, getProfileDetails }) => {
   const navigation = useNavigation();
   const Tabs = createMaterialTopTabNavigator();
   const { userUploadedChallenges, userUploadedReplies } = useSelector(postsSelector)
@@ -74,7 +74,9 @@ const ProfileTabs: React.FC<IProfileTabs> = ({ user, updatedProfileDetails }) =>
     }
   }, [hasMoreChallenges]);
 
-
+  useEffect(() => {
+    getProfileDetails();
+  }, [userUploadedChallenges, userUploadedReplies])
 
   const addUserRepliesToReplies = () => {
     const updatedReplies = [...replies];
@@ -254,18 +256,18 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({ user, inProfileTab
   let currentUser = route.params ? route.params.user : user;
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [profileDetails, setProfileDetails] = useState<IProfileDetails>();
-  const dispatch = useDispatch();
+
+  async function getProfileDetails() {
+    setIsLoading(true);
+    const profileDetailsEndpoint = `${process.env.BASE_API_ENPOINT}/users/profileDetails?userId=${currentUser._id}`;
+
+    const { res } = await fetchAPI(RequestMethod.GET, profileDetailsEndpoint);
+
+    res && setProfileDetails(res);
+    res && setIsLoading(false);
+  }
 
   useEffect(() => {
-    async function getProfileDetails() {
-      setIsLoading(true);
-      const profileDetailsEndpoint = `${process.env.BASE_API_ENPOINT}/users/profileDetails?userId=${currentUser._id}`;
-
-      const { res, error } = await fetchAPI(RequestMethod.GET, profileDetailsEndpoint);
-
-      res && setProfileDetails(res);
-      res && setIsLoading(false);
-    }
     getProfileDetails();
   }, []);
 
@@ -274,7 +276,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({ user, inProfileTab
       {inProfileTab && <LogOutFromApp />}
       <ProfileHeader details={profileDetails} user={currentUser} isLoading={isLoading} />
       <Divider style={{ backgroundColor: Colors.weakGrey }} />
-      <ProfileTabs user={currentUser} updatedProfileDetails={setProfileDetails} />
+      <ProfileTabs user={currentUser} getProfileDetails={getProfileDetails} />
     </SafeAreaView>
   );
 };
