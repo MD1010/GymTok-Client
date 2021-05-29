@@ -10,7 +10,7 @@ import { IUser } from "../../interfaces";
 import { INotification } from "../../interfaces/Notification";
 import { authSelector } from "../../store/auth/authSlice";
 import { sendNotification } from "../../store/notifications/actions";
-import { addReplyToPost } from "../../store/posts/actions";
+import { addReplyToPost, loggedUserUploadChallenge, loggedUserUploadReply } from "../../store/posts/actions";
 import { fetchAPI, RequestMethod } from "../../utils/fetchAPI";
 import { Colors, Loader, Player, SubmitButton, TouchableHighlightButton } from "../shared";
 
@@ -106,6 +106,7 @@ export const PublishScreen: React.FC = () => {
     if (res) {
       console.log("res upload", res);
       setIsLoading(false);
+      dispatch(loggedUserUploadChallenge(res));
       navigation.navigate("Home");
       const notification: any = {
         body: "Check it now!",
@@ -140,8 +141,9 @@ export const PublishScreen: React.FC = () => {
 
     if (res) {
       setIsLoading(false);
-      navigation.navigate("Home", { screen: "PostReplies", params: { newReply: res } });
       dispatch(addReplyToPost(route.params?.postId, res));
+      dispatch(loggedUserUploadReply(res));
+      navigation.navigate("Home", { screen: "PostReplies", params: { newReply: res } });
     } else if (error) {
       setIsLoading(false);
       alert(JSON.stringify(error));
@@ -149,15 +151,14 @@ export const PublishScreen: React.FC = () => {
   };
 
   const onSubmit = () => {
+    if (!loggedUser) {
+      return navigation.navigate("NotLoggedIn", {
+        redirectScreen: "Publish",
+      });
+    }
     if (isReply) {
       replyChallenge();
     } else {
-      // challenge
-      if (!loggedUser) {
-        return navigation.navigate("NotLoggedIn", {
-          redirectScreen: "Publish",
-        });
-      }
       publishChallenge();
     }
   };
@@ -171,11 +172,11 @@ export const PublishScreen: React.FC = () => {
         onSelect={() =>
           route.params?.taggedPeople?.length
             ? navigation.navigate("TagPeople", {
-                selectedUsers: route.params?.taggedPeople,
-              })
+              selectedUsers: route.params?.taggedPeople,
+            })
             : navigation.navigate("SearchUser", {
-                excludedUsersToSearch: route.params?.taggedPeople,
-              })
+              excludedUsersToSearch: route.params?.taggedPeople,
+            })
         }
         icon={<Fontisto name="at" color={Colors.lightGrey2} size={14} />}
       />

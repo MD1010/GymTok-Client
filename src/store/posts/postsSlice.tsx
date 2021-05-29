@@ -11,12 +11,16 @@ export interface PostsState {
   latestFetchedPosts: IPost[]; // last itemsToFetch that are displayed
   userPosts: IPost[];
   hasMoreToFetch: boolean;
+  userUploadedChallenges: IPost[];
+  userUploadedReplies: IPost[];
 }
 export const initialState: PostsState = {
   error: null,
   latestFetchedPosts: [],
   userPosts: [],
   hasMoreToFetch: true,
+  userUploadedChallenges: [],
+  userUploadedReplies: []
 };
 
 interface LikePayload {
@@ -113,6 +117,12 @@ const postsSlice = createSlice({
         state.userPosts = updatedUserPosts;
       }
     },
+    loggedUserUploadChallenge: (state, action: PayloadAction<IPost>) => {
+      state.userUploadedChallenges = [...state.userUploadedChallenges, action.payload];
+    },
+    loggedUserUploadReply: (state, action: PayloadAction<IPost>) => {
+      state.userUploadedReplies = [...state.userUploadedReplies, action.payload];
+    }
   },
 });
 

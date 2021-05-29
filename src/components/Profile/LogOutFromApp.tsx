@@ -15,8 +15,6 @@ export const LogOutFromApp: React.FC = () => {
   const { loggedUser } = useSelector(authSelector);
 
   const logoutFromApp = useCallback(() => {
-    console.log(123123);
-
     dispatch(logout());
     setModalVisible(false);
   }, []);

@@ -119,3 +119,15 @@ export const addReplyToPost = (postId: string, reply: IPost): AppThunk => {
     dispatch(postsActions.addReplyToPost({ postId, reply }));
   };
 };
+
+export const loggedUserUploadChallenge = (challenge: IPost): AppThunk => {
+  return async (dispatch: AppDispatch, getState: () => RootState) => {
+    dispatch(postsActions.loggedUserUploadChallenge(challenge));
+  };
+};
+
+export const loggedUserUploadReply = (reply: IPost): AppThunk => {
+  return async (dispatch: AppDispatch, getState: () => RootState) => {
+    dispatch(postsActions.loggedUserUploadReply(reply));
+  };
+};
