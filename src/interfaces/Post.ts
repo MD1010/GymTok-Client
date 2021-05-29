@@ -1,3 +1,4 @@
+import { PostType } from "../utils/postTypeEnum";
 import { IHashtag } from "./Hashtag";
 import { IUser } from "./User";
 
@@ -13,4 +14,5 @@ export interface IPost {
   likes: string[];
   isReply: boolean;
   hashtags: IHashtag[];
+  types: PostType[];
 }

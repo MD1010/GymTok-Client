@@ -1,26 +1,20 @@
+import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import isEmpty from "lodash/isEmpty";
 import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Dimensions, FlatList, Text, View, ViewabilityConfig, RefreshControl, InteractionManager } from "react-native";
-import { Button } from "react-native-paper";
+import { Dimensions, FlatList, RefreshControl, Text, View, ViewabilityConfig } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
+import * as configs from "../../config.json";
 import { IPost } from "../../interfaces/Post";
 import { authSelector } from "../../store/auth/authSlice";
-import {
-  getLatestPosts,
-  getMorePosts,
-  getMostRecommended,
-  getUserPosts,
-  updateUserLikePost,
-} from "../../store/posts/actions";
+import { getLatestPosts, getMorePosts, getMostRecommended, updateUserLikePost } from "../../store/posts/actions";
 import { postsSelector } from "../../store/posts/postsSlice";
-import { Loader } from "../shared";
-import { Colors, UIConsts } from "../shared/styles/variables";
-import { Post } from "./Post";
-import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { fetchAPI, RequestMethod } from "../../utils/fetchAPI";
+import { PostType } from "../../utils/postTypeEnum";
 import { userPressLikeOnPost } from "../../utils/updatePostLikes";
-import * as configs from "../../config.json"
+import { Loader } from "../shared";
+import { Colors } from "../shared/styles/variables";
+import { Post } from "./Post";
 
 interface PostsListProps {
   /**
@@ -31,10 +25,11 @@ userPosts   *  in home page isFeed is true, else it is false
   isLoadMore?: boolean;
   initialPostIndex?: number;
   updateAllPosts?: (posts: IPost[]) => void;
+  previewIn: PostType;
 }
 
 export const PostsList: React.FC<PostsListProps> = memo(
-  ({ isFeed, currentPosts, isLoadMore, initialPostIndex, updateAllPosts }) => {
+  ({ isFeed, currentPosts, isLoadMore, initialPostIndex, updateAllPosts, previewIn }) => {
     const navigation = useNavigation();
     const dispatch = useDispatch();
     const [navigatedOutOfScreen, setNavigatedOutOfScreen] = useState<boolean>(false);
@@ -49,7 +44,8 @@ export const PostsList: React.FC<PostsListProps> = memo(
     // const [posts, setPosts] = useState<IPost[]>([]);
     //const isLoading = useRef<boolean>(true);
     const [isLoading, setIsLoading] = useState<boolean>(true);
-    let posts: IPost[] = currentPosts ? currentPosts : isFeed ? latestFetchedPosts : userPosts;
+    const posts = useSelector(FactortSelector(previeIn));
+    // let posts: IPost[] = currentPosts ? currentPosts : isFeed ? latestFetchedPosts : userPosts;
     const [refreshing, setRefreshing] = React.useState<boolean>(false);
     const loadMore: boolean = isLoadMore !== undefined ? isLoadMore : true;
     const bottomTabsHeight = isFeed ? useBottomTabBarHeight() : 0;
@@ -105,7 +101,7 @@ export const PostsList: React.FC<PostsListProps> = memo(
       } else {
         console.log("getting more posts because user is null");
         // loggedUser is null -> didnt log in yet
-        dispatch(getMorePosts());
+        dispatch(getMorePosts(previewIn));
       }
     };
     useEffect(() => {

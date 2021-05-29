@@ -4,28 +4,26 @@ import { AppDispatch, AppThunk } from "../configureStore";
 import { RootState } from "../rootReducer";
 import { itemsToFetch, postsActions } from "./postsSlice";
 import * as config from "../../config.json";
+import { PostType } from "../../utils/postTypeEnum";
 
-export const getMorePosts = (): AppThunk => {
+export const getMorePosts = (postType: PostType): AppThunk => {
   return async (dispatch: AppDispatch, getState: () => RootState) => {
     const currentPosts = getState()?.posts?.latestFetchedPosts;
 
     const endpoint = `${config.BASE_API_ENPOINT}/posts`;
 
-    const { res, error } = await fetchAPI<IPost[]>(
-      RequestMethod.GET,
-      endpoint,
-      null,
-      {
-        size: itemsToFetch,
-        page: Math.floor(currentPosts.length / itemsToFetch),
-      }
-    );
+    const { res, error } = await fetchAPI<IPost[]>(RequestMethod.GET, endpoint, null, {
+      size: itemsToFetch,
+      page: Math.floor(currentPosts.length / itemsToFetch),
+    });
     if (res) {
-      if (res.length > 0) {
-        dispatch(postsActions.fetchMoreSuccess(res));
-      } else {
-        dispatch(postsActions.fetchMoreSuccess(currentPosts.slice()));
-      }
+      dispatch(postsActions.fetchNewPosts({ postType, newPosts: res }));
+      // if (res.length > 0) {
+      //   dispatch(postsActions.fetchMoreSuccess(res));
+      //   // dispatch(postsActions.fetchNewPosts({postType, newPosts: res}))
+      // } else {
+      //   dispatch(postsActions.fetchMoreSuccess(currentPosts.slice()));
+      // }
     } else {
       dispatch(postsActions.fetchFailed(error));
     }
@@ -39,20 +37,15 @@ export const getUserReplies = (): AppThunk => {
     const currentPostsLenght = getState()?.posts.userReplies.length;
     console.log("fetching more replies and puting in redux");
 
-    const { res, error } = await fetchAPI<IPost[]>(
-      RequestMethod.GET,
-      endpoint,
-      null,
-      {
-        size: itemsToFetch,
-        page: Math.floor(currentPostsLenght / itemsToFetch),
-        uid: loggedUserId,
-        isReply: true,
-      }
-    );
+    const { res, error } = await fetchAPI<IPost[]>(RequestMethod.GET, endpoint, null, {
+      size: itemsToFetch,
+      page: Math.floor(currentPostsLenght / itemsToFetch),
+      uid: loggedUserId,
+      isReply: true,
+    });
 
     if (res) {
-      dispatch(postsActions.userProfileRepliesFetchSuccess(res));
+      dispatch(postsActions.fetchNewPosts({ postType: PostType.PROFILE_REPLY, newPosts: res }));
     } else {
       dispatch(postsActions.fetchFailed(error));
     }
@@ -65,20 +58,15 @@ export const getUserChallenges = (): AppThunk => {
     const loggedUserId = getState().auth.loggedUser._id;
     const currentPostsLenght = getState()?.posts.userChallenges.length;
     console.log("fetching more challenges and puting in redux");
-    const { res, error } = await fetchAPI<IPost[]>(
-      RequestMethod.GET,
-      endpoint,
-      null,
-      {
-        size: itemsToFetch,
-        page: Math.floor(currentPostsLenght / itemsToFetch),
-        uid: loggedUserId,
-        isReply: false,
-      }
-    );
+    const { res, error } = await fetchAPI<IPost[]>(RequestMethod.GET, endpoint, null, {
+      size: itemsToFetch,
+      page: Math.floor(currentPostsLenght / itemsToFetch),
+      uid: loggedUserId,
+      isReply: false,
+    });
 
     if (res) {
-      dispatch(postsActions.userProfileChallengesFetchSuccess(res));
+      dispatch(postsActions.fetchNewPosts({ postType: PostType.PROFILE_CHALLENGE, newPosts: res }));
     } else {
       dispatch(postsActions.fetchFailed(error));
     }
@@ -91,18 +79,13 @@ export const getMostRecommended = (): AppThunk => {
 
     console.log(endpoint);
     const currentPosts = getState().posts.latestFetchedPosts;
-    const { res, error } = await fetchAPI<IPost[]>(
-      RequestMethod.GET,
-      endpoint,
-      null,
-      {
-        size: itemsToFetch,
-        page: Math.floor(currentPosts.length / itemsToFetch),
-      }
-    );
+    const { res, error } = await fetchAPI<IPost[]>(RequestMethod.GET, endpoint, null, {
+      size: itemsToFetch,
+      page: Math.floor(currentPosts.length / itemsToFetch),
+    });
 
     if (res) {
-      dispatch(postsActions.fetchMoreSuccess(res));
+      dispatch(postsActions.fetchNewPosts({ postType: PostType.FEED, newPosts: res }));
     } else {
       dispatch(postsActions.fetchFailed(error));
     }
@@ -130,16 +113,11 @@ export const getLatestPosts = (): AppThunk => {
     //   console.log("sortedItemmmm", sortedArr[i].publishDate);
     // });
 
-    const { res, error } = await fetchAPI<IPost[]>(
-      RequestMethod.GET,
-      endpoint,
-      null,
-      {
-        size: itemsToFetch,
-        page: Math.floor(currentPosts.length / itemsToFetch),
-        currentMaxDate: maxDate,
-      }
-    );
+    const { res, error } = await fetchAPI<IPost[]>(RequestMethod.GET, endpoint, null, {
+      size: itemsToFetch,
+      page: Math.floor(currentPosts.length / itemsToFetch),
+      currentMaxDate: maxDate,
+    });
 
     if (res) {
       console.log("refreshing and getting newest posts!!");
@@ -169,3 +147,9 @@ export const addReplyToPost = (postId: string, reply: IPost): AppThunk => {
     dispatch(postsActions.addReplyToPost({ postId, reply }));
   };
 };
+
+// export const fetchNewPosts = (): AppThunk => {
+//   return async (dispatch: AppDispatch, getState: () => RootState) => {
+//     dispatch(postsActions.addReplyToPost({ postId, reply }));
+//   };
+// };
