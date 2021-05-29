@@ -63,12 +63,18 @@ const ProfileTabs: React.FC<IProfileTabs> = ({ user, updatedProfileDetails }) =>
   };
 
   useEffect(() => {
-    navigation.addListener("focus", () => {
+    if (!hasMoreReplies) {
       const updatedReplies = addUserRepliesToReplies();
+    }
+  }, [hasMoreReplies]);
+
+  useEffect(() => {
+    if (!hasMoreChallenges) {
       const updatedChallenges = addUserChallengesToChallenges();
-      updatedProfileDetails({ numOfChallenges: updatedChallenges.length, numOfReplies: updatedReplies.length })
-    });
-  }, [navigation, userUploadedReplies, userUploadedChallenges]);
+    }
+  }, [hasMoreChallenges]);
+
+
 
   const addUserRepliesToReplies = () => {
     const updatedReplies = [...replies];
