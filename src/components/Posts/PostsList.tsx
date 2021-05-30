@@ -20,6 +20,7 @@ import { Post } from "./Post";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { fetchAPI, RequestMethod } from "../../utils/fetchAPI";
 import { userPressLikeOnPost } from "../../utils/updatePostLikes";
+import * as configs from "../../config.json"
 
 interface PostsListProps {
   /**
@@ -142,7 +143,7 @@ export const PostsList: React.FC<PostsListProps> = memo(
       updateAllPosts && updateAllPosts(updatedPosts);
 
       let requestMethod: RequestMethod;
-      const likesApi = `${process.env.BASE_API_ENPOINT}/users/${loggedUser._id}/posts/${post._id}/like`;
+      const likesApi = `${configs.BASE_API_ENPOINT}/users/${loggedUser._id}/posts/${post._id}/like`;
       if (!isUserLikePost) {
         requestMethod = RequestMethod.POST;
       } else {

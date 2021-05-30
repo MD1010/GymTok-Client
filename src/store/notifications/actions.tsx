@@ -4,9 +4,10 @@ import { INotification } from "../../interfaces/Notification";
 import { fetchAPI, RequestMethod } from "../../utils/fetchAPI";
 import { AppDispatch, AppThunk } from "../configureStore";
 import { notificationsActions } from "./notificationsSlice";
+import * as config from "../../config.json"
 
 export const setPushToken = async (userId: string) => {
-  const pushTokenAPI = `${process.env.BASE_API_ENPOINT}/notifications/pushToken`;
+  const pushTokenAPI = `${config.BASE_API_ENPOINT}/notifications/pushToken`;
   const token = await getTokenAfterPermissionGrant();
 
   const { error } = await fetchAPI(RequestMethod.PUT, pushTokenAPI, {
@@ -17,7 +18,7 @@ export const setPushToken = async (userId: string) => {
 };
 
 export const unregisterFromNotifications = async (userId: string) => {
-  const pushTokenAPI = `${process.env.BASE_API_ENPOINT}/notifications/pushToken`;
+  const pushTokenAPI = `${config.BASE_API_ENPOINT}/notifications/pushToken`;
   const token = await getTokenAfterPermissionGrant();
 
   const { error } = await fetchAPI(RequestMethod.DELETE, pushTokenAPI, {
@@ -28,7 +29,7 @@ export const unregisterFromNotifications = async (userId: string) => {
 };
 
 export const getUserNotifications = (userId: string): AppThunk => {
-  const notificationsAPI = `${process.env.BASE_API_ENPOINT}/notifications`;
+  const notificationsAPI = `${config.BASE_API_ENPOINT}/notifications`;
   return async (dispatch: AppDispatch) => {
     const { res, error } = await fetchAPI(RequestMethod.GET, notificationsAPI, null, {
       uid: userId,
@@ -48,13 +49,13 @@ export const getNotificationRecieved = (notification: INotification): AppThunk =
 };
 
 export const sendNotification = async (notificationPayload: INotification) => {
-  const notificationsAPI = `${process.env.BASE_API_ENPOINT}/notifications/send`;
+  const notificationsAPI = `${config.BASE_API_ENPOINT}/notifications/send`;
   const { res, error } = await fetchAPI(RequestMethod.POST, notificationsAPI, notificationPayload);
   if (error) alert(JSON.stringify(error));
 };
 
 export const deleteUserNotifications = (userId: string): AppThunk => {
-  const notificationsAPI = `${process.env.BASE_API_ENPOINT}/notifications/${userId}`;
+  const notificationsAPI = `${config.BASE_API_ENPOINT}/notifications/${userId}`;
   return async (dispatch: AppDispatch) => {
     const { res, error } = await fetchAPI(RequestMethod.DELETE, notificationsAPI);
     if (res) {
@@ -66,7 +67,7 @@ export const deleteUserNotifications = (userId: string): AppThunk => {
 };
 
 export const deleteNotification = (notification: INotification, userId: string): AppThunk => {
-  const notificationsAPI = `${process.env.BASE_API_ENPOINT}/notifications/${notification._id}/${userId}`;
+  const notificationsAPI = `${config.BASE_API_ENPOINT}/notifications/${notification._id}/${userId}`;
   return async (dispatch: AppDispatch) => {
     dispatch(notificationsActions.deleteUserNotification(notification));
     const { res, error } = await fetchAPI(RequestMethod.DELETE, notificationsAPI);
@@ -79,7 +80,7 @@ export const deleteNotification = (notification: INotification, userId: string):
 };
 
 export const markNotificationAsRead = (notification: INotification, userId: string): AppThunk => {
-  const notificationsAPI = `${process.env.BASE_API_ENPOINT}/notifications/${notification._id}/${userId}`;
+  const notificationsAPI = `${config.BASE_API_ENPOINT}/notifications/${notification._id}/${userId}`;
   return async (dispatch: AppDispatch) => {
     if (notification.isRead) return;
     const { res, error } = await fetchAPI(RequestMethod.PUT, notificationsAPI);

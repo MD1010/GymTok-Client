@@ -3,12 +3,13 @@ import { fetchAPI, RequestMethod } from "../../utils/fetchAPI";
 import { AppDispatch, AppThunk } from "../configureStore";
 import { RootState } from "../rootReducer";
 import { itemsToFetch, postsActions } from "./postsSlice";
+import * as config from "../../config.json"
 
 export const getMorePosts = (): AppThunk => {
   return async (dispatch: AppDispatch, getState: () => RootState) => {
     const currentPosts = getState()?.posts?.latestFetchedPosts;
 
-    const endpoint = `${process.env.BASE_API_ENPOINT}/posts`;
+    const endpoint = `${config.BASE_API_ENPOINT}/posts`;
 
     const { res, error } = await fetchAPI<IPost[]>(RequestMethod.GET, endpoint, null, {
       size: itemsToFetch,
@@ -30,7 +31,7 @@ export const getUserPosts = (): AppThunk => {
   return async (dispatch: AppDispatch, getState: () => RootState) => {
     // todo https://www.goodday.work/t/RRaDG3
     // todo send param to this func if you want replies or real posts and send the relevant query params
-    const endpoint = `${process.env.BASE_API_ENPOINT}/posts`;
+    const endpoint = `${config.BASE_API_ENPOINT}/posts`;
     const loggedUser = getState()?.auth?.loggedUser._id;
 
     const { res, error } = await fetchAPI<IPost[]>(RequestMethod.GET, endpoint, null, {
@@ -49,7 +50,7 @@ export const getUserPosts = (): AppThunk => {
 export const getMostRecommended = (): AppThunk => {
   return async (dispatch: AppDispatch, getState: () => RootState) => {
     const loggedUser = getState()?.auth?.loggedUser?.username;
-    const endpoint = `${process.env.BASE_API_ENPOINT}/users/${loggedUser}/recommendedPosts`;
+    const endpoint = `${config.BASE_API_ENPOINT}/users/${loggedUser}/recommendedPosts`;
     console.log(endpoint);
     const currentPosts = getState().posts.latestFetchedPosts;
     const { res, error } = await fetchAPI<IPost[]>(RequestMethod.GET, endpoint, null, {
@@ -69,8 +70,8 @@ export const getLatestPosts = (): AppThunk => {
   return async (dispatch: AppDispatch, getState: () => RootState) => {
     const loggedUser = getState()?.auth?.loggedUser?.username;
 
-    const recommendedEndpoint = `${process.env.BASE_API_ENPOINT}/users/${loggedUser}/recommendedPosts`;
-    const randomPostsEndpoint = `${process.env.BASE_API_ENPOINT}/posts`;
+    const recommendedEndpoint = `${config.BASE_API_ENPOINT}/users/${loggedUser}/recommendedPosts`;
+    const randomPostsEndpoint = `${config.BASE_API_ENPOINT}/posts`;
     const endpoint = loggedUser ? recommendedEndpoint : randomPostsEndpoint;
     const currentPosts = getState().posts.latestFetchedPosts;
     let maxDate = currentPosts[0].publishDate;

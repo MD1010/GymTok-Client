@@ -12,6 +12,7 @@ import { Colors } from "../shared/styles/variables";
 import { Player } from "../shared/VideoPlayer";
 import Ripple from "react-native-material-ripple";
 import { formatDate } from "../../utils/date";
+import * as config from "../../config.json"
 
 interface PostRepliesProps { }
 
@@ -31,7 +32,7 @@ export const PostReplies: React.FC<PostRepliesProps> = ({ }) => {
   const getChallengeReplies = async () => {
     setIsLoadingReplies(true);
     setChallengeReplies([]);
-    const challengesEndpoint = `${process.env.BASE_API_ENPOINT}/posts/${post._id}/replies`;
+    const challengesEndpoint = `${config.BASE_API_ENPOINT}/posts/${post._id}/replies`;
     const { res } = await fetchAPI(RequestMethod.GET, challengesEndpoint);
 
     res && setChallengeReplies(res);

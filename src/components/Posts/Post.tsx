@@ -15,6 +15,7 @@ import { fetchAPI, RequestMethod } from "../../utils/fetchAPI";
 import { Colors } from "../shared/styles/variables";
 import { Player } from "../shared/VideoPlayer";
 import { styles } from "./Posts.style";
+import * as configs from "../../config.json"
 // import { challengeContext } from "./ChallengesContainer";
 
 interface PostProps {
@@ -102,7 +103,7 @@ export const Post: React.FC<PostProps> = memo(({ post, isVisible, containerStyle
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const [isUserLikePost, setÌsUserLikePost] = useState<boolean>(false);
-  const streaminServerUrl = `${process.env.VIDEO_SERVER_ENDPOINT}/video/${videoURI}`;
+  const streaminServerUrl = `${configs.VIDEO_SERVER_ENDPOINT}/video/${videoURI}`;
 
   useEffect(() => {
     loggedUser && setÌsUserLikePost(post.likes.includes(loggedUser?._id));

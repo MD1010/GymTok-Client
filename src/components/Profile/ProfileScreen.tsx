@@ -12,6 +12,7 @@ import { fetchAPI, RequestMethod } from "../../utils/fetchAPI";
 import { Colors } from "../shared";
 import { GenericComponent } from "./genericComponent";
 import { LogOutFromApp } from "./LogOutFromApp";
+import * as config from "../../config.json"
 
 const itemsToFetch = 12;
 
@@ -35,7 +36,7 @@ const ProfileTabs: React.FC<IProfileTabs> = ({ user, getProfileDetails }) => {
   const [hasMoreReplies, setHasMoreReplies] = useState(true);
 
   const getMoreChallenges = async () => {
-    const endpoint = `${process.env.BASE_API_ENPOINT}/posts`;
+    const endpoint = `${config.BASE_API_ENPOINT}/posts`;
     const { res, error } = await fetchAPI<IPost[]>(RequestMethod.GET, endpoint, null, {
       size: itemsToFetch,
       page: Math.floor(challenges.length / itemsToFetch),
@@ -49,7 +50,7 @@ const ProfileTabs: React.FC<IProfileTabs> = ({ user, getProfileDetails }) => {
   };
 
   const getMoreReplies = async () => {
-    const endpoint = `${process.env.BASE_API_ENPOINT}/posts`;
+    const endpoint = `${config.BASE_API_ENPOINT}/posts`;
     const { res, error } = await fetchAPI<IPost[]>(RequestMethod.GET, endpoint, null, {
       size: itemsToFetch,
       page: Math.floor(replies.length / itemsToFetch),
@@ -259,7 +260,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({ user, inProfileTab
 
   async function getProfileDetails() {
     setIsLoading(true);
-    const profileDetailsEndpoint = `${process.env.BASE_API_ENPOINT}/users/profileDetails?userId=${currentUser._id}`;
+    const profileDetailsEndpoint = `${config.BASE_API_ENPOINT}/users/profileDetails?userId=${currentUser._id}`;
 
     const { res } = await fetchAPI(RequestMethod.GET, profileDetailsEndpoint);
 
