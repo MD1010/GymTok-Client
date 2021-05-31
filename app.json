@@ -19,23 +19,18 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true
     },
     "android": {
+      "googleServicesFile": "./google-services.json",
       "adaptiveIcon": {
         "foregroundImage": "./assets/icon.png",
         "backgroundColor": "#14192c"
       },
       "softwareKeyboardLayoutMode": "pan",
-      "permissions": [
-        "RECORD_AUDIO",
-        "CAMERA",
-        "CAPTURE_AUDIO_OUTPUT"
-      ],
+      "permissions": ["RECORD_AUDIO", "CAMERA", "CAPTURE_AUDIO_OUTPUT"],
       "useNextNotificationsApi": true,
       "package": "com.md10.GymTok"
     },
