@@ -46,21 +46,17 @@ function ProfileTabs(props: IProfileTabs) {
   if (isCurrentUserLoggedUser) {
     currentChallenges = useSelector(challengesSelector);
     currentReplies = useSelector(repliesSelector);
-    const { hasMoreChallengesToFetch, hasMoreRepliesToFetch } =
-      useSelector(postsSelector);
+    const { hasMoreChallengesToFetch, hasMoreRepliesToFetch } = useSelector(postsSelector);
     hasMoreChallengesToFetchFlag = hasMoreChallengesToFetch;
     hasMoreRepliesToFetchFlag = hasMoreRepliesToFetch;
     getMoreReplies = () => dispatch(getUserReplies());
     getMoreChallenges = () => dispatch(getUserChallenges());
-    setChallengesCallback = (items) =>
-      dispatch(postsActions.setUserChallenges(items));
-    setRepliesCallback = (items) =>
-      dispatch(postsActions.setUserReplies(items));
+    setChallengesCallback = (items) => dispatch(postsActions.setUserChallenges(items));
+    setRepliesCallback = (items) => dispatch(postsActions.setUserReplies(items));
   } else {
     const [challenges, setChallenges] = useState([]);
     const [replies, setReplies] = useState([]);
-    const [hasMoreChallengesToFetch, sethasMoreChallengesToFetch] =
-      useState(true);
+    const [hasMoreChallengesToFetch, sethasMoreChallengesToFetch] = useState(true);
     const [hasMoreRepliesToFetch, sethasMoreRepliesToFetch] = useState(true);
     currentChallenges = challenges;
     currentReplies = replies;
@@ -70,19 +66,14 @@ function ProfileTabs(props: IProfileTabs) {
     setRepliesCallback = setReplies;
 
     getMoreReplies = async () => {
-      const endpoint = `${process.env.BASE_API_ENPOINT}/posts`;
+      const endpoint = `${config.BASE_API_ENPOINT}/posts`;
       console.log("fetching more replies and puting in state");
-      const { res, error } = await fetchAPI<IPost[]>(
-        RequestMethod.GET,
-        endpoint,
-        null,
-        {
-          size: itemsToFetch,
-          page: Math.floor(replies.length / itemsToFetch),
-          uid: user._id,
-          isReply: true,
-        }
-      );
+      const { res, error } = await fetchAPI<IPost[]>(RequestMethod.GET, endpoint, null, {
+        size: itemsToFetch,
+        page: Math.floor(replies.length / itemsToFetch),
+        uid: user._id,
+        isReply: true,
+      });
       if (res.length < itemsToFetch) {
         sethasMoreRepliesToFetch(false);
       }
@@ -90,18 +81,13 @@ function ProfileTabs(props: IProfileTabs) {
     };
     getMoreChallenges = async () => {
       console.log("fetching more challenges and puting in state");
-      const endpoint = `${process.env.BASE_API_ENPOINT}/posts`;
-      const { res, error } = await fetchAPI<IPost[]>(
-        RequestMethod.GET,
-        endpoint,
-        null,
-        {
-          size: itemsToFetch,
-          page: Math.floor(challenges.length / itemsToFetch),
-          uid: user._id,
-          isReply: false,
-        }
-      );
+      const endpoint = `${config.BASE_API_ENPOINT}/posts`;
+      const { res, error } = await fetchAPI<IPost[]>(RequestMethod.GET, endpoint, null, {
+        size: itemsToFetch,
+        page: Math.floor(challenges.length / itemsToFetch),
+        uid: user._id,
+        isReply: false,
+      });
       if (res.length < itemsToFetch) {
         sethasMoreChallengesToFetch(false);
       }
@@ -124,13 +110,7 @@ function ProfileTabs(props: IProfileTabs) {
           } else if (route.name === "Replies") {
             iconName = "person-circle";
           }
-          return (
-            <Icon
-              name={iconName}
-              size={25}
-              color={focused ? Colors.white : Colors.darkGrey}
-            />
-          );
+          return <Icon name={iconName} size={25} color={focused ? Colors.white : Colors.darkGrey} />;
         },
       })}
       tabBarOptions={{
@@ -205,10 +185,7 @@ const ProfileHeader: React.FC<IProfileHeaderProps> = ({ user, isLoading }) => {
 
       <View style={{ paddingVertical: 40, backgroundColor: Colors.black }}>
         <View style={{ alignItems: "center" }}>
-          <Image
-            source={require("../../../assets/avatar/user.png")}
-            style={{ width: 100, height: 100 }}
-          />
+          <Image source={require("../../../assets/avatar/user.png")} style={{ width: 100, height: 100 }} />
           <Text
             style={{
               color: Colors.white,
@@ -255,10 +232,7 @@ interface ProfileScreenProps {
   inProfileTab: boolean;
 }
 
-export const ProfileScreen: React.FC<ProfileScreenProps> = ({
-  user,
-  inProfileTab = false,
-}) => {
+export const ProfileScreen: React.FC<ProfileScreenProps> = ({ user, inProfileTab = false }) => {
   const route = useRoute<any>();
   let isCurrentUserLoggedUser = true;
   let currentUser;
@@ -277,10 +251,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
       setIsLoading(true);
       const profileDetailsEndpoint = `${config.BASE_API_ENPOINT}/users/profileDetails?userId=${currentUser._id}`;
 
-      const { res, error } = await fetchAPI(
-        RequestMethod.GET,
-        profileDetailsEndpoint
-      );
+      const { res, error } = await fetchAPI(RequestMethod.GET, profileDetailsEndpoint);
       res &&
         dispatch(
           postsActions.setProfileDetails({
@@ -299,10 +270,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
       {inProfileTab && <LogOutFromApp />}
       <ProfileHeader user={currentUser} isLoading={isLoading} />
       <Divider style={{ backgroundColor: Colors.weakGrey }} />
-      <ProfileTabs
-        user={currentUser}
-        isCurrentUserLoggedUser={isCurrentUserLoggedUser}
-      />
+      <ProfileTabs user={currentUser} isCurrentUserLoggedUser={isCurrentUserLoggedUser} />
     </SafeAreaView>
   );
 };

@@ -11,15 +11,10 @@ export const getMorePosts = (): AppThunk => {
 
     const endpoint = `${config.BASE_API_ENPOINT}/posts`;
 
-    const { res, error } = await fetchAPI<IPost[]>(
-      RequestMethod.GET,
-      endpoint,
-      null,
-      {
-        size: itemsToFetch,
-        page: Math.floor(currentPosts.length / itemsToFetch),
-      }
-    );
+    const { res, error } = await fetchAPI<IPost[]>(RequestMethod.GET, endpoint, null, {
+      size: itemsToFetch,
+      page: Math.floor(currentPosts.length / itemsToFetch),
+    });
     if (res) {
       if (res.length > 0) {
         dispatch(postsActions.fetchMoreSuccess(res));
@@ -39,17 +34,12 @@ export const getUserReplies = (): AppThunk => {
     const currentPostsLenght = getState()?.posts.userReplies.length;
     console.log("fetching more replies and puting in redux");
 
-    const { res, error } = await fetchAPI<IPost[]>(
-      RequestMethod.GET,
-      endpoint,
-      null,
-      {
-        size: itemsToFetch,
-        page: Math.floor(currentPostsLenght / itemsToFetch),
-        uid: loggedUserId,
-        isReply: true,
-      }
-    );
+    const { res, error } = await fetchAPI<IPost[]>(RequestMethod.GET, endpoint, null, {
+      size: itemsToFetch,
+      page: Math.floor(currentPostsLenght / itemsToFetch),
+      uid: loggedUserId,
+      isReply: true,
+    });
 
     if (res) {
       dispatch(postsActions.userProfileRepliesFetchSuccess(res));
@@ -61,21 +51,16 @@ export const getUserReplies = (): AppThunk => {
 
 export const getUserChallenges = (): AppThunk => {
   return async (dispatch: AppDispatch, getState: () => RootState) => {
-    const endpoint = `${process.env.BASE_API_ENPOINT}/posts`;
+    const endpoint = `${config.BASE_API_ENPOINT}/posts`;
     const loggedUserId = getState().auth.loggedUser._id;
     const currentPostsLenght = getState()?.posts.userChallenges.length;
     console.log("fetching more challenges and puting in redux");
-    const { res, error } = await fetchAPI<IPost[]>(
-      RequestMethod.GET,
-      endpoint,
-      null,
-      {
-        size: itemsToFetch,
-        page: Math.floor(currentPostsLenght / itemsToFetch),
-        uid: loggedUserId,
-        isReply: false,
-      }
-    );
+    const { res, error } = await fetchAPI<IPost[]>(RequestMethod.GET, endpoint, null, {
+      size: itemsToFetch,
+      page: Math.floor(currentPostsLenght / itemsToFetch),
+      uid: loggedUserId,
+      isReply: false,
+    });
 
     if (res) {
       dispatch(postsActions.userProfileChallengesFetchSuccess(res));
@@ -91,15 +76,10 @@ export const getMostRecommended = (): AppThunk => {
 
     console.log(endpoint);
     const currentPosts = getState().posts.latestFetchedPosts;
-    const { res, error } = await fetchAPI<IPost[]>(
-      RequestMethod.GET,
-      endpoint,
-      null,
-      {
-        size: itemsToFetch,
-        page: Math.floor(currentPosts.length / itemsToFetch),
-      }
-    );
+    const { res, error } = await fetchAPI<IPost[]>(RequestMethod.GET, endpoint, null, {
+      size: itemsToFetch,
+      page: Math.floor(currentPosts.length / itemsToFetch),
+    });
 
     if (res) {
       dispatch(postsActions.fetchMoreSuccess(res));
@@ -130,16 +110,11 @@ export const getLatestPosts = (): AppThunk => {
     //   console.log("sortedItemmmm", sortedArr[i].publishDate);
     // });
 
-    const { res, error } = await fetchAPI<IPost[]>(
-      RequestMethod.GET,
-      endpoint,
-      null,
-      {
-        size: itemsToFetch,
-        page: Math.floor(currentPosts.length / itemsToFetch),
-        currentMaxDate: maxDate,
-      }
-    );
+    const { res, error } = await fetchAPI<IPost[]>(RequestMethod.GET, endpoint, null, {
+      size: itemsToFetch,
+      page: Math.floor(currentPosts.length / itemsToFetch),
+      currentMaxDate: maxDate,
+    });
 
     if (res) {
       console.log("refreshing and getting newest posts!!");

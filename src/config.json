@@ -1,7 +1,7 @@
 {
-    "BASE_API_ENPOINT": "http://193.106.55.109:4000",
-"VIDEO_SERVER_ENDPOINT": "http://193.106.55.109:8000",
-"GOOGLE_ANDROID_CLIENT_ID": "467291510755-ljvq3gmkdntrm8sv3sv14i5gen59879q.apps.googleusercontent.com",
-"GOOGLE_IOS_CLIENT_ID": "467291510755-rd8lqie9tve4tethhcjhi8t2c72g5hmj.apps.googleusercontent.com",
-"FACEBOOK_APP_ID": "135897215135362"
+  "BASE_API_ENPOINT": "http://193.106.55.109:4000",
+  "VIDEO_SERVER_ENDPOINT": "http://193.106.55.109:8000",
+  "GOOGLE_ANDROID_CLIENT_ID": "467291510755-ljvq3gmkdntrm8sv3sv14i5gen59879q.apps.googleusercontent.com",
+  "GOOGLE_IOS_CLIENT_ID": "467291510755-rd8lqie9tve4tethhcjhi8t2c72g5hmj.apps.googleusercontent.com",
+  "FACEBOOK_APP_ID": "135897215135362"
 }
