@@ -17,7 +17,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch } from "react-redux";
 import { registerIfNeed } from "../../store/auth/actions";
 import { Colors } from "../shared/styles/variables";
-import * as config from "../../config.json"
+import * as config from "../../config.json";
 
 type StackParamsList = {
   params: { redirectScreen: string };
@@ -52,11 +52,12 @@ async function loginWithFacebook() {
 
 async function loginWithGoogle() {
   try {
-    console.log("google idddd " + config.GOOGLE_ANDROID_CLIENT_ID, config.GOOGLE_IOS_CLIENT_ID);
+    // console.log("google idddd " + config.GOOGLE_ANDROID_CLIENT_ID, config.GOOGLE_IOS_CLIENT_ID);
     const result = await Google.logInAsync({
       androidClientId: config.GOOGLE_ANDROID_CLIENT_ID,
       iosClientId: config.GOOGLE_IOS_CLIENT_ID,
       scopes: ["profile", "email"],
+      androidStandaloneAppClientId: config.PROD_GOOGLE_OAUTH_CLIENT_ID,
     });
 
     if (result.type === "success") {

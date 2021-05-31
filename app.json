@@ -19,25 +19,26 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true
     },
     "android": {
+      "googleServicesFile": "./google-services.json",
+      "config": {
+        "googleSignIn": {
+          "apiKey": "698096415317-v176v2dnbk2ppft8ros0s4elomlv72db.apps.googleusercontent.com",
+          "certificateHash": "31F6CA8D4FE6E77BEF0801344C66F5E9A9BAFDBB"
+        }
+      },
       "adaptiveIcon": {
         "foregroundImage": "./assets/icon.png",
         "backgroundColor": "#14192c"
       },
       "softwareKeyboardLayoutMode": "pan",
-      "permissions": [
-        "RECORD_AUDIO",
-        "CAMERA",
-        "CAPTURE_AUDIO_OUTPUT"
-      ],
+      "permissions": ["RECORD_AUDIO", "CAMERA", "CAPTURE_AUDIO_OUTPUT"],
       "useNextNotificationsApi": true,
-      "package": "com.md10.GymTok"
+      "package": "com.md10.gymtok"
     },
     "notification": {
       "icon": "./assets/icon.png"
