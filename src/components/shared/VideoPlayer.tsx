@@ -56,6 +56,10 @@ export const Player: React.FC<VideoProps> = memo(
       return () => navigation.removeListener("blur", null);
     }, []);
 
+    useEffect(() => {
+      videoInViewPort && setIsPaused(false);
+    }, [videoInViewPort]);
+
     return (
       <TouchableWithoutFeedback
         onPress={() =>
