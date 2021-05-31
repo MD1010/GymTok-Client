@@ -1,26 +1,19 @@
+import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import isEmpty from "lodash/isEmpty";
 import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Dimensions, FlatList, Text, View, ViewabilityConfig, RefreshControl, InteractionManager } from "react-native";
-import { Button } from "react-native-paper";
+import { Dimensions, FlatList, RefreshControl, Text, View, ViewabilityConfig } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
+import * as configs from "../../config.json";
 import { IPost } from "../../interfaces/Post";
 import { authSelector } from "../../store/auth/authSlice";
-import {
-  getLatestPosts,
-  getMorePosts,
-  getMostRecommended,
-  getUserPosts,
-  updateUserLikePost,
-} from "../../store/posts/actions";
+import { getLatestPosts, getMorePosts, getMostRecommended, updateUserLikePost } from "../../store/posts/actions";
 import { postsSelector } from "../../store/posts/postsSlice";
-import { Loader } from "../shared";
-import { Colors, UIConsts } from "../shared/styles/variables";
-import { Post } from "./Post";
-import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { fetchAPI, RequestMethod } from "../../utils/fetchAPI";
 import { userPressLikeOnPost } from "../../utils/updatePostLikes";
-import * as configs from "../../config.json"
+import { Loader } from "../shared";
+import { Colors } from "../shared/styles/variables";
+import { Post } from "./Post";
 
 interface PostsListProps {
   /**
@@ -125,21 +118,16 @@ export const PostsList: React.FC<PostsListProps> = memo(
       // getPosts();
     }, [loggedUser]);
 
-    useFocusEffect(
-      React.useCallback(() => {
-        navigation.addListener("blur", () => {
-          setNavigatedOutOfScreen(true);
-        });
-        navigation.addListener("focus", () => {
-          setNavigatedOutOfScreen(false);
-        });
-      }, [])
-    );
+    useFocusEffect(() => {
+      setNavigatedOutOfScreen(false);
+      navigation.addListener("blur", () => {
+        setNavigatedOutOfScreen(true);
+      });
+    });
 
     useEffect(() => {
       return () => {
         navigation.removeListener("blur", null);
-        navigation.removeListener("focus", null);
       };
     }, []);
 
