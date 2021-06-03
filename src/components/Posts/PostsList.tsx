@@ -45,6 +45,7 @@ export const PostsList: React.FC<PostsListProps> = memo(
     let posts: IPost[] = currentPosts ? currentPosts : isFeed ? latestFetchedPosts : userPosts;
     const [refreshing, setRefreshing] = React.useState<boolean>(false);
     const loadMore: boolean = isLoadMore !== undefined ? isLoadMore : true;
+
     const bottomTabsHeight = isFeed ? useBottomTabBarHeight() : 0;
 
     useEffect(() => {
