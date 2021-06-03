@@ -51,6 +51,13 @@ const notificationsSlice = createSlice({
     getLatestNotificationSuccess: (state, action: PayloadAction<INotification>) => {
       state.receivedNotifications.unshift(action.payload);
     },
+
+    clearDataBeforeLogOut: (state) => {
+      (state.receivedNotifications = []),
+        (state.isLoading = false),
+        (state.error = null),
+        (state.lastDeletedNotification = null);
+    },
   },
 });
 

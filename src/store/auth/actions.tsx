@@ -45,6 +45,7 @@ export const logout = (): AppThunk => {
     await unregisterFromNotifications(userId);
     dispatch(authActions.logout());
     dispatch(postsActions.clearDataBeforeLogOut());
+    dispatch(notificationsActions.clearDataBeforeLogOut());
   };
 };
 
