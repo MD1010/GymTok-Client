@@ -32,6 +32,7 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
         backBehavior={"initialRoute"}
         sceneContainerStyle={{ backgroundColor: Colors.black }}
         tabBarOptions={{
+          safeAreaInsets: { bottom: 0 },
           activeTintColor: Colors.cyan,
           // activeBackgroundColor: Colors.black,
           inactiveTintColor: Colors.white,
@@ -85,13 +86,7 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
                     style={{ backgroundColor: Colors.lightPurpule, borderWidth: 0 }}
                     color={Colors.white}
                     size={40}
-                    icon={() => (
-                      <FontAwesome5
-                        name="plus"
-                        size={20}
-                        color={Colors.white}
-                      />
-                    )}
+                    icon={() => <FontAwesome5 name="plus" size={20} color={Colors.white} />}
                     onPress={() => {
                       navigation.navigate("Camera");
                     }}
@@ -109,11 +104,7 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
             tabBarIcon: ({ color, size, focused }) =>
               focused ? (
                 <View>
-                  <Ionicons
-                    name={"notifications-sharp"}
-                    color={color}
-                    size={size}
-                  />
+                  <Ionicons name={"notifications-sharp"} color={color} size={size} />
                   {loggedUser && unreadNotifications.length ? (
                     <Badge
                       value={unreadNotifications.length}
@@ -130,11 +121,7 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
                 </View>
               ) : (
                 <View>
-                  <Ionicons
-                    name={"notifications-outline"}
-                    color={color}
-                    size={size}
-                  />
+                  <Ionicons name={"notifications-outline"} color={color} size={size} />
                   {loggedUser && unreadNotifications.length ? (
                     <Badge
                       value={unreadNotifications.length}
