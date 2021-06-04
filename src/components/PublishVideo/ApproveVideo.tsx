@@ -1,12 +1,15 @@
 import { FontAwesome } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/core";
-import React, { memo, useContext, useEffect } from "react";
+import React, { memo, useContext, useEffect, useState } from "react";
 import { Text, View, StyleSheet, Dimensions } from "react-native";
 import { Avatar } from "react-native-elements";
-import { TouchableOpacity, TouchableWithoutFeedback } from "react-native-gesture-handler";
+import {
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+} from "react-native-gesture-handler";
 import { Colors } from "../shared/styles/variables";
 import { Player } from "../shared/VideoPlayer";
-import { RouteProp, useRoute } from "@react-navigation/native";
+import { RouteProp, useFocusEffect, useRoute } from "@react-navigation/native";
 
 type StackParamsList = {
   params: { videoURL: string; postId: string; isReply: boolean };
@@ -21,13 +24,17 @@ const UIContainer: React.FC<IUIContainer> = ({ goBack, goForward }) => {
   return (
     <>
       <View style={styles.uiContainer}>
-        <View style={[styles.rowContainer, { justifyContent: "space-between" }]}>
+        <View
+          style={[styles.rowContainer, { justifyContent: "space-between" }]}
+        >
           <TouchableOpacity onPress={() => goBack()}>
             <Text style={{ color: "#fff", fontSize: 18 }}>Retake</Text>
           </TouchableOpacity>
         </View>
 
-        <View style={[styles.rowContainer, { justifyContent: "space-between" }]}>
+        <View
+          style={[styles.rowContainer, { justifyContent: "space-between" }]}
+        >
           <TouchableOpacity onPress={() => goForward()}>
             <Text style={{ color: "#fff", fontSize: 16 }}>Use Video</Text>
           </TouchableOpacity>
@@ -39,6 +46,10 @@ const UIContainer: React.FC<IUIContainer> = ({ goBack, goForward }) => {
 
 export const ApproveVideo: React.FC = () => {
   const navigation = useNavigation();
+
+  const [navigatedOutOfScreen, setNavigatedOutOfScreen] =
+    useState<boolean>(false);
+
   const route = useRoute<RouteProp<StackParamsList, "params">>();
   const videoURL = route.params.videoURL;
 
@@ -54,10 +65,26 @@ export const ApproveVideo: React.FC = () => {
     }
     navigation.navigate("Publish", navigationParams);
   };
+  useFocusEffect(() => {
+    setNavigatedOutOfScreen(false);
+    navigation.addListener("blur", () => {
+      setNavigatedOutOfScreen(true);
+    });
+  });
 
+  useEffect(() => {
+    return () => {
+      navigation.removeListener("blur", null);
+    };
+  }, []);
   return (
     <View style={styles.container}>
-      <Player style={styles.video} uri={videoURL} resizeMode="cover" videoInViewPort />
+      <Player
+        style={styles.video}
+        uri={videoURL}
+        resizeMode="cover"
+        videoInViewPort={!navigatedOutOfScreen}
+      />
       <View style={styles.infoContainer}>
         <UIContainer goBack={goBack} goForward={goForward} />
       </View>
@@ -98,3 +125,6 @@ const styles = StyleSheet.create({
     paddingBottom: 15,
   },
 });
+function setNavigatedOutOfScreen(arg0: boolean) {
+  throw new Error("Function not implemented.");
+}

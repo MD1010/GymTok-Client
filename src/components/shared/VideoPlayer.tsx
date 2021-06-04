@@ -3,7 +3,15 @@ import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { Video } from "expo-av";
 import * as FileSystem from "expo-file-system";
 import React, { memo, ReactNode, useEffect, useRef, useState } from "react";
-import { Dimensions, Platform, StyleProp, StyleSheet, TouchableWithoutFeedback, View, ViewStyle } from "react-native";
+import {
+  Dimensions,
+  Platform,
+  StyleProp,
+  StyleSheet,
+  TouchableWithoutFeedback,
+  View,
+  ViewStyle,
+} from "react-native";
 import shorthash from "shorthash";
 import { loadVideo } from "../../utils/cache";
 import { Colors } from "./styles/variables";
@@ -63,7 +71,11 @@ export const Player: React.FC<VideoProps> = memo(
     return (
       <TouchableWithoutFeedback
         onPress={() =>
-          onVideoTap ? onVideoTap() : statusRef.current?.isPlaying ? pauseVideoByTap() : resumeVideoByTap()
+          onVideoTap
+            ? onVideoTap()
+            : statusRef.current?.isPlaying
+            ? pauseVideoByTap()
+            : resumeVideoByTap()
         }
       >
         {
@@ -85,12 +97,20 @@ export const Player: React.FC<VideoProps> = memo(
                 shouldPlay={videoInViewPort}
                 isLooping
                 isMuted={isMuted}
-                onPlaybackStatusUpdate={(status) => (statusRef.current = status)}
+                onPlaybackStatusUpdate={(status) =>
+                  (statusRef.current = status)
+                }
               />
             }
             {!controlsShown && !hidePlayButton && (
               <View style={styles.playButtonContainer}>
-                {isPaused && <FontAwesome name="play" size={playBtnSize ? playBtnSize : 40} color={Colors.white} />}
+                {isPaused && (
+                  <FontAwesome
+                    name="play"
+                    size={playBtnSize ? playBtnSize : 40}
+                    color={Colors.white}
+                  />
+                )}
               </View>
             )}
           </View>
