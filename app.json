@@ -24,7 +24,6 @@
       "supportsTablet": true
     },
     "android": {
-  
       "icon": "./assets/gymtokIcon.png",
       "googleServicesFile": "./google-services.json",
       "config": {
@@ -44,9 +43,7 @@
     },
     "notification": {
       "icon": "./assets/gymtokIcon.png",
-      "androidMode": "default",
-      "iosDisplayInForeground": true
-     
+      "androidMode": "default"
     },
     "web": {
       "favicon": "./assets/favicon.png"
