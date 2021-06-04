@@ -1,19 +1,32 @@
 import AsyncStorage from "@react-native-community/async-storage";
 import { fetchAPI, RequestMethod } from "../../utils/fetchAPI";
 import { AppDispatch, AppThunk } from "../configureStore";
-import { getUserNotifications, setPushToken, unregisterFromNotifications } from "../notifications/actions";
+import {
+  getUserNotifications,
+  setPushToken,
+  unregisterFromNotifications,
+} from "../notifications/actions";
 import { notificationsActions } from "../notifications/notificationsSlice";
 import { postsActions } from "../posts/postsSlice";
 import { RootState } from "../rootReducer";
 import { authActions } from "./authSlice";
 import * as config from "../../config.json";
 
-export const register = (username: string, fullName: string, password: string, email: string): AppThunk => {
+export const register = (
+  username: string,
+  fullName: string,
+  password: string,
+  email: string
+): AppThunk => {
   return async (dispatch: AppDispatch) => {
     const registerEnpoint = `${config.BASE_API_ENPOINT}/users/register`;
     const body = { username, fullName, password, email };
     dispatch(authActions.resetAuthError());
-    const { res, error } = await fetchAPI(RequestMethod.POST, registerEnpoint, body);
+    const { res, error } = await fetchAPI(
+      RequestMethod.POST,
+      registerEnpoint,
+      body
+    );
     if (res) {
       dispatch(authActions.login(res));
     } else {
@@ -28,7 +41,11 @@ export const login = (username: string, password: string): AppThunk => {
 
     const body = { username, password };
     dispatch(authActions.resetAuthError());
-    const { res, error } = await fetchAPI(RequestMethod.POST, registerEnpoint, body);
+    const { res, error } = await fetchAPI(
+      RequestMethod.POST,
+      registerEnpoint,
+      body
+    );
     if (res) {
       dispatch(authActions.login(res));
       dispatch(postsActions.clearFetchedPosts());
@@ -70,7 +87,11 @@ export const registerIfNeed = (
     const body = { email, username, password, fullName, photoUrl };
 
     dispatch(authActions.resetAuthError());
-    const { res, error } = await fetchAPI(RequestMethod.POST, registerIfNeedEnpoint, body);
+    const { res, error } = await fetchAPI(
+      RequestMethod.POST,
+      registerIfNeedEnpoint,
+      body
+    );
 
     if (res) {
       dispatch(
@@ -80,6 +101,7 @@ export const registerIfNeed = (
           photoUrl,
         })
       );
+      await setPushToken(res.user._id);
     } else {
       dispatch(authActions.authFailed({ error }));
     }
