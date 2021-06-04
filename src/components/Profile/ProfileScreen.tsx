@@ -12,7 +12,7 @@ import { fetchAPI, RequestMethod } from "../../utils/fetchAPI";
 import { Colors } from "../shared";
 import { GenericComponent } from "./genericComponent";
 import { LogOutFromApp } from "./LogOutFromApp";
-import * as config from "../../config.json"
+import * as config from "../../config.json";
 
 const itemsToFetch = 12;
 
@@ -29,7 +29,8 @@ interface IProfileDetails {
 const ProfileTabs: React.FC<IProfileTabs> = ({ user, getProfileDetails }) => {
   const navigation = useNavigation();
   const Tabs = createMaterialTopTabNavigator();
-  const { userUploadedChallenges, userUploadedReplies } = useSelector(postsSelector)
+  const { userUploadedChallenges, userUploadedReplies } =
+    useSelector(postsSelector);
   const [challenges, setChallenges] = useState<IPost[]>([]);
   const [replies, setReplies] = useState<IPost[]>([]);
   const [hasMoreChallenges, setHasMoreChallenges] = useState(true);
@@ -37,12 +38,17 @@ const ProfileTabs: React.FC<IProfileTabs> = ({ user, getProfileDetails }) => {
 
   const getMoreChallenges = async () => {
     const endpoint = `${config.BASE_API_ENPOINT}/posts`;
-    const { res, error } = await fetchAPI<IPost[]>(RequestMethod.GET, endpoint, null, {
-      size: itemsToFetch,
-      page: Math.floor(challenges.length / itemsToFetch),
-      uid: user._id,
-      isReply: false,
-    });
+    const { res, error } = await fetchAPI<IPost[]>(
+      RequestMethod.GET,
+      endpoint,
+      null,
+      {
+        size: itemsToFetch,
+        page: Math.floor(challenges.length / itemsToFetch),
+        uid: user._id,
+        isReply: false,
+      }
+    );
     if (res.length < itemsToFetch) {
       setHasMoreChallenges(false);
     }
@@ -51,12 +57,17 @@ const ProfileTabs: React.FC<IProfileTabs> = ({ user, getProfileDetails }) => {
 
   const getMoreReplies = async () => {
     const endpoint = `${config.BASE_API_ENPOINT}/posts`;
-    const { res, error } = await fetchAPI<IPost[]>(RequestMethod.GET, endpoint, null, {
-      size: itemsToFetch,
-      page: Math.floor(replies.length / itemsToFetch),
-      uid: user._id,
-      isReply: true,
-    });
+    const { res, error } = await fetchAPI<IPost[]>(
+      RequestMethod.GET,
+      endpoint,
+      null,
+      {
+        size: itemsToFetch,
+        page: Math.floor(replies.length / itemsToFetch),
+        uid: user._id,
+        isReply: true,
+      }
+    );
     if (res.length < itemsToFetch) {
       setHasMoreReplies(false);
     }
@@ -76,39 +87,50 @@ const ProfileTabs: React.FC<IProfileTabs> = ({ user, getProfileDetails }) => {
   }, [hasMoreChallenges]);
 
   useEffect(() => {
-    console.log("update profile")
+    console.log("update profile");
     getProfileDetails();
-  }, [userUploadedChallenges, userUploadedReplies])
+  }, [userUploadedChallenges, userUploadedReplies]);
 
   const addUserRepliesToReplies = () => {
     const updatedReplies = [...replies];
     for (const userUploadedReply of userUploadedReplies) {
-      const existReply = updatedReplies.find(reply => reply._id === userUploadedReply._id);
+      const existReply = updatedReplies.find(
+        (reply) => reply._id === userUploadedReply._id
+      );
       if (!existReply) {
         updatedReplies.push(userUploadedReply);
       }
     }
 
-    console.log("replies.length !== updatedReplies.length", replies.length !== updatedReplies.length)
+    console.log(
+      "replies.length !== updatedReplies.length",
+      replies.length !== updatedReplies.length
+    );
     replies.length !== updatedReplies.length && setReplies(updatedReplies);
 
     return updatedReplies;
-  }
+  };
 
   const addUserChallengesToChallenges = () => {
     const updatedChallenges = [...challenges];
     for (const userUploadedChallenge of userUploadedChallenges) {
-      const existChallenge = updatedChallenges.find(challenge => challenge._id === userUploadedChallenge._id);
+      const existChallenge = updatedChallenges.find(
+        (challenge) => challenge._id === userUploadedChallenge._id
+      );
       if (!existChallenge) {
         updatedChallenges.push(userUploadedChallenge);
       }
     }
 
-    console.log("challenges.length !== updatedReplies.length", replies.length !== updatedChallenges.length)
-    challenges.length !== updatedChallenges.length && setChallenges(updatedChallenges);
+    console.log(
+      "challenges.length !== updatedReplies.length",
+      replies.length !== updatedChallenges.length
+    );
+    challenges.length !== updatedChallenges.length &&
+      setChallenges(updatedChallenges);
 
     return updatedChallenges;
-  }
+  };
 
   return (
     <Tabs.Navigator
@@ -123,7 +145,13 @@ const ProfileTabs: React.FC<IProfileTabs> = ({ user, getProfileDetails }) => {
           } else if (route.name === "Replies") {
             iconName = "person-circle";
           }
-          return <Icon name={iconName} size={25} color={focused ? Colors.white : Colors.darkGrey} />;
+          return (
+            <Icon
+              name={iconName}
+              size={25}
+              color={focused ? Colors.white : Colors.darkGrey}
+            />
+          );
         },
       })}
       tabBarOptions={{
@@ -159,14 +187,18 @@ const ProfileTabs: React.FC<IProfileTabs> = ({ user, getProfileDetails }) => {
       />
     </Tabs.Navigator>
   );
-}
+};
 interface IProfileHeaderProps {
   details: IProfileDetails;
   user: IUser;
   isLoading: boolean;
 }
 
-const ProfileHeader: React.FC<IProfileHeaderProps> = ({ user, isLoading, details }) => {
+const ProfileHeader: React.FC<IProfileHeaderProps> = ({
+  user,
+  isLoading,
+  details,
+}) => {
   const [numOfChallenges, setNumOfChallenges] = useState<string | number>("-");
   const [numOfReplies, setNumOfReplies] = useState<string | number>("-");
   useEffect(() => {
@@ -206,7 +238,16 @@ const ProfileHeader: React.FC<IProfileHeaderProps> = ({ user, isLoading, details
 
       <View style={{ paddingVertical: 40, backgroundColor: Colors.black }}>
         <View style={{ alignItems: "center" }}>
-          <Image source={require("../../../assets/avatar/user.png")} style={{ width: 100, height: 100 }} />
+          <Image
+            source={
+              user.image
+                ? {
+                    uri: user.image,
+                  }
+                : require("../../../assets/avatar/user.png")
+            }
+            style={{ width: 100, height: 100, borderRadius: 360 }}
+          />
           <Text
             style={{
               color: Colors.white,
@@ -253,7 +294,10 @@ interface ProfileScreenProps {
   inProfileTab: boolean;
 }
 
-export const ProfileScreen: React.FC<ProfileScreenProps> = ({ user, inProfileTab = false }) => {
+export const ProfileScreen: React.FC<ProfileScreenProps> = ({
+  user,
+  inProfileTab = false,
+}) => {
   const route = useRoute<any>();
   let currentUser = route.params ? route.params.user : user;
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -270,14 +314,18 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({ user, inProfileTab
   }
 
   useEffect(() => {
-    console.log("update profile")
+    console.log("update profile");
     getProfileDetails();
   }, []);
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
       {inProfileTab && <LogOutFromApp />}
-      <ProfileHeader details={profileDetails} user={currentUser} isLoading={isLoading} />
+      <ProfileHeader
+        details={profileDetails}
+        user={currentUser}
+        isLoading={isLoading}
+      />
       <Divider style={{ backgroundColor: Colors.weakGrey }} />
       <ProfileTabs user={currentUser} getProfileDetails={getProfileDetails} />
     </SafeAreaView>
