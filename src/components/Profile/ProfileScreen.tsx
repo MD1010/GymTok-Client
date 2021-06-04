@@ -1,102 +1,115 @@
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-import { useRoute } from "@react-navigation/native";
-import React, { useCallback, useEffect, useState } from "react";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import React, { useEffect, useState } from "react";
 import { Image, Text, View } from "react-native";
 import { Divider } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Icon from "react-native-vector-icons/Ionicons";
 import { useDispatch, useSelector } from "react-redux";
 import { IPost, IUser } from "../../interfaces";
+import { postsSelector } from "../../store/posts/postsSlice";
 import { fetchAPI, RequestMethod } from "../../utils/fetchAPI";
 import { Colors } from "../shared";
 import { GenericComponent } from "./genericComponent";
 import { LogOutFromApp } from "./LogOutFromApp";
-import {
-  challengesSelector,
-  numOfChallengesSelector,
-  numOfRepliesSelector,
-  postsActions,
-  postsSelector,
-  repliesSelector,
-} from "../../store/posts/postsSlice";
-import { getUserChallenges, getUserReplies } from "../../store/posts/actions";
-import * as config from "../../config.json";
+import * as config from "../../config.json"
 
 const itemsToFetch = 12;
 
 interface IProfileTabs {
   user: IUser;
-  isCurrentUserLoggedUser: boolean;
+  getProfileDetails: () => void;
 }
-function ProfileTabs(props: IProfileTabs) {
-  const dispatch = useDispatch();
 
-  let currentChallenges;
-  let currentReplies;
-  let getMoreReplies;
-  let getMoreChallenges;
-  let hasMoreChallengesToFetchFlag;
-  let hasMoreRepliesToFetchFlag;
-  let setChallengesCallback;
-  let setRepliesCallback;
+interface IProfileDetails {
+  numOfChallenges: number;
+  numOfReplies: number;
+}
 
-  const user = props.user;
-  const isCurrentUserLoggedUser = props.isCurrentUserLoggedUser;
+const ProfileTabs: React.FC<IProfileTabs> = ({ user, getProfileDetails }) => {
+  const navigation = useNavigation();
+  const Tabs = createMaterialTopTabNavigator();
+  const { userUploadedChallenges, userUploadedReplies } = useSelector(postsSelector)
+  const [challenges, setChallenges] = useState<IPost[]>([]);
+  const [replies, setReplies] = useState<IPost[]>([]);
+  const [hasMoreChallenges, setHasMoreChallenges] = useState(true);
+  const [hasMoreReplies, setHasMoreReplies] = useState(true);
 
-  if (isCurrentUserLoggedUser) {
-    currentChallenges = useSelector(challengesSelector);
-    currentReplies = useSelector(repliesSelector);
-    const { hasMoreChallengesToFetch, hasMoreRepliesToFetch } = useSelector(postsSelector);
-    hasMoreChallengesToFetchFlag = hasMoreChallengesToFetch;
-    hasMoreRepliesToFetchFlag = hasMoreRepliesToFetch;
-    getMoreReplies = () => dispatch(getUserReplies());
-    getMoreChallenges = () => dispatch(getUserChallenges());
-    setChallengesCallback = (items) => dispatch(postsActions.setUserChallenges(items));
-    setRepliesCallback = (items) => dispatch(postsActions.setUserReplies(items));
-  } else {
-    const [challenges, setChallenges] = useState([]);
-    const [replies, setReplies] = useState([]);
-    const [hasMoreChallengesToFetch, sethasMoreChallengesToFetch] = useState(true);
-    const [hasMoreRepliesToFetch, sethasMoreRepliesToFetch] = useState(true);
-    currentChallenges = challenges;
-    currentReplies = replies;
-    hasMoreChallengesToFetchFlag = hasMoreChallengesToFetch;
-    hasMoreRepliesToFetchFlag = hasMoreRepliesToFetch;
-    setChallengesCallback = setChallenges;
-    setRepliesCallback = setReplies;
+  const getMoreChallenges = async () => {
+    const endpoint = `${config.BASE_API_ENPOINT}/posts`;
+    const { res, error } = await fetchAPI<IPost[]>(RequestMethod.GET, endpoint, null, {
+      size: itemsToFetch,
+      page: Math.floor(challenges.length / itemsToFetch),
+      uid: user._id,
+      isReply: false,
+    });
+    if (res.length < itemsToFetch) {
+      setHasMoreChallenges(false);
+    }
+    setChallenges([...challenges, ...res]);
+  };
 
-    getMoreReplies = async () => {
-      const endpoint = `${config.BASE_API_ENPOINT}/posts`;
-      console.log("fetching more replies and puting in state");
-      const { res, error } = await fetchAPI<IPost[]>(RequestMethod.GET, endpoint, null, {
-        size: itemsToFetch,
-        page: Math.floor(replies.length / itemsToFetch),
-        uid: user._id,
-        isReply: true,
-      });
-      if (res.length < itemsToFetch) {
-        sethasMoreRepliesToFetch(false);
+  const getMoreReplies = async () => {
+    const endpoint = `${config.BASE_API_ENPOINT}/posts`;
+    const { res, error } = await fetchAPI<IPost[]>(RequestMethod.GET, endpoint, null, {
+      size: itemsToFetch,
+      page: Math.floor(replies.length / itemsToFetch),
+      uid: user._id,
+      isReply: true,
+    });
+    if (res.length < itemsToFetch) {
+      setHasMoreReplies(false);
+    }
+    setReplies([...replies, ...res]);
+  };
+
+  useEffect(() => {
+    if (!hasMoreReplies) {
+      addUserRepliesToReplies();
+    }
+  }, [hasMoreReplies]);
+
+  useEffect(() => {
+    if (!hasMoreChallenges) {
+      addUserChallengesToChallenges();
+    }
+  }, [hasMoreChallenges]);
+
+  useEffect(() => {
+    console.log("update profile")
+    getProfileDetails();
+  }, [userUploadedChallenges, userUploadedReplies])
+
+  const addUserRepliesToReplies = () => {
+    const updatedReplies = [...replies];
+    for (const userUploadedReply of userUploadedReplies) {
+      const existReply = updatedReplies.find(reply => reply._id === userUploadedReply._id);
+      if (!existReply) {
+        updatedReplies.push(userUploadedReply);
       }
-      setReplies([...replies, ...res]);
-    };
-    getMoreChallenges = async () => {
-      console.log("fetching more challenges and puting in state");
-      const endpoint = `${config.BASE_API_ENPOINT}/posts`;
-      const { res, error } = await fetchAPI<IPost[]>(RequestMethod.GET, endpoint, null, {
-        size: itemsToFetch,
-        page: Math.floor(challenges.length / itemsToFetch),
-        uid: user._id,
-        isReply: false,
-      });
-      if (res.length < itemsToFetch) {
-        sethasMoreChallengesToFetch(false);
-      }
+    }
 
-      setChallenges([...challenges, ...res]);
-    };
+    console.log("replies.length !== updatedReplies.length", replies.length !== updatedReplies.length)
+    replies.length !== updatedReplies.length && setReplies(updatedReplies);
+
+    return updatedReplies;
   }
 
-  const Tabs = createMaterialTopTabNavigator();
+  const addUserChallengesToChallenges = () => {
+    const updatedChallenges = [...challenges];
+    for (const userUploadedChallenge of userUploadedChallenges) {
+      const existChallenge = updatedChallenges.find(challenge => challenge._id === userUploadedChallenge._id);
+      if (!existChallenge) {
+        updatedChallenges.push(userUploadedChallenge);
+      }
+    }
+
+    console.log("challenges.length !== updatedReplies.length", replies.length !== updatedChallenges.length)
+    challenges.length !== updatedChallenges.length && setChallenges(updatedChallenges);
+
+    return updatedChallenges;
+  }
+
   return (
     <Tabs.Navigator
       sceneContainerStyle={{ backgroundColor: Colors.black }}
@@ -126,10 +139,10 @@ function ProfileTabs(props: IProfileTabs) {
         name="Challanges"
         children={() => (
           <GenericComponent
-            items={currentChallenges}
+            items={challenges}
             loadMoreCallback={getMoreChallenges}
-            hasMoreToFetch={hasMoreChallengesToFetchFlag}
-            setItems={setChallengesCallback}
+            hasMoreToFetch={hasMoreChallenges}
+            setItems={setChallenges}
           />
         )}
       />
@@ -137,10 +150,10 @@ function ProfileTabs(props: IProfileTabs) {
         name="Replies"
         children={() => (
           <GenericComponent
-            items={currentReplies}
+            items={replies}
             loadMoreCallback={getMoreReplies}
-            hasMoreToFetch={hasMoreRepliesToFetchFlag}
-            setItems={setRepliesCallback}
+            hasMoreToFetch={hasMoreReplies}
+            setItems={setReplies}
           />
         )}
       />
@@ -148,13 +161,21 @@ function ProfileTabs(props: IProfileTabs) {
   );
 }
 interface IProfileHeaderProps {
+  details: IProfileDetails;
   user: IUser;
   isLoading: boolean;
 }
 
-const ProfileHeader: React.FC<IProfileHeaderProps> = ({ user, isLoading }) => {
-  const numOfChallenges = useSelector(numOfChallengesSelector);
-  const numOfReplies = useSelector(numOfRepliesSelector);
+const ProfileHeader: React.FC<IProfileHeaderProps> = ({ user, isLoading, details }) => {
+  const [numOfChallenges, setNumOfChallenges] = useState<string | number>("-");
+  const [numOfReplies, setNumOfReplies] = useState<string | number>("-");
+  useEffect(() => {
+    if (!isLoading) {
+      setNumOfChallenges(details.numOfChallenges);
+      setNumOfReplies(details.numOfReplies);
+    }
+  }, [isLoading]);
+
   const Counter = ({ count, text }) => (
     <View style={{ alignItems: "center" }}>
       <Text
@@ -234,43 +255,31 @@ interface ProfileScreenProps {
 
 export const ProfileScreen: React.FC<ProfileScreenProps> = ({ user, inProfileTab = false }) => {
   const route = useRoute<any>();
-  let isCurrentUserLoggedUser = true;
-  let currentUser;
-  if (route.params) {
-    currentUser = route.params.user;
-    isCurrentUserLoggedUser = false;
-  } else {
-    currentUser = user;
+  let currentUser = route.params ? route.params.user : user;
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [profileDetails, setProfileDetails] = useState<IProfileDetails>();
+
+  async function getProfileDetails() {
+    setIsLoading(true);
+    const profileDetailsEndpoint = `${config.BASE_API_ENPOINT}/users/profileDetails?userId=${currentUser._id}`;
+
+    const { res } = await fetchAPI(RequestMethod.GET, profileDetailsEndpoint);
+
+    res && setProfileDetails(res);
+    res && setIsLoading(false);
   }
 
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const dispatch = useDispatch();
-
   useEffect(() => {
-    async function getProfileDetails() {
-      setIsLoading(true);
-      const profileDetailsEndpoint = `${config.BASE_API_ENPOINT}/users/profileDetails?userId=${currentUser._id}`;
-
-      const { res, error } = await fetchAPI(RequestMethod.GET, profileDetailsEndpoint);
-      res &&
-        dispatch(
-          postsActions.setProfileDetails({
-            numOfChallenges: res.numOfChallenges,
-            numOfReplies: res.numOfReplies,
-          })
-        );
-
-      res && setIsLoading(false);
-    }
+    console.log("update profile")
     getProfileDetails();
   }, []);
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
       {inProfileTab && <LogOutFromApp />}
-      <ProfileHeader user={currentUser} isLoading={isLoading} />
+      <ProfileHeader details={profileDetails} user={currentUser} isLoading={isLoading} />
       <Divider style={{ backgroundColor: Colors.weakGrey }} />
-      <ProfileTabs user={currentUser} isCurrentUserLoggedUser={isCurrentUserLoggedUser} />
+      <ProfileTabs user={currentUser} getProfileDetails={getProfileDetails} />
     </SafeAreaView>
   );
 };

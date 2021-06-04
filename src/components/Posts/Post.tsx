@@ -15,6 +15,7 @@ import { fetchAPI, RequestMethod } from "../../utils/fetchAPI";
 import { Colors } from "../shared/styles/variables";
 import { Player } from "../shared/VideoPlayer";
 import { styles } from "./Posts.style";
+import * as configs from "../../config.json"
 // import { challengeContext } from "./ChallengesContainer";
 import * as config from "../../config.json"
 

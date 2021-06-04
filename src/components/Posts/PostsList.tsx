@@ -237,11 +237,11 @@ export const PostsList: React.FC<PostsListProps> = memo(
         <View
           // {...panResponder.panHandlers}
           style={{ height: viewHeight, backgroundColor: Colors.black }}
-          // onStartShouldSetResponder={() => true}
-          // onStartShouldSetResponderCapture={() => true}
-          // onMoveShouldSetResponder={() => true}
-          // onMoveShouldSetResponderCapture={() => true}
-          // onResponderRelease={() => console.log(123123123)}
+        // onStartShouldSetResponder={() => true}
+        // onStartShouldSetResponderCapture={() => true}
+        // onMoveShouldSetResponder={() => true}
+        // onMoveShouldSetResponderCapture={() => true}
+        // onResponderRelease={() => console.log(123123123)}
         >
           <FlatList
             refreshControl={

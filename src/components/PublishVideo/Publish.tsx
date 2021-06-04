@@ -6,7 +6,6 @@ import { colors, Divider } from "react-native-elements";
 import { TextInput } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch, useSelector } from "react-redux";
-import * as config from "../../config.json";
 import { IUser } from "../../interfaces";
 import { authSelector } from "../../store/auth/authSlice";
 import { sendNotification } from "../../store/notifications/actions";
@@ -14,6 +13,7 @@ import { addReplyToPost } from "../../store/posts/actions";
 import { postsActions } from "../../store/posts/postsSlice";
 import { fetchAPI, RequestMethod } from "../../utils/fetchAPI";
 import { Colors, Loader, Player, SubmitButton, TouchableHighlightButton } from "../shared";
+import * as config from "../../config.json"
 
 type StackParamsList = {
   params: {
@@ -143,13 +143,9 @@ export const PublishScreen: React.FC = () => {
 
     if (res) {
       setIsLoading(false);
-      navigation.navigate("Home", {
-        screen: "PostReplies",
-        params: { newReply: res },
-      });
       dispatch(addReplyToPost(route.params?.postId, res));
       dispatch(postsActions.userProfileRepliesFetchSuccess([res]));
-      dispatch(postsActions.increaseNumOfReplies());
+      navigation.navigate("Home", { screen: "PostReplies", params: { newReply: res } });
     } else if (error) {
       setIsLoading(false);
       alert(JSON.stringify(error));
@@ -157,15 +153,14 @@ export const PublishScreen: React.FC = () => {
   };
 
   const onSubmit = () => {
+    if (!loggedUser) {
+      return navigation.navigate("NotLoggedIn", {
+        redirectScreen: "Publish",
+      });
+    }
     if (isReply) {
       replyChallenge();
     } else {
-      // challenge
-      if (!loggedUser) {
-        return navigation.navigate("NotLoggedIn", {
-          redirectScreen: "Publish",
-        });
-      }
       publishChallenge();
     }
   };
@@ -179,11 +174,11 @@ export const PublishScreen: React.FC = () => {
         onSelect={() =>
           route.params?.taggedPeople?.length
             ? navigation.navigate("TagPeople", {
-                selectedUsers: route.params?.taggedPeople,
-              })
+              selectedUsers: route.params?.taggedPeople,
+            })
             : navigation.navigate("SearchUser", {
-                excludedUsersToSearch: route.params?.taggedPeople,
-              })
+              excludedUsersToSearch: route.params?.taggedPeople,
+            })
         }
         icon={<Fontisto name="at" color={Colors.lightGrey2} size={14} />}
       />

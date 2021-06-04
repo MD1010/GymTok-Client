@@ -17,8 +17,8 @@ export interface PostsState {
   numOfUserChallenges: number | string;
   numOfUserReplies: number | string;
   hasMoreToFetch: boolean;
-  hasMoreChallengesToFetch: boolean;
-  hasMoreRepliesToFetch: boolean;
+  userUploadedChallenges: IPost[];
+  userUploadedReplies: IPost[];
 }
 export const initialState: PostsState = {
   error: null,
@@ -29,8 +29,8 @@ export const initialState: PostsState = {
   numOfUserChallenges: "-",
   numOfUserReplies: "-",
   hasMoreToFetch: true,
-  hasMoreChallengesToFetch: true,
-  hasMoreRepliesToFetch: true,
+  userUploadedChallenges: [],
+  userUploadedReplies: []
 };
 
 interface LikePayload {
