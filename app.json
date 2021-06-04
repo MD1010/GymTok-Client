@@ -25,7 +25,7 @@
     },
     "android": {
   
-      "icon": "./assets/icon.png",
+      "icon": "./assets/gymtokIcon.png",
       "googleServicesFile": "./google-services.json",
       "config": {
         "googleSignIn": {
@@ -43,7 +43,7 @@
       "package": "com.md10.gymtok"
     },
     "notification": {
-      "icon": "./assets/man22.png",
+      "icon": "./assets/gymtokIcon.png",
       "color": "#311b92",
       "androidMode": "default",
       "iosDisplayInForeground": true
