@@ -24,10 +24,11 @@ userPosts   *  in home page isFeed is true, else it is false
   isLoadMore?: boolean;
   initialPostIndex?: number;
   updateAllPosts?: (posts: IPost[]) => void;
+  isOriginalVideo: boolean;
 }
 
 export const PostsList: React.FC<PostsListProps> = memo(
-  ({ isFeed, currentPosts, isLoadMore, initialPostIndex, updateAllPosts }) => {
+  ({ isFeed, currentPosts, isLoadMore, initialPostIndex, updateAllPosts, isOriginalVideo }) => {
     const navigation = useNavigation();
     const dispatch = useDispatch();
     const [navigatedOutOfScreen, setNavigatedOutOfScreen] = useState<boolean>(false);
@@ -225,6 +226,7 @@ export const PostsList: React.FC<PostsListProps> = memo(
           isVisible={index === currentlyPlaying && !navigatedOutOfScreen}
           containerStyle={{ height: viewHeight }}
           loggedUserPressLike={loggedUserPressLike}
+          isOriginalVideo={isOriginalVideo}
         />
       );
     };
@@ -240,11 +242,11 @@ export const PostsList: React.FC<PostsListProps> = memo(
         <View
           // {...panResponder.panHandlers}
           style={{ height: viewHeight, backgroundColor: Colors.black }}
-          // onStartShouldSetResponder={() => true}
-          // onStartShouldSetResponderCapture={() => true}
-          // onMoveShouldSetResponder={() => true}
-          // onMoveShouldSetResponderCapture={() => true}
-          // onResponderRelease={() => console.log(123123123)}
+        // onStartShouldSetResponder={() => true}
+        // onStartShouldSetResponderCapture={() => true}
+        // onMoveShouldSetResponder={() => true}
+        // onMoveShouldSetResponderCapture={() => true}
+        // onResponderRelease={() => console.log(123123123)}
         >
           <FlatList
             refreshControl={
