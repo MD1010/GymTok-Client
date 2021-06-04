@@ -24,6 +24,8 @@
       "supportsTablet": true
     },
     "android": {
+  
+      "icon": "./assets/icon.png",
       "googleServicesFile": "./google-services.json",
       "config": {
         "googleSignIn": {
@@ -37,11 +39,15 @@
       },
       "softwareKeyboardLayoutMode": "pan",
       "permissions": ["RECORD_AUDIO", "CAMERA", "CAPTURE_AUDIO_OUTPUT"],
-      "useNextNotificationsApi": true,
+     
       "package": "com.md10.gymtok"
     },
     "notification": {
-      "icon": "./assets/icon.png"
+      "icon": "./assets/icon.png",
+      "color": "#311b92",
+      "androidMode": "default",
+      "iosDisplayInForeground": true
+     
     },
     "web": {
       "favicon": "./assets/favicon.png"
