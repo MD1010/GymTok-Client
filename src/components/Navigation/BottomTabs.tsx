@@ -9,6 +9,7 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import { useSelector } from "react-redux";
 import { authSelector } from "../../store/auth/authSlice";
 import { unreadNotificationsSelector } from "../../store/notifications/notificationsSlice";
+import { postsSelector } from "../../store/posts/postsSlice";
 import { ExploreContainer } from "../Explore/ExploreContainer";
 import { HomeScreen } from "../Home/HomeScreen";
 import { NotificationScreen } from "../Notifications/NotificationScreen";
@@ -31,6 +32,7 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({}) => {
         backBehavior={"initialRoute"}
         sceneContainerStyle={{ backgroundColor: Colors.black }}
         tabBarOptions={{
+          safeAreaInsets: { bottom: 0 },
           activeTintColor: Colors.cyan,
           // activeBackgroundColor: Colors.black,
           inactiveTintColor: Colors.white,

@@ -7,10 +7,10 @@ import { TextInput } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch, useSelector } from "react-redux";
 import { IUser } from "../../interfaces";
-import { INotification } from "../../interfaces/Notification";
 import { authSelector } from "../../store/auth/authSlice";
 import { sendNotification } from "../../store/notifications/actions";
-import { addReplyToPost, loggedUserUploadChallenge, loggedUserUploadReply } from "../../store/posts/actions";
+import { addReplyToPost } from "../../store/posts/actions";
+import { postsActions } from "../../store/posts/postsSlice";
 import { fetchAPI, RequestMethod } from "../../utils/fetchAPI";
 import { Colors, Loader, Player, SubmitButton, TouchableHighlightButton } from "../shared";
 import * as config from "../../config.json"
@@ -107,7 +107,8 @@ export const PublishScreen: React.FC = () => {
     if (res) {
       console.log("res upload", res);
       setIsLoading(false);
-      dispatch(loggedUserUploadChallenge(res));
+      dispatch(postsActions.userProfileRepliesFetchSuccess([res]));
+      dispatch(postsActions.increaseNumOfChallenges());
       navigation.navigate("Home");
       const notification: any = {
         body: "Check it now!",
@@ -143,7 +144,7 @@ export const PublishScreen: React.FC = () => {
     if (res) {
       setIsLoading(false);
       dispatch(addReplyToPost(route.params?.postId, res));
-      dispatch(loggedUserUploadReply(res));
+      dispatch(postsActions.userProfileRepliesFetchSuccess([res]));
       navigation.navigate("Home", { screen: "PostReplies", params: { newReply: res } });
     } else if (error) {
       setIsLoading(false);

@@ -1,7 +1,16 @@
 import { FontAwesome } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-import React, { useEffect, useState } from "react";
-import { Dimensions, FlatList, ImageBackground, SafeAreaView, StyleSheet, Text, View, ViewStyle } from "react-native";
+import React, { useEffect, useRef, useState } from "react";
+import {
+  Dimensions,
+  FlatList,
+  ImageBackground,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  View,
+  ViewStyle,
+} from "react-native";
 import Ripple from "react-native-material-ripple";
 import { useSelector } from "react-redux";
 import { IPost } from "../../interfaces";
@@ -9,7 +18,7 @@ import { postsSelector } from "../../store/posts/postsSlice";
 import { STREAMING_SERVER_GIF_ENDPOINT } from "../../utils/consts";
 import { Loader } from "../shared";
 import { Colors } from "../shared/styles/variables";
-
+import isEqaul from "lodash/isEqual";
 interface Props {
   items: IPost[];
   loadMoreCallback?: () => any;
@@ -39,38 +48,39 @@ export const GenericComponent: React.FC<Props> = ({
   renderBottomVideo,
   renderFooter,
   gifStyle,
-  setItems
+  setItems,
 }) => {
   const navigation = useNavigation();
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [showFooter, setShowFooter] = useState<boolean>(false);
-
+  let callOnScrollEnd = useRef(false);
+  let lastItems = useRef(undefined);
   const isHorizontal: boolean = horizontal ? horizontal : false;
   const numOfColumns: number = numColumns ? numColumns : 3;
-  const picHeight: number = pictureHeight ? pictureHeight : styles.theImage.height;
+  const picHeight: number = pictureHeight
+    ? pictureHeight
+    : styles.theImage.height;
 
   const Footer = () => {
     if (items.length) {
       if (hasMoreToFetch) {
-        console.log(`has more to fetch?: ${hasMoreToFetch}`);
         return <Loader style={{ height: 100, width: 100 }} />;
       }
     }
     return null;
   };
-  // const showVideo = (videoURL) => {
-  //   navigation.navigate("UsersProfile", {
-  //     videoURL: `${STREAMING_SERVER_VIDEO_ENDPOINT}/${videoURL}`,
-  //   });
-  // };
 
   const updateItems = (posts: IPost[]) => {
     setItems && setItems(posts);
-  }
+  };
 
   const showVideo = (postID) => {
     const initialIndex = items.findIndex((post) => post._id === postID);
-    navigation.navigate("VideoDisplay", { posts: items, initialIndex, updateAllPosts: updateItems });
+    navigation.navigate("VideoDisplay", {
+      posts: items,
+      initialIndex,
+      updateAllPosts: updateItems,
+    });
   };
   useEffect(() => {
     if (items) {
@@ -83,8 +93,12 @@ export const GenericComponent: React.FC<Props> = ({
   }, []);
 
   const handleLoadMore = () => {
-    items.length && setShowFooter(true);
-    hasMoreToFetch && loadMoreCallback();
+    console.log("here");
+    if (!isEqaul(lastItems.current, items)) {
+      items.length && setShowFooter(true);
+      hasMoreToFetch && loadMoreCallback();
+      lastItems.current = [...items];
+    }
   };
   const renderItem = (item: IPost) => {
     return (
@@ -125,7 +139,11 @@ export const GenericComponent: React.FC<Props> = ({
                     alignItems: "center",
                   }}
                 >
-                  <FontAwesome name={"heart"} size={13} color={Colors.lightGrey} />
+                  <FontAwesome
+                    name={"heart"}
+                    size={13}
+                    color={Colors.lightGrey}
+                  />
                   <Text style={styles.amount}>{item?.likes?.length}</Text>
                 </View>
               </View>
@@ -137,11 +155,17 @@ export const GenericComponent: React.FC<Props> = ({
       </View>
     );
   };
-  const d = () => console.log(123123);
 
   return (
     <SafeAreaView
-      style={[{ flex: 1, flexDirection: isHorizontal ? "row" : "column", marginHorizontal: 5 }, containerStyle]}
+      style={[
+        {
+          flex: 1,
+          flexDirection: isHorizontal ? "row" : "column",
+          marginHorizontal: 5,
+        },
+        containerStyle,
+      ]}
     >
       <FlatList
         ListHeaderComponent={pageHeader}
@@ -152,7 +176,15 @@ export const GenericComponent: React.FC<Props> = ({
         renderItem={({ item }) => renderItem(item)}
         onEndReachedThreshold={0.5}
         ListFooterComponent={showFooter ? <Footer /> : null}
-        onEndReached={handleLoadMore}
+        // onEndReached={handleLoadMore}
+        onEndReached={() => {
+          callOnScrollEnd.current = true;
+          items.length && hasMoreToFetch && setShowFooter(true);
+        }}
+        onMomentumScrollEnd={() => {
+          callOnScrollEnd && handleLoadMore();
+          callOnScrollEnd.current = false;
+        }}
       />
     </SafeAreaView>
   );

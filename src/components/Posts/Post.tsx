@@ -17,12 +17,14 @@ import { Player } from "../shared/VideoPlayer";
 import { styles } from "./Posts.style";
 import * as configs from "../../config.json"
 // import { challengeContext } from "./ChallengesContainer";
+import * as config from "../../config.json"
 
 interface PostProps {
   post: IPost;
   isVisible: boolean;
   containerStyle?: ViewStyle;
   loggedUserPressLike: (post: IPost, isUserLikePost: boolean) => Promise<IPost>;
+  isOriginalVideo: boolean;
 }
 
 interface IUIContainer {
@@ -97,13 +99,13 @@ const LikesComments: React.FC<IUIContainer> = ({
   );
 };
 
-export const Post: React.FC<PostProps> = memo(({ post, isVisible, containerStyle, loggedUserPressLike }) => {
+export const Post: React.FC<PostProps> = memo(({ post, isVisible, containerStyle, loggedUserPressLike, isOriginalVideo }) => {
   const { videoURI, createdBy, likes, replies } = post;
   const { loggedUser } = useSelector(authSelector);
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const [isUserLikePost, setÌsUserLikePost] = useState<boolean>(false);
-  const streaminServerUrl = `${configs.VIDEO_SERVER_ENDPOINT}/video/${videoURI}`;
+  const streaminServerUrl = `${config.VIDEO_SERVER_ENDPOINT}/video/${videoURI}`;
 
   useEffect(() => {
     loggedUser && setÌsUserLikePost(post.likes.includes(loggedUser?._id));
@@ -152,13 +154,13 @@ export const Post: React.FC<PostProps> = memo(({ post, isVisible, containerStyle
 
         <View style={[styles.rowContainer, { marginVertical: 10 }]}>
           <TagsContainer hashtags={post.hashtags} />
-          <LikesComments
+          {!isOriginalVideo && <LikesComments
             numberOfLikes={likes ? likes.length : 0}
             isUserLikeChallenge={isUserLikePost}
             numberOfComments={replies ? replies.length : 0}
             onLikeButtonPress={() => onLikeButtonPress()}
             onCommentButtonPress={() => onCommentButtonPress()}
-          />
+          />}
         </View>
       </View>
     </View>

@@ -3,7 +3,7 @@ import { fetchAPI, RequestMethod } from "../../utils/fetchAPI";
 import { AppDispatch, AppThunk } from "../configureStore";
 import { RootState } from "../rootReducer";
 import { itemsToFetch, postsActions } from "./postsSlice";
-import * as config from "../../config.json"
+import * as config from "../../config.json";
 
 export const getMorePosts = (): AppThunk => {
   return async (dispatch: AppDispatch, getState: () => RootState) => {
@@ -27,30 +27,53 @@ export const getMorePosts = (): AppThunk => {
   };
 };
 
-export const getUserPosts = (): AppThunk => {
+export const getUserReplies = (): AppThunk => {
   return async (dispatch: AppDispatch, getState: () => RootState) => {
-    // todo https://www.goodday.work/t/RRaDG3
-    // todo send param to this func if you want replies or real posts and send the relevant query params
     const endpoint = `${config.BASE_API_ENPOINT}/posts`;
-    const loggedUser = getState()?.auth?.loggedUser._id;
+    const loggedUserId = getState()?.auth?.loggedUser._id;
+    const currentPostsLenght = getState()?.posts.userReplies.length;
+    console.log("fetching more replies and puting in redux");
 
     const { res, error } = await fetchAPI<IPost[]>(RequestMethod.GET, endpoint, null, {
       size: itemsToFetch,
-      page: Math.floor(getState().posts.latestFetchedPosts.length / itemsToFetch),
-      createdBy: loggedUser,
+      page: Math.floor(currentPostsLenght / itemsToFetch),
+      uid: loggedUserId,
+      isReply: true,
     });
+
     if (res) {
-      dispatch(postsActions.userPostsFetchSuccess(res));
+      dispatch(postsActions.userProfileRepliesFetchSuccess(res));
     } else {
       dispatch(postsActions.fetchFailed(error));
     }
   };
 };
 
+export const getUserChallenges = (): AppThunk => {
+  return async (dispatch: AppDispatch, getState: () => RootState) => {
+    const endpoint = `${config.BASE_API_ENPOINT}/posts`;
+    const loggedUserId = getState().auth.loggedUser._id;
+    const currentPostsLenght = getState()?.posts.userChallenges.length;
+    console.log("fetching more challenges and puting in redux");
+    const { res, error } = await fetchAPI<IPost[]>(RequestMethod.GET, endpoint, null, {
+      size: itemsToFetch,
+      page: Math.floor(currentPostsLenght / itemsToFetch),
+      uid: loggedUserId,
+      isReply: false,
+    });
+
+    if (res) {
+      dispatch(postsActions.userProfileChallengesFetchSuccess(res));
+    } else {
+      dispatch(postsActions.fetchFailed(error));
+    }
+  };
+};
 export const getMostRecommended = (): AppThunk => {
   return async (dispatch: AppDispatch, getState: () => RootState) => {
     const loggedUser = getState()?.auth?.loggedUser?.username;
     const endpoint = `${config.BASE_API_ENPOINT}/users/${loggedUser}/recommendedPosts`;
+
     console.log(endpoint);
     const currentPosts = getState().posts.latestFetchedPosts;
     const { res, error } = await fetchAPI<IPost[]>(RequestMethod.GET, endpoint, null, {
@@ -72,6 +95,7 @@ export const getLatestPosts = (): AppThunk => {
 
     const recommendedEndpoint = `${config.BASE_API_ENPOINT}/users/${loggedUser}/recommendedPosts`;
     const randomPostsEndpoint = `${config.BASE_API_ENPOINT}/posts`;
+
     const endpoint = loggedUser ? recommendedEndpoint : randomPostsEndpoint;
     const currentPosts = getState().posts.latestFetchedPosts;
     let maxDate = currentPosts[0].publishDate;

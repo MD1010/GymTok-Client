@@ -75,12 +75,8 @@ export const PostReplies: React.FC<PostRepliesProps> = ({ }) => {
     }
   }, [post]);
 
-  useEffect(() => {
-    post && console.log(post?.publishDate?.toString());
-  }, [post]);
-
   const showOriginalVideo = () => {
-    navigation.navigate("VideoDisplay", { posts: [post] });
+    navigation.navigate("VideoDisplay", { posts: [post], isOriginalVideo: true });
   };
 
   const OriginalVideoPreview = () =>

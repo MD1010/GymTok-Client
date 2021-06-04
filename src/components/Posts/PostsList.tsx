@@ -1,26 +1,19 @@
+import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import isEmpty from "lodash/isEmpty";
 import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Dimensions, FlatList, Text, View, ViewabilityConfig, RefreshControl, InteractionManager } from "react-native";
-import { Button } from "react-native-paper";
+import { Dimensions, FlatList, RefreshControl, Text, View, ViewabilityConfig } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
+import * as configs from "../../config.json";
 import { IPost } from "../../interfaces/Post";
 import { authSelector } from "../../store/auth/authSlice";
-import {
-  getLatestPosts,
-  getMorePosts,
-  getMostRecommended,
-  getUserPosts,
-  updateUserLikePost,
-} from "../../store/posts/actions";
+import { getLatestPosts, getMorePosts, getMostRecommended, updateUserLikePost } from "../../store/posts/actions";
 import { postsSelector } from "../../store/posts/postsSlice";
-import { Loader } from "../shared";
-import { Colors, UIConsts } from "../shared/styles/variables";
-import { Post } from "./Post";
-import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { fetchAPI, RequestMethod } from "../../utils/fetchAPI";
 import { userPressLikeOnPost } from "../../utils/updatePostLikes";
-import * as configs from "../../config.json"
+import { Loader } from "../shared";
+import { Colors } from "../shared/styles/variables";
+import { Post } from "./Post";
 
 interface PostsListProps {
   /**
@@ -31,10 +24,11 @@ userPosts   *  in home page isFeed is true, else it is false
   isLoadMore?: boolean;
   initialPostIndex?: number;
   updateAllPosts?: (posts: IPost[]) => void;
+  isOriginalVideo: boolean;
 }
 
 export const PostsList: React.FC<PostsListProps> = memo(
-  ({ isFeed, currentPosts, isLoadMore, initialPostIndex, updateAllPosts }) => {
+  ({ isFeed, currentPosts, isLoadMore, initialPostIndex, updateAllPosts, isOriginalVideo }) => {
     const navigation = useNavigation();
     const dispatch = useDispatch();
     const [navigatedOutOfScreen, setNavigatedOutOfScreen] = useState<boolean>(false);
@@ -52,6 +46,7 @@ export const PostsList: React.FC<PostsListProps> = memo(
     let posts: IPost[] = currentPosts ? currentPosts : isFeed ? latestFetchedPosts : userPosts;
     const [refreshing, setRefreshing] = React.useState<boolean>(false);
     const loadMore: boolean = isLoadMore !== undefined ? isLoadMore : true;
+
     const bottomTabsHeight = isFeed ? useBottomTabBarHeight() : 0;
 
     useEffect(() => {
@@ -94,7 +89,14 @@ export const PostsList: React.FC<PostsListProps> = memo(
 
     const getPosts = () => {
       if (loggedUser) {
-        isFeed ? dispatch(getMostRecommended()) : dispatch(getUserPosts());
+        if (isFeed) {
+          ("herer");
+          dispatch(getMostRecommended());
+        }
+        // } else {
+        //   console.log("bitch");
+        //   dispatch(getUserPosts());
+        // }
       } else {
         console.log("getting more posts because user is null");
         // loggedUser is null -> didnt log in yet
@@ -105,34 +107,24 @@ export const PostsList: React.FC<PostsListProps> = memo(
       // check if user was loaded - undefinded means the store has not been updated yet.
       if (loggedUser !== undefined) {
         console.log("loading...");
-        //isLoading.current = true;
         setIsLoading(true);
-        if (isEmpty(posts)) {
-          getPosts();
-        } else {
-          //isLoading.current = false;
-          setIsLoading(false);
-        }
+        getPosts();
+        setIsLoading(false);
       }
 
       // getPosts();
     }, [loggedUser]);
 
-    useFocusEffect(
-      React.useCallback(() => {
-        navigation.addListener("blur", () => {
-          setNavigatedOutOfScreen(true);
-        });
-        navigation.addListener("focus", () => {
-          setNavigatedOutOfScreen(false);
-        });
-      }, [])
-    );
+    useFocusEffect(() => {
+      setNavigatedOutOfScreen(false);
+      navigation.addListener("blur", () => {
+        setNavigatedOutOfScreen(true);
+      });
+    });
 
     useEffect(() => {
       return () => {
         navigation.removeListener("blur", null);
-        navigation.removeListener("focus", null);
       };
     }, []);
 
@@ -229,6 +221,7 @@ export const PostsList: React.FC<PostsListProps> = memo(
           isVisible={index === currentlyPlaying && !navigatedOutOfScreen}
           containerStyle={{ height: viewHeight }}
           loggedUserPressLike={loggedUserPressLike}
+          isOriginalVideo={isOriginalVideo}
         />
       );
     };
@@ -244,11 +237,11 @@ export const PostsList: React.FC<PostsListProps> = memo(
         <View
           // {...panResponder.panHandlers}
           style={{ height: viewHeight, backgroundColor: Colors.black }}
-          // onStartShouldSetResponder={() => true}
-          // onStartShouldSetResponderCapture={() => true}
-          // onMoveShouldSetResponder={() => true}
-          // onMoveShouldSetResponderCapture={() => true}
-          // onResponderRelease={() => console.log(123123123)}
+        // onStartShouldSetResponder={() => true}
+        // onStartShouldSetResponderCapture={() => true}
+        // onMoveShouldSetResponder={() => true}
+        // onMoveShouldSetResponderCapture={() => true}
+        // onResponderRelease={() => console.log(123123123)}
         >
           <FlatList
             refreshControl={

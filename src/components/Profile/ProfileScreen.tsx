@@ -65,17 +65,18 @@ const ProfileTabs: React.FC<IProfileTabs> = ({ user, getProfileDetails }) => {
 
   useEffect(() => {
     if (!hasMoreReplies) {
-      const updatedReplies = addUserRepliesToReplies();
+      addUserRepliesToReplies();
     }
   }, [hasMoreReplies]);
 
   useEffect(() => {
     if (!hasMoreChallenges) {
-      const updatedChallenges = addUserChallengesToChallenges();
+      addUserChallengesToChallenges();
     }
   }, [hasMoreChallenges]);
 
   useEffect(() => {
+    console.log("update profile")
     getProfileDetails();
   }, [userUploadedChallenges, userUploadedReplies])
 
@@ -269,6 +270,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({ user, inProfileTab
   }
 
   useEffect(() => {
+    console.log("update profile")
     getProfileDetails();
   }, []);
 
