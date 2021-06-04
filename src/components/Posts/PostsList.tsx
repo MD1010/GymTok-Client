@@ -107,14 +107,9 @@ export const PostsList: React.FC<PostsListProps> = memo(
       // check if user was loaded - undefinded means the store has not been updated yet.
       if (loggedUser !== undefined) {
         console.log("loading...");
-        //isLoading.current = true;
         setIsLoading(true);
-        if (isEmpty(posts)) {
-          getPosts();
-        } else {
-          //isLoading.current = false;
-          setIsLoading(false);
-        }
+        getPosts();
+        setIsLoading(false);
       }
 
       // getPosts();
@@ -242,11 +237,11 @@ export const PostsList: React.FC<PostsListProps> = memo(
         <View
           // {...panResponder.panHandlers}
           style={{ height: viewHeight, backgroundColor: Colors.black }}
-        // onStartShouldSetResponder={() => true}
-        // onStartShouldSetResponderCapture={() => true}
-        // onMoveShouldSetResponder={() => true}
-        // onMoveShouldSetResponderCapture={() => true}
-        // onResponderRelease={() => console.log(123123123)}
+          // onStartShouldSetResponder={() => true}
+          // onStartShouldSetResponderCapture={() => true}
+          // onMoveShouldSetResponder={() => true}
+          // onMoveShouldSetResponderCapture={() => true}
+          // onResponderRelease={() => console.log(123123123)}
         >
           <FlatList
             refreshControl={
