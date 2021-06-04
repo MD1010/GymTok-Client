@@ -49,10 +49,7 @@ const postsSlice = createSlice({
   reducers: {
     fetchMoreSuccess: (state, action: PayloadAction<IPost[]>) => {
       if (action.payload.length < itemsToFetch) state.hasMoreToFetch = false;
-      state.latestFetchedPosts = [
-        ...state.latestFetchedPosts,
-        ...action.payload,
-      ];
+      state.latestFetchedPosts = [...state.latestFetchedPosts, ...action.payload];
       // state.latestFetchedPosts.sort((a,b) => new Date(a.publishDate) - new Date(b.publishDate) );
       // state.latestFetchedPosts = [...action.payload,...state.latestFetchedPosts];
       state.error = null;
@@ -62,21 +59,16 @@ const postsSlice = createSlice({
       state.userPosts = [...state.userPosts, ...action.payload];
       state.error = null;
     },
-    userProfileChallengesFetchSuccess: (
-      state,
-      action: PayloadAction<IPost[]>
-    ) => {
+    userProfileChallengesFetchSuccess: (state, action: PayloadAction<IPost[]>) => {
       console.log("setting more challenges!");
-      if (action.payload.length < itemsToFetch)
-        state.hasMoreChallengesToFetch = false;
+      if (action.payload.length < itemsToFetch) state.hasMoreChallengesToFetch = false;
       state.userChallenges = [...state.userChallenges, ...action.payload];
       console.log(`new challenges lenght: ${state.userChallenges.length}`);
     },
     userProfileRepliesFetchSuccess: (state, action: PayloadAction<IPost[]>) => {
       console.log("setting more replies!");
 
-      if (action.payload.length < itemsToFetch)
-        state.hasMoreRepliesToFetch = false;
+      if (action.payload.length < itemsToFetch) state.hasMoreRepliesToFetch = false;
       state.userReplies = [...state.userReplies, ...action.payload];
       console.log(`new replies lenght: ${state.userReplies.length}`);
     },
@@ -87,14 +79,10 @@ const postsSlice = createSlice({
     },
     increaseNumOfChallenges: (state) => {
       console.log("in increas func");
-      typeof state.numOfUserChallenges == "number"
-        ? (state.numOfUserChallenges = state.numOfUserChallenges + 1)
-        : null;
+      typeof state.numOfUserChallenges == "number" ? (state.numOfUserChallenges = state.numOfUserChallenges + 1) : null;
     },
     increaseNumOfReplies: (state) => {
-      typeof state.numOfUserReplies == "number"
-        ? (state.numOfUserReplies = state.numOfUserReplies + 1)
-        : null;
+      typeof state.numOfUserReplies == "number" ? (state.numOfUserReplies = state.numOfUserReplies + 1) : null;
     },
     setUserChallenges: (state, action: PayloadAction<IPost[]>) => {
       state.userChallenges = action.payload;
@@ -122,11 +110,7 @@ const postsSlice = createSlice({
         state.latestFetchedPosts = updatedLatestFetchedPosts;
       }
 
-      const updatedUserPosts = userLikePost(
-        state.userPosts,
-        action.payload.post._id,
-        action.payload.userId
-      );
+      const updatedUserPosts = userLikePost(state.userPosts, action.payload.post._id, action.payload.userId);
 
       if (updatedUserPosts) {
         state.userPosts = updatedUserPosts;
@@ -143,11 +127,7 @@ const postsSlice = createSlice({
         state.latestFetchedPosts = updatedLatestFetchedPosts;
       }
 
-      const updatedUserPosts = userDislikePost(
-        state.userPosts,
-        action.payload.post._id,
-        action.payload.userId
-      );
+      const updatedUserPosts = userDislikePost(state.userPosts, action.payload.post._id, action.payload.userId);
 
       if (updatedUserPosts) {
         state.userPosts = updatedUserPosts;
@@ -164,15 +144,14 @@ const postsSlice = createSlice({
         state.latestFetchedPosts = updatedLatestFetchedPosts;
       }
 
-      const updatedUserPosts = addReplyToPost(
-        state.userPosts,
-        action.payload.postId,
-        action.payload.reply
-      );
+      const updatedUserPosts = addReplyToPost(state.userPosts, action.payload.postId, action.payload.reply);
 
       if (updatedLatestFetchedPosts) {
         state.userPosts = updatedUserPosts;
       }
+    },
+    clearFetchedPosts: (state) => {
+      state.latestFetchedPosts = [];
     },
     clearDataBeforeLogOut: (state) => initialState,
   },
@@ -180,12 +159,9 @@ const postsSlice = createSlice({
 
 export const postsActions = postsSlice.actions;
 export const postsSelector = (state: RootState) => state.posts;
-export const challengesSelector = (state: RootState) =>
-  state.posts.userChallenges;
+export const challengesSelector = (state: RootState) => state.posts.userChallenges;
 export const repliesSelector = (state: RootState) => state.posts.userReplies;
-export const numOfChallengesSelector = (state: RootState) =>
-  state.posts.numOfUserChallenges;
-export const numOfRepliesSelector = (state: RootState) =>
-  state.posts.numOfUserReplies;
+export const numOfChallengesSelector = (state: RootState) => state.posts.numOfUserChallenges;
+export const numOfRepliesSelector = (state: RootState) => state.posts.numOfUserReplies;
 
 export default postsSlice.reducer;

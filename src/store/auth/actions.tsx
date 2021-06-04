@@ -31,6 +31,7 @@ export const login = (username: string, password: string): AppThunk => {
     const { res, error } = await fetchAPI(RequestMethod.POST, registerEnpoint, body);
     if (res) {
       dispatch(authActions.login(res));
+      dispatch(postsActions.clearFetchedPosts());
       dispatch(getUserNotifications(res.user._id));
       await setPushToken(res.user._id);
     } else {
