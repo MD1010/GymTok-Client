@@ -43,7 +43,7 @@
       "package": "com.md10.gymtok"
     },
     "notification": {
-      "icon": "./assets/icon.png",
+      "icon": "./assets/man22.png",
       "color": "#311b92",
       "androidMode": "default",
       "iosDisplayInForeground": true
