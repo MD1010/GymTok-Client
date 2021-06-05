@@ -42,7 +42,7 @@
       "package": "com.md10.gymtok"
     },
     "notification": {
-      "icon": "./assets/gymtokIcon.png",
+      "icon": "./assets/gymIcon.png",
       "androidMode": "default"
     },
     "web": {
