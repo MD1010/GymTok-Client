@@ -15,9 +15,9 @@ import { fetchAPI, RequestMethod } from "../../utils/fetchAPI";
 import { Colors } from "../shared/styles/variables";
 import { Player } from "../shared/VideoPlayer";
 import { styles } from "./Posts.style";
-import * as configs from "../../config.json"
+import * as configs from "../../config.json";
 // import { challengeContext } from "./ChallengesContainer";
-import * as config from "../../config.json"
+import * as config from "../../config.json";
 
 interface PostProps {
   post: IPost;
@@ -33,7 +33,6 @@ interface IUIContainer {
   isUserLikeChallenge: boolean;
   onLikeButtonPress: () => void;
   onCommentButtonPress: () => void;
-
 }
 
 const Heading = ({ createdBy, onCameraPress, isReply }) => {
@@ -67,7 +66,7 @@ const TagsContainer: React.FC<{ hashtags: IHashtag[] }> = ({ hashtags }) => (
   <View style={[styles.rowContainer, { flex: 2, flexWrap: "wrap" }]}>
     {hashtags?.map((tag, i) => (
       <Text key={i} style={styles.hashtag}>
-        #{tag.hashtag}
+        {tag.hashtag && `#${tag.hashtag}`}
       </Text>
     ))}
   </View>
@@ -99,70 +98,73 @@ const LikesComments: React.FC<IUIContainer> = ({
   );
 };
 
-export const Post: React.FC<PostProps> = memo(({ post, isVisible, containerStyle, loggedUserPressLike, isOriginalVideo }) => {
-  const { videoURI, createdBy, likes, replies } = post;
-  const { loggedUser } = useSelector(authSelector);
-  const navigation = useNavigation();
-  const dispatch = useDispatch();
-  const [isUserLikePost, setÌsUserLikePost] = useState<boolean>(false);
-  const streaminServerUrl = `${config.VIDEO_SERVER_ENDPOINT}/video/${videoURI}`;
+export const Post: React.FC<PostProps> = memo(
+  ({ post, isVisible, containerStyle, loggedUserPressLike, isOriginalVideo }) => {
+    const { videoURI, createdBy, likes, replies } = post;
+    const { loggedUser } = useSelector(authSelector);
+    const navigation = useNavigation();
+    const dispatch = useDispatch();
+    const [isUserLikePost, setÌsUserLikePost] = useState<boolean>(false);
+    const streaminServerUrl = `${config.VIDEO_SERVER_ENDPOINT}/video/${videoURI}`;
 
-  useEffect(() => {
-    loggedUser && setÌsUserLikePost(post.likes.includes(loggedUser?._id));
-  }, [post, loggedUser]);
+    useEffect(() => {
+      loggedUser && setÌsUserLikePost(post.likes.includes(loggedUser?._id));
+    }, [post, loggedUser]);
 
-  const onLikeButtonPress = () => {
-    if (loggedUser) {
-      console.log("user:" + loggedUser?.fullName + " click on like button.");
-      setÌsUserLikePost(!isUserLikePost);
+    const onLikeButtonPress = () => {
+      if (loggedUser) {
+        console.log("user:" + loggedUser?.fullName + " click on like button.");
+        setÌsUserLikePost(!isUserLikePost);
 
-      loggedUserPressLike(post, isUserLikePost)
-    }
-    else {
-      navigation.navigate("NotLoggedIn");
-      console.log("guest click on like button, need to log-in");
-    }
-  };
+        loggedUserPressLike(post, isUserLikePost);
+      } else {
+        navigation.navigate("NotLoggedIn");
+        console.log("guest click on like button, need to log-in");
+      }
+    };
 
-  const onCommentButtonPress = () => {
-    if (loggedUser) {
-      console.log("user:" + loggedUser?.fullName + " click on comment button.");
-      // todo: fetch here
-    } else {
-      navigation.navigate("NotLoggedIn");
-      console.log("guest click on comment button, need to login");
-    }
-  };
+    const onCommentButtonPress = () => {
+      if (loggedUser) {
+        console.log("user:" + loggedUser?.fullName + " click on comment button.");
+        // todo: fetch here
+      } else {
+        navigation.navigate("NotLoggedIn");
+        console.log("guest click on comment button, need to login");
+      }
+    };
 
-  const onCameraPress = async () => {
-    if (loggedUser) {
-      console.log("user:" + loggedUser?.fullName + " click on camera button.");
-      navigation.navigate("Camera", { postId: post._id, isReply: true });
-    } else {
-      navigation.navigate("NotLoggedIn");
-      console.log("guest click on comment button, need to login");
-    }
-  };
+    const onCameraPress = async () => {
+      if (loggedUser) {
+        console.log("user:" + loggedUser?.fullName + " click on camera button.");
+        navigation.navigate("Camera", { postId: post._id, isReply: true });
+      } else {
+        navigation.navigate("NotLoggedIn");
+        console.log("guest click on comment button, need to login");
+      }
+    };
 
-  return (
-    <View style={[styles.container, containerStyle]}>
-      <Player style={styles.video} uri={streaminServerUrl} videoInViewPort={isVisible} resizeMode="cover" />
-      <View style={styles.infoContainer}>
-        <Heading createdBy={createdBy} isReply={post.isReply} onCameraPress={() => onCameraPress()} />
+    return (
+      <View style={[styles.container, containerStyle]}>
+        <Player style={styles.video} uri={streaminServerUrl} videoInViewPort={isVisible} resizeMode="cover" />
+        <View style={styles.infoContainer}>
+          <Heading createdBy={createdBy} isReply={post.isReply} onCameraPress={() => onCameraPress()} />
 
-        <Text style={styles.info}>{post.description}</Text>
+          <Text style={styles.info}>{post.description}</Text>
 
-        <View style={[styles.rowContainer, { marginVertical: 10 }]}>
-          <TagsContainer hashtags={post.hashtags} />
-          {!isOriginalVideo && <LikesComments
-            numberOfLikes={likes ? likes.length : 0}
-            isUserLikeChallenge={isUserLikePost}
-            numberOfComments={replies ? replies.length : 0}
-            onLikeButtonPress={() => onLikeButtonPress()}
-            onCommentButtonPress={() => onCommentButtonPress()}
-          />}
+          <View style={[styles.rowContainer, { marginVertical: 10 }]}>
+            <TagsContainer hashtags={post.hashtags} />
+            {!isOriginalVideo && (
+              <LikesComments
+                numberOfLikes={likes ? likes.length : 0}
+                isUserLikeChallenge={isUserLikePost}
+                numberOfComments={replies ? replies.length : 0}
+                onLikeButtonPress={() => onLikeButtonPress()}
+                onCommentButtonPress={() => onCommentButtonPress()}
+              />
+            )}
+          </View>
         </View>
       </View>
-    </View>
-  );
-});
+    );
+  }
+);

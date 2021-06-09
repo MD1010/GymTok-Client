@@ -29,7 +29,8 @@ export const UserNotification = ({ notification, userId }: { notification: INoti
   }, []);
 
   const openNotification = (notification: INotification) => {
-    navigation.navigate("VideoDisplay", { posts: [notification.data] });
+    const post = { ...notification.data, createdBy: notification.sender };
+    navigation.navigate("VideoDisplay", { posts: [post] });
     dispatch(markNotificationAsRead(notification, userId));
   };
 
